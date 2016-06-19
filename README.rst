@@ -74,18 +74,30 @@ Restricted, specified maps can also be translated to dicts:
     >>> load("a: yes\nb: no", Map({"a": Bool(), "b": Bool()}))
     {'a': True, 'b': False}
 
-Lists can be restricted to a single type:
+Validators can be nested and lists can be restricted to a single type:
 
 .. code-block:: python
 
     >>> from strictyaml import load, Map, Seq, Float
-    >>> load("a:\n  - 1.5\n  - 2.5\nb:\n  - 2\n  - -3.14", Map({"a": Seq(Float()), "b": Seq(Float())}))
-    {'a': [1.5, 2.5], 'b': [2.0, -3.14]}
+    >>> list_float_typed_yaml = """
+    ... a:
+    ...   - 1.5
+    ...   - 2.5
+    ... b:
+    ...   - 2
+    ...   - -3.14e5
+    >>> load(list_float_typed_yaml, Map({"a": Seq(Float()), "b": Seq(Float())}))
+    {'b': [2.0, -314000.0], 'a': [1.5, 2.5]}
 
 Types can be mixed and matched:
 
 .. code-block:: python
 
     >>> from strictyaml import load, Map, Bool, Str, Decimal
-    >>> load("Name: Tea\nPrice: 3.55\nAvailable: yes\n", Map({"Name": Str(), "Price": Decimal(), "Available": Bool()}))
+    >>> product_yaml = """
+    ... Name: Tea
+    ... Price: 3.55
+    ... Available: Yes
+    ... """
+    >>> load(product_yaml, Map({"Name": Str(), "Price": Decimal(), "Available": Bool()}))
     {'Available': True, 'Name': 'Tea', 'Price': Decimal('3.55')}
