@@ -32,7 +32,9 @@ Parse output of StrictYAML::
 Why use StrictYAML?
 -------------------
 
-YAML is an excellent metalanguage to describe most kinds of configuration.
+YAML is an excellent metalanguage to describe most kinds of configuration
+as well as for creating simple DSLs.
+
 It is terse and devoid of noisy syntax (unlike JSON), able to clearly
 represent hierarchical data (unlike INI) and most important of all, 
 it's not the product of a crazed committee of monkeys hammering away on
