@@ -5,13 +5,17 @@ StrictYAML is a YAML parser that forces you to explicitly type your YAML
 with a schema before parsing it, eliminating parse surprise bugs caused
 by implicit typing.
 
-For example::
+For example:
+
+.. code-block:: yaml
 
   - Don Corleone: Do you have faith in my judgment?
   - Clemenza: Yes
   - Don Corleone: Do I have your loyalty?
 
-Parse output of pyyaml/ruamel.yaml::
+Parse output of pyyaml/ruamel.yaml:
+
+.. code-block:: python
 
     >>> from ruamel.yaml import load
     >>> load(the_godfather)
@@ -21,7 +25,9 @@ Parse output of pyyaml/ruamel.yaml::
 
 Wait, Clemenza said what??
 
-Parse output of StrictYAML::
+Parse output of StrictYAML:
+
+.. code-block:: python
 
     >>> from strictyaml import load, List, MapPattern, Str
     >>> load(the_godfather, List(MapPattern({Str(), Str()})))
