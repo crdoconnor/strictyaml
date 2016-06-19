@@ -50,5 +50,26 @@ YAML has weaknesses, however, which StrictYAML addresses:
 Using StrictYAML
 ----------------
 
-    >>> from strictyaml import load, Map, Str
-    >>> load(
+Map pattern in YAML can be translated to dicts::
+
+    >>> from strictyaml import load, MapPattern, Str, Int
+    >>> load("a: 1\nb: 2", MapPattern(Str(), Int()))
+    {'a': 1, 'b': 2}
+
+Restricted, specified maps can also be translated to dicts::
+
+    >>> from strictyaml import load, Map, Bool
+    >>> load("a: yes\nb: no", Map({"a": Bool(), "b": Bool()}))
+    {'a': True, 'b': False}
+
+Lists can be restricted to a single type::
+
+    >>> from strictyaml import load, Map, Seq, Float
+    >>> load("a:\n  - 1.5\n  - 2.5\nb:\n  - 2\n  - -3.14", Map({"a": Seq(Float()), "b": Seq(Float())}))
+    {'a': [1.5, 2.5], 'b': [2.0, -3.14]}
+
+Types can be mixed and matched::
+
+    >>> from strictyaml import load, Map, Bool, Str, Decimal
+    >>> load("Name: Tea\nPrice: 3.55\nAvailable: yes\n", Map({"Name": Str(), "Price": Decimal(), "Available": Bool()}))
+    {'Available': True, 'Name': 'Tea', 'Price': Decimal('3.55')}
