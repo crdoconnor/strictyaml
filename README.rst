@@ -52,25 +52,33 @@ YAML has weaknesses, however, which StrictYAML addresses:
 Using StrictYAML
 ----------------
 
-Map pattern in YAML can be translated to dicts::
+Map pattern in YAML can be translated to dicts:
+
+.. code-block:: python
 
     >>> from strictyaml import load, MapPattern, Str, Int
     >>> load("a: 1\nb: 2", MapPattern(Str(), Int()))
     {'a': 1, 'b': 2}
 
-Restricted, specified maps can also be translated to dicts::
+Restricted, specified maps can also be translated to dicts:
+
+.. code-block:: python
 
     >>> from strictyaml import load, Map, Bool
     >>> load("a: yes\nb: no", Map({"a": Bool(), "b": Bool()}))
     {'a': True, 'b': False}
 
-Lists can be restricted to a single type::
+Lists can be restricted to a single type:
+
+.. code-block:: python
 
     >>> from strictyaml import load, Map, Seq, Float
     >>> load("a:\n  - 1.5\n  - 2.5\nb:\n  - 2\n  - -3.14", Map({"a": Seq(Float()), "b": Seq(Float())}))
     {'a': [1.5, 2.5], 'b': [2.0, -3.14]}
 
-Types can be mixed and matched::
+Types can be mixed and matched:
+
+.. code-block:: python
 
     >>> from strictyaml import load, Map, Bool, Str, Decimal
     >>> load("Name: Tea\nPrice: 3.55\nAvailable: yes\n", Map({"Name": Str(), "Price": Decimal(), "Available": Bool()}))
