@@ -101,3 +101,15 @@ Types can be mixed and matched:
     ... """
     >>> load(product_yaml, Map({"Name": Str(), "Price": Decimal(), "Available": Bool()}))
     {'Available': True, 'Name': 'Tea', 'Price': Decimal('3.55')}
+
+You can also use enums:
+
+.. code-block:: python
+
+    >>> from strictyaml import load, Map, Str, Enum
+    >>> product_yaml = """
+    ... Name: Tea
+    ... Type: Green
+    ... """
+    >>> load(product_yaml, Map({"Name": Str(), "Type": Enum(["Green", "Mint"])}))
+    {'Name': 'Tea', 'Type': 'Green'}
