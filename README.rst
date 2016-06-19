@@ -43,7 +43,8 @@ typewriters (XML).
 YAML has weaknesses, however, which StrictYAML addresses:
 
 * Implicitly typed (StrictYAML fixes this with explicit typing).
-* Allows arbitrary binary data leading to, among other things, Ruby on Rails' spectacular [security fail](http://www.h-online.com/open/news/item/Rails-developers-close-another-extremely-critical-flaw-1793511.html) (disallowed in StrictYAML because *why on earth did anybody think this was a good idea?*).
+* Allows arbitrary binary data leading to, among other things, Ruby on Rails' spectacular
+`security fail <http://www.h-online.com/open/news/item/Rails-developers-close-another-extremely-critical-flaw-1793511.html>`) (disallowed in StrictYAML because *why on earth did anybody think this was a good idea?*).
 * Tag tokens, allowing you to specify types in the YAML (disallowed in StrictYAML).
 * Confusing "flow" style (disallowed by default in StrictYAML).
 * Often confusing node anchors and references (disallowed by default in StrictYAML).
