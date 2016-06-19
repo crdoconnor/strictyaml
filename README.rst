@@ -86,6 +86,7 @@ Validators can be nested and lists can be restricted to a single type:
     ... b:
     ...   - 2
     ...   - -3.14e5
+    ... """
     >>> load(list_float_typed_yaml, Map({"a": Seq(Float()), "b": Seq(Float())}))
     {'b': [2.0, -314000.0], 'a': [1.5, 2.5]}
 
