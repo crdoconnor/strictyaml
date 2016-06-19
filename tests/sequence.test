@@ -1,0 +1,45 @@
+{% for python_version in python_versions %}
+- name: Sequence validation
+  preconditions:
+    python_version: {{ python_version }}
+    files:
+      valid_sequence.yaml: |
+        - 1
+        - 2
+        - 3
+      invalid_sequence_1.yaml: |
+        a: 1
+        b: 2
+        c: 3
+      invalid_sequence_2.yaml: |
+        - 2
+        - 3
+        - a:
+          - 1
+          - 2
+  tags:
+    - sequence
+    - py{{ python_version }}
+  scenario:
+    - Run command: |
+        from strictyaml import Seq, Str, YAMLValidationError, load
+
+        schema = Seq(Str())
+
+        try:
+            load(invalid_sequence_1, schema)
+        except YAMLValidationError as error:
+            seq1_error = error
+
+
+        try:
+            load(invalid_sequence_2, schema)
+        except YAMLValidationError as error:
+            seq2_error = error
+
+    - Assert True: 'load(valid_sequence, schema) == ["1", "2", "3", ]'
+    - Assert True: seq1_error.start_line == 1
+    - Assert True: seq1_error.end_line == 3
+    - Assert True: seq2_error.start_line == 3
+    - Assert True: seq2_error.end_line == 5
+{% endfor %}

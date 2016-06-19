@@ -1,0 +1,46 @@
+{% for python_version in python_versions %}
+- name: Nested mapping validation
+  preconditions:
+    python_version: {{ python_version }}
+    files:
+      valid_sequence.yaml: |
+        a:
+          x: 9
+          y: 8
+        b: 2
+        c: 3
+      invalid_sequence_1.yaml: |
+        a:
+          x: 9
+          z: 8
+        b: 2
+        d: 3
+      invalid_sequence_2.yaml: |
+        a: 11
+        b: 2
+        d: 3
+  tags:
+    - nested
+    - map
+    - py{{ python_version }}
+  scenario:
+    - Run command: |
+        from strictyaml import Map, Int, YAMLValidationError, load
+
+        schema = Map({"a": Map({"x": Int(), "y": Int()}), "b": Int(), "c": Int()})
+
+        try:
+            load(invalid_sequence_1, schema)
+        except YAMLValidationError as error:
+            seq1_error = error
+        try:
+            load(invalid_sequence_2, schema)
+        except YAMLValidationError as error:
+            seq2_error = error
+
+    - Assert True: 'load(valid_sequence, schema) == {"a": {"x": 9, "y": 8}, "b": 2, "c": 3}'
+    - Assert True: seq1_error.start_line == 3
+    - Assert True: seq1_error.end_line == 3
+    - Assert True: seq2_error.start_line == 1
+    - Assert True: seq2_error.end_line == 1
+{% endfor %}

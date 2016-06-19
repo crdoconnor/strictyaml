@@ -1,0 +1,11 @@
+- name: Run flake8
+  preconditions:
+    launch_shell: no
+  tags:
+    - flake8
+  scenario:
+    - Flake8:
+        directory: strictyaml
+        args:
+          - --max-line-length=100
+          - --exclude=__init__.py

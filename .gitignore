@@ -1,0 +1,7 @@
+build/
+dist/
+.cache
+strictyaml.egg-info/
+tests/.hitch
+__pycache__
+*.pyc

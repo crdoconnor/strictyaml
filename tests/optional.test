@@ -1,0 +1,55 @@
+{% for python_version in python_versions %}
+- name: Optional validation
+  preconditions:
+    python_version: {{ python_version }}
+    files:
+      valid_sequence_1.yaml: |
+        a: 1
+        b: yes
+      valid_sequence_2.yaml: |
+        a: 1
+        b: no
+      valid_sequence_3.yaml: |
+        a: 1
+      invalid_sequence_1.yaml: |
+        b: 2
+      invalid_sequence_2.yaml: |
+        a: 1
+        b: 2
+      invalid_sequence_3.yaml: |
+        a: 1
+        b: yes
+        c: 3
+  tags:
+    - sequence
+    - py{{ python_version }}
+  scenario:
+    - Run command: |
+        from strictyaml import Map, Int, Bool, Optional, YAMLValidationError, load
+
+        schema = Map({"a": Int(), Optional("b"): Bool(), })
+
+        try:
+            load(invalid_sequence_1, schema)
+        except YAMLValidationError as error:
+            seq1_error = error
+
+        try:
+            load(invalid_sequence_2, schema)
+        except YAMLValidationError as error:
+            seq2_error = error
+
+        try:
+            load(invalid_sequence_3, schema)
+        except YAMLValidationError as error:
+            seq3_error = error
+    - Assert True: 'load(valid_sequence_1, schema) == {"a": 1, "b": True}'
+    - Assert True: 'load(valid_sequence_2, schema) == {"a": 1, "b": False}'
+    - Assert True: 'load(valid_sequence_3, schema) == {"a": 1}'
+    - Assert True: seq1_error.start_line == 1
+    - Assert True: seq1_error.end_line == 1
+    - Assert True: seq2_error.start_line == 2
+    - Assert True: seq2_error.end_line == 2
+    - Assert True: seq3_error.start_line == 3
+    - Assert True: seq3_error.end_line == 3
+{% endfor %}
