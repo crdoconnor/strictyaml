@@ -1,6 +1,5 @@
 from ruamel import yaml as ruamelyaml
 from strictyaml import exceptions
-from strictyaml.yamllocation import YAMLLocation
 
 
 def load(stream, schema):

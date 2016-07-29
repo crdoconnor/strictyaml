@@ -1,5 +1,5 @@
-from strictyaml.yamllocation import YAMLLocation
 from ruamel.yaml import YAMLError
+
 
 class StrictYAMLError(YAMLError):
     @property
