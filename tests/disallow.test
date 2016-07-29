@@ -1,0 +1,49 @@
+{% for python_version in python_versions %}
+- name: Disallow invalid YAML
+  preconditions:
+    python_version: {{ python_version }}
+    files:
+      tag_tokens.yaml: |
+        x:
+          a: !!str yes
+          b: !!str 3.5
+          c: !!str yes
+      flow_style.yaml: |
+        x: { a: 1, b: 2, c: 3 }
+      node_anchors_and_references.yaml: |
+        x: 
+          a: &node1 3.5
+          b: 1
+          c: *node1
+  tags:
+    - disallow
+    - py{{ python_version }}
+  scenario:
+    - Run command: |
+        from strictyaml import Map, Int, Any, load
+        from strictyaml import TagTokenDisallowed, FlowMappingDisallowed, AnchorTokenDisallowed
+
+        schema = Map({"x": Map({"a": Any(), "b": Any(), "c": Any()})})
+
+        try:
+            load(tag_tokens, schema)
+        except TagTokenDisallowed as error:
+            seq1_error = error
+
+        try:
+            load(flow_style, schema)
+        except FlowMappingDisallowed as error:
+            seq2_error = error
+
+        try:
+            load(node_anchors_and_references, schema)
+        except AnchorTokenDisallowed as error:
+            seq3_error = error
+
+    - Assert True: seq1_error.start_line == 2
+    - Assert True: seq1_error.end_line == 2
+    - Assert True: seq2_error.start_line == 1
+    - Assert True: seq2_error.end_line == 1
+    - Assert True: seq3_error.start_line == 2
+    - Assert True: seq3_error.end_line == 2
+{% endfor %}

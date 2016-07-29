@@ -1,4 +1,7 @@
+# The all important loader
 from strictyaml.parser import load
+
+# Validators
 from strictyaml.validators import Optional
 from strictyaml.validators import Validator
 from strictyaml.validators import OrValidator
@@ -14,4 +17,16 @@ from strictyaml.validators import Map
 from strictyaml.validators import MapPattern
 from strictyaml.validators import Seq
 from strictyaml.validators import UniqueSeq
+
+# Exceptions
+from strictyaml.exceptions import StrictYAMLError
+
+# Validaton
 from strictyaml.exceptions import YAMLValidationError
+
+# Disallowed token exceptions
+from strictyaml.exceptions import DisallowedToken
+
+from strictyaml.exceptions import TagTokenDisallowed
+from strictyaml.exceptions import FlowMappingDisallowed
+from strictyaml.exceptions import AnchorTokenDisallowed
