@@ -1,5 +1,7 @@
 {% for python_version in python_versions %}
 - name: Only allow YAML
+  description: |
+    Ensure that 
   preconditions:
     python_version: {{ python_version }}
   tags:
@@ -7,13 +9,15 @@
     - py{{ python_version }}
   scenario:
     - Run command: |
-        from strictyaml import Map, Int, Any, load
-
-        schema = Map({"x": Int()})
+        from strictyaml import Str, Int, load
 
         try:
-            load(None, schema)
+            load(None, Str())
         except TypeError:
             there_was_a_type_error = True
+
     - Assert True: there_was_a_type_error
+    - Assert True: load("1", Str()) == "1"
+    - Assert True: load("1", Int()) == 1
+    - Assert True: load("", Str()) == ""
 {% endfor %}

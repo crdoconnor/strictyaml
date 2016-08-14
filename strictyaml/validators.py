@@ -16,6 +16,8 @@ class Validator(object):
         return OrValidator(self, other)
 
     def __call__(self, document, location=None):
+        if location is None:
+            location = YAMLLocation()
         return self.validate(document, location)
 
 
