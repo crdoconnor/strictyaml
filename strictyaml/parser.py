@@ -7,6 +7,9 @@ def load(stream, schema):
     Parse the first YAML document in a stream
     and produce the corresponding Python object.
     """
+    if type(stream) is not str:
+        raise TypeError("StrictYAML can only read a string of valid YAML.")
+
     document = ruamelyaml.load(stream, Loader=ruamelyaml.RoundTripLoader)
 
     for token in ruamelyaml.scan(stream):
