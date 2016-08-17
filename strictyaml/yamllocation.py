@@ -53,7 +53,7 @@ class YAMLLocation(object):
                 if type(segment) == CommentedSeq:
                     for i, value in enumerate(segment):
                         if start_popping:
-                            slicedpart.pop(i)
+                            slicedpart.pop(0)
 
                         if i == index:
                             start_popping = True
@@ -92,3 +92,6 @@ class YAMLLocation(object):
             else:
                 segment = index
         return segment
+
+    def __repr__(self):
+        return "<YAMLLocation>"

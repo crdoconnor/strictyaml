@@ -17,29 +17,51 @@
         - a:
           - 1
           - 2
+      invalid_sequence_3.yaml: |
+        - 1.1
+        - 1.2
+      invalid_sequence_4.yaml: |
+        - 1
+        - 2
+        - 3.4
   tags:
     - sequence
     - py{{ python_version }}
   scenario:
     - Run command: |
-        from strictyaml import Seq, Str, YAMLValidationError, load
+        from strictyaml import Seq, Str, Int, YAMLValidationError, load
+        from __future__ import print_function
 
-        schema = Seq(Str())
-
-        try:
-            load(invalid_sequence_1, schema)
-        except YAMLValidationError as error:
-            seq1_error = error
-
+        assert 'load(valid_sequence, Seq(Str())) == ["1", "2", "3", ]'
 
         try:
-            load(invalid_sequence_2, schema)
+            load(invalid_sequence_1, Seq(Str()))
         except YAMLValidationError as error:
-            seq2_error = error
+            print(error)
+            assert error.start_line == 1 
+            assert error.end_line == 3
 
-    - Assert True: 'load(valid_sequence, schema) == ["1", "2", "3", ]'
-    - Assert True: seq1_error.start_line == 1
-    - Assert True: seq1_error.end_line == 3
-    - Assert True: seq2_error.start_line == 3
-    - Assert True: seq2_error.end_line == 5
+    - Run command: |
+        try:
+            load(invalid_sequence_2, Seq(Str()))
+        except YAMLValidationError as error:
+            print(error)
+            assert error.start_line == 3
+            assert error.end_line == 5
+
+    - Run command: |
+        try:
+            load(invalid_sequence_3, Seq(Int()))
+        except YAMLValidationError as error:
+            print(error)
+            assert error.start_line == 1
+            assert error.end_line == 1
+
+    - Run command: |
+        try:
+            load(invalid_sequence_4, Seq(Int()))
+        except YAMLValidationError as error:
+            print(error)
+            assert error.start_line == 3
+            assert error.end_line == 3
 {% endfor %}
