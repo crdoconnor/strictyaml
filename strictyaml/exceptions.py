@@ -22,6 +22,15 @@ class YAMLValidationError(StrictYAMLError):
         self._start_line = location.start_line(self._document)
         self._end_line = location.end_line(self._document)
 
+    def __repr__(self):
+        return "<YAMLValidationError {0}>".format(str(self._message))
+
+    def __str__(self):
+        return """{0}""".format(self._message)
+
+    def __unicode__(self):
+        return u"""{0}""".format(self._message)
+
 
 class DisallowedToken(StrictYAMLError):
     MESSAGE = "Disallowed token"
