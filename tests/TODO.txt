@@ -1,0 +1,18 @@
+Add scalar types
+
+* Date and time related types
+* Unix timestamp
+* Regex
+* URL
+* Domain
+* Enum (case insensitive)
+* Email
+* PositiveInt
+* Base64
+* Simex
+
+Add kwalify parsing.
+
+Refactor so that custom scalar validators can be written.
+
+Add 'IncompleteMap' -- allows string based parsing in mapping.
