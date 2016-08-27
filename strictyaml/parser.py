@@ -1,9 +1,10 @@
 from ruamel import yaml as ruamelyaml
 from strictyaml import exceptions
 from ruamel.yaml.comments import CommentedSeq, CommentedMap
+from strictyaml.validators import Any
 
 
-def load(stream, schema):
+def load(stream, schema=None):
     """
     Parse the first YAML document in a stream
     and produce the corresponding Python object.
@@ -37,5 +38,8 @@ def load(stream, schema):
                 token.start_mark.line + 1,
                 token.end_mark.line + 1
             )
+
+    if schema is None:
+        schema = Any()
 
     return schema(document)

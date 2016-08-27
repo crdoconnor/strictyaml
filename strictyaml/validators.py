@@ -55,7 +55,28 @@ class OrValidator(Validator):
             raise error2
 
 
+def strip_accoutrements(document):
+    """
+    Replace CommentedMap with regular python dict and CommentedSeq with regular list.
+    """
+    if type(document) is CommentedMap:
+        return {key: strip_accoutrements(value) for key, value in document.items()}
+    elif type(document) is CommentedSeq:
+        return [strip_accoutrements(item) for item in document]
+    else:
+        return str(document)
+
+
 class Any(Validator):
+    """
+    Validates any YAML and returns simple dicts/lists of strings.
+    """
+    def validate(self, document, location=None):
+        return strip_accoutrements(location.get(document))
+
+
+class CommentedYAML(Validator):
+    """Validates any YAML and returns ruamel.yaml CommentedMap/CommentedSeq."""
     def validate(self, document, location=None):
         return location.get(document)
 
