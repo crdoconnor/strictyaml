@@ -10,6 +10,7 @@ Add scalar types
 * PositiveInt
 * Base64
 * Simex
+* UNIX path
 
 Add kwalify parsing.
 
