@@ -1,12 +1,19 @@
 StrictYAML
 ==========
 
-StrictYAML is a `type-safe <https://en.wikipedia.org/wiki/Type_safety>`_ YAML parser,
-built on `ruamel.yaml <http://pypi.python.org/pypi/ruamel.yaml>`_ that eliminates
-most of the `bullshit <https://github.com/crdoconnor/strictyaml/blob/master/FAQ.rst#what-bullshit-in-ordinary-yaml-does-strictyaml-remove>`_
-in the YAML spec.
+StrictYAML is a `type-safe <https://en.wikipedia.org/wiki/Type_safety>`_ YAML parser.
+built atop `ruamel.yaml <http://pypi.python.org/pypi/ruamel.yaml>`_ that parses a restricted
+subset of the YAML specificaton.
 
-It's designed to serve as an easy drop in replacement parser for either pyyaml, ruamel.yaml or poyo.
+Priorities:
+
+* Readability of YAML.
+* Ease of use of API.
+* Secure by default.
+* Strict validation of markup and straightforward type casting.
+* Clear, human readable exceptions with line numbers.
+* Acting as a drop in replacement for pyyaml, ruamel.yaml or poyo.
+* Letting you worry about more interesting things than parsing config files.
 
 Simple example:
 
@@ -17,18 +24,53 @@ Simple example:
   posessions:
     - Towel
 
+Default parse result:
+
 .. code-block:: python
 
    >>> strictyaml.load(yaml) \
-     == {"name": "Ford Prefect", "age": "42", "possessions": ["Towel", ]}   # note 42 is a string
+     == {"name": "Ford Prefect", "age": "42", "possessions": ["Towel", ]}   # Without validator all data is a string, dict or list
 
-Example using validator with mapping, sequence, string and integer:
+Example using optional validator - using mapping, sequence, string and integer:
 
 .. code-block:: python
 
    >>> from strictyaml import load, Map, Str, Int, Seq
    >>> load(yaml, Map({"name": Str(), "age": Int(), "possessions": Seq(Str())})) \
      == {"name": "Ford Prefect", "age": 42, "possessions": ["Towel", ]}     # 42 is now an int
+
+
+Which features are cut out of the YAML spec?
+--------------------------------------------
+
++--------------------------+-----------------------+---------------------------------------+------------------------------------+
+| Stupid feature           | Example YAML          | Example pyyaml/ruamel/poyo            | Example StrictYAML                 |
++==========================+=======================+=======================================+====================================+
+| `Implicit typing`_       | .. code-block:: yaml  | .. code-block:: python                | .. code-block:: python             |
+|                          |                       |                                       |                                    |
+|                          |      x: yes           |      load(yaml) == \                  |      load(yaml) == \               |
+|                          |      y: null          |        {"x": True, "y": None}         |        {"x": "yes", "y": "null}    |
++--------------------------+-----------------------+---------------------------------------+------------------------------------+
+| `Binary data`_           | .. code-block:: yaml  | .. code-block:: python                | .. code-block:: python             |
+|                          |                       |                                       |                                    |
+|                          |      evil: !!binary   |      load(yaml) == \                  |      raises TagTokenDisallowed     |
+|                          |       evildata        |      {'evil': b'z\xf8\xa5u\xabZ'}     |                                    |
++--------------------------+-----------------------+---------------------------------------+------------------------------------+
+| `Explicit tags`_         | .. code-block:: yaml  | .. code-block:: python                | .. code-block:: python             |
+|                          |                       |                                       |                                    |
+|                          |      x: !!int 5       |      load(yaml) == {"x": 5}           |     raises TagTokenDisallowed      |
++--------------------------+-----------------------+---------------------------------------+------------------------------------+
+| `Node anchors and refs`_ | .. code-block:: yaml  | .. code-block:: python                | .. code-block:: python             |
+|                          |                       |                                       |                                    |
+|                          |      x: &id001        |      load(yaml) == \                  |     raises NodeAnchorDisallowed    |
+|                          |        a: 1           |       {'x': {'a': 1}, 'y': {'a': 1}}  |                                    |
+|                          |      y: *id001        |                                       |                                    |
++--------------------------+-----------------------+---------------------------------------+------------------------------------+
+| `Flow style`_            | .. code-block:: yaml  | .. code-block:: python                | .. code-block:: python             |
+|                          |                       |                                       |                                    |
+|                          |      x: 1             |      load(yaml) == \                  |     raises FlowStyleDisallowed     |
+|                          |      b: {c: 3, d: 4}  |      {'x': {'a': 1}, 'y': {'a': 1}}   |                                    |
++--------------------------+-----------------------+---------------------------------------+------------------------------------+
 
 
 FAQ
@@ -102,11 +144,26 @@ Custom scalar types
 COMING SOON
 
 
-Using Kwalify
--------------
+Using YAML Valdation
+--------------------
 
 See: What is kwalify and when should I use it?
 
 COMING SOON
 
 
+Saving YAML
+-----------
+
+COMING SOON
+
+Roundtripping YAML
+------------------
+
+COMING SOON
+
+.. _Implicit typing: https://github.com/crdoconnor/strictyaml/blob/master/FAQ.rst#what-is-wrong-with-implicit-typing
+.. _Binary data: https://github.com/crdoconnor/strictyaml/blob/master/FAQ.rst#what-is-wrong-with-binary-data
+.. _Explicit tags: https://github.com/crdoconnor/strictyaml/blob/master/FAQ.rst#what-is-wrong-with-explicit-tags
+.. _Flow style: https://github.com/crdoconnor/strictyaml/blob/master/FAQ.rst#what-is-wrong-with-flow-style
+.. _Node anchors and refs: https://github.com/crdoconnor/strictyaml/blob/master/FAQ.rst#what-is-wrong-with-node-anchors-and-references

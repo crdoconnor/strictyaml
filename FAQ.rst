@@ -203,7 +203,7 @@ In fact, all ugly typecasts are disallowed because while they might be meaningfu
   e: !!str 123
   f: !!str Yes
 
-StrictYAML is also throws a DisallowedToken exception if sees node anchors and references. For example, this particularly unreadable example from wikipedia:
+StrictYAML is also throws a DisallowedToken exception if sees node anchors and references. For example, this particularly unreadable example from the wikipedia page about YAML:
 
 .. code-block:: yaml
 
@@ -239,6 +239,8 @@ Flow style also throws a DisallowedToken exception:
 This use of JSONesque { and } is also ugly and hampers readability - especially when { and } are used for other purposes (e.g. templating).
 
 The first question in the FAQ for pyyaml is "`why does my YAML look wrong? <http://pyyaml.org/wiki/PyYAMLDocumentation#Dictionarieswithoutnestedcollectionsarenotdumpedcorrectly>`_".
+
+To take a real life example, `this saltstack YAML definition <https://github.com/saltstack-formulas/mysql-formula/blob/master/mysql/server.sls#L22`_ makes the distinction between flow style and jinja2 templates very unclear.
 
 
 Why not use INI files for configuration or DSLs?
