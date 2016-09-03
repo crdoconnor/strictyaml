@@ -101,7 +101,7 @@ Why should I use strictyaml instead of ordinary YAML?
 
 StrictYAML is *not* a new standard. It's:
 
-* YAML without implicit typing - `which was a terrible idea <https://github.com/crdoconnor/strictyaml/blob/master/FAQ.rst#what-do-you-mean-implicit-typing-is-a-terrible-idea>`_.
+* YAML without implicit typing - `which was a terrible idea <https://github.com/crdoconnor/strictyaml/blob/master/FAQ.rst#what-is-wrong-with-implicit-typing>`_.
 * YAML with all of the `other bullshit removed <https://github.com/crdoconnor/strictyaml/blob/master/FAQ.rst#what-features-does-strictyaml-remove>`_.
 * An optional YAML validator.
 
