@@ -154,7 +154,7 @@ Parse output from pyyaml, ruamel.yaml and poyo:
 
     >>> load(the_matrix) == [{"Morpheus": "Do you belive in fate, Neo?"}, {"Neo": False}]
 
-It isn't just a problem in movie scripts::
+It isn't just a problem in movie scripts:
 
 .. code-block:: yaml
 
@@ -165,7 +165,7 @@ It isn't just a problem in movie scripts::
 
     >>> load(versions) == [{"python": "3.5.3", "postgres": 9.3}]    # oops those *both* should have been strings
 
-It's also makes `Christopher Null <http://www.wired.com/2015/11/null/>_` unhappy:
+It's also makes `Christopher Null <http://www.wired.com/2015/11/null/>`_ unhappy:
 
 .. code-block:: yaml
 
@@ -174,24 +174,27 @@ It's also makes `Christopher Null <http://www.wired.com/2015/11/null/>_` unhappy
 
 .. code-block:: python
 
-    >>> load(name) == {"first name": "Christopher", "surname": None}    # Chris deserves a unit test but he ain't ever gonna get a unit test
+    # Chris deserves a unit test but he ain't ever gonna get a unit test
+    >>> load(name) == {"first name": "Christopher", "surname": None}
 
 
 What is wrong with explicit syntax typing in readable configuration languages?
 ------------------------------------------------------------------------------
 
-Explicit syntax typing is the process of using syntax to define types in markup. So, for instance in JSON, quotation marks are used to define types::
+Explicit syntax typing is the process of using syntax to define types in markup. So, for instance in JSON, quotation marks are used to define types:
+
+.. code-block:: json
 
   {"name": "Arthur Dent", "age": 42}
 
 This also has two disadvantages:
 
-* The distinction is subtle and not particularly clear to non-programmers, who will understand that age needs to be an number and will probably put in a number but not necessarily why a number should be surrounded by quotes -- or not.
+* The distinction is subtle and not particularly clear to non-programmers, who will understand that *age needs to be an number* and will *probably put in a number* but *not why a number should be surrounded by quotes* -- or not.
 * It's not as DRY - two superfluous characters per string makes the markup longer and noisier.
 
-In JSON when being used as a REST API, this has a major advantage - it is explicit to the machine reading the JSON that "string" and "age" is an integer and it can convert accordingly in the absence of a schema.
+In JSON when being used as a REST API, this is an advantage - it is explicit to the machine reading the JSON that "string" and "age" is an integer and it can convert accordingly in the absence of a schema.
 
-Regular YAML has optional explicit syntax typing to explicitly declare strings, although it's not at all obvious when to use it::
+Regular YAML has optional explicit syntax typing to explicitly declare strings, although it's *not at all obvious* when to use it::
 
   a: text               # not necessary
   b: "yes"              # necessary
@@ -227,14 +230,15 @@ StrictYAML doesn't allow binary data to be parsed and will throw an exception if
 
 This idiotic feature led to Ruby on Rails' spectacular `security fail <http://www.h-online.com/open/news/item/Rails-developers-close-another-extremely-critical-flaw-1793511.html>`_.
 
+
+
 What is wrong with explicit tags?
 ---------------------------------
 
-In fact, all ugly typecasts are disallowed because while they might be meaningful to programmers, they're not meaningful to non-programmers and markup is the wrong place for type declarations.
+In fact, all ugly typecasts are disallowed in strictyaml because while they might be meaningful to programmers, they're not meaningful to non-programmers and markup is the wrong place for type declarations.
 
 .. code-block:: yaml
 
-  ---
   d: !!float 123
   e: !!str 123
   f: !!str Yes
@@ -280,11 +284,11 @@ Flow style also throws a DisallowedToken exception:
     a: 1
     b: {c: 3, d: 4}
 
-This use of JSONesque { and } is also ugly and hampers readability - especially when { and } are used for other purposes (e.g. templating).
+This use of JSONesque { and } is also ugly and hampers readability - *especially* when { and } are used for other purposes (e.g. templating) and the human reader/writer of YAML has to give themselves a headache figuring out what *kind* of curly bracket it is.
 
-The first question in the FAQ for pyyaml is "`why does my YAML look wrong? <http://pyyaml.org/wiki/PyYAMLDocumentation#Dictionarieswithoutnestedcollectionsarenotdumpedcorrectly>`_".
+The *first* question in the FAQ of pyyaml actually subtly indicates that this feature wasn't a good idea - see "`why does my YAML look wrong? <http://pyyaml.org/wiki/PyYAMLDocumentation#Dictionarieswithoutnestedcollectionsarenotdumpedcorrectly>`_".
 
-To take a real life example, `this saltstack YAML definition <https://github.com/saltstack-formulas/mysql-formula/blob/master/mysql/server.sls#L22`_ makes the distinction between flow style and jinja2 templates very unclear.
+To take a real life example, `this saltstack YAML definition <https://github.com/saltstack-formulas/mysql-formula/blob/master/mysql/server.sls#L22>`_ makes the distinction between flow style and jinja2 templates unclear.
 
 
 Why not use INI files for configuration or DSLs?
@@ -299,11 +303,11 @@ INI is a very old and quite readable configuration format. Unfortunately it suff
 Why shouldn't I just use python code for configuration?
 -------------------------------------------------------
 
-This isn't `uncommon <https://docs.djangoproject.com/en/1.10/ref/settings/>`_ and can often seem like a nice, simple solution although it can have `nasty side effects <http://nedbatchelder.com/blog/201112/duplicitous_django_settings.html>`_.
+This isn't `uncommon <https://docs.djangoproject.com/en/1.10/ref/settings/>`_ and can often seem like a nice, simple solution although using a turing complete language for configuration will often have `nasty side effects <http://nedbatchelder.com/blog/201112/duplicitous_django_settings.html>`_.
 
 Why does using YAML (or indeed, any configuration language) avoid this? Because they are *less powerful* languages than python.
 
-While this may not intrinsically seem like a good thing (more power is better right?), it isn't:
+While this may not intrinsically seem like a good thing (more power seems better at first glance), it isn't:
 
  * `We need less powerful languages <http://lukeplant.me.uk/blog/posts/less-powerful-languages/>`_.
  * `Rule of least power (wikipedia) <https://en.wikipedia.org/wiki/Rule_of_least_power>`_.
@@ -316,7 +320,9 @@ This has a number of advantages.
 
 The less powerful a language is, the more likely it is that you can hand it off to a non-programmer to maintain it.
 
-For example, a YAML translations configuration file like this could easily be edited by a non programmer::
+For example, a YAML translations configuration file like this could easily be edited by a non programmer:
+
+.. code-block:: yaml
 
   Hello:
     French: Bonjour
@@ -347,13 +353,13 @@ Why not use JSON for configuration or simple DSLs?
 JSON is an *ideal* format for REST APIs and other APIs that send data over a wire and it probably always will be because:
 
 * It's a simple spec.
-* It has all the basic types which map on to all programming languages - number, string, list, mapping, boolean.
-* Its syntax contains a built in level of error detection - cut a JSON request in half and it is no longer still valid, eliminating a class of obscure and problematic bugs.
-* If indented correctly, it's readable.
+* It has all the basic types which map on to all programming languages - number, string, list, mapping, boolean *and no more*.
+* Its syntax contains a built in level of error detection - cut a JSON request in half and it is no longer still valid, eliminating an entire class of obscure and problematic bugs.
+* If pretty-printed correctly, it's more or less readable - for the purposes of debugging, anyway.
 
 However, while it is emintently suitable for REST APIs it is less suitable for configuration since:
 
-* The same syntax which gives it decent error detection (commas, curly brackets) makes tricky for humans to edit.
+* The same syntax which gives it decent error detection (commas, curly brackets) makes it tricky for humans to edit.
 * It's not especially readable.
 * It doesn't allow comments.
 
@@ -367,7 +373,8 @@ TOML's main criticism of YAML is spot on::
 
   TOML aims for simplicity, a goal which is not apparent in the YAML specification.
 
-A cut down the YAML specification however - with implicit typing, node anchors/references and flow style cut out ends up being *simpler* than TOML.
+StrictYAML's cut down version of the YAML specification however - with implicit typing, node anchors/references and flow style cut out,
+ends up being simpler than TOML.
 
 TOML's use of special characters for delimiters instead of whitespace makes the resulting output noiser and harder for humans
 to parse. Here's an example from the TOML site:
@@ -405,13 +412,13 @@ Whereas strictyaml:
   flt2: 3.1415
   string: hello
 
-Assumes string where no validator exists:
+Will yield this:
 
 .. code-block:: python
 
   load(yaml) == {"flt2": "3.1415", "string": "hello"}
 
-Or the type specified by the validator if it does exist:
+Or this:
 
 .. code-block:: python
 
@@ -534,6 +541,16 @@ If your schema is very simple and small, there is no point to using kwalify.
 If your schema needs to be shared with a 3rd party - especially a third party using another language, it may be helpful to use it.
 
 If your schema validation requirements are more complicated - e.g. like what is described above - it's best *not* to use it.
+
+
+Why not use pykwalify to validate YAML instead?
+-----------------------------------------------
+
+See the question above for the correct times to use kwalify to validate your code and crucially, when not to.
+
+Apart from the kinds of YAML structures which pykwalify is simply *unable* to validate, it also
+`fixes versions in setup.py <https://github.com/Grokzen/pykwalify/issues/55>`_
+which will break your code when upgrading.
 
 
 Why is StrictYAML built upon ruamel.yaml?
