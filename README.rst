@@ -1,7 +1,7 @@
 StrictYAML
 ==========
 
-StrictYAML is a `type-safe <https://en.wikipedia.org/wiki/Type_safety>`_ YAML parser.
+StrictYAML is a `type-safe <https://en.wikipedia.org/wiki/Type_safety>`_ YAML parser
 built atop `ruamel.yaml <https://github.com/crdoconnor/strictyaml/blob/master/FAQ.rst#why-is-strictyaml-built-on-ruamelyaml>`_ that parses a
 `restricted subset <https://github.com/crdoconnor/strictyaml/blob/master/FAQ.rst#what-features-does-strictyaml-remove>`_
 of the YAML specificaton.
@@ -30,7 +30,7 @@ Default parse result:
 .. code-block:: python
 
    >>> strictyaml.load(yaml) \
-     == {"name": "Ford Prefect", "age": "42", "possessions": ["Towel", ]}   # Without validator all data is a string, dict or list
+     == {"name": "Ford Prefect", "age": "42", "possessions": ["Towel", ]}   # All data is str, list or dict
 
 Example using optional validator - using mapping, sequence, string and integer:
 

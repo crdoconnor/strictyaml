@@ -10,7 +10,7 @@ What features does StrictYAML remove?
 | `Implicit typing`_       | .. code-block:: yaml  | .. code-block:: python                | .. code-block:: python             |
 |                          |                       |                                       |                                    |
 |                          |      x: yes           |      load(yaml) == \                  |      load(yaml) == \               |
-|                          |      y: null          |        {"x": True, "y": None}         |        {"x": "yes", "y": "null}    |
+|                          |      y: null          |        {"x": True, "y": None}         |        {"x": "yes", "y": "null"}   |
 +--------------------------+-----------------------+---------------------------------------+------------------------------------+
 | `Binary data`_           | .. code-block:: yaml  | .. code-block:: python                | .. code-block:: python             |
 |                          |                       |                                       |                                    |
