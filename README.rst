@@ -40,37 +40,6 @@ Example using optional validator - using mapping, sequence, string and integer:
      == {"name": "Ford Prefect", "age": 42, "possessions": ["Towel", ]}     # 42 is now an int
 
 
-Which features are cut out of the YAML spec?
---------------------------------------------
-
-+--------------------------+-----------------------+---------------------------------------+------------------------------------+
-| Stupid feature           | Example YAML          | Example pyyaml/ruamel/poyo            | Example StrictYAML                 |
-+==========================+=======================+=======================================+====================================+
-| `Implicit typing`_       | .. code-block:: yaml  | .. code-block:: python                | .. code-block:: python             |
-|                          |                       |                                       |                                    |
-|                          |      x: yes           |      load(yaml) == \                  |      load(yaml) == \               |
-|                          |      y: null          |        {"x": True, "y": None}         |        {"x": "yes", "y": "null}    |
-+--------------------------+-----------------------+---------------------------------------+------------------------------------+
-| `Binary data`_           | .. code-block:: yaml  | .. code-block:: python                | .. code-block:: python             |
-|                          |                       |                                       |                                    |
-|                          |      evil: !!binary   |      load(yaml) == \                  |      raises TagTokenDisallowed     |
-|                          |       evildata        |      {'evil': b'z\xf8\xa5u\xabZ'}     |                                    |
-+--------------------------+-----------------------+---------------------------------------+------------------------------------+
-| `Explicit tags`_         | .. code-block:: yaml  | .. code-block:: python                | .. code-block:: python             |
-|                          |                       |                                       |                                    |
-|                          |      x: !!int 5       |      load(yaml) == {"x": 5}           |     raises TagTokenDisallowed      |
-+--------------------------+-----------------------+---------------------------------------+------------------------------------+
-| `Node anchors and refs`_ | .. code-block:: yaml  | .. code-block:: python                | .. code-block:: python             |
-|                          |                       |                                       |                                    |
-|                          |      x: &id001        |      load(yaml) == \                  |     raises NodeAnchorDisallowed    |
-|                          |        a: 1           |       {'x': {'a': 1}, 'y': {'a': 1}}  |                                    |
-|                          |      y: *id001        |                                       |                                    |
-+--------------------------+-----------------------+---------------------------------------+------------------------------------+
-| `Flow style`_            | .. code-block:: yaml  | .. code-block:: python                | .. code-block:: python             |
-|                          |                       |                                       |                                    |
-|                          |      x: 1             |      load(yaml) == \                  |     raises FlowStyleDisallowed     |
-|                          |      b: {c: 3, d: 4}  |      {'x': {'a': 1}, 'y': {'a': 1}}   |                                    |
-+--------------------------+-----------------------+---------------------------------------+------------------------------------+
 
 
 FAQ
@@ -84,8 +53,9 @@ From learning programmers:
 
 If you're looking at this and thinking "why not do/use X instead?" that's a healthy response, and you deserve answers. These are probably the questions you're asking:
 
+
 * `Why should I use strictyaml instead of ordinary YAML? <https://github.com/crdoconnor/strictyaml/blob/master/FAQ.rst#why-should-i-use-strictyaml-instead-of-ordinary-YAML>`_
-* `What bullshit in ordinary YAML does strictyaml remove? <https://github.com/crdoconnor/strictyaml/blob/master/FAQ.rst#what-bullshit-in-ordinary-yaml-does-strictyaml-remove>`_
+* `What features does StrictYAML remove? <https://github.com/crdoconnor/strictyaml/blob/master/FAQ.rst#what-features-does-strictyaml-remove>`_
 * `What do you mean implicit typing is a terrible idea? <https://github.com/crdoconnor/strictyaml/blob/master/FAQ.rst#what-do-you-mean-implicit-typing-is-a-terrible-idea>`_
 * `Why not use JSON for configuration or DSLs? <https://github.com/crdoconnor/strictyaml/blob/master/FAQ.rst#why-not-use-json-for-configuration-or-dsls>`_
 * `Why not use INI files for configuration or DSLs? <https://github.com/crdoconnor/strictyaml/blob/master/FAQ.rst#why-not-use-ini-files-for-configuration-or-dsls>`_
@@ -117,8 +87,8 @@ If you're not sure what the key is going to be but you know what type the values
      == {"emails": {"arthur": "arthur@earth.gov", "zaphod": "zaphod@beeblebrox.com", "ford": "ford@ursa-minor.com"}}
 
 
-All Scalar Types
-----------------
+Strings, Floats and Decimal
+---------------------------
 
 StrictYAML will parse a string into the correct data type if you specify it:
 
@@ -129,14 +99,29 @@ StrictYAML will parse a string into the correct data type if you specify it:
   >>> load("float: 42.3333", Map({"float": strictyaml.Float()})) == {"string": 42.3333}
   >>> load("price: 35.42811", Map({"price": strictyaml.Decimal()})) == {"price": decimal.Decimal('35.32811')}
 
+Booleans
+--------
+
+.. code-block:: python
+
   >>> load("booltrue: yes", Map({"booltrue": strictyaml.Bool()})) == {"booltrue": True}
   >>> load("boolfalse: no", Map({"boolfalse": strictyaml.Bool()})) == {"booltrue": True}
   >>> load("booltrue: true", Map({"booltrue": strictyaml.Bool()})) == {"booltrue": True}
   >>> load("boolfalse: False", Map({"boolfalse": strictyaml.Bool()})) == {"booltrue": False}
 
-  >>> load("enum: monday", Map({"enum": strictyaml.Enum(["monday", "tuesday", "wednesday"])})) == {"enum": "monday"}
+
+Enums
+-----
+
+.. code-block:: python
+
+  >>> load("day: monday", Map({"day": strictyaml.Enum(["monday", "tuesday", "wednesday"])})) == {"day": "monday"}
 
 
+Dates, times and timestamps
+---------------------------
+
+COMING SOON
 
 Custom scalar types
 -------------------
@@ -162,8 +147,4 @@ Roundtripping YAML
 
 COMING SOON
 
-.. _Implicit typing: https://github.com/crdoconnor/strictyaml/blob/master/FAQ.rst#what-is-wrong-with-implicit-typing
-.. _Binary data: https://github.com/crdoconnor/strictyaml/blob/master/FAQ.rst#what-is-wrong-with-binary-data
-.. _Explicit tags: https://github.com/crdoconnor/strictyaml/blob/master/FAQ.rst#what-is-wrong-with-explicit-tags
-.. _Flow style: https://github.com/crdoconnor/strictyaml/blob/master/FAQ.rst#what-is-wrong-with-flow-style
-.. _Node anchors and refs: https://github.com/crdoconnor/strictyaml/blob/master/FAQ.rst#what-is-wrong-with-node-anchors-and-references
+.. _Restricted subset: https://github.com/crdoconnor/strictyaml/blob/master/FAQ.rst#what-features-does-strictyaml-remove

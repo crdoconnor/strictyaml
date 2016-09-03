@@ -1,6 +1,38 @@
 FAQ
 ===
 
+What features does StrictYAML remove?
+-------------------------------------
+
++--------------------------+-----------------------+---------------------------------------+------------------------------------+
+| Stupid feature           | Example YAML          | Example pyyaml/ruamel/poyo            | Example StrictYAML                 |
++==========================+=======================+=======================================+====================================+
+| `Implicit typing`_       | .. code-block:: yaml  | .. code-block:: python                | .. code-block:: python             |
+|                          |                       |                                       |                                    |
+|                          |      x: yes           |      load(yaml) == \                  |      load(yaml) == \               |
+|                          |      y: null          |        {"x": True, "y": None}         |        {"x": "yes", "y": "null}    |
++--------------------------+-----------------------+---------------------------------------+------------------------------------+
+| `Binary data`_           | .. code-block:: yaml  | .. code-block:: python                | .. code-block:: python             |
+|                          |                       |                                       |                                    |
+|                          |      evil: !!binary   |      load(yaml) == \                  |      raises TagTokenDisallowed     |
+|                          |       evildata        |      {'evil': b'z\xf8\xa5u\xabZ'}     |                                    |
++--------------------------+-----------------------+---------------------------------------+------------------------------------+
+| `Explicit tags`_         | .. code-block:: yaml  | .. code-block:: python                | .. code-block:: python             |
+|                          |                       |                                       |                                    |
+|                          |      x: !!int 5       |      load(yaml) == {"x": 5}           |     raises TagTokenDisallowed      |
++--------------------------+-----------------------+---------------------------------------+------------------------------------+
+| `Node anchors and refs`_ | .. code-block:: yaml  | .. code-block:: python                | .. code-block:: python             |
+|                          |                       |                                       |                                    |
+|                          |      x: &id001        |      load(yaml) == \                  |     raises NodeAnchorDisallowed    |
+|                          |        a: 1           |       {'x': {'a': 1}, 'y': {'a': 1}}  |                                    |
+|                          |      y: *id001        |                                       |                                    |
++--------------------------+-----------------------+---------------------------------------+------------------------------------+
+| `Flow style`_            | .. code-block:: yaml  | .. code-block:: python                | .. code-block:: python             |
+|                          |                       |                                       |                                    |
+|                          |      x: 1             |      load(yaml) == \                  |     raises FlowStyleDisallowed     |
+|                          |      b: {c: 3, d: 4}  |      {'x': {'a': 1}, 'y': {'a': 1}}   |                                    |
++--------------------------+-----------------------+---------------------------------------+------------------------------------+
+
 What is YAML?
 -------------
 
@@ -48,6 +80,7 @@ YAML is the clearest and easiest to read format for representing hierarchical da
 It is an ideal format for configuration and simple DSLs. It easily maps on to python's
 lists and dicts, making the data that is parsed easy to manipulate and use.
 
+
 When should I use a validator and when should I not?
 ----------------------------------------------------
 
@@ -69,7 +102,7 @@ Why should I use strictyaml instead of ordinary YAML?
 StrictYAML is *not* a new standard. It's:
 
 * YAML without implicit typing - `which was a terrible idea <https://github.com/crdoconnor/strictyaml/blob/master/FAQ.rst#what-do-you-mean-implicit-typing-is-a-terrible-idea>`_.
-* YAML with all of the `other bullshit removed <https://github.com/crdoconnor/strictyaml/blob/master/FAQ.rst#what-bullshit-in-ordinary-yaml-does-strictyaml-remove>`_.
+* YAML with all of the `other bullshit removed <https://github.com/crdoconnor/strictyaml/blob/master/FAQ.rst#what-features-does-strictyaml-remove>`_.
 * An optional YAML validator.
 
 If you already have YAML, StrictYAML will usually parse it.
@@ -179,8 +212,8 @@ Several other configuration language formats also have explicit syntax typing in
 * SDLang
 
 
-What other bullshit in ordinary YAML does strictyaml remove?
-------------------------------------------------------------
+What is wrong with binary data?
+-------------------------------
 
 StrictYAML doesn't allow binary data to be parsed and will throw an exception if it sees it:
 
@@ -194,6 +227,9 @@ StrictYAML doesn't allow binary data to be parsed and will throw an exception if
 
 This idiotic feature led to Ruby on Rails' spectacular `security fail <http://www.h-online.com/open/news/item/Rails-developers-close-another-extremely-critical-flaw-1793511.html>`_.
 
+What is wrong with explicit tags?
+---------------------------------
+
 In fact, all ugly typecasts are disallowed because while they might be meaningful to programmers, they're not meaningful to non-programmers and markup is the wrong place for type declarations.
 
 .. code-block:: yaml
@@ -202,6 +238,10 @@ In fact, all ugly typecasts are disallowed because while they might be meaningfu
   d: !!float 123
   e: !!str 123
   f: !!str Yes
+
+
+What is wrong with node anchors and references?
+-----------------------------------------------
 
 StrictYAML is also throws a DisallowedToken exception if sees node anchors and references. For example, this particularly unreadable example from the wikipedia page about YAML:
 
@@ -228,6 +268,10 @@ StrictYAML is also throws a DisallowedToken exception if sees node anchors and r
         <<: *id001
         spotSize: 2mm                # redefines just this key, refers rest from &id001
     - step: *id002
+
+
+What is wrong with flow style?
+------------------------------
 
 Flow style also throws a DisallowedToken exception:
 
@@ -504,3 +548,9 @@ If your favorite configuration language / tool isn't mentioned and critiqued and
 Please feel free to ensure all tickets come accompanied with a creative insult. I wouldn't want to spoil the long tradition of flame wars about configuration languages.
 
 
+
+.. _Implicit typing: https://github.com/crdoconnor/strictyaml/blob/master/FAQ.rst#what-is-wrong-with-implicit-typing
+.. _Binary data: https://github.com/crdoconnor/strictyaml/blob/master/FAQ.rst#what-is-wrong-with-binary-data
+.. _Explicit tags: https://github.com/crdoconnor/strictyaml/blob/master/FAQ.rst#what-is-wrong-with-explicit-tags
+.. _Flow style: https://github.com/crdoconnor/strictyaml/blob/master/FAQ.rst#what-is-wrong-with-flow-style
+.. _Node anchors and refs: https://github.com/crdoconnor/strictyaml/blob/master/FAQ.rst#what-is-wrong-with-node-anchors-and-references
