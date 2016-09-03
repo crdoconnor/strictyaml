@@ -108,8 +108,8 @@ StrictYAML is *not* a new standard. It's:
 If you already have YAML, StrictYAML will usually parse it.
 
 
-Why is implicit typing a terrible idea?
----------------------------------------
+What is wrong with implicit typing?
+-----------------------------------
 
 Because it violates the `principle of least astonishment <https://en.wikipedia.org/wiki/Principle_of_least_astonishment>`_:
 
