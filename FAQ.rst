@@ -536,6 +536,13 @@ If your schema needs to be shared with a 3rd party - especially a third party us
 If your schema validation requirements are more complicated - e.g. like what is described above - it's best *not* to use it.
 
 
+Why is StrictYAML built upon ruamel.yaml?
+-----------------------------------------
+
+`ruamel.yaml <https://pypi.python.org/pypi/ruamel.yaml>`_ is probably the best spec-adhering YAML parser for python.
+
+Unlike pyyaml it does not require the C yaml library to be installed, and it is capable of loading, editing and saving
+YAML while preserving comments, which pyyaml does not.
 
 
 What if I still disagree with everything you wrote here?
