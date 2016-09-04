@@ -83,7 +83,7 @@ If you're not sure what the key is going to be but you know what type the values
 .. code-block:: python
 
    >>> from strictyaml import load, Map, MapPattern, Str
-   >>> load(yaml, Map({"emails": MapPattern({Str(), Str()})}) \
+   >>> load(yaml, Map({"emails": MapPattern({Str(): Str()})}) \
      == {"emails": {"arthur": "arthur@earth.gov", "zaphod": "zaphod@beeblebrox.com", "ford": "ford@ursa-minor.com"}}
 
 
@@ -95,19 +95,19 @@ StrictYAML will parse a string into the correct data type if you specify it:
 .. code-block:: python
 
   >>> import from strictyaml import load, Map
-  >>> load("string: string", Map({"string": strictyaml.Str()})) == {"string": "string"}
-  >>> load("float: 42.3333", Map({"float": strictyaml.Float()})) == {"string": 42.3333}
-  >>> load("price: 35.42811", Map({"price": strictyaml.Decimal()})) == {"price": decimal.Decimal('35.32811')}
+  >>> assert load("string: string", Map({"string": strictyaml.Str()})) == {"string": "string"}
+  >>> assert load("float: 42.3333", Map({"float": strictyaml.Float()})) == {"string": 42.3333}
+  >>> assert load("price: 35.42811", Map({"price": strictyaml.Decimal()})) == {"price": decimal.Decimal('35.32811')}
 
 Booleans
 --------
 
 .. code-block:: python
 
-  >>> load("booltrue: yes", Map({"booltrue": strictyaml.Bool()})) == {"booltrue": True}
-  >>> load("boolfalse: no", Map({"boolfalse": strictyaml.Bool()})) == {"booltrue": True}
-  >>> load("booltrue: true", Map({"booltrue": strictyaml.Bool()})) == {"booltrue": True}
-  >>> load("boolfalse: False", Map({"boolfalse": strictyaml.Bool()})) == {"booltrue": False}
+  >>> assert load("booltrue: yes", Map({"booltrue": strictyaml.Bool()})) == {"booltrue": True}
+  >>> assert load("boolfalse: no", Map({"boolfalse": strictyaml.Bool()})) == {"booltrue": True}
+  >>> assert load("booltrue: true", Map({"booltrue": strictyaml.Bool()})) == {"booltrue": True}
+  >>> assert load("boolfalse: False", Map({"boolfalse": strictyaml.Bool()})) == {"booltrue": False}
 
 
 Enums
@@ -115,7 +115,7 @@ Enums
 
 .. code-block:: python
 
-  >>> load("day: monday", Map({"day": strictyaml.Enum(["monday", "tuesday", "wednesday"])})) == {"day": "monday"}
+  >>> assert load("day: monday", Map({"day": strictyaml.Enum(["monday", "tuesday", "wednesday"])})) == {"day": "monday"}
 
 
 Dates, times and timestamps
