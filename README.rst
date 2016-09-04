@@ -71,36 +71,101 @@ If you're looking at this and thinking "why not do/use X instead?" that's a heal
 Map Patterns
 ------------
 
-If you're not sure what the key is going to be but you know what type the values will be, use this.
+If you're not sure what the key name is going to be in a map but you know what type the keys and values will be, use "MapPattern".
 
 .. code-block:: yaml
 
   emails:
     arthur: arthur@earth.gov
     zaphod: zaphod@beeblebrox.com
-    ford: ford@ursa-minor.com
+    ford: ford@megadodo-publications.com
 
 .. code-block:: python
 
    >>> from strictyaml import load, Map, MapPattern, Str
    >>> load(yaml, Map({"emails": MapPattern({Str(), Str()})}) \
-     == {"emails": {"arthur": "arthur@earth.gov", "zaphod": "zaphod@beeblebrox.com", "ford": "ford@ursa-minor.com"}}
+     == {"emails": {"arthur": "arthur@earth.gov", "zaphod": "zaphod@beeblebrox.com", "ford": "ford@megadodo-publications.com"}}
 
 
-Strings, Floats and Decimal
----------------------------
+Optional values
+---------------
 
-StrictYAML will parse a string into the correct data type if you specify it:
+If you want to use a mapping with a number of *required* keys and a number of *optional* keys use "Optional":
+
+.. code-block:: yaml
+
+  arthur:
+    email: arthur@earth.gov
+  zaphod:
+    email: zaphod@beeblebrox.com
+    job: President of the Galaxy
+  ford:
+    email: ford@ursa-minor.com
+    job: Freelance "journalist"
+
+
+This would be parsed like so:
+
+.. code-block:: python
+
+   >>> from strictyaml import load, MapPattern, Map, Str, Optional
+   >>> load(yaml, MapPattern(Str(), Map({"email": Str(), Optional("job"): Str()}))) \
+     == {
+            "arthur": {'email': 'arthur@earth.gov',},
+            "zaphod": {'email': 'zaphod@beeblebrox.com', 'job': 'President of the Galaxy'},
+            "ford": {'email': 'ford@ursa-minor.com', 'job': 'Freelance "journalist"'},
+        }
+
+
+Either/Or
+---------
+
+If, for example, you want to parse something as a list of strings *or* an individual string, you can
+use a pipe operator to distinguish between them - like so: |
+
+.. code-block:: yaml
+
+  zaphod:
+    email: zaphod@beeblebrox.com
+    victims: Good taste
+  ford:
+    email: ford@ursa-minor.com
+    victims: Journalistic integrity
+  arthur:
+    email: arthur@earth.gov
+    victims:
+      - A bowl of petunias
+      - Agrajag
+      - A sperm whale
+
+This would be parsed like so:
+
+.. code-block:: python
+
+   >>> from strictyaml import load, Seq, Map, Str, Optional
+   >>> load(yaml, MapPattern(Str(), Map({"email": Str(), "victims": Str() | Seq(Str())}))) \
+     == {
+            "zaphod": {'email': 'zaphod@beeblebrox.com', 'victims': 'President of the Galaxy'},
+            "arthur": {'email': 'arthur@earth.gov', 'victims': 'Journalistic integrity'},
+            "ford": {'email': 'ford@ursa-minor.com', 'victims': ['A bowl of petunias', 'Agrajag', 'A sperm whale', ]},
+        }
+
+Numbers
+-------
+
+StrictYAML will parse a string into integers, floating point or decimal (non-floating point) numbers if you specify it:
 
 .. code-block:: python
 
   >>> import from strictyaml import load, Map
-  >>> load("string: string", Map({"string": strictyaml.Str()})) == {"string": "string"}
-  >>> load("float: 42.3333", Map({"float": strictyaml.Float()})) == {"string": 42.3333}
-  >>> load("price: 35.42811", Map({"price": strictyaml.Decimal()})) == {"price": decimal.Decimal('35.32811')}
+  >>> load("int: 42", Map({"int": strictyaml.Int()})) == {"int": 42}
+  >>> load("float: 42.3333", Map({"float": strictyaml.Float()})) == {"float": 42.3333}
+  >>> load("price: 35.42811", Map({"price": strictyaml.Decimal()})) == {"price": decimal.Decimal('35.42811')}
 
 Booleans
 --------
+
+Upper case or lower case - it doesn't matter. Yes, on and true are treated as True and no, off and false are treated as False.
 
 .. code-block:: python
 
@@ -116,6 +181,7 @@ Enums
 .. code-block:: python
 
   >>> load("day: monday", Map({"day": strictyaml.Enum(["monday", "tuesday", "wednesday"])})) == {"day": "monday"}
+
 
 
 Dates, times and timestamps
