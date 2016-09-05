@@ -19,9 +19,8 @@ from strictyaml.validators import Seq
 from strictyaml.validators import UniqueSeq
 
 # Exceptions
+from strictyaml.exceptions import YAMLError
 from strictyaml.exceptions import StrictYAMLError
-
-# Validaton
 from strictyaml.exceptions import YAMLValidationError
 
 # Disallowed token exceptions
