@@ -1,6 +1,6 @@
-# When running in continuous integration, don't stop on first failure
+# When testing everything, do py 2 and 3
 
-failfast: false
+failfast: true
 pause_on_failure: false
 python_versions:
   - 2.7.10
