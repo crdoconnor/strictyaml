@@ -1,7 +1,9 @@
+{% for ruamel_version in ruamel_versions %}
 {% for python_version in python_versions %}
 - name: No schema validation
   preconditions:
     python_version: {{ python_version }}
+    ruamel version: {{ ruamel_version }}
     files:
       sequence_1.yaml: |
         a:
@@ -30,4 +32,5 @@
     - Assert True: 'load(sequence_1) == {"a": {"x": "9", "y": "8"}, "b": "2", "c": "3"}'
     - Assert True: 'load(sequence_2) == {"a": ["9", "8",], "b": "2", "d": "3"}'
     - Assert True: 'load(sequence_3) == {"a": "11", "b": "2", "d": "3"}'
+{% endfor %}
 {% endfor %}

@@ -1,9 +1,11 @@
+{% for ruamel_version in ruamel_versions %}
 {% for python_version in python_versions %}
 - name: Only allow YAML
   description: |
-    Ensure that 
+    Ensure that only YAML is allowed.
   preconditions:
     python_version: {{ python_version }}
+    ruamel version: {{ ruamel_version }}
   tags:
     - disallow
     - py{{ python_version }}
@@ -20,4 +22,5 @@
     - Assert True: load("1", Str()) == "1"
     - Assert True: load("1", Int()) == 1
     - Assert True: load("", Str()) == ""
+{% endfor %}
 {% endfor %}

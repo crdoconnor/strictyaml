@@ -41,6 +41,7 @@ class ExecutionEngine(hitchtest.ExecutionEngine):
         # Uninstall and reinstall
         run(self.pip("uninstall", "strictyaml", "-y").ignore_errors())
         run(self.pip("install", ".").in_dir(self.path.project))
+        run(self.pip("install", "ruamel.yaml=={0}".format(self.preconditions.get("ruamel version", "0.12.12"))))
 
         self.services = hitchserve.ServiceBundle(
             str(self.path.project),

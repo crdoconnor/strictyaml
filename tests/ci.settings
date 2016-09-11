@@ -1,7 +1,25 @@
-# When testing everything, do py 2 and 3
+# When testing everything, do py 2 and 3 and three versions of ruamel.yaml
 
 failfast: true
 pause_on_failure: false
 python_versions:
   - 2.7.10
   - 3.5.0
+ruamel_versions:
+  #- 0.11.10  # Doesn't work
+  #- 0.11.11
+  - 0.11.14
+  #- 0.11.15
+  - 0.12.0
+  #- 0.12.1
+  #- 0.12.2
+  #- 0.12.3
+  #- 0.12.4
+  #- 0.12.5
+  #- 0.12.6
+  #- 0.12.7
+  #- 0.12.8
+  #- 0.12.9
+  #- 0.12.10
+  #- 0.12.11
+  - 0.12.12

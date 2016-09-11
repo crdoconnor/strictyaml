@@ -1,7 +1,9 @@
+{% for ruamel_version in ruamel_versions %}
 {% for python_version in python_versions %}
 - name: Sequence validation
   preconditions:
     python_version: {{ python_version }}
+    ruamel version: {{ ruamel_version }}
     files:
       valid_sequence.yaml: |
         - 1
@@ -64,4 +66,5 @@
             print(error)
             assert error.start_line == 3
             assert error.end_line == 3
+{% endfor %}
 {% endfor %}

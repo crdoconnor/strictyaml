@@ -1,7 +1,9 @@
+{% for ruamel_version in ruamel_versions %}
 {% for python_version in python_versions %}
 - name: Duplicate keys
   preconditions:
     python_version: {{ python_version }}
+    ruamel version: {{ ruamel_version }}
     files:
       duplicate.yaml: |
         a: 1
@@ -20,4 +22,5 @@
 
     - Assert True: dupe_error.start_line == 2
     - Assert True: dupe_error.end_line == 2
+{% endfor %}
 {% endfor %}
