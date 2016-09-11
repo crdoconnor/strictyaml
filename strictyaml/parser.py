@@ -16,7 +16,7 @@ from ruamel.yaml.constructor import ConstructorError
 import collections
 
 
-# StrictYAMLConstructor is mostly taken from ruamel/yaml/constructor.py
+# StrictYAMLConstructor is mostly taken from RoundTripConstructor ruamel/yaml/constructor.py
 # Differences:
 #  * If a duplicate key is found, an exception is raised
 
@@ -85,9 +85,47 @@ class StrictYAMLConstructor(RoundTripConstructor):
                 maptyp.add_yaml_merge(merge_map)
 
 
+# StrictYAMLScanner is mostly taken from RoundTripScanner in ruamel/yaml/scanner.py
+# Differences:
+#  * Tokens are checked for disallowed tokens.
+
+class StrictYAMLScanner(RoundTripScanner):
+    def check_token(self, *choices):
+        # Check if the next token is one of the given types.
+        while self.need_more_tokens():
+            self.fetch_more_tokens()
+        self._gather_comments()
+        if self.tokens:
+            if not choices:
+                return True
+            for choice in choices:
+                if isinstance(self.tokens[0], choice):
+                    token = self.tokens[0]
+                    if isinstance(token, ruamelyaml.tokens.TagToken):
+                        raise exceptions.TagTokenDisallowed(
+                            "",
+                            token.start_mark.line + 1,
+                            token.end_mark.line + 1
+                        )
+                    if isinstance(token, ruamelyaml.tokens.FlowMappingStartToken):
+                        raise exceptions.FlowMappingDisallowed(
+                            "",
+                            token.start_mark.line + 1,
+                            token.end_mark.line + 1
+                        )
+                    if isinstance(token, ruamelyaml.tokens.AnchorToken):
+                        raise exceptions.AnchorTokenDisallowed(
+                            "",
+                            token.start_mark.line + 1,
+                            token.end_mark.line + 1
+                        )
+                    return True
+        return False
+
+
 class StrictYAMLLoader(
             Reader,
-            RoundTripScanner,
+            StrictYAMLScanner,
             RoundTripParser,
             Composer,
             StrictYAMLConstructor,
@@ -112,29 +150,9 @@ def load(yaml_string, schema=None):
 
     document = ruamelyaml.load(yaml_string, Loader=StrictYAMLLoader)
 
-    # Document is single item (string, int, etc.)
+    # Document is just a  (string, int, etc.)
     if type(document) not in (CommentedMap, CommentedSeq):
         document = yaml_string
-
-    for token in ruamelyaml.scan(yaml_string):
-        if type(token) is ruamelyaml.tokens.TagToken:
-            raise exceptions.TagTokenDisallowed(
-                document,
-                token.start_mark.line + 1,
-                token.end_mark.line + 1
-            )
-        if type(token) is ruamelyaml.tokens.FlowMappingStartToken:
-            raise exceptions.FlowMappingDisallowed(
-                document,
-                token.start_mark.line + 1,
-                token.end_mark.line + 1
-            )
-        if type(token) is ruamelyaml.tokens.AnchorToken:
-            raise exceptions.AnchorTokenDisallowed(
-                document,
-                token.start_mark.line + 1,
-                token.end_mark.line + 1
-            )
 
     if schema is None:
         schema = Any()
