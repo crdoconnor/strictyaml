@@ -52,3 +52,7 @@ class FlowMappingDisallowed(DisallowedToken):
 
 class AnchorTokenDisallowed(DisallowedToken):
     MESSAGE = "Anchor tokens not allowed"
+
+
+class DuplicateKeysDisallowed(DisallowedToken):
+    MESSAGE = "Duplicate keys not allowed"

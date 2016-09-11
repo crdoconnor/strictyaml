@@ -32,6 +32,12 @@ What features does StrictYAML remove?
 |                          |      x: 1             |      load(yaml) == \                  |     raises FlowStyleDisallowed     |
 |                          |      b: {c: 3, d: 4}  |      {'x': {'a': 1}, 'y': {'a': 1}}   |                                    |
 +--------------------------+-----------------------+---------------------------------------+------------------------------------+
+| `Duplicate keys`_        | .. code-block:: yaml  | .. code-block:: python                | .. code-block:: python             |
+|                          |                       |                                       |                                    |
+|                          |      x: 1             |      load(yaml) == \                  |     raises DuplicateKeysDisallowed |
+|                          |      x: 2             |      {'x': 2}                         |                                    |
++--------------------------+-----------------------+---------------------------------------+------------------------------------+
+
 
 What is YAML?
 -------------
@@ -354,6 +360,25 @@ The *first* question in the FAQ of pyyaml actually subtly indicates that this fe
 To take a real life example, `this saltstack YAML definition <https://github.com/saltstack-formulas/mysql-formula/blob/master/mysql/server.sls#L22>`_ makes the distinction between flow style and jinja2 templates unclear.
 
 
+What is wrong with duplicate keys?
+----------------------------------
+
+Duplicate keys are allowed in regular YAML - as parsed by pyyaml, ruamel.yaml and poyo:
+
+.. code-block:: yaml
+
+    x: cow
+    y: dog
+    x: bull
+
+Not only is it unclear whether x should be "cow" or "bull" (the parser will decide 'bull', but did you know that?),
+if there are 200 lines between x: cow and x: bull, a user might very likely change the *first* x and erroneously believe
+that the resulting value of x has been changed - when it hasn't.
+
+In order to avoid all possible confusion, StrictYAML will simply refuse to parse this and will only accept associative
+arrays where all of the keys are unique. It will throw a DuplicateKeysDisallowed exception.
+
+
 Why not use INI files for configuration or DSLs?
 ------------------------------------------------
 
@@ -641,3 +666,4 @@ Please feel free to ensure all tickets come accompanied with a creative insult. 
 .. _Explicit tags: https://github.com/crdoconnor/strictyaml/blob/master/FAQ.rst#what-is-wrong-with-explicit-tags
 .. _Flow style: https://github.com/crdoconnor/strictyaml/blob/master/FAQ.rst#what-is-wrong-with-flow-style
 .. _Node anchors and refs: https://github.com/crdoconnor/strictyaml/blob/master/FAQ.rst#what-is-wrong-with-node-anchors-and-references
+.. _Duplicate keys: https://github.com/crdoconnor/strictyaml/blob/master/FAQ.rst#what-is-wrong-with-duplicate-keys

@@ -29,3 +29,4 @@ from strictyaml.exceptions import DisallowedToken
 from strictyaml.exceptions import TagTokenDisallowed
 from strictyaml.exceptions import FlowMappingDisallowed
 from strictyaml.exceptions import AnchorTokenDisallowed
+from strictyaml.exceptions import DuplicateKeysDisallowed
