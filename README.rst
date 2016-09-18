@@ -42,6 +42,13 @@ Example using optional validator - using mapping, sequence, string and integer:
 
 
 
+Install It
+----------
+.. code-block:: sh
+
+  $ pip install strictyaml
+
+
 
 FAQ
 ---
