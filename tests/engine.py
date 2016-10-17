@@ -123,9 +123,9 @@ class ExecutionEngine(hitchtest.ExecutionEngine):
 
 
     def tear_down(self):
-        if hasattr(self, 'services'):
-            self.services.shutdown()
         try:
-            self.end_python_interpreter()
+            self.shutdown_connection()
         except:
             pass
+        if hasattr(self, 'services'):
+            self.services.shutdown()

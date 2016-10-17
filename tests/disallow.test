@@ -27,26 +27,40 @@
 
         schema = Map({"x": Map({"a": Any(), "b": Any(), "c": Any()})})
 
-        try:
-            load(tag_tokens, schema)
-        except TagTokenDisallowed as error:
-            seq1_error = error
+    - Assert Exception:
+        command: load(tag_tokens, schema)
+        exception: |
+          While scanning
+            in "<unicode string>", line 2, column 11:
+                a: !!str yes
+                        ^
+          Found disallowed tag tokens (do not specify types in markup)
+            in "<unicode string>", line 2, column 6:
+                a: !!str yes
+                   ^
 
-        try:
-            load(flow_style, schema)
-        except FlowMappingDisallowed as error:
-            seq2_error = error
+    - Assert Exception:
+        command: load(flow_style, schema)
+        exception: |
+          While scanning
+            in "<unicode string>", line 1, column 4:
+              x: { a: 1, b: 2, c: 3 }
+                 ^
+          Found ugly disallowed JSONesque flow mapping (surround with ' and ' to make text appear literally)
+            in "<unicode string>", line 1, column 5:
+              x: { a: 1, b: 2, c: 3 }
+                  ^
 
-        try:
-            load(node_anchors_and_references, schema)
-        except AnchorTokenDisallowed as error:
-            seq3_error = error
-
-    - Assert True: seq1_error.start_line == 2
-    - Assert True: seq1_error.end_line == 2
-    - Assert True: seq2_error.start_line == 1
-    - Assert True: seq2_error.end_line == 1
-    - Assert True: seq3_error.start_line == 2
-    - Assert True: seq3_error.end_line == 2
+    - Assert Exception:
+        command: load(node_anchors_and_references, schema)
+        exception: |
+          While scanning
+            in "<unicode string>", line 2, column 6:
+                a: &node1 3.5
+                   ^
+          Found confusing disallowed anchor token (surround with ' and ' to make text appear literally)
+            in "<unicode string>", line 2, column 12:
+                a: &node1 3.5
+                         ^
 {% endfor %}
 {% endfor %}

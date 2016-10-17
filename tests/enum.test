@@ -26,28 +26,22 @@
 
         schema = Map({"a": Enum(["A", "B", "C"])})
 
-        try:
-            load(invalid_sequence_1, schema)
-        except YAMLValidationError as error:
-            seq1_error = error
-
-        try:
-            load(invalid_sequence_2, schema)
-        except YAMLValidationError as error:
-            seq2_error = error
-
-        try:
-            load(invalid_sequence_3, schema)
-        except YAMLValidationError as error:
-            seq3_error = error
     - Assert True: 'load(valid_sequence_1, schema) == {"a": "A"}'
+    
     - Assert True: 'load(valid_sequence_2, schema) == {"a": "B"}'
+    
     - Assert True: 'load(valid_sequence_3, schema) == {"a": "C"}'
-    - Assert True: seq1_error.start_line == 1
-    - Assert True: seq1_error.end_line == 1
-    - Assert True: seq2_error.start_line == 1
-    - Assert True: seq2_error.end_line == 1
-    - Assert True: seq3_error.start_line == 1
-    - Assert True: seq3_error.end_line == 1
+    
+    - Assert Exception:
+        command: load(invalid_sequence_1, schema)
+        exception: ''
+
+    - Assert Exception:
+        command: load(invalid_sequence_2, schema)
+        exception: ''
+        
+    - Assert Exception:
+        command: load(invalid_sequence_3, schema)
+        exception: ''
 {% endfor %}
 {% endfor %}

@@ -31,28 +31,35 @@
 
         schema = Map({"a": Int(), Optional("b"): Bool(), })
 
-        try:
-            load(invalid_sequence_1, schema)
-        except YAMLValidationError as error:
-            seq1_error = error
-
-        try:
-            load(invalid_sequence_2, schema)
-        except YAMLValidationError as error:
-            seq2_error = error
-
-        try:
-            load(invalid_sequence_3, schema)
-        except YAMLValidationError as error:
-            seq3_error = error
     - Assert True: 'load(valid_sequence_1, schema) == {"a": 1, "b": True}'
     - Assert True: 'load(valid_sequence_2, schema) == {"a": 1, "b": False}'
     - Assert True: 'load(valid_sequence_3, schema) == {"a": 1}'
-    - Assert True: seq1_error.start_line == 1
-    - Assert True: seq1_error.end_line == 1
-    - Assert True: seq2_error.start_line == 2
-    - Assert True: seq2_error.end_line == 2
-    - Assert True: seq3_error.start_line == 3
-    - Assert True: seq3_error.end_line == 3
+    
+    - Assert Exception:
+        command: load(invalid_sequence_1, schema)
+        exception: |
+          when expecting a boolean value (one of "yes", "true", "on", "1", "no", "false", "off", "0")
+          found non-boolean
+            in "<unicode string>", line 1, column 1:
+              b: 2
+               ^
+        
+    - Assert Exception:
+        command: load(invalid_sequence_2, schema)
+        exception: |
+          when expecting a boolean value (one of "yes", "true", "on", "1", "no", "false", "off", "0")
+          found non-boolean
+            in "<unicode string>", line 2, column 1:
+              b: 2
+              ^
+
+    - Assert Exception:
+        command: load(invalid_sequence_3, schema)
+        exception: |
+          while parsing a mapping
+          unexpected key not in schema 'c'
+            in "<unicode string>", line 3, column 1:
+              c: 3
+              ^
 {% endfor %}
 {% endfor %}

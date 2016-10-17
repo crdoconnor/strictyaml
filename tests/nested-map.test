@@ -31,19 +31,24 @@
 
         schema = Map({"a": Map({"x": Int(), "y": Int()}), "b": Int(), "c": Int()})
 
-        try:
-            load(invalid_sequence_1, schema)
-        except YAMLValidationError as error:
-            seq1_error = error
-        try:
-            load(invalid_sequence_2, schema)
-        except YAMLValidationError as error:
-            seq2_error = error
-
     - Assert True: 'load(valid_sequence, schema) == {"a": {"x": 9, "y": 8}, "b": 2, "c": 3}'
-    - Assert True: seq1_error.start_line == 3
-    - Assert True: seq1_error.end_line == 3
-    - Assert True: seq2_error.start_line == 1
-    - Assert True: seq2_error.end_line == 1
+    
+    - Assert Exception:
+        command: load(invalid_sequence_1, schema)
+        exception: |
+          while parsing a mapping
+          unexpected key not in schema 'z'
+            in "<unicode string>", line 3, column 1:
+                z: 8
+              ^
+
+    - Assert Exception:
+        command: load(invalid_sequence_2, schema)
+        exception: |
+          when expecting a mapping
+          found non-mapping
+            in "<unicode string>", line 1, column 1:
+              a: 11
+               ^
 {% endfor %}
 {% endfor %}

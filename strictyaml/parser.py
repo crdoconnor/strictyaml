@@ -74,9 +74,10 @@ class StrictYAMLConstructor(RoundTripConstructor):
                 )
                 if key in maptyp:
                     raise exceptions.DuplicateKeysDisallowed(
-                        "Duplicate key found",
-                        key_node.start_mark.line + 1,
-                        key_node.end_mark.line + 1
+                        "While parsing",
+                        key_node.start_mark,
+                        "Duplicate key '{0}' found".format(key),
+                        key_node.end_mark,
                     )
                 maptyp[key] = value
             # do this last, or <<: before a key will prevent insertion in instances
@@ -103,21 +104,27 @@ class StrictYAMLScanner(RoundTripScanner):
                     token = self.tokens[0]
                     if isinstance(token, ruamelyaml.tokens.TagToken):
                         raise exceptions.TagTokenDisallowed(
-                            "",
-                            token.start_mark.line + 1,
-                            token.end_mark.line + 1
+                            "While scanning",
+                            token.end_mark,
+                            "Found disallowed tag tokens "
+                            "(do not specify types in markup)",
+                            token.start_mark,
                         )
                     if isinstance(token, ruamelyaml.tokens.FlowMappingStartToken):
                         raise exceptions.FlowMappingDisallowed(
-                            "",
-                            token.start_mark.line + 1,
-                            token.end_mark.line + 1
+                            "While scanning",
+                            token.start_mark,
+                            "Found ugly disallowed JSONesque flow mapping "
+                            "(surround with ' and ' to make text appear literally)",
+                            token.end_mark,
                         )
                     if isinstance(token, ruamelyaml.tokens.AnchorToken):
                         raise exceptions.AnchorTokenDisallowed(
-                            "",
-                            token.start_mark.line + 1,
-                            token.end_mark.line + 1
+                            "While scanning",
+                            token.start_mark,
+                            "Found confusing disallowed anchor token "
+                            "(surround with ' and ' to make text appear literally)",
+                            token.end_mark,
                         )
                     return True
         return False

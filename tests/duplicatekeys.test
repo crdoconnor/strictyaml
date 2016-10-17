@@ -15,12 +15,17 @@
     - Run command: |
         from strictyaml import load, DuplicateKeysDisallowed
 
-        try:
-            load(duplicate)
-        except DuplicateKeysDisallowed as error:
-            dupe_error = error
+    - Assert Exception:
+        command: load(duplicate)
+        exception: |
+          While parsing
+            in "<unicode string>", line 2, column 1:
+              a: 1
+              ^
+          Duplicate key 'a' found
+            in "<unicode string>", line 2, column 2:
+              a: 1
+               ^
 
-    - Assert True: dupe_error.start_line == 2
-    - Assert True: dupe_error.end_line == 2
 {% endfor %}
 {% endfor %}

@@ -1,6 +1,8 @@
 from ruamel.yaml.comments import CommentedSeq, CommentedMap
 from strictyaml.exceptions import YAMLValidationError
 from strictyaml.yamllocation import YAMLLocation
+from strictyaml.exceptions import raise_exception
+
 import decimal
 import copy
 import re
@@ -49,10 +51,10 @@ class OrValidator(Validator):
         if error2 is None:
             return validation_b
 
-        if error1 is not None:
-            raise error1
         if error2 is not None:
             raise error2
+        if error1 is not None:
+            raise error1
 
 
 def strip_accoutrements(document):
@@ -90,10 +92,10 @@ class Scalar(Validator):
         val = location.get(document)
 
         if type(val) == CommentedSeq or type(val) == CommentedMap:
-            raise YAMLValidationError(
-                "Not {0}".format(self.rule_description),
-                document,
-                location=location
+            raise_exception(
+                "when expecting a {0}".format(self.__class__.__name__.lower()),
+                "found mapping/sequence",
+                document, location=location,
             )
         else:
             return self.validate_scalar(document, location=location)
@@ -108,10 +110,10 @@ class Enum(Scalar):
     def validate(self, document, location=None):
         val = str(location.get(document))
         if val not in self._restricted_to:
-            raise YAMLValidationError(
-                "{} not in enum".format(val),
-                document,
-                location=location
+            raise_exception(
+                "when expecting one of: {0}".format(", ".join(self._restricted_to)),
+                "found '{0}'".format(val),
+                document, location=location,
             )
         else:
             return val
@@ -126,18 +128,33 @@ class Int(Scalar):
     def validate_scalar(self, document, location):
         val = str(location.get(document))
         if re.compile("^[-+]?\d+$").match(val) is None:
-            raise YAMLValidationError("not an integer", document, location)
+            raise_exception(
+                    "when expecting an integer",
+                    "found non-integer",
+                    document, location=location,
+                )
         else:
             return int(val)
+
+
+TRUE_VALUES = ["yes", "true", "on", "1", ]
+FALSE_VALUES = ["no", "false", "off", "0", ]
+BOOL_VALUES = TRUE_VALUES + FALSE_VALUES
 
 
 class Bool(Scalar):
     def validate_scalar(self, document, location):
         val = str(location.get(document))
-        if str(val).lower() not in ["yes", "true", "no", "false", "on", "off", "1", "0", ]:
-            raise YAMLValidationError("not a bool", document, location)
+        if str(val).lower() not in BOOL_VALUES:
+            raise_exception(
+                """when expecting a boolean value (one of "{0}")""".format(
+                    '", "'.join(BOOL_VALUES)
+                ),
+                "found non-boolean",
+                document, location=location,
+            )
         else:
-            if val in ["yes", "true", "on", "1", ]:
+            if val in TRUE_VALUES:
                 return True
             else:
                 return False
@@ -147,7 +164,11 @@ class Float(Scalar):
     def validate_scalar(self, document, location):
         val = str(location.get(document))
         if re.compile(r"^[-+]?[0-9]*\.?[0-9]+([eE][-+]?[0-9]+)?$").match(str(val)) is None:
-            raise YAMLValidationError("not a float", document, location)
+            raise_exception(
+                "when expecting a float",
+                "found non-float",
+                document, location=location,
+            )
         else:
             return float(val)
 
@@ -156,7 +177,11 @@ class Decimal(Scalar):
     def validate_scalar(self, document, location):
         val = str(location.get(document))
         if re.compile(r"^[-+]?[0-9]*\.?[0-9]+([eE][-+]?[0-9]+)?$").match(str(val)) is None:
-            raise YAMLValidationError("not a decimal", document, location)
+            raise_exception(
+                "when expecting a decimal",
+                "found non-decimal",
+                document, location=location,
+            )
         else:
             return decimal.Decimal(val)
 
@@ -173,7 +198,11 @@ class MapPattern(Validator):
         return_snippet = {}
 
         if type(location.get(document)) != CommentedMap:
-            raise YAMLValidationError("Not a mapping", document)
+            raise_exception(
+                "when expecting a mapping",
+                "found non-mapping",
+                document, location=location,
+            )
         else:
             for key, value in location.get(document).items():
                 valid_key = self._key_validator(document, location.key(key))
@@ -198,12 +227,18 @@ class Map(Validator):
         return_snippet = {}
 
         if type(location.get(document)) != CommentedMap:
-            raise YAMLValidationError("Not a map", document, location=location)
+            raise_exception(
+                "when expecting a mapping",
+                "found non-mapping",
+                document, location=location,
+            )
         else:
             for key, value in location.get(document).items():
                 if key not in self._validator_dict.keys():
-                    raise YAMLValidationError(
-                        "Invalid key found {}".format(key), document, location=location.key(key)
+                    raise_exception(
+                        "while parsing a mapping",
+                        "unexpected key not in schema '{0}'".format(key),
+                        document, location=location.key(key)
                     )
 
                 return_snippet[key] = self._validator_dict[key](
@@ -224,7 +259,11 @@ class Seq(Validator):
         return_snippet = []
 
         if type(location.get(document)) != CommentedSeq:
-            raise YAMLValidationError("Not a sequence", document, location=location)
+            raise_exception(
+                "when expecting a sequence",
+                "found non-sequence",
+                document, location=location,
+            )
         else:
             for i, item in enumerate(location.get(document)):
                 return_snippet.append(self._validator(document, location=location.index(i)))
@@ -244,13 +283,21 @@ class UniqueSeq(Validator):
         return_snippet = []
 
         if type(location.get(document)) != CommentedSeq:
-            raise YAMLValidationError("Not a sequence", document, location=location)
+            raise_exception(
+                "when expecting a unique sequence",
+                "found non-sequence",
+                document, location=location,
+            )
         else:
             existing_items = set()
 
             for i, item in enumerate(location.get(document)):
                 if item in existing_items:
-                    raise YAMLValidationError("Duplicates found", document, location=location)
+                    raise_exception(
+                        "while parsing a sequence",
+                        "duplicate found",
+                        document, location=location
+                    )
                 else:
                     existing_items.add(item)
                     return_snippet.append(self._validator(document, location=location.index(i)))

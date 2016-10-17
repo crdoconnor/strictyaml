@@ -18,8 +18,10 @@ from strictyaml.validators import MapPattern
 from strictyaml.validators import Seq
 from strictyaml.validators import UniqueSeq
 
+# Base exception from 
+from ruamel.yaml import YAMLError
+
 # Exceptions
-from strictyaml.exceptions import YAMLError
 from strictyaml.exceptions import StrictYAMLError
 from strictyaml.exceptions import YAMLValidationError
 

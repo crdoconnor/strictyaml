@@ -26,21 +26,30 @@
 
         schema = UniqueSeq(Str())
 
-        try:
-            load(invalid_sequence_1, schema)
-        except YAMLValidationError as error:
-            seq1_error = error
-
-
-        try:
-            load(invalid_sequence_2, schema)
-        except YAMLValidationError as error:
-            seq2_error = error
-
     - Assert True: 'load(valid_sequence, schema) == ["A", "B", "C", ]'
-    - Assert True: seq1_error.start_line == 1
-    - Assert True: seq1_error.end_line == 3
-    - Assert True: seq2_error.start_line == 1
-    - Assert True: seq2_error.end_line == 3
+
+    - Assert Exception:
+        command: load(invalid_sequence_1, schema)
+        exception: |
+          while parsing a sequence
+            in "<unicode string>", line 1, column 1:
+              - A
+               ^
+          duplicate found
+            in "<unicode string>", line 3, column 1:
+              - B
+              ^
+
+    - Assert Exception:
+        command: load(invalid_sequence_2, schema)
+        exception: |
+          while parsing a sequence
+            in "<unicode string>", line 1, column 1:
+              - 3
+               ^
+          duplicate found
+            in "<unicode string>", line 3, column 1:
+              - 3
+              ^
 {% endfor %}
 {% endfor %}

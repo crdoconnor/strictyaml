@@ -26,28 +26,37 @@
 
         schema = Map({"a": Bool() | Int()})
 
-        try:
-            load(invalid_sequence_1, schema)
-        except YAMLValidationError as error:
-            seq1_error = error
-
-        try:
-            load(invalid_sequence_2, schema)
-        except YAMLValidationError as error:
-            seq2_error = error
-
-        try:
-            load(invalid_sequence_3, schema)
-        except YAMLValidationError as error:
-            seq3_error = error
     - Assert True: 'load(valid_sequence_1, schema) == {"a" : True}'
+
     - Assert True: 'load(valid_sequence_2, schema) == {"a" : 5}'
+
     - Assert True: 'load(valid_sequence_3, schema) == {"a" : False}'
-    - Assert True: seq1_error.start_line == 1
-    - Assert True: seq1_error.end_line == 1
-    - Assert True: seq2_error.start_line == 1
-    - Assert True: seq2_error.end_line == 1
-    - Assert True: seq3_error.start_line == 1
-    - Assert True: seq3_error.end_line == 1
+
+    - Assert Exception:
+        command: load(invalid_sequence_1, schema)
+        exception: |
+          when expecting an integer
+          found non-integer
+            in "<unicode string>", line 1, column 1:
+              a: A
+               ^
+
+    - Assert Exception:
+        command: load(invalid_sequence_2, schema)
+        exception: |
+          when expecting an integer
+          found non-integer
+            in "<unicode string>", line 1, column 1:
+              a: B
+               ^
+
+    - Assert Exception:
+        command: load(invalid_sequence_3, schema)
+        exception: |
+          when expecting an integer
+          found non-integer
+            in "<unicode string>", line 1, column 1:
+              a: 3.14
+               ^
 {% endfor %}
 {% endfor %}
