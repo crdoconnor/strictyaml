@@ -1,0 +1,78 @@
+    {% for ruamel_version in ruamel_versions %}
+{% for python_version in python_versions %}
+- name: Datetime validation
+  preconditions:
+    python_version: {{ python_version }}
+    ruamel version: {{ ruamel_version }}
+    files:
+      valid_sequence.yaml: |
+        date: 2016-10-22
+        datetime1: 2016-10-22T14:23:12+00:00
+        datetime2: 2016-10-22T14:23:12Z
+        datetime3: 20161022T142312Z
+      invalid_sequence_1.yaml: |
+        date: 1
+        datetime1: a
+        datetime2: b
+        datetime3: c
+  tags:
+    - sequence
+    - py{{ python_version }}
+  scenario:
+    - Run command: |
+        from strictyaml import Map, Datetime, YAMLValidationError, load
+        from datetime import datetime
+        from dateutil.tz.tz import tzutc
+
+        schema = Map({
+            "date": Datetime(),
+            "datetime1": Datetime(),
+            "datetime2": Datetime(),
+            "datetime3": Datetime(),
+        })
+
+    - Assert True: |
+        load(valid_sequence, schema) == {
+            "date": datetime(2016, 10, 22, 0, 0),
+            "datetime1": datetime(2016, 10, 22, 14, 23, 12),
+            "datetime2": datetime(2016, 10, 22, 14, 23, 12),
+            "datetime3": datetime(2016, 10, 22, 14, 23, 12, tzinfo=tzutc()),
+        }
+
+    #- Assert Exception:
+        #command: load(invalid_sequence_1, schema)
+        #exception: |
+          #when expecting an ISO 8601 date (e.g. 2016-10-22T14:23:12+00:00)
+          #found non-boolean
+            #in "<unicode string>", line 2, column 1:
+              #b: 2
+              #^
+
+    #- Assert Exception:
+        #command: load(invalid_sequence_2, schema)
+        #exception: |
+          #when expecting an integer
+          #found non-integer
+            #in "<unicode string>", line 1, column 1:
+              #a: string
+               #^
+
+    #- Assert Exception:
+        #command: load(invalid_sequence_3, schema)
+        #exception: |
+          #when expecting a float
+          #found non-float
+            #in "<unicode string>", line 4, column 1:
+              #d: not a float
+              #^
+
+    #- Assert Exception:
+        #command: load(invalid_sequence_4, schema)
+        #exception: |
+          #when expecting a decimal
+          #found non-decimal
+            #in "<unicode string>", line 5, column 1:
+              #e: not a decimal
+              #^
+{% endfor %}
+{% endfor %}

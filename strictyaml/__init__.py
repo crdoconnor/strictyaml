@@ -17,6 +17,7 @@ from strictyaml.validators import Map
 from strictyaml.validators import MapPattern
 from strictyaml.validators import Seq
 from strictyaml.validators import UniqueSeq
+from strictyaml.validators import Datetime
 
 # Base exception from 
 from ruamel.yaml import YAMLError

@@ -191,10 +191,16 @@ Enums
 
 
 
-Dates, times and timestamps
----------------------------
+Datetimes
+---------
 
-COMING SOON
+This datetime parser uses dateutil's datetime parser, which is used, among others, by arrow, delorean and pendulum.
+
+
+.. code-block:: python
+
+  >>> load("date: 2016-10-22T14:23:12+00:00", Map({"date": strictyaml.Datetime()})) == {"date": datetime(2016, 10, 22, 14, 23, 12)}
+
 
 Custom scalar types
 -------------------
@@ -209,11 +215,6 @@ See: What is kwalify and when should I use it?
 
 COMING SOON
 
-
-Saving YAML
------------
-
-COMING SOON
 
 Roundtripping YAML
 ------------------

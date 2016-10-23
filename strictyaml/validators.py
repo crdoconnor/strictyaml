@@ -3,6 +3,7 @@ from strictyaml.exceptions import YAMLValidationError
 from strictyaml.yamllocation import YAMLLocation
 from strictyaml.exceptions import raise_exception
 
+import dateutil.parser
 import decimal
 import copy
 import re
@@ -186,6 +187,20 @@ class Decimal(Scalar):
             )
         else:
             return decimal.Decimal(val)
+
+
+class Datetime(Scalar):
+    def validate_scalar(self, document, location):
+        val = str(location.get(document))
+
+        try:
+            return dateutil.parser.parse(val)
+        except ValueError:
+            raise_exception(
+                "when expecting a datetime",
+                "found non-datetime",
+                document, location=location,
+            )
 
 
 class MapPattern(Validator):
