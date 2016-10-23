@@ -25,7 +25,7 @@ patool==1.12
 pexpect==4.2.1
 pickleshare==0.7.4
 pkg-resources==0.0.0
-prompt-toolkit==1.0.7
+prompt-toolkit==1.0.8
 psutil==4.1.0
 ptyprocess==0.5.1
 Pygments==2.1.3

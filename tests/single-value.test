@@ -13,14 +13,13 @@
     - Run command: |
         from strictyaml import Str, Int, load
 
-        try:
-            load(None, Str())
-        except TypeError:
-            there_was_a_type_error = True
+    - Assert exception:
+        command: load(None, Str())
+        exception: 'StrictYAML can only read a string of valid YAML.'
 
-    - Assert True: there_was_a_type_error
     - Assert True: load("1", Str()) == "1"
     - Assert True: load("1", Int()) == 1
     - Assert True: load("", Str()) == ""
+    - Assert True: 'load("x:") == {"x": ""}'
 {% endfor %}
 {% endfor %}

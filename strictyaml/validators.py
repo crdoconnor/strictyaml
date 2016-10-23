@@ -65,6 +65,8 @@ def strip_accoutrements(document):
         return {key: strip_accoutrements(value) for key, value in document.items()}
     elif type(document) is CommentedSeq:
         return [strip_accoutrements(item) for item in document]
+    elif document is None:
+        return ""
     else:
         return str(document)
 
