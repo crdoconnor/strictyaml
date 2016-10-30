@@ -34,28 +34,10 @@ class OrValidator(Validator):
             location = YAMLLocation()
             document = copy.deepcopy(document)
 
-        error1 = None
-        error2 = None
-
         try:
-            validation_a = self._validator_a(document, location=location)
-        except YAMLValidationError as err:
-            error1 = err
-
-        try:
-            validation_b = self._validator_b(document, location=location)
-        except YAMLValidationError as err:
-            error2 = err
-
-        if error1 is None:
-            return validation_a
-        if error2 is None:
-            return validation_b
-
-        if error2 is not None:
-            raise error2
-        if error1 is not None:
-            raise error1
+            return self._validator_a(document, location=location)
+        except YAMLValidationError:
+            return self._validator_b(document, location=location)
 
 
 def strip_accoutrements(document):
