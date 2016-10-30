@@ -220,3 +220,11 @@ Roundtripping YAML
 ------------------
 
 COMING SOON
+
+
+Contributors
+------------
+
+* @gvx
+* @ AlexandreDecan
+* @lots0logs
