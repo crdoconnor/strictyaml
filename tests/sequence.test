@@ -40,11 +40,11 @@
         exception: |
           when expecting a sequence
             in "<unicode string>", line 1, column 1:
-              a: 1
+              a: '1'
                ^
           found non-sequence
             in "<unicode string>", line 3, column 1:
-              c: 3
+              c: '3'
               ^
 
     - Assert Exception:
@@ -56,7 +56,7 @@
               ^
           found mapping/sequence
             in "<unicode string>", line 5, column 1:
-                - 2
+                - '2'
               ^
 
 
@@ -66,7 +66,7 @@
           when expecting an integer
           found non-integer
             in "<unicode string>", line 1, column 1:
-              - 1.1
+              - '1.1'
                ^
 
     - Assert Exception:
@@ -75,7 +75,7 @@
           when expecting an integer
           found non-integer
             in "<unicode string>", line 3, column 1:
-              - 3.4
+              - '3.4'
               ^
 {% endfor %}
 {% endfor %}

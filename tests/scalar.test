@@ -1,6 +1,6 @@
     {% for ruamel_version in ruamel_versions %}
 {% for python_version in python_versions %}
-- name: Sequence validation
+- name: Scalar validation
   preconditions:
     python_version: {{ python_version }}
     ruamel version: {{ ruamel_version }}
@@ -36,7 +36,11 @@
         d: 3.141
         e: not a decimal
   tags:
-    - sequence
+    - scalar
+    - int
+    - bool
+    - float
+    - decimal
     - py{{ python_version }}
   scenario:
     - Run command: |
@@ -53,7 +57,7 @@
           when expecting a boolean value (one of "yes", "true", "on", "1", "no", "false", "off", "0")
           found non-boolean
             in "<unicode string>", line 2, column 1:
-              b: 2
+              b: '2'
               ^
 
     - Assert Exception:

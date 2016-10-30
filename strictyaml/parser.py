@@ -22,6 +22,8 @@ import collections
 
 
 class StrictYAMLConstructor(RoundTripConstructor):
+        yaml_constructors = {}
+
         def construct_mapping(self, node, maptyp, deep=False):
             if not isinstance(node, MappingNode):
                 raise ConstructorError(
@@ -84,6 +86,58 @@ class StrictYAMLConstructor(RoundTripConstructor):
             # of collections.OrderedDict (as they have no __contains__
             if merge_map:
                 maptyp.add_yaml_merge(merge_map)
+
+
+StrictYAMLConstructor.add_constructor(
+    u'tag:yaml.org,2002:null',
+    RoundTripConstructor.construct_yaml_str)
+
+StrictYAMLConstructor.add_constructor(
+    u'tag:yaml.org,2002:bool',
+    RoundTripConstructor.construct_yaml_str)
+
+StrictYAMLConstructor.add_constructor(
+    u'tag:yaml.org,2002:int',
+    RoundTripConstructor.construct_yaml_str)
+
+StrictYAMLConstructor.add_constructor(
+    u'tag:yaml.org,2002:float',
+    RoundTripConstructor.construct_yaml_str)
+
+StrictYAMLConstructor.add_constructor(
+    u'tag:yaml.org,2002:binary',
+    RoundTripConstructor.construct_yaml_str)
+
+StrictYAMLConstructor.add_constructor(
+    u'tag:yaml.org,2002:timestamp',
+    RoundTripConstructor.construct_yaml_str)
+
+StrictYAMLConstructor.add_constructor(
+    u'tag:yaml.org,2002:omap',
+    RoundTripConstructor.construct_yaml_omap)
+
+StrictYAMLConstructor.add_constructor(
+    u'tag:yaml.org,2002:pairs',
+    RoundTripConstructor.construct_yaml_pairs)
+
+StrictYAMLConstructor.add_constructor(
+    u'tag:yaml.org,2002:set',
+    RoundTripConstructor.construct_yaml_set)
+
+StrictYAMLConstructor.add_constructor(
+    u'tag:yaml.org,2002:str',
+    RoundTripConstructor.construct_yaml_str)
+
+StrictYAMLConstructor.add_constructor(
+    u'tag:yaml.org,2002:seq',
+    RoundTripConstructor.construct_yaml_seq)
+
+StrictYAMLConstructor.add_constructor(
+    u'tag:yaml.org,2002:map',
+    RoundTripConstructor.construct_yaml_map)
+
+StrictYAMLConstructor.add_constructor(
+    None, RoundTripConstructor.construct_undefined)
 
 
 # StrictYAMLScanner is mostly taken from RoundTripScanner in ruamel/yaml/scanner.py

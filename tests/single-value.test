@@ -21,5 +21,10 @@
     - Assert True: load("1", Int()) == 1
     - Assert True: load("", Str()) == ""
     - Assert True: 'load("x:") == {"x": ""}'
+    - Assert True: 'load("null: null") == {"null": "null"}'
+    - Assert True: 'load("2.0: 2.0") == {"2.0": "2.0"}'
+    - Assert True: 'load("2: 2") == {"2": "2"}'
+    - Assert True: 'load("true: True") == {"true": "True"}'
+    - Assert True: 'load("2016-02-01: 2016-02-01") == {"2016-02-01": "2016-02-01"}'
 {% endfor %}
 {% endfor %}

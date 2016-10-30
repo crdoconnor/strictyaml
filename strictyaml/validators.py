@@ -66,8 +66,6 @@ def strip_accoutrements(document):
         return {key: strip_accoutrements(value) for key, value in document.items()}
     elif type(document) is CommentedSeq:
         return [strip_accoutrements(item) for item in document]
-    elif document is None:
-        return ""
     else:
         return str(document)
 
@@ -106,8 +104,8 @@ class Scalar(Validator):
 
 class Enum(Scalar):
     def __init__(self, restricted_to):
-        # TODO: Validate set or list
-        # TODO: Validate enum is always string
+        for element in restricted_to:
+            assert type(element) is str
         self._restricted_to = restricted_to
 
     def validate(self, document, location=None):

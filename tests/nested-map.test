@@ -39,7 +39,7 @@
           while parsing a mapping
           unexpected key not in schema 'z'
             in "<unicode string>", line 3, column 1:
-                z: 8
+                z: '8'
               ^
 
     - Assert Exception:
@@ -48,7 +48,7 @@
           when expecting a mapping
           found non-mapping
             in "<unicode string>", line 1, column 1:
-              a: 11
+              a: '11'
                ^
 {% endfor %}
 {% endfor %}

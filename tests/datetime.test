@@ -34,8 +34,8 @@
     - Assert True: |
         load(valid_sequence, schema) == {
             "date": datetime(2016, 10, 22, 0, 0),
-            "datetime1": datetime(2016, 10, 22, 14, 23, 12),
-            "datetime2": datetime(2016, 10, 22, 14, 23, 12),
+            "datetime1": datetime(2016, 10, 22, 14, 23, 12, tzinfo=tzutc()),
+            "datetime2": datetime(2016, 10, 22, 14, 23, 12, tzinfo=tzutc()),
             "datetime3": datetime(2016, 10, 22, 14, 23, 12, tzinfo=tzutc()),
         }
 
