@@ -156,6 +156,7 @@ class StrictYAMLScanner(RoundTripScanner):
             for choice in choices:
                 if isinstance(self.tokens[0], choice):
                     token = self.tokens[0]
+                    print(type(token))
                     if isinstance(token, ruamelyaml.tokens.TagToken):
                         raise exceptions.TagTokenDisallowed(
                             "While scanning",
@@ -164,7 +165,10 @@ class StrictYAMLScanner(RoundTripScanner):
                             "(do not specify types in markup)",
                             token.start_mark,
                         )
-                    if isinstance(token, ruamelyaml.tokens.FlowMappingStartToken):
+                    if (
+                            isinstance(token, ruamelyaml.tokens.FlowMappingStartToken) or
+                            isinstance(token, ruamelyaml.tokens.FlowSequenceStartToken)
+                        ):
                         raise exceptions.FlowMappingDisallowed(
                             "While scanning",
                             token.start_mark,

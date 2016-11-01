@@ -12,6 +12,8 @@
           c: !!str yes
       flow_style.yaml: |
         x: { a: 1, b: 2, c: 3 }
+      flow_style_sequence.yaml: |
+        [a, b]: [x, y]
       node_anchors_and_references.yaml: |
         x: 
           a: &node1 3.5
@@ -38,6 +40,30 @@
             in "<unicode string>", line 2, column 6:
                 a: !!str yes
                    ^
+
+    - Assert Exception:
+        command: load(flow_style_sequence)
+        exception: |
+          While scanning
+            in "<unicode string>", line 1, column 1:
+              [a, b]: [x, y]
+              ^
+          Found ugly disallowed JSONesque flow mapping (surround with ' and ' to make text appear literally)
+            in "<unicode string>", line 1, column 2:
+              [a, b]: [x, y]
+               ^
+
+    - Assert Exception:
+        command: load(flow_style, schema)
+        exception: |
+          While scanning
+            in "<unicode string>", line 1, column 4:
+              x: { a: 1, b: 2, c: 3 }
+                 ^
+          Found ugly disallowed JSONesque flow mapping (surround with ' and ' to make text appear literally)
+            in "<unicode string>", line 1, column 5:
+              x: { a: 1, b: 2, c: 3 }
+                  ^
 
     - Assert Exception:
         command: load(flow_style, schema)
