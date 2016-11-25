@@ -1,7 +1,7 @@
 from ruamel.yaml import MarkedYAMLError
 from ruamel.yaml.dumper import RoundTripDumper
 from ruamel.yaml import dump
-from ruamel.yaml.error import Mark
+from ruamel.yaml.error import StringMark
 
 
 class StrictYAMLError(MarkedYAMLError):
@@ -40,7 +40,11 @@ def raise_exception(context, problem, document, location):
     problem_index = len('\n'.join(str_document.split('\n')[:problem_line]))
     raise YAMLValidationError(
         context,
-        Mark("<unicode string>", context_index, context_line, 0, str_document, context_index + 1),
+        StringMark(
+            "<unicode string>", context_index, context_line, 0, str_document, context_index + 1
+        ),
         problem,
-        Mark("<unicode string>", problem_index, problem_line, 0, str_document, problem_index + 1)
+        StringMark(
+            "<unicode string>", problem_index, problem_line, 0, str_document, problem_index + 1
+        )
     )

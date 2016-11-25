@@ -1,6 +1,6 @@
 python_versions:
   - 3.5.0
 ruamel_versions:
-  - 0.12.12
+  - 0.13.1
 failfast: true
 pause_on_failure: true
