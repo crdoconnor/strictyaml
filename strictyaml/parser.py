@@ -165,9 +165,9 @@ class StrictYAMLScanner(RoundTripScanner):
                             token.start_mark,
                         )
                     if (
-                            isinstance(token, ruamelyaml.tokens.FlowMappingStartToken) or
-                            isinstance(token, ruamelyaml.tokens.FlowSequenceStartToken)
-                        ):
+                        isinstance(token, ruamelyaml.tokens.FlowMappingStartToken) or
+                        isinstance(token, ruamelyaml.tokens.FlowSequenceStartToken)
+                    ):
                         raise exceptions.FlowMappingDisallowed(
                             "While scanning",
                             token.start_mark,
