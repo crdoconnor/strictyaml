@@ -1,7 +1,10 @@
 from ruamel.yaml import MarkedYAMLError
 from ruamel.yaml.dumper import RoundTripDumper
 from ruamel.yaml import dump
-from ruamel.yaml.error import StringMark
+try:
+    from ruamel.yaml.error import Mark as StringMark
+except ImportError:
+    from ruamel.yaml.error import StringMark
 
 
 class StrictYAMLError(MarkedYAMLError):
