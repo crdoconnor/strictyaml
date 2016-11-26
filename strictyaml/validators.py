@@ -102,6 +102,33 @@ class Enum(Scalar):
             return val
 
 
+class EmptyNone(Scalar):
+    def validate_scalar(self, document, location):
+        val = str(location.get(document))
+        if val != "":
+            raise_exception(
+                "when expecting an empty value",
+                "found non-empty value",
+                document, location=location,
+            )
+        else:
+            return self.empty()
+
+    def empty(self):
+        return None
+
+
+
+class EmptyDict(EmptyNone):
+    def empty(self):
+        return {}
+
+
+class EmptyList(EmptyNone):
+    def empty(self):
+        return []
+
+
 class Str(Scalar):
     def validate_scalar(self, document, location):
         return str(location.get(document))

@@ -181,6 +181,16 @@ Upper case or lower case - it doesn't matter. Yes, on and true are treated as Tr
   >>> load("booltrue: true", Map({"booltrue": strictyaml.Bool()})) == {"booltrue": True}
   >>> load("boolfalse: False", Map({"boolfalse": strictyaml.Bool()})) == {"booltrue": False}
 
+Empty values
+------------
+
+Empty values can be be validated and returned as None, {} and []:
+
+.. code-block:: python
+
+  >>> load("empty: ", Map({"empty": strictyaml.EmptyNone()})) == {"empty": None}
+  >>> load("empty: ", Map({"empty": strictyaml.EmptyDict()})) == {"empty": {}}
+  >>> load("empty: ", Map({"empty": strictyaml.EmptyList()})) == {"empty": []}
 
 Enums
 -----
