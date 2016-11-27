@@ -6,6 +6,7 @@ from strictyaml.validators import Optional
 from strictyaml.validators import Validator
 from strictyaml.validators import OrValidator
 from strictyaml.validators import Any
+from strictyaml.validators import CommentedYAML
 from strictyaml.validators import Scalar
 from strictyaml.validators import Enum
 from strictyaml.validators import Str
