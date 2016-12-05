@@ -118,7 +118,6 @@ class EmptyNone(Scalar):
         return None
 
 
-
 class EmptyDict(EmptyNone):
     def empty(self):
         return {}
