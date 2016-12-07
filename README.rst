@@ -212,6 +212,16 @@ This datetime parser uses dateutil's datetime parser, which is used, among other
   >>> load("date: 2016-10-22T14:23:12+00:00", Map({"date": strictyaml.Datetime()})) == {"date": datetime(2016, 10, 22, 14, 23, 12)}
 
 
+Comma Separated Values
+----------------------
+
+Scalar strings can be parsed a second time into comma separated values.
+
+.. code-block:: python
+
+  >>> load("a: 1, 2, 3", Map({"a": strictyaml.CommaSepaeated(strictyaml.Int())})) == {"a": [1, 2, 3, ]}
+
+
 Custom scalar types
 -------------------
 

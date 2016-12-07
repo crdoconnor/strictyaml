@@ -22,6 +22,7 @@ from strictyaml.validators import Datetime
 from strictyaml.validators import EmptyNone
 from strictyaml.validators import EmptyDict
 from strictyaml.validators import EmptyList
+from strictyaml.validators import CommaSeparated
 
 # Base exception from 
 from ruamel.yaml import YAMLError

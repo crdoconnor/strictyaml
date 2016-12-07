@@ -81,7 +81,7 @@ class Scalar(Validator):
                 document, location=location,
             )
         else:
-            return self.validate_scalar(document, location=location)
+            return self.validate_scalar(document, location, value=None)
 
 
 class Enum(Scalar):
@@ -90,8 +90,8 @@ class Enum(Scalar):
             assert type(element) is str
         self._restricted_to = restricted_to
 
-    def validate(self, document, location=None):
-        val = str(location.get(document))
+    def validate_scalar(self, document, location, value):
+        val = str(location.get(document)) if value is None else value
         if val not in self._restricted_to:
             raise_exception(
                 "when expecting one of: {0}".format(", ".join(self._restricted_to)),
@@ -103,8 +103,8 @@ class Enum(Scalar):
 
 
 class EmptyNone(Scalar):
-    def validate_scalar(self, document, location):
-        val = str(location.get(document))
+    def validate_scalar(self, document, location, value):
+        val = str(location.get(document)) if value is None else value
         if val != "":
             raise_exception(
                 "when expecting an empty value",
@@ -128,14 +128,26 @@ class EmptyList(EmptyNone):
         return []
 
 
+class CommaSeparated(Scalar):
+    def __init__(self, item_validator):
+        self._item_validator = item_validator
+
+    def validate_scalar(self, document, location, value):
+        val = str(location.get(document)) if value is None else value
+        return [
+            self._item_validator.validate_scalar(document, location, value=item)
+            for item in val.split(",")
+        ]
+
+
 class Str(Scalar):
-    def validate_scalar(self, document, location):
-        return str(location.get(document))
+    def validate_scalar(self, document, location, value=None):
+        return str(location.get(document)) if value is None else value
 
 
 class Int(Scalar):
-    def validate_scalar(self, document, location):
-        val = str(location.get(document))
+    def validate_scalar(self, document, location, value=None):
+        val = str(location.get(document)) if value is None else value
         if re.compile("^[-+]?\d+$").match(val) is None:
             raise_exception(
                     "when expecting an integer",
@@ -152,8 +164,8 @@ BOOL_VALUES = TRUE_VALUES + FALSE_VALUES
 
 
 class Bool(Scalar):
-    def validate_scalar(self, document, location):
-        val = str(location.get(document))
+    def validate_scalar(self, document, location, value=None):
+        val = str(location.get(document)) if value is None else value
         if str(val).lower() not in BOOL_VALUES:
             raise_exception(
                 """when expecting a boolean value (one of "{0}")""".format(
@@ -170,8 +182,8 @@ class Bool(Scalar):
 
 
 class Float(Scalar):
-    def validate_scalar(self, document, location):
-        val = str(location.get(document))
+    def validate_scalar(self, document, location, value=None):
+        val = str(location.get(document)) if value is None else value
         if re.compile(r"^[-+]?[0-9]*\.?[0-9]+([eE][-+]?[0-9]+)?$").match(str(val)) is None:
             raise_exception(
                 "when expecting a float",
@@ -183,8 +195,8 @@ class Float(Scalar):
 
 
 class Decimal(Scalar):
-    def validate_scalar(self, document, location):
-        val = str(location.get(document))
+    def validate_scalar(self, document, location, value=None):
+        val = str(location.get(document)) if value is None else value
         if re.compile(r"^[-+]?[0-9]*\.?[0-9]+([eE][-+]?[0-9]+)?$").match(str(val)) is None:
             raise_exception(
                 "when expecting a decimal",
@@ -196,8 +208,8 @@ class Decimal(Scalar):
 
 
 class Datetime(Scalar):
-    def validate_scalar(self, document, location):
-        val = str(location.get(document))
+    def validate_scalar(self, document, location, value=None):
+        val = str(location.get(document)) if value is None else value
 
         try:
             return dateutil.parser.parse(val)
@@ -265,7 +277,7 @@ class Map(Validator):
                     )
 
                 return_snippet[key] = self._validator_dict[key](
-                    document, location=location.val(key)
+                    document, location.val(key)
                 )
 
         return return_snippet

@@ -1,0 +1,21 @@
+{% for ruamel_version in ruamel_versions %}
+{% for python_version in python_versions %}
+- name: Comma separated strings
+  preconditions:
+    python_version: {{ python_version }}
+    ruamel version: {{ ruamel_version }}
+    files:
+      valid_sequence.yaml: |
+        a: 1,2,3
+  tags:
+    - sequence
+    - py{{ python_version }}
+  scenario:
+    - Run command: |
+        from strictyaml import CommaSeparated, Str, Map, YAMLValidationError, load
+
+        schema = Map({"a": CommaSeparated(Str())})
+
+    - Assert True: 'load(valid_sequence, schema) == {"a": ["1", "2", "3"]}'
+{% endfor %}
+{% endfor %}
