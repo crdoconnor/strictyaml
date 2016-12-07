@@ -464,7 +464,24 @@ TOML's main criticism of YAML is spot on::
 StrictYAML's cut down version of the YAML specification however - with implicit typing, node anchors/references and flow style cut out,
 ends up being simpler than TOML.
 
-TOML's use of special characters for delimiters instead of whitespace makes the resulting output noiser and harder for humans
+The main complication in TOML is its inconsistency in how it handles tables and arrays. For example:
+
+``` toml
+# not clear that this is an array
+[[tables]]
+foo = "foo"
+```
+
+Similarly, all arrays have the type `array`. So even though arrays are homogenous in TOML, you can oddly do:
+
+``` toml
+array = [["foo"], [1]]
+
+# but not
+array = ["foo", 1]
+```
+
+TOML's use of special characters for delimiters instead of whitespace like YAML makes the resulting output noiser and harder for humans
 to parse. Here's an example from the TOML site:
 
 .. code-block:: toml
@@ -512,7 +529,7 @@ Or this:
 
   load(yaml, Map({"flt2": Float(), "string": Str()})) == {"flt": 3.1415, "string": "hello"}
 
-This not only eliminates the need for `syntax typing <https://github.com/crdoconnor/strictyaml/blob/master/FAQ.rst#whats-wrong-with-syntax-typing-in-a-readable-configuration-language>`_, it's more type safe.
+Which not only eliminates the need for `syntax typing <https://github.com/crdoconnor/strictyaml/blob/master/FAQ.rst#whats-wrong-with-syntax-typing-in-a-readable-configuration-language>`_, is more type safe.
 
 
 Why not use HJSON?
