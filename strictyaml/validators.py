@@ -135,7 +135,7 @@ class CommaSeparated(Scalar):
     def validate_scalar(self, document, location, value):
         val = str(location.get(document)) if value is None else value
         return [
-            self._item_validator.validate_scalar(document, location, value=item)
+            self._item_validator.validate_scalar(document, location, value=item.lstrip())
             for item in val.split(",")
         ]
 

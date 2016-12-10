@@ -6,16 +6,27 @@
     ruamel version: {{ ruamel_version }}
     files:
       valid_sequence.yaml: |
-        a: 1,2,3
+        a: 1, 2, 3
+      invalid_sequence.yaml: |
+        a: 1, x, 3
   tags:
     - sequence
     - py{{ python_version }}
   scenario:
     - Run command: |
-        from strictyaml import CommaSeparated, Str, Map, YAMLValidationError, load
+        from strictyaml import CommaSeparated, Int, Map, YAMLValidationError, load
 
-        schema = Map({"a": CommaSeparated(Str())})
+        schema = Map({"a": CommaSeparated(Int())})
 
-    - Assert True: 'load(valid_sequence, schema) == {"a": ["1", "2", "3"]}'
+    - Assert True: 'load(valid_sequence, schema) == {"a": [1, 2, 3]}'
+
+    - Assert exception:
+        command: load(invalid_sequence, schema)
+        exception: |
+          when expecting an integer
+          found non-integer
+            in "<unicode string>", line 1, column 1:
+              a: 1, x, 3
+               ^
 {% endfor %}
 {% endfor %}
