@@ -14,6 +14,20 @@ class ExecutionEngine(hitchtest.ExecutionEngine):
     def set_up(self):
         """Set up your applications and the test environment."""
         self.path.project = self.path.engine.parent
+        self.path.docs = self.path.project.joinpath("docs")
+        self.path.this_story_doc = self.path.docs.joinpath(
+            "{0}.rst".format(path.basename(self._test.filename).replace(".test", ""))
+        )
+
+        if self.path.this_story_doc.exists():
+            self.path.this_story_doc.remove()
+        self.append_to_docs("{0}\n{1}\n\n".format(
+                self._test.name, "=" * len(self._test.name),
+            )
+        )
+
+        if self._test.description is not None:
+            self.append_to_docs("{0}\n\n".format(self._test.description))
 
         if self.path.state.exists():
             self.path.state.rmtree(ignore_errors=True)
@@ -56,20 +70,51 @@ class ExecutionEngine(hitchtest.ExecutionEngine):
         self.ipython_step_library = hitchpython.IPythonStepLibrary()
         self.ipython_step_library.startup_connection(self.ipython_kernel_filename)
 
-        self.run_command = self.ipython_step_library.run
-        self.assert_true = self.ipython_step_library.assert_true
-        self.assert_exception = self.ipython_step_library.assert_exception
+        #self.assert_true = self.ipython_step_library.assert_true
+        #self.assert_exception = self.ipython_step_library.assert_exception
         self.shutdown_connection = self.ipython_step_library.shutdown_connection
-        self.run_command("import os")
-        self.run_command("from path import Path")
-        self.run_command("os.chdir('{}')".format(self.path.state))
+        self.ipython_step_library.run("import os")
+        self.ipython_step_library.run("from path import Path")
+        self.ipython_step_library.run("os.chdir('{}')".format(self.path.state))
 
         for filename, text in self.preconditions.get("files", {}).items():
-            self.run_command(
+            self.ipython_step_library.run(
                 """{} = Path("{}").bytes().decode("utf8")""".format(
                     filename.replace(".yaml", ""), filename
                 )
             )
+            self.append_to_docs("{0}\n.. code-block:: yaml\n\n  {1}\n\n".format(
+                filename.replace(".yaml", ""),
+                text.rstrip("\n").replace("\n", "\n  ")
+            ))
+
+    def run_command(self, command):
+        self.ipython_step_library.run(command)
+        self.append_to_docs(
+            ".. code-block:: python\n\n  >>> {0}\n\n".format(
+                command.rstrip("\n").replace("\n", "\n  >>> ")
+            )
+        )
+
+    def assert_true(self, command):
+        self.ipython_step_library.assert_true(command)
+        self.append_to_docs(
+            ".. code-block:: python\n\n  >>> {0}\n  True\n\n".format(
+                command.rstrip("\n").replace("\n", "\n  >>> ")
+            )
+        )
+
+    def assert_exception(self, command, exception):
+        self.ipython_step_library.assert_exception(command, exception)
+        self.append_to_docs(
+            ".. code-block:: python\n\n  >>> {0}\n  EXCEPTION RAISED:\n  {1}\n\n".format(
+                command.rstrip("\n").replace("\n", "\n  >>> "),
+                exception.rstrip("\n").replace("\n", "\n  "),
+            )
+        )
+
+    def append_to_docs(self, text):
+        self.path.this_story_doc.write_text(text, append=True)
 
     def on_failure(self):
         if self.settings.get("pause_on_failure", True):
