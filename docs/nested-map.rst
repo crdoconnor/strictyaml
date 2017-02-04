@@ -8,15 +8,6 @@ invalid_sequence_2
   b: 2
   d: 3
 
-invalid_sequence_1
-.. code-block:: yaml
-
-  a:
-    x: 9
-    z: 8
-  b: 2
-  d: 3
-
 valid_sequence
 .. code-block:: yaml
 
@@ -26,6 +17,15 @@ valid_sequence
   b: 2
   c: 3
 
+invalid_sequence_1
+.. code-block:: yaml
+
+  a:
+    x: 9
+    z: 8
+  b: 2
+  d: 3
+
 .. code-block:: python
 
   >>> from strictyaml import Map, Int, YAMLValidationError, load
@@ -34,7 +34,8 @@ valid_sequence
 
 .. code-block:: python
 
-  >>> load(valid_sequence, schema) == {"a": {"x": 9, "y": 8}, "b": 2, "c": 3}True
+  >>> load(valid_sequence, schema) == {"a": {"x": 9, "y": 8}, "b": 2, "c": 3}
+  True
 
 .. code-block:: python
 

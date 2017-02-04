@@ -1,15 +1,15 @@
 Comma separated strings
 =======================
 
-valid_sequence
-.. code-block:: yaml
-
-  a: 1, 2, 3
-
 invalid_sequence
 .. code-block:: yaml
 
   a: 1, x, 3
+
+valid_sequence
+.. code-block:: yaml
+
+  a: 1, 2, 3
 
 .. code-block:: python
 
@@ -19,7 +19,8 @@ invalid_sequence
 
 .. code-block:: python
 
-  >>> load(valid_sequence, schema) == {"a": [1, 2, 3]}True
+  >>> load(valid_sequence, schema) == {"a": [1, 2, 3]}
+  True
 
 .. code-block:: python
 

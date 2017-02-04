@@ -16,37 +16,46 @@ Ensure that only YAML is allowed.
 
 .. code-block:: python
 
-  >>> load("1", Str()) == "1"True
+  >>> load("1", Str()) == "1"
+  True
 
 .. code-block:: python
 
-  >>> load("1", Int()) == 1True
+  >>> load("1", Int()) == 1
+  True
 
 .. code-block:: python
 
-  >>> load("", Str()) == ""True
+  >>> load("", Str()) == ""
+  True
 
 .. code-block:: python
 
-  >>> load("x:") == {"x": ""}True
+  >>> load("x:") == {"x": ""}
+  True
 
 .. code-block:: python
 
-  >>> load("null: null") == {"null": "null"}True
+  >>> load("null: null") == {"null": "null"}
+  True
 
 .. code-block:: python
 
-  >>> load("2.0: 2.0") == {"2.0": "2.0"}True
+  >>> load("2.0: 2.0") == {"2.0": "2.0"}
+  True
 
 .. code-block:: python
 
-  >>> load("2: 2") == {"2": "2"}True
+  >>> load("2: 2") == {"2": "2"}
+  True
 
 .. code-block:: python
 
-  >>> load("true: True") == {"true": "True"}True
+  >>> load("true: True") == {"true": "True"}
+  True
 
 .. code-block:: python
 
-  >>> load("2016-02-01: 2016-02-01") == {"2016-02-01": "2016-02-01"}True
+  >>> load("2016-02-01: 2016-02-01") == {"2016-02-01": "2016-02-01"}
+  True
 

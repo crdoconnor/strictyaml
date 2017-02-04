@@ -1,33 +1,11 @@
 Optional validation
 ===================
 
-valid_sequence_3
-.. code-block:: yaml
-
-  a: 1
-
 invalid_sequence_2
 .. code-block:: yaml
 
   a: a
   b: 2
-
-invalid_sequence_1
-.. code-block:: yaml
-
-  b: b
-
-valid_sequence_1
-.. code-block:: yaml
-
-  a: 1
-  b: 2
-
-valid_sequence_2
-.. code-block:: yaml
-
-  a: 1
-  c: 3
 
 invalid_sequence_3
 .. code-block:: yaml
@@ -35,6 +13,28 @@ invalid_sequence_3
   a: 1
   b: yes
   c: 3
+
+valid_sequence_1
+.. code-block:: yaml
+
+  a: 1
+  b: 2
+
+valid_sequence_3
+.. code-block:: yaml
+
+  a: 1
+
+valid_sequence_2
+.. code-block:: yaml
+
+  a: 1
+  c: 3
+
+invalid_sequence_1
+.. code-block:: yaml
+
+  b: b
 
 .. code-block:: python
 
@@ -44,15 +44,18 @@ invalid_sequence_3
 
 .. code-block:: python
 
-  >>> load(valid_sequence_1, schema) == {"a": 1, "b": 2}True
+  >>> load(valid_sequence_1, schema) == {"a": 1, "b": 2}
+  True
 
 .. code-block:: python
 
-  >>> load(valid_sequence_2, schema) == {"a": 1, "c": 3}True
+  >>> load(valid_sequence_2, schema) == {"a": 1, "c": 3}
+  True
 
 .. code-block:: python
 
-  >>> load(valid_sequence_3, schema) == {"a": 1, }True
+  >>> load(valid_sequence_3, schema) == {"a": 1, }
+  True
 
 .. code-block:: python
 

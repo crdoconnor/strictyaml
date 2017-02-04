@@ -1,35 +1,35 @@
 Enum validation
 ===============
 
-valid_sequence_3
-.. code-block:: yaml
-
-  a: C
-
 invalid_sequence_2
 .. code-block:: yaml
 
   a: yes
 
-invalid_sequence_1
+invalid_sequence_3
 .. code-block:: yaml
 
-  a: D
+  a: 1
 
 valid_sequence_1
 .. code-block:: yaml
 
   a: A
 
+valid_sequence_3
+.. code-block:: yaml
+
+  a: C
+
 valid_sequence_2
 .. code-block:: yaml
 
   a: B
 
-invalid_sequence_3
+invalid_sequence_1
 .. code-block:: yaml
 
-  a: 1
+  a: D
 
 .. code-block:: python
 
@@ -39,15 +39,18 @@ invalid_sequence_3
 
 .. code-block:: python
 
-  >>> load(valid_sequence_1, schema) == {"a": "A"}True
+  >>> load(valid_sequence_1, schema) == {"a": "A"}
+  True
 
 .. code-block:: python
 
-  >>> load(valid_sequence_2, schema) == {"a": "B"}True
+  >>> load(valid_sequence_2, schema) == {"a": "B"}
+  True
 
 .. code-block:: python
 
-  >>> load(valid_sequence_3, schema) == {"a": "C"}True
+  >>> load(valid_sequence_3, schema) == {"a": "C"}
+  True
 
 .. code-block:: python
 

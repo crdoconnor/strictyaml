@@ -1,27 +1,11 @@
 Optional validation
 ===================
 
-valid_sequence_2
-.. code-block:: yaml
-
-  a: 1
-  b: no
-
 invalid_sequence_2
 .. code-block:: yaml
 
   a: 1
   b: 2
-
-invalid_sequence_1
-.. code-block:: yaml
-
-  b: 2
-
-valid_sequence_3
-.. code-block:: yaml
-
-  a: 1
 
 invalid_sequence_3
 .. code-block:: yaml
@@ -36,9 +20,33 @@ valid_sequence_1
   a: 1
   b: yes
 
+invalid_sequence_1
+.. code-block:: yaml
+
+  b: 2
+
+valid_sequence_3
+.. code-block:: yaml
+
+  a: 1
+
+valid_sequence_2
+.. code-block:: yaml
+
+  a: 1
+  b: no
+
+valid_sequence_4
+.. code-block:: yaml
+
+  a: 1
+  b:
+    x: y
+    y: z
+
 .. code-block:: python
 
-  >>> from strictyaml import Map, Int, Bool, Optional, YAMLValidationError, load
+  >>> from strictyaml import Map, Int, Str, Bool, Optional, YAMLValidationError, load
   >>> 
   >>> schema = Map({"a": Int(), Optional("b"): Bool(), })
 
@@ -56,6 +64,10 @@ valid_sequence_1
 
   >>> load(valid_sequence_3, schema) == {"a": 1}
   True
+
+.. code-block:: python
+
+  >>> load(valid_sequence_4, Map({"a": Int(), Optional("b"): Map({Optional("x"): Str(), Optional("y"): Str()})}))
 
 .. code-block:: python
 

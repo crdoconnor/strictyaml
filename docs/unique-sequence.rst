@@ -8,19 +8,19 @@ invalid_sequence_2
   - 3
   - 3
 
-invalid_sequence_1
-.. code-block:: yaml
-
-  - A
-  - B
-  - B
-
 valid_sequence
 .. code-block:: yaml
 
   - A
   - B
   - C
+
+invalid_sequence_1
+.. code-block:: yaml
+
+  - A
+  - B
+  - B
 
 .. code-block:: python
 
@@ -30,7 +30,8 @@ valid_sequence
 
 .. code-block:: python
 
-  >>> load(valid_sequence, schema) == ["A", "B", "C", ]True
+  >>> load(valid_sequence, schema) == ["A", "B", "C", ]
+  True
 
 .. code-block:: python
 

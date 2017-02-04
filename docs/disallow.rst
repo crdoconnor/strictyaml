@@ -1,6 +1,11 @@
 Disallow invalid YAML
 =====================
 
+flow_style_sequence
+.. code-block:: yaml
+
+  [a, b]: [x, y]
+
 tag_tokens
 .. code-block:: yaml
 
@@ -9,16 +14,6 @@ tag_tokens
     b: !!str 3.5
     c: !!str yes
 
-flow_style
-.. code-block:: yaml
-
-  x: { a: 1, b: 2, c: 3 }
-
-flow_style_sequence
-.. code-block:: yaml
-
-  [a, b]: [x, y]
-
 node_anchors_and_references
 .. code-block:: yaml
 
@@ -26,6 +21,11 @@ node_anchors_and_references
     a: &node1 3.5
     b: 1
     c: *node1
+
+flow_style
+.. code-block:: yaml
+
+  x: { a: 1, b: 2, c: 3 }
 
 .. code-block:: python
 
