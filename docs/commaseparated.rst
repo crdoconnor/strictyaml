@@ -1,15 +1,15 @@
 Comma separated strings
 =======================
 
-invalid_sequence
-.. code-block:: yaml
-
-  a: 1, x, 3
-
 valid_sequence
 .. code-block:: yaml
 
   a: 1, 2, 3
+
+invalid_sequence
+.. code-block:: yaml
+
+  a: 1, x, 3
 
 .. code-block:: python
 

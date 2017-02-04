@@ -1,21 +1,6 @@
 Empty validation
 ================
 
-valid_sequence_3
-.. code-block:: yaml
-
-  a:
-
-valid_sequence_2
-.. code-block:: yaml
-
-  a:
-
-valid_sequence_4
-.. code-block:: yaml
-
-  a:
-
 valid_sequence_1
 .. code-block:: yaml
 
@@ -25,6 +10,21 @@ invalid_sequence_1
 .. code-block:: yaml
 
   a: C
+
+valid_sequence_3
+.. code-block:: yaml
+
+  a:
+
+valid_sequence_4
+.. code-block:: yaml
+
+  a:
+
+valid_sequence_2
+.. code-block:: yaml
+
+  a:
 
 .. code-block:: python
 
