@@ -2,84 +2,12 @@ from ruamel.yaml.comments import CommentedSeq, CommentedMap
 from strictyaml.exceptions import YAMLValidationError
 from strictyaml.yamllocation import YAMLLocation
 from strictyaml.exceptions import raise_exception
+from strictyaml.representation import YAML
 
 import dateutil.parser
 import decimal
 import copy
 import re
-
-
-class YAML(object):
-    def __init__(self, value, boolean=None):
-        self._value = value
-        self._boolean = boolean
-
-    def __int__(self):
-        return self._value
-
-    def __str__(self):
-        return str(self._value)
-
-    @property
-    def data(self):
-        if type(self._value) is CommentedMap:
-            return {key: value.data for key, value in self._value.items()}
-        elif type(self._value) is CommentedSeq:
-            return [item.data for item in self._value]
-        elif self._boolean is not None:
-            return self._boolean
-        else:
-            return self._value
-
-    def as_marked_up(self):
-        """
-        Returns ruamel.yaml CommentedSeq/CommentedMap objects
-        with comments. This can be fed directly into a ruamel.yaml
-        dumper.
-        """
-        if isinstance(self._value, CommentedMap):
-            new_commented_map = copy.deepcopy(self._value)
-
-            for key, value in new_commented_map.items():
-                new_commented_map[key] = value.as_marked_up()
-            return new_commented_map
-        elif isinstance(self._value, CommentedSeq):
-            new_commented_seq = copy.deepcopy(self._value)
-
-            for i, item in enumerate(new_commented_seq):
-                new_commented_seq[i] = item.as_marked_up()
-            return new_commented_seq
-        else:
-            return self._value
-
-    def __float__(self):
-        return float(self._value)
-
-    def __repr__(self):
-        return u"YAML({0})".format(self.data)
-
-    def __bool__(self):
-        return self._boolean
-
-    def __getitem__(self, index):
-        return self._value[index]
-
-    def __setitem__(self, index, value):
-        self._value[index] = YAML(value)
-
-    def __hash__(self):
-        return hash(self._value)
-
-    def __len__(self):
-        return len(self._value)
-
-    def as_yaml(self):
-        from ruamel.yaml import dump
-        from ruamel.yaml import RoundTripDumper
-        return dump(self.as_marked_up(), Dumper=RoundTripDumper)
-
-    def __eq__(self, value):
-        return self.data == value
 
 
 class Optional(object):
@@ -188,17 +116,17 @@ class EmptyNone(Scalar):
             return self.empty()
 
     def empty(self):
-        return YAML(None)
+        return YAML(None, '')
 
 
 class EmptyDict(EmptyNone):
     def empty(self):
-        return YAML({})
+        return YAML({}, '')
 
 
 class EmptyList(EmptyNone):
     def empty(self):
-        return YAML([])
+        return YAML([], '')
 
 
 class CommaSeparated(Scalar):
@@ -228,7 +156,7 @@ class Int(Scalar):
                     document, location=location,
                 )
         else:
-            return YAML(int(val))
+            return YAML(int(val), val)
 
 
 TRUE_VALUES = ["yes", "true", "on", "1", ]
@@ -249,9 +177,9 @@ class Bool(Scalar):
             )
         else:
             if val in TRUE_VALUES:
-                return YAML(val, boolean=True)
+                return YAML(True, val)
             else:
-                return YAML(val, boolean=False)
+                return YAML(False, val)
 
 
 class Float(Scalar):
@@ -264,7 +192,7 @@ class Float(Scalar):
                 document, location=location,
             )
         else:
-            return YAML(float(val))
+            return YAML(float(val), val)
 
 
 class Decimal(Scalar):
@@ -277,7 +205,7 @@ class Decimal(Scalar):
                 document, location=location,
             )
         else:
-            return YAML(decimal.Decimal(val))
+            return YAML(decimal.Decimal(val), val)
 
 
 class Datetime(Scalar):
@@ -285,7 +213,7 @@ class Datetime(Scalar):
         val = str(location.get(document)) if value is None else value
 
         try:
-            return YAML(dateutil.parser.parse(val))
+            return YAML(dateutil.parser.parse(val), val)
         except ValueError:
             raise_exception(
                 "when expecting a datetime",

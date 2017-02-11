@@ -12,26 +12,26 @@ modified_commented_yaml
 
   # Some comment
   
-  a: 2 # value comment
+  a: x # value comment
   
   # Another comment
-  b: 2
+  b: x
 
 commented_yaml
 .. code-block:: yaml
 
   # Some comment
   
-  a: 1 # value comment
+  a: x # value comment
   
   # Another comment
-  b: 2
+  b: y
 
 .. code-block:: python
 
-  >>> from strictyaml import Map, Int, YAMLValidationError, load
+  >>> from strictyaml import Map, Str, YAMLValidationError, load
   >>> 
-  >>> schema = Map({"a": Int(), "b": Int()})
+  >>> schema = Map({"a": Str(), "b": Str()})
 
 .. code-block:: python
 
@@ -42,7 +42,7 @@ commented_yaml
 
   >>> to_modify = load(commented_yaml, schema)
   >>> 
-  >>> to_modify['a'] = 2
+  >>> to_modify['b'] = 'x'
 
 .. code-block:: python
 

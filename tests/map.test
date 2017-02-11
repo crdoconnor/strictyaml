@@ -38,6 +38,10 @@
     - Assert True: 'len(load(valid_sequence, schema)) == 3'
 
     - Assert Exception:
+        command: load(valid_sequence, schema).text
+        exception: is a mapping, has no text value.
+
+    - Assert Exception:
         command: load(invalid_sequence_1, schema)
         exception: |
           while parsing a mapping

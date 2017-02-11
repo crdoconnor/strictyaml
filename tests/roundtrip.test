@@ -13,32 +13,32 @@
       commented_yaml.yaml: |
         # Some comment
         
-        a: 1 # value comment
+        a: x # value comment
         
         # Another comment
-        b: 2
+        b: y
       modified_commented_yaml.yaml: |
         # Some comment
         
-        a: 2 # value comment
+        a: x # value comment
         
         # Another comment
-        b: 2
+        b: x
   tags:
     - roundtrip
     - py{{ python_version }}
   scenario:
     - Run command: |
-        from strictyaml import Map, Int, YAMLValidationError, load
+        from strictyaml import Map, Str, YAMLValidationError, load
 
-        schema = Map({"a": Int(), "b": Int()})
+        schema = Map({"a": Str(), "b": Str()})
 
     - Assert True: 'load(commented_yaml, schema).as_yaml() == commented_yaml'
 
     - Run command: |
         to_modify = load(commented_yaml, schema)
 
-        to_modify['a'] = 2
+        to_modify['b'] = 'x'
 
     - Assert True: 'to_modify.as_yaml() == modified_commented_yaml'
 {% endfor %}

@@ -1,6 +1,9 @@
 Datetime validation
 ===================
 
+Datetimes are parsed using the python-dateutil library.
+
+
 valid_sequence
 .. code-block:: yaml
 
@@ -38,5 +41,10 @@ invalid_sequence_1
   >>>     "datetime2": datetime(2016, 10, 22, 14, 23, 12, tzinfo=tzutc()),
   >>>     "datetime3": datetime(2016, 10, 22, 14, 23, 12, tzinfo=tzutc()),
   >>> }
+  True
+
+.. code-block:: python
+
+  >>> load(valid_sequence, schema)["date"].text == "2016-10-22"
   True
 

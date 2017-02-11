@@ -1,0 +1,31 @@
+{% for ruamel_version in ruamel_versions %}
+{% for python_version in python_versions %}
+- name: Boolean validation
+  preconditions:
+    python_version: {{ python_version }}
+    ruamel version: {{ ruamel_version }}
+    files:
+      valid_sequence.yaml: |
+        a: yes
+        b: true
+        c: on
+        d: 1
+        e: 0
+        f: off
+        g: false
+        h: no
+  tags:
+    - scalar
+    - bool
+    - py{{ python_version }}
+  scenario:
+    - Run command: |
+        from strictyaml import Bool, Str, MapPattern, YAMLValidationError, load
+
+        schema = MapPattern(Str(), Bool())
+
+    - Assert True: 'load(valid_sequence, schema)["a"] == True'
+
+    - Assert True: 'load(valid_sequence, schema)["g"].text == "false"'
+{% endfor %}
+{% endfor %}
