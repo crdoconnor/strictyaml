@@ -64,6 +64,9 @@ class YAML(object):
     def __getitem__(self, index):
         return self._value[index]
 
+    def __setitem__(self, index, value):
+        self._value[index] = YAML(value)
+
     def __hash__(self):
         return hash(self._value)
 

@@ -1,6 +1,11 @@
 {% for ruamel_version in ruamel_versions %}
 {% for python_version in python_versions %}
 - name: Roundtripped YAML
+  description: |
+    Loaded YAML can be dumped out again and commments
+    should be preserved.
+
+    Loaded YAML can even be modified and dumped out again too.
   preconditions:
     python_version: {{ python_version }}
     ruamel version: {{ ruamel_version }}
@@ -9,6 +14,13 @@
         # Some comment
         
         a: 1 # value comment
+        
+        # Another comment
+        b: 2
+      modified_commented_yaml.yaml: |
+        # Some comment
+        
+        a: 2 # value comment
         
         # Another comment
         b: 2
@@ -22,5 +34,12 @@
         schema = Map({"a": Int(), "b": Int()})
 
     - Assert True: 'load(commented_yaml, schema).as_yaml() == commented_yaml'
+
+    - Run command: |
+        to_modify = load(commented_yaml, schema)
+
+        to_modify['a'] = 2
+
+    - Assert True: 'to_modify.as_yaml() == modified_commented_yaml'
 {% endfor %}
 {% endfor %}
