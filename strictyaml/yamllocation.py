@@ -1,6 +1,6 @@
 from ruamel.yaml.comments import CommentedSeq, CommentedMap
 from ruamel.yaml import dump, RoundTripDumper
-import copy
+from copy import deepcopy
 
 
 class YAMLLocation(object):
@@ -8,22 +8,22 @@ class YAMLLocation(object):
         self._indices = []
 
     def val(self, index):
-        new_location = copy.deepcopy(self)
+        new_location = deepcopy(self)
         new_location._indices.append(('val', index))
         return new_location
 
     def key(self, name):
-        new_location = copy.deepcopy(self)
+        new_location = deepcopy(self)
         new_location._indices.append(('key', name))
         return new_location
 
     def index(self, index):
-        new_location = copy.deepcopy(self)
+        new_location = deepcopy(self)
         new_location._indices.append(('index', index))
         return new_location
 
     def _slice_segment(self, indices, segment, include_selected):
-        slicedpart = copy.deepcopy(segment)
+        slicedpart = deepcopy(segment)
 
         if len(indices) == 0 and not include_selected:
             slicedpart = None
@@ -83,7 +83,7 @@ class YAMLLocation(object):
         return len(dump(slicedpart, Dumper=RoundTripDumper).rstrip().split('\n'))
 
     def get(self, document):
-        segment = copy.deepcopy(document)
+        segment = deepcopy(document)
         for index_type, index in self._indices:
             if index_type == "val":
                 segment = segment[index]

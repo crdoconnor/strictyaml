@@ -7,10 +7,23 @@ valid_sequence_1
   a: 1
   b: yes
 
+invalid_sequence_3
+.. code-block:: yaml
+
+  a: 1
+  b: yes
+  c: 3
+
 valid_sequence_3
 .. code-block:: yaml
 
   a: 1
+
+valid_sequence_2
+.. code-block:: yaml
+
+  a: 1
+  b: no
 
 valid_sequence_4
 .. code-block:: yaml
@@ -20,28 +33,15 @@ valid_sequence_4
     x: y
     y: z
 
-valid_sequence_2
+invalid_sequence_1
 .. code-block:: yaml
 
-  a: 1
-  b: no
-
-invalid_sequence_3
-.. code-block:: yaml
-
-  a: 1
-  b: yes
-  c: 3
+  b: 2
 
 invalid_sequence_2
 .. code-block:: yaml
 
   a: 1
-  b: 2
-
-invalid_sequence_1
-.. code-block:: yaml
-
   b: 2
 
 .. code-block:: python

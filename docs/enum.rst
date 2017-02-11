@@ -6,6 +6,11 @@ valid_sequence_1
 
   a: A
 
+invalid_sequence_3
+.. code-block:: yaml
+
+  a: 1
+
 valid_sequence_3
 .. code-block:: yaml
 
@@ -16,20 +21,15 @@ valid_sequence_2
 
   a: B
 
-invalid_sequence_3
+invalid_sequence_1
 .. code-block:: yaml
 
-  a: 1
+  a: D
 
 invalid_sequence_2
 .. code-block:: yaml
 
   a: yes
-
-invalid_sequence_1
-.. code-block:: yaml
-
-  a: D
 
 .. code-block:: python
 

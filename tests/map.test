@@ -33,6 +33,10 @@
 
     - Assert True: 'load(valid_sequence, schema) == {"a": 1, "b": 2, "c": 3}'
 
+    - Assert True: 'load(valid_sequence, schema)["a"] == 1'
+
+    - Assert True: 'len(load(valid_sequence, schema)) == 3'
+
     - Assert Exception:
         command: load(invalid_sequence_1, schema)
         exception: |
@@ -54,8 +58,6 @@
               - '3'
               ^
 
-
-
     - Assert Exception:
         command: load(invalid_sequence_3, schema)
         exception: |
@@ -64,6 +66,5 @@
             in "<unicode string>", line 4, column 1:
               d: '4'
               ^
-    
 {% endfor %}
 {% endfor %}

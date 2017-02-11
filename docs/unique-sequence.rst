@@ -1,13 +1,6 @@
 Sequence pattern validation
 ===========================
 
-invalid_sequence_2
-.. code-block:: yaml
-
-  - 3
-  - 3
-  - 3
-
 valid_sequence
 .. code-block:: yaml
 
@@ -21,6 +14,13 @@ invalid_sequence_1
   - A
   - B
   - B
+
+invalid_sequence_2
+.. code-block:: yaml
+
+  - 3
+  - 3
+  - 3
 
 .. code-block:: python
 

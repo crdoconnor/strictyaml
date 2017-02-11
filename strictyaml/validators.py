@@ -9,6 +9,76 @@ import copy
 import re
 
 
+class YAML(object):
+    def __init__(self, value, boolean=None):
+        self._value = value
+        self._boolean = boolean
+
+    def __int__(self):
+        return self._value
+
+    def __str__(self):
+        return str(self._value)
+
+    @property
+    def data(self):
+        if type(self._value) is CommentedMap:
+            return {key: value.data for key, value in self._value.items()}
+        elif type(self._value) is CommentedSeq:
+            return [item.data for item in self._value]
+        elif self._boolean is not None:
+            return self._boolean
+        else:
+            return self._value
+
+    def as_marked_up(self):
+        """
+        Returns ruamel.yaml CommentedSeq/CommentedMap objects
+        with comments. This can be fed directly into a ruamel.yaml
+        dumper.
+        """
+        if isinstance(self._value, CommentedMap):
+            new_commented_map = copy.deepcopy(self._value)
+
+            for key, value in new_commented_map.items():
+                new_commented_map[key] = value.as_marked_up()
+            return new_commented_map
+        elif isinstance(self._value, CommentedSeq):
+            new_commented_seq = copy.deepcopy(self._value)
+
+            for i, item in enumerate(new_commented_seq):
+                new_commented_seq[i] = item.as_marked_up()
+            return new_commented_seq
+        else:
+            return self._value
+
+    def __float__(self):
+        return float(self._value)
+
+    def __repr__(self):
+        return u"YAML({0})".format(self.data)
+
+    def __bool__(self):
+        return self._boolean
+
+    def __getitem__(self, index):
+        return self._value[index]
+
+    def __hash__(self):
+        return hash(self._value)
+
+    def __len__(self):
+        return len(self._value)
+
+    def as_yaml(self):
+        from ruamel.yaml import dump
+        from ruamel.yaml import RoundTripDumper
+        return dump(self.as_marked_up(), Dumper=RoundTripDumper)
+
+    def __eq__(self, value):
+        return self.data == value
+
+
 class Optional(object):
     def __init__(self, key):
         self.key = key
@@ -99,7 +169,7 @@ class Enum(Scalar):
                 document, location=location,
             )
         else:
-            return val
+            return YAML(val)
 
 
 class EmptyNone(Scalar):
@@ -115,17 +185,17 @@ class EmptyNone(Scalar):
             return self.empty()
 
     def empty(self):
-        return None
+        return YAML(None)
 
 
 class EmptyDict(EmptyNone):
     def empty(self):
-        return {}
+        return YAML({})
 
 
 class EmptyList(EmptyNone):
     def empty(self):
-        return []
+        return YAML([])
 
 
 class CommaSeparated(Scalar):
@@ -134,15 +204,15 @@ class CommaSeparated(Scalar):
 
     def validate_scalar(self, document, location, value):
         val = str(location.get(document)) if value is None else value
-        return [
-            self._item_validator.validate_scalar(document, location, value=item.lstrip())
+        return YAML([
+            YAML(self._item_validator.validate_scalar(document, location, value=item.lstrip()))
             for item in val.split(",")
-        ]
+        ])
 
 
 class Str(Scalar):
     def validate_scalar(self, document, location, value=None):
-        return str(location.get(document)) if value is None else value
+        return YAML(str(location.get(document)) if value is None else value)
 
 
 class Int(Scalar):
@@ -155,7 +225,7 @@ class Int(Scalar):
                     document, location=location,
                 )
         else:
-            return int(val)
+            return YAML(int(val))
 
 
 TRUE_VALUES = ["yes", "true", "on", "1", ]
@@ -176,9 +246,9 @@ class Bool(Scalar):
             )
         else:
             if val in TRUE_VALUES:
-                return True
+                return YAML(val, boolean=True)
             else:
-                return False
+                return YAML(val, boolean=False)
 
 
 class Float(Scalar):
@@ -191,7 +261,7 @@ class Float(Scalar):
                 document, location=location,
             )
         else:
-            return float(val)
+            return YAML(float(val))
 
 
 class Decimal(Scalar):
@@ -204,7 +274,7 @@ class Decimal(Scalar):
                 document, location=location,
             )
         else:
-            return decimal.Decimal(val)
+            return YAML(decimal.Decimal(val))
 
 
 class Datetime(Scalar):
@@ -212,7 +282,7 @@ class Datetime(Scalar):
         val = str(location.get(document)) if value is None else value
 
         try:
-            return dateutil.parser.parse(val)
+            return YAML(dateutil.parser.parse(val))
         except ValueError:
             raise_exception(
                 "when expecting a datetime",
@@ -230,7 +300,7 @@ class MapPattern(Validator):
         if location is None:
             location = YAMLLocation()
             document = copy.deepcopy(document)
-        return_snippet = {}
+        return_snippet = location.get(document)
 
         if type(location.get(document)) != CommentedMap:
             raise_exception(
@@ -244,7 +314,7 @@ class MapPattern(Validator):
                 valid_val = self._value_validator(document, location.val(key))
                 return_snippet[valid_key] = valid_val
 
-        return return_snippet
+        return YAML(return_snippet)
 
 
 class Map(Validator):
@@ -259,7 +329,7 @@ class Map(Validator):
         if location is None:
             location = YAMLLocation()
             document = copy.deepcopy(document)
-        return_snippet = {}
+        return_snippet = location.get(document)
 
         if type(location.get(document)) != CommentedMap:
             raise_exception(
@@ -280,7 +350,7 @@ class Map(Validator):
                     document, location.val(key)
                 )
 
-        return return_snippet
+        return YAML(return_snippet)
 
 
 class Seq(Validator):
@@ -291,7 +361,7 @@ class Seq(Validator):
         if location is None:
             location = YAMLLocation()
             document = copy.deepcopy(document)
-        return_snippet = []
+        return_snippet = location.get(document)
 
         if type(location.get(document)) != CommentedSeq:
             raise_exception(
@@ -301,9 +371,9 @@ class Seq(Validator):
             )
         else:
             for i, item in enumerate(location.get(document)):
-                return_snippet.append(self._validator(document, location=location.index(i)))
+                return_snippet[i] = self._validator(document, location=location.index(i))
 
-        return return_snippet
+        return YAML(return_snippet)
 
 
 class UniqueSeq(Validator):
@@ -315,7 +385,7 @@ class UniqueSeq(Validator):
             location = YAMLLocation()
             document = copy.deepcopy(document)
 
-        return_snippet = []
+        return_snippet = location.get(document)
 
         if type(location.get(document)) != CommentedSeq:
             raise_exception(
@@ -335,6 +405,6 @@ class UniqueSeq(Validator):
                     )
                 else:
                     existing_items.add(item)
-                    return_snippet.append(self._validator(document, location=location.index(i)))
+                    return_snippet[i] = self._validator(document, location=location.index(i))
 
-        return return_snippet
+        return YAML(return_snippet)

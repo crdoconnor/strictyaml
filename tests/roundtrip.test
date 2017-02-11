@@ -1,0 +1,26 @@
+{% for ruamel_version in ruamel_versions %}
+{% for python_version in python_versions %}
+- name: Roundtripped YAML
+  preconditions:
+    python_version: {{ python_version }}
+    ruamel version: {{ ruamel_version }}
+    files:
+      commented_yaml.yaml: |
+        # Some comment
+        
+        a: 1 # value comment
+        
+        # Another comment
+        b: 2
+  tags:
+    - roundtrip
+    - py{{ python_version }}
+  scenario:
+    - Run command: |
+        from strictyaml import Map, Int, YAMLValidationError, load
+
+        schema = Map({"a": Int(), "b": Int()})
+
+    - Assert True: 'load(commented_yaml, schema).as_yaml() == commented_yaml'
+{% endfor %}
+{% endfor %}
