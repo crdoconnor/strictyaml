@@ -55,6 +55,15 @@ class YAML(object):
     def end_line(self):
         return self._location.end_line(self._document)
 
+    def lines(self):
+        return self._location.lines(self._document)
+
+    def lines_before(self, how_many):
+        return self._location.lines_before(self._document, how_many)
+
+    def lines_after(self, how_many):
+        return self._location.lines_after(self._document, how_many)
+
     def __float__(self):
         return float(self._value)
 
@@ -88,7 +97,7 @@ class YAML(object):
             raise TypeError("{0} is a mapping, has no text value.".format(repr(self)))
         if isinstance(self._value, CommentedSeq):
             raise TypeError("{0} is a sequence, has no text value.".format(repr(self)))
-        return str(self._text)
+        return self._text
 
     def __eq__(self, value):
         return self.data == value

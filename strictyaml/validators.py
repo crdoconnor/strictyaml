@@ -143,6 +143,7 @@ class Str(Scalar):
     def validate_scalar(self, document, location, value=None):
         return YAML(
             str(location.get(document)) if value is None else value,
+            text=location.get(document),
             document=document,
             location=location
         )

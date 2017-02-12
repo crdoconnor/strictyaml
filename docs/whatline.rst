@@ -7,22 +7,25 @@ Line and context can be determined from the returned YAML object.
 commented_yaml
 .. code-block:: yaml
 
+  y: p
   # Some comment
   
-  a: x # value comment
-  
+  a: |
+    x
   # Another comment
   b: y
+  c: a
+  d: b
 
 .. code-block:: python
 
   >>> from strictyaml import Map, Str, YAMLValidationError, load
   >>> 
-  >>> schema = Map({"a": Str(), "b": Str()})
+  >>> schema = Map({"y": Str(), "a": Str(), "b": Str(), "c": Str(), "d": Str()})
 
 .. code-block:: python
 
-  >>> load(commented_yaml, schema)["a"].end_line == 3
+  >>> load(commented_yaml, schema)["a"].end_line == 6
   True
 
 .. code-block:: python
@@ -32,6 +35,21 @@ commented_yaml
 
 .. code-block:: python
 
-  >>> load(commented_yaml, schema).end_line == 6
+  >>> load(commented_yaml, schema).end_line == 9
+  True
+
+.. code-block:: python
+
+  >>> load(commented_yaml, schema)['a'].lines() == ['# Some comment', '', 'a: |', '  x', '# Another comment']
+  True
+
+.. code-block:: python
+
+  >>> load(commented_yaml, schema)['a'].lines_before(1) == ["y: p"]
+  True
+
+.. code-block:: python
+
+  >>> load(commented_yaml, schema)['a'].lines_after(4) == ["b: y", "c: a", "d: b",  '']
   True
 

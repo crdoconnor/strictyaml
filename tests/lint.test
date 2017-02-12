@@ -1,7 +1,7 @@
 - name: Run flake8
   preconditions:
     launch_shell: no
-    ruamel version: 0.12.12
+    ruamel version: 0.13.13
   tags:
     - flake8
   scenario:

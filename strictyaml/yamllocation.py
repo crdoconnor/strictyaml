@@ -82,6 +82,21 @@ class YAMLLocation(object):
         slicedpart = self._slice_segment(self._indices, document, include_selected=True)
         return len(dump(slicedpart, Dumper=RoundTripDumper).rstrip().split('\n'))
 
+    def lines(self, document):
+        return dump(document, Dumper=RoundTripDumper).split('\n')[
+            self.start_line(document) - 1:self.end_line(document)
+        ]
+
+    def lines_before(self, document, how_many):
+        return dump(document, Dumper=RoundTripDumper).split('\n')[
+            self.start_line(document) - 1 - how_many:self.start_line(document) - 1
+        ]
+
+    def lines_after(self, document, how_many):
+        return dump(document, Dumper=RoundTripDumper).split('\n')[
+            self.end_line(document):self.end_line(document) + how_many
+        ]
+
     def get(self, document):
         segment = deepcopy(document)
         for index_type, index in self._indices:
@@ -94,4 +109,4 @@ class YAMLLocation(object):
         return segment
 
     def __repr__(self):
-        return "<YAMLLocation>"
+        return "<YAMLLocation: {0}>".format(self._indices)

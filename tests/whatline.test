@@ -8,12 +8,15 @@
     ruamel version: {{ ruamel_version }}
     files:
       commented_yaml.yaml: |
+        y: p
         # Some comment
         
-        a: x # value comment
-        
+        a: |
+          x
         # Another comment
         b: y
+        c: a
+        d: b
   tags:
     - roundtrip
     - py{{ python_version }}
@@ -21,10 +24,16 @@
     - Run command: |
         from strictyaml import Map, Str, YAMLValidationError, load
 
-        schema = Map({"a": Str(), "b": Str()})
+        schema = Map({"y": Str(), "a": Str(), "b": Str(), "c": Str(), "d": Str()})
 
-    - Assert True: 'load(commented_yaml, schema)["a"].end_line == 3'
+    - Assert True: 'load(commented_yaml, schema)["a"].end_line == 6'
     - Assert True: 'load(commented_yaml, schema).start_line == 1'
-    - Assert True: 'load(commented_yaml, schema).end_line == 6'
+    - Assert True: 'load(commented_yaml, schema).end_line == 9'
+    - Assert True: |
+        load(commented_yaml, schema)['a'].lines() == ['# Some comment', '', 'a: |', '  x', '# Another comment']
+    - Assert True: |
+        load(commented_yaml, schema)['a'].lines_before(1) == ["y: p"]
+    - Assert True: |
+        load(commented_yaml, schema)['a'].lines_after(4) == ["b: y", "c: a", "d: b",  '']
 {% endfor %}
 {% endfor %}
