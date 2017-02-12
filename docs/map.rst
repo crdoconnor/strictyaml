@@ -1,12 +1,13 @@
 Mapping validation
 ==================
 
-invalid_sequence_2
+invalid_sequence_3
 .. code-block:: yaml
 
-  - 1
-  - 2
-  - 3
+  a: 1
+  b: 2
+  c: 3
+  d: 4
 
 invalid_sequence_1
 .. code-block:: yaml
@@ -22,13 +23,12 @@ valid_sequence
   b: 2
   c: 3
 
-invalid_sequence_3
+invalid_sequence_2
 .. code-block:: yaml
 
-  a: 1
-  b: 2
-  c: 3
-  d: 4
+  - 1
+  - 2
+  - 3
 
 .. code-block:: python
 
@@ -39,6 +39,11 @@ invalid_sequence_3
 .. code-block:: python
 
   >>> load(valid_sequence, schema) == {"a": 1, "b": 2, "c": 3}
+  True
+
+.. code-block:: python
+
+  >>> load(valid_sequence, schema).items() == [("a", 1), ("b", 2), ("c", 3)]
   True
 
 .. code-block:: python

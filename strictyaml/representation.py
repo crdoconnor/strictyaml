@@ -100,6 +100,9 @@ class YAML(object):
     def as_yaml(self):
         return dump(self.as_marked_up(), Dumper=RoundTripDumper)
 
+    def items(self):
+        return [(key, self._value[key]) for key, value in self._value.items()]
+
     @property
     def text(self):
         if isinstance(self._value, CommentedMap):
