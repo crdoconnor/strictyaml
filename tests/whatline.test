@@ -31,10 +31,10 @@
     - Assert True: 'load(commented_yaml, schema).start_line == 1'
     - Assert True: 'load(commented_yaml, schema).end_line == 10'
     - Assert True: |
-        load(commented_yaml, schema)['a'].lines() == ['# Some comment', '', 'a: |', '  x', '', '# Another comment']
+        load(commented_yaml, schema)['a'].lines() == '# Some comment\n\na: |\n  x\n\n# Another comment'
     - Assert True: |
-        load(commented_yaml, schema)['a'].lines_before(1) == ["y: p"]
+        load(commented_yaml, schema)['a'].lines_before(1) == "y: p"
     - Assert True: |
-        load(commented_yaml, schema)['a'].lines_after(4) == ["b: y", "c: a", "d: b",  '']
+        load(commented_yaml, schema)['a'].lines_after(4) == "b: y\nc: a\nd: b\n"
 {% endfor %}
 {% endfor %}

@@ -41,16 +41,16 @@ commented_yaml
 
 .. code-block:: python
 
-  >>> load(commented_yaml, schema)['a'].lines() == ['# Some comment', '', 'a: |', '  x', '', '# Another comment']
+  >>> load(commented_yaml, schema)['a'].lines() == '# Some comment\n\na: |\n  x\n\n# Another comment'
   True
 
 .. code-block:: python
 
-  >>> load(commented_yaml, schema)['a'].lines_before(1) == ["y: p"]
+  >>> load(commented_yaml, schema)['a'].lines_before(1) == "y: p"
   True
 
 .. code-block:: python
 
-  >>> load(commented_yaml, schema)['a'].lines_after(4) == ["b: y", "c: a", "d: b",  '']
+  >>> load(commented_yaml, schema)['a'].lines_after(4) == "b: y\nc: a\nd: b\n"
   True
 
