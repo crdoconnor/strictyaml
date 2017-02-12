@@ -12,6 +12,7 @@ commented_yaml
   
   a: |
     x
+  
   # Another comment
   b: y
   c: a
@@ -25,7 +26,7 @@ commented_yaml
 
 .. code-block:: python
 
-  >>> load(commented_yaml, schema)["a"].end_line == 6
+  >>> load(commented_yaml, schema)["a"].end_line == 7
   True
 
 .. code-block:: python
@@ -35,12 +36,12 @@ commented_yaml
 
 .. code-block:: python
 
-  >>> load(commented_yaml, schema).end_line == 9
+  >>> load(commented_yaml, schema).end_line == 10
   True
 
 .. code-block:: python
 
-  >>> load(commented_yaml, schema)['a'].lines() == ['# Some comment', '', 'a: |', '  x', '# Another comment']
+  >>> load(commented_yaml, schema)['a'].lines() == ['# Some comment', '', 'a: |', '  x', '', '# Another comment']
   True
 
 .. code-block:: python
