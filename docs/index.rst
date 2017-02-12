@@ -1,7 +1,7 @@
 StrictYAML
 ==========
 
-Hitch is a type safe parser.
+StrictYAML is a typesafe YAML parser.
 
 Documentation
 -------------
@@ -9,4 +9,4 @@ Documentation
 .. toctree::
    :maxdepth: 1
 
-   .
+   /
