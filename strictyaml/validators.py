@@ -94,7 +94,7 @@ class Enum(Scalar):
                 document, location=location,
             )
         else:
-            return YAML(val)
+            return YAML(val, document=document, location=location)
 
 
 class EmptyNone(Scalar):
@@ -107,20 +107,20 @@ class EmptyNone(Scalar):
                 document, location=location,
             )
         else:
-            return self.empty()
+            return self.empty(document, location)
 
-    def empty(self):
-        return YAML(None, '')
+    def empty(self, document, location):
+        return YAML(None, '', document=document, location=location)
 
 
 class EmptyDict(EmptyNone):
-    def empty(self):
-        return YAML({}, '')
+    def empty(self, document, location):
+        return YAML({}, '', document=document, location=location)
 
 
 class EmptyList(EmptyNone):
-    def empty(self):
-        return YAML([], '')
+    def empty(self, document, location):
+        return YAML([], '', document=document, location=location)
 
 
 class CommaSeparated(Scalar):
@@ -129,15 +129,23 @@ class CommaSeparated(Scalar):
 
     def validate_scalar(self, document, location, value):
         val = str(location.get(document)) if value is None else value
-        return YAML([
-            YAML(self._item_validator.validate_scalar(document, location, value=item.lstrip()))
-            for item in val.split(",")
-        ])
+        return YAML(
+            [
+                YAML(self._item_validator.validate_scalar(document, location, value=item.lstrip()))
+                for item in val.split(",")
+            ],
+            document=document,
+            location=location
+        )
 
 
 class Str(Scalar):
     def validate_scalar(self, document, location, value=None):
-        return YAML(str(location.get(document)) if value is None else value)
+        return YAML(
+            str(location.get(document)) if value is None else value,
+            document=document,
+            location=location
+        )
 
 
 class Int(Scalar):
@@ -150,7 +158,7 @@ class Int(Scalar):
                     document, location=location,
                 )
         else:
-            return YAML(int(val), val)
+            return YAML(int(val), val, document=document, location=location)
 
 
 TRUE_VALUES = ["yes", "true", "on", "1", ]
@@ -171,9 +179,9 @@ class Bool(Scalar):
             )
         else:
             if val in TRUE_VALUES:
-                return YAML(True, val)
+                return YAML(True, val, document=document, location=location)
             else:
-                return YAML(False, val)
+                return YAML(False, val, document=document, location=location)
 
 
 class Float(Scalar):
@@ -186,7 +194,7 @@ class Float(Scalar):
                 document, location=location,
             )
         else:
-            return YAML(float(val), val)
+            return YAML(float(val), val, document=document, location=location)
 
 
 class Decimal(Scalar):
@@ -199,7 +207,7 @@ class Decimal(Scalar):
                 document, location=location,
             )
         else:
-            return YAML(decimal.Decimal(val), val)
+            return YAML(decimal.Decimal(val), val, document=document, location=location)
 
 
 class Datetime(Scalar):
@@ -207,7 +215,7 @@ class Datetime(Scalar):
         val = str(location.get(document)) if value is None else value
 
         try:
-            return YAML(dateutil.parser.parse(val), val)
+            return YAML(dateutil.parser.parse(val), val, document=document, location=location)
         except ValueError:
             raise_exception(
                 "when expecting a datetime",
@@ -239,7 +247,7 @@ class MapPattern(Validator):
                 valid_val = self._value_validator(document, location.val(key))
                 return_snippet[valid_key] = valid_val
 
-        return YAML(return_snippet)
+        return YAML(return_snippet, document=document, location=location)
 
 
 class Map(Validator):
@@ -275,7 +283,7 @@ class Map(Validator):
                     document, location.val(key)
                 )
 
-        return YAML(return_snippet)
+        return YAML(return_snippet, document=document, location=location)
 
 
 class Seq(Validator):
@@ -298,7 +306,7 @@ class Seq(Validator):
             for i, item in enumerate(location.get(document)):
                 return_snippet[i] = self._validator(document, location=location.index(i))
 
-        return YAML(return_snippet)
+        return YAML(return_snippet, document=document, location=location)
 
 
 class FixedSeq(Validator):
@@ -330,7 +338,7 @@ class FixedSeq(Validator):
                 item, validator = item_and_val
                 return_snippet[i] = validator(document, location=location.index(i))
 
-        return YAML(return_snippet)
+        return YAML(return_snippet, document=document, location=location)
 
 
 class UniqueSeq(Validator):
@@ -364,4 +372,4 @@ class UniqueSeq(Validator):
                     existing_items.add(item)
                     return_snippet[i] = self._validator(document, location=location.index(i))
 
-        return YAML(return_snippet)
+        return YAML(return_snippet, document=document, location=location)

@@ -1,0 +1,30 @@
+{% for ruamel_version in ruamel_versions %}
+{% for python_version in python_versions %}
+- name: What line
+  description: |
+    Line and context can be determined from the returned YAML object.
+  preconditions:
+    python_version: {{ python_version }}
+    ruamel version: {{ ruamel_version }}
+    files:
+      commented_yaml.yaml: |
+        # Some comment
+        
+        a: x # value comment
+        
+        # Another comment
+        b: y
+  tags:
+    - roundtrip
+    - py{{ python_version }}
+  scenario:
+    - Run command: |
+        from strictyaml import Map, Str, YAMLValidationError, load
+
+        schema = Map({"a": Str(), "b": Str()})
+
+    - Assert True: 'load(commented_yaml, schema)["a"].end_line == 3'
+    - Assert True: 'load(commented_yaml, schema).start_line == 1'
+    - Assert True: 'load(commented_yaml, schema).end_line == 6'
+{% endfor %}
+{% endfor %}

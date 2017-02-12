@@ -5,9 +5,11 @@ from copy import deepcopy
 
 
 class YAML(object):
-    def __init__(self, value, text=None):
+    def __init__(self, value, text=None, document=None, location=None):
         self._value = value
         self._text = str(value) if text is None else text
+        self._document = deepcopy(document)
+        self._location = location
 
     def __int__(self):
         return self._value
@@ -44,6 +46,14 @@ class YAML(object):
             return new_commented_seq
         else:
             return self._text
+
+    @property
+    def start_line(self):
+        return self._location.start_line(self._document)
+
+    @property
+    def end_line(self):
+        return self._location.end_line(self._document)
 
     def __float__(self):
         return float(self._value)
