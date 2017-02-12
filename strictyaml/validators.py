@@ -41,16 +41,13 @@ class OrValidator(Validator):
             return self._validator_b(document, location=location)
 
 
-def strip_accoutrements(document):
-    """
-    Replace CommentedMap with regular python dict and CommentedSeq with regular list.
-    """
-    if type(document) is CommentedMap:
-        return {key: strip_accoutrements(value) for key, value in document.items()}
-    elif type(document) is CommentedSeq:
-        return [strip_accoutrements(item) for item in document]
+def schema_from_data(document):
+    if isinstance(document, CommentedMap):
+        return Map({key: schema_from_data(value) for key, value in document.items()})
+    elif isinstance(document, CommentedSeq):
+        return FixedSeq([schema_from_data(item) for item in document])
     else:
-        return str(document)
+        return Str()
 
 
 class Any(Validator):
@@ -58,13 +55,10 @@ class Any(Validator):
     Validates any YAML and returns simple dicts/lists of strings.
     """
     def validate(self, document, location=None):
-        return strip_accoutrements(location.get(document))
-
-
-class CommentedYAML(Validator):
-    """Validates any YAML and returns ruamel.yaml CommentedMap/CommentedSeq."""
-    def validate(self, document, location=None):
-        return location.get(document)
+        if location is None:
+            location = YAMLLocation()
+            document = copy.deepcopy(document)
+        return schema_from_data(location.get(document))(document, location=location)
 
 
 class Scalar(Validator):
@@ -328,9 +322,9 @@ class FixedSeq(Validator):
         else:
             if len(self._validators) != len(location.get(document)):
                 raise_exception(
-                "when expecting a sequence of {0} elements".format(len(self._validators)),
-                "found a sequence of {0} elements".format(len(location.get(document))),
-                document, location=location,
+                    "when expecting a sequence of {0} elements".format(len(self._validators)),
+                    "found a sequence of {0} elements".format(len(location.get(document))),
+                    document, location=location,
                 )
             for i, item_and_val in enumerate(zip(location.get(document), self._validators)):
                 item, validator = item_and_val

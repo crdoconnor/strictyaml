@@ -1,0 +1,35 @@
+{% for ruamel_version in ruamel_versions %}
+{% for python_version in python_versions %}
+- name: Non-schema validation
+  description: |
+    When using strictyaml you do not have to specify a schema. If
+    you do this, the validator "Any" is used which will accept any
+    mapping and any list and any value (which will always be rendered
+    as a string).
+    
+    This is recommended when prototyping programs and the schema is
+    frequently changing. When your prototype code is parsing YAML
+    that has a fixed structure, lock it down with a schema.
+  preconditions:
+    python_version: {{ python_version }}
+    ruamel version: {{ ruamel_version }}
+    files:
+      valid_sequence.yaml: |
+        a:
+          x: 9
+          y: 8
+        b: 2
+        c: 3
+  tags:
+    - nested
+    - map
+    - py{{ python_version }}
+  scenario:
+    - Run command: |
+        from strictyaml import Any, YAMLValidationError, load
+
+        schema = Any()
+
+    - Assert True: 'load(valid_sequence, schema) == {"a": {"x": "9", "y": "8"}, "b": "2", "c": "3"}'
+{% endfor %}
+{% endfor %}
