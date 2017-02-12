@@ -249,7 +249,7 @@ class MapPattern(Validator):
 
 
 class Map(Validator):
-    def __init__(self, validator, location=None):
+    def __init__(self, validator):
         self._validator = validator
 
         self._validator_dict = {
@@ -303,6 +303,38 @@ class Seq(Validator):
         else:
             for i, item in enumerate(location.get(document)):
                 return_snippet[i] = self._validator(document, location=location.index(i))
+
+        return YAML(return_snippet)
+
+
+class FixedSeq(Validator):
+    def __init__(self, validators):
+        for validator in validators:
+            assert isinstance(validator, Validator)
+        self._validators = validators
+
+    def validate(self, document, location=None):
+        if location is None:
+            location = YAMLLocation()
+            document = copy.deepcopy(document)
+        return_snippet = location.get(document)
+
+        if type(location.get(document)) != CommentedSeq:
+            raise_exception(
+                "when expecting a sequence of {0} elements".format(len(self._validators)),
+                "found non-sequence",
+                document, location=location,
+            )
+        else:
+            if len(self._validators) != len(location.get(document)):
+                raise_exception(
+                "when expecting a sequence of {0} elements".format(len(self._validators)),
+                "found a sequence of {0} elements".format(len(location.get(document))),
+                document, location=location,
+                )
+            for i, item_and_val in enumerate(zip(location.get(document), self._validators)):
+                item, validator = item_and_val
+                return_snippet[i] = validator(document, location=location.index(i))
 
         return YAML(return_snippet)
 

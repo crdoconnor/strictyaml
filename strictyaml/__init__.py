@@ -6,7 +6,6 @@ from strictyaml.validators import Optional
 from strictyaml.validators import Validator
 from strictyaml.validators import OrValidator
 from strictyaml.validators import Any
-from strictyaml.validators import CommentedYAML
 from strictyaml.validators import Scalar
 from strictyaml.validators import Enum
 from strictyaml.validators import Str
@@ -18,13 +17,14 @@ from strictyaml.validators import Map
 from strictyaml.validators import MapPattern
 from strictyaml.validators import Seq
 from strictyaml.validators import UniqueSeq
+from strictyaml.validators import FixedSeq
 from strictyaml.validators import Datetime
 from strictyaml.validators import EmptyNone
 from strictyaml.validators import EmptyDict
 from strictyaml.validators import EmptyList
 from strictyaml.validators import CommaSeparated
 
-# Base exception from 
+# Base exception from ruamel.yaml (all exceptions inherit from this)
 from ruamel.yaml import YAMLError
 
 # Exceptions
