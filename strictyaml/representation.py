@@ -3,6 +3,7 @@ from strictyaml.exceptions import raise_type_error
 from ruamel.yaml import RoundTripDumper
 from ruamel.yaml import dump
 from copy import deepcopy
+import decimal
 
 
 class YAML(object):
@@ -16,7 +17,7 @@ class YAML(object):
         return int(self._value)
 
     def __str__(self):
-        if type(self._value) is str:
+        if type(self._value) in (str, int, float, decimal.Decimal):
             return str(self._value)
         else:
             raise raise_type_error(
