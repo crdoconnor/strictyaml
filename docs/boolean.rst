@@ -29,3 +29,9 @@ valid_sequence
   >>> load(valid_sequence, schema)["g"].text == "false"
   True
 
+.. code-block:: python
+
+  >>> str(load(valid_sequence, schema)["g"])
+  EXCEPTION RAISED:
+  Cannot cast
+

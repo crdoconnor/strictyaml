@@ -51,3 +51,10 @@ def raise_exception(context, problem, document, location):
             "<unicode string>", problem_index, problem_line, 0, str_document, problem_index + 1
         )
     )
+
+
+def raise_type_error(yaml_object, to_type, alternatives):
+    raise TypeError((
+        "Cannot cast {0} to {1}.\n"
+        "Use {2} instead."
+    ).format(repr(yaml_object), to_type, alternatives))

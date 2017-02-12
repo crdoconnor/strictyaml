@@ -1,4 +1,5 @@
 from ruamel.yaml.comments import CommentedSeq, CommentedMap
+from strictyaml.exceptions import raise_type_error
 from ruamel.yaml import RoundTripDumper
 from ruamel.yaml import dump
 from copy import deepcopy
@@ -15,7 +16,12 @@ class YAML(object):
         return self._value
 
     def __str__(self):
-        return str(self._value)
+        if type(self._value) is str:
+            return str(self._value)
+        else:
+            raise raise_type_error(
+                repr(self), "str", "str(yamlobj.value) or str(yamlobj.text)"
+            )
 
     @property
     def data(self):

@@ -27,5 +27,9 @@
     - Assert True: 'load(valid_sequence, schema)["a"] == True'
 
     - Assert True: 'load(valid_sequence, schema)["g"].text == "false"'
+
+    - Assert Exception:
+        command: str(load(valid_sequence, schema)["g"])
+        exception: Cannot cast
 {% endfor %}
 {% endfor %}
