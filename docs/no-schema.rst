@@ -1,15 +1,6 @@
 No schema validation
 ====================
 
-sequence_2
-.. code-block:: yaml
-
-  a:
-    - 9
-    - 8
-  b: 2
-  d: 3
-
 sequence_1
 .. code-block:: yaml
 
@@ -23,6 +14,15 @@ sequence_3
 .. code-block:: yaml
 
   a: 11
+  b: 2
+  d: 3
+
+sequence_2
+.. code-block:: yaml
+
+  a:
+    - 9
+    - 8
   b: 2
   d: 3
 

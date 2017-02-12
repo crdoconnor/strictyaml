@@ -1,19 +1,26 @@
 Mapping validation
 ==================
 
-valid_sequence
-.. code-block:: yaml
-
-  a: 1
-  b: 2
-  c: 3
-
 invalid_sequence_2
 .. code-block:: yaml
 
   - 1
   - 2
   - 3
+
+invalid_sequence_1
+.. code-block:: yaml
+
+  a: 1
+  b: 2
+  d: 3
+
+valid_sequence
+.. code-block:: yaml
+
+  a: 1
+  b: 2
+  c: 3
 
 invalid_sequence_3
 .. code-block:: yaml
@@ -22,13 +29,6 @@ invalid_sequence_3
   b: 2
   c: 3
   d: 4
-
-invalid_sequence_1
-.. code-block:: yaml
-
-  a: 1
-  b: 2
-  d: 3
 
 .. code-block:: python
 
@@ -53,6 +53,12 @@ invalid_sequence_1
 
 .. code-block:: python
 
+  >>> load(valid_sequence, schema)['keynotfound']
+  EXCEPTION RAISED:
+  keynotfound
+
+.. code-block:: python
+
   >>> load(valid_sequence, schema).text
   EXCEPTION RAISED:
   is a mapping, has no text value.
@@ -65,7 +71,7 @@ invalid_sequence_1
   unexpected key not in schema 'd'
     in "<unicode string>", line 3, column 1:
       d: '3'
-      ^
+      ^ (line: 3)
 
 .. code-block:: python
 
@@ -74,11 +80,11 @@ invalid_sequence_1
   when expecting a mapping
     in "<unicode string>", line 1, column 1:
       - '1'
-       ^
+       ^ (line: 1)
   found non-mapping
     in "<unicode string>", line 3, column 1:
       - '3'
-      ^
+      ^ (line: 3)
 
 .. code-block:: python
 
@@ -88,5 +94,5 @@ invalid_sequence_1
   unexpected key not in schema 'd'
     in "<unicode string>", line 4, column 1:
       d: '4'
-      ^
+      ^ (line: 4)
 

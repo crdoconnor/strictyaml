@@ -1,18 +1,11 @@
 Optional validation
 ===================
 
-valid_sequence_1
+invalid_sequence_2
 .. code-block:: yaml
 
-  a: 1
+  a: a
   b: 2
-
-invalid_sequence_3
-.. code-block:: yaml
-
-  a: 1
-  b: yes
-  c: 3
 
 valid_sequence_3
 .. code-block:: yaml
@@ -30,11 +23,18 @@ invalid_sequence_1
 
   b: b
 
-invalid_sequence_2
+valid_sequence_1
 .. code-block:: yaml
 
-  a: a
+  a: 1
   b: 2
+
+invalid_sequence_3
+.. code-block:: yaml
+
+  a: 1
+  b: yes
+  c: 3
 
 .. code-block:: python
 

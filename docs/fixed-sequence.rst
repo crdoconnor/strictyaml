@@ -14,6 +14,13 @@ invalid_sequence_2
     - 1
     - 2
 
+invalid_sequence_1
+.. code-block:: yaml
+
+  a: 1
+  b: 2
+  c: 3
+
 valid_sequence
 .. code-block:: yaml
 
@@ -26,13 +33,6 @@ invalid_sequence_3
 
   - 1
   - a
-
-invalid_sequence_1
-.. code-block:: yaml
-
-  a: 1
-  b: 2
-  c: 3
 
 .. code-block:: python
 
@@ -52,11 +52,11 @@ invalid_sequence_1
   when expecting a sequence of 3 elements
     in "<unicode string>", line 1, column 1:
       a: '1'
-       ^
+       ^ (line: 1)
   found non-sequence
     in "<unicode string>", line 3, column 1:
       c: '3'
-      ^
+      ^ (line: 3)
 
 .. code-block:: python
 
@@ -65,11 +65,11 @@ invalid_sequence_1
   when expecting a float
     in "<unicode string>", line 3, column 1:
       - a:
-      ^
+      ^ (line: 3)
   found mapping/sequence
     in "<unicode string>", line 5, column 1:
         - '2'
-      ^
+      ^ (line: 5)
 
 .. code-block:: python
 
@@ -78,9 +78,9 @@ invalid_sequence_1
   when expecting a sequence of 3 elements
     in "<unicode string>", line 1, column 1:
       - '1'
-       ^
+       ^ (line: 1)
   found a sequence of 2 elements
     in "<unicode string>", line 2, column 1:
       - a
-      ^
+      ^ (line: 2)
 

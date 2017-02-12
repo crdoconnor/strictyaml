@@ -1,14 +1,12 @@
 Nested mapping validation
 =========================
 
-valid_sequence
+invalid_sequence_2
 .. code-block:: yaml
 
-  a:
-    x: 9
-    y: 8
+  a: 11
   b: 2
-  c: 3
+  d: 3
 
 invalid_sequence_1
 .. code-block:: yaml
@@ -19,12 +17,14 @@ invalid_sequence_1
   b: 2
   d: 3
 
-invalid_sequence_2
+valid_sequence
 .. code-block:: yaml
 
-  a: 11
+  a:
+    x: 9
+    y: 8
   b: 2
-  d: 3
+  c: 3
 
 .. code-block:: python
 

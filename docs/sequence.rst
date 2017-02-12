@@ -1,26 +1,6 @@
 Sequence validation
 ===================
 
-invalid_sequence_4
-.. code-block:: yaml
-
-  - 1
-  - 2
-  - 3.4
-
-invalid_sequence_1
-.. code-block:: yaml
-
-  a: 1
-  b: 2
-  c: 3
-
-invalid_sequence_3
-.. code-block:: yaml
-
-  - 1.1
-  - 1.2
-
 invalid_sequence_2
 .. code-block:: yaml
 
@@ -30,12 +10,32 @@ invalid_sequence_2
     - 1
     - 2
 
+invalid_sequence_1
+.. code-block:: yaml
+
+  a: 1
+  b: 2
+  c: 3
+
+invalid_sequence_4
+.. code-block:: yaml
+
+  - 1
+  - 2
+  - 3.4
+
 valid_sequence
 .. code-block:: yaml
 
   - 1
   - 2
   - 3
+
+invalid_sequence_3
+.. code-block:: yaml
+
+  - 1.1
+  - 1.2
 
 .. code-block:: python
 
@@ -59,11 +59,11 @@ valid_sequence
   when expecting a sequence
     in "<unicode string>", line 1, column 1:
       a: '1'
-       ^
+       ^ (line: 1)
   found non-sequence
     in "<unicode string>", line 3, column 1:
       c: '3'
-      ^
+      ^ (line: 3)
 
 .. code-block:: python
 
@@ -72,11 +72,11 @@ valid_sequence
   when expecting a str
     in "<unicode string>", line 3, column 1:
       - a:
-      ^
+      ^ (line: 3)
   found mapping/sequence
     in "<unicode string>", line 5, column 1:
         - '2'
-      ^
+      ^ (line: 5)
 
 .. code-block:: python
 
@@ -86,7 +86,7 @@ valid_sequence
   found non-integer
     in "<unicode string>", line 1, column 1:
       - '1.1'
-       ^
+       ^ (line: 1)
 
 .. code-block:: python
 
@@ -96,5 +96,5 @@ valid_sequence
   found non-integer
     in "<unicode string>", line 3, column 1:
       - '3.4'
-      ^
+      ^ (line: 3)
 

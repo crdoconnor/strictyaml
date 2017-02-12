@@ -28,9 +28,9 @@ duplicate
   While parsing
     in "<unicode string>", line 2, column 1:
       a: bull
-      ^
+      ^ (line: 2)
   Duplicate key 'a' found
     in "<unicode string>", line 2, column 2:
       a: bull
-       ^
+       ^ (line: 2)
 

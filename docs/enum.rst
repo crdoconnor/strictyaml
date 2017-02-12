@@ -1,15 +1,10 @@
 Enum validation
 ===============
 
-valid_sequence_1
+invalid_sequence_2
 .. code-block:: yaml
 
-  a: A
-
-invalid_sequence_3
-.. code-block:: yaml
-
-  a: 1
+  a: yes
 
 valid_sequence_3
 .. code-block:: yaml
@@ -26,10 +21,15 @@ invalid_sequence_1
 
   a: D
 
-invalid_sequence_2
+valid_sequence_1
 .. code-block:: yaml
 
-  a: yes
+  a: A
+
+invalid_sequence_3
+.. code-block:: yaml
+
+  a: 1
 
 .. code-block:: python
 

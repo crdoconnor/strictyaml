@@ -42,11 +42,11 @@
           when expecting a sequence of 3 elements
             in "<unicode string>", line 1, column 1:
               a: '1'
-               ^
+               ^ (line: 1)
           found non-sequence
             in "<unicode string>", line 3, column 1:
               c: '3'
-              ^
+              ^ (line: 3)
 
     - Assert Exception:
         command: load(invalid_sequence_2, schema)
@@ -54,11 +54,11 @@
           when expecting a float
             in "<unicode string>", line 3, column 1:
               - a:
-              ^
+              ^ (line: 3)
           found mapping/sequence
             in "<unicode string>", line 5, column 1:
                 - '2'
-              ^
+              ^ (line: 5)
 
     - Assert Exception:
         command: load(invalid_sequence_3, schema)
@@ -66,10 +66,10 @@
           when expecting a sequence of 3 elements
             in "<unicode string>", line 1, column 1:
               - '1'
-               ^
+               ^ (line: 1)
           found a sequence of 2 elements
             in "<unicode string>", line 2, column 1:
               - a
-              ^
+              ^ (line: 2)
 {% endfor %}
 {% endfor %}

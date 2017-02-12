@@ -1,15 +1,10 @@
 Or validation
 =============
 
-valid_sequence_1
+invalid_sequence_2
 .. code-block:: yaml
 
-  a: yes
-
-invalid_sequence_3
-.. code-block:: yaml
-
-  a: 3.14
+  a: B
 
 valid_sequence_3
 .. code-block:: yaml
@@ -26,10 +21,15 @@ invalid_sequence_1
 
   a: A
 
-invalid_sequence_2
+valid_sequence_1
 .. code-block:: yaml
 
-  a: B
+  a: yes
+
+invalid_sequence_3
+.. code-block:: yaml
+
+  a: 3.14
 
 .. code-block:: python
 

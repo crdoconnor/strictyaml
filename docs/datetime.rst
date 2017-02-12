@@ -4,14 +4,6 @@ Datetime validation
 Datetimes are parsed using the python-dateutil library.
 
 
-valid_sequence
-.. code-block:: yaml
-
-  date: 2016-10-22
-  datetime1: 2016-10-22T14:23:12+00:00
-  datetime2: 2016-10-22T14:23:12Z
-  datetime3: 20161022T142312Z
-
 invalid_sequence_1
 .. code-block:: yaml
 
@@ -19,6 +11,14 @@ invalid_sequence_1
   datetime1: a
   datetime2: b
   datetime3: c
+
+valid_sequence
+.. code-block:: yaml
+
+  date: 2016-10-22
+  datetime1: 2016-10-22T14:23:12+00:00
+  datetime2: 2016-10-22T14:23:12Z
+  datetime3: 20161022T142312Z
 
 .. code-block:: python
 

@@ -1,11 +1,6 @@
 Disallow invalid YAML
 =====================
 
-flow_style
-.. code-block:: yaml
-
-  x: { a: 1, b: 2, c: 3 }
-
 tag_tokens
 .. code-block:: yaml
 
@@ -27,6 +22,11 @@ node_anchors_and_references
     b: 1
     c: *node1
 
+flow_style
+.. code-block:: yaml
+
+  x: { a: 1, b: 2, c: 3 }
+
 .. code-block:: python
 
   >>> from strictyaml import Map, Int, Any, load
@@ -41,11 +41,11 @@ node_anchors_and_references
   While scanning
     in "<unicode string>", line 2, column 11:
         a: !!str yes
-                ^
+                ^ (line: 2)
   Found disallowed tag tokens (do not specify types in markup)
     in "<unicode string>", line 2, column 6:
         a: !!str yes
-           ^
+           ^ (line: 2)
 
 .. code-block:: python
 
@@ -54,11 +54,11 @@ node_anchors_and_references
   While scanning
     in "<unicode string>", line 1, column 1:
       [a, b]: [x, y]
-      ^
+      ^ (line: 1)
   Found ugly disallowed JSONesque flow mapping (surround with ' and ' to make text appear literally)
     in "<unicode string>", line 1, column 2:
       [a, b]: [x, y]
-       ^
+       ^ (line: 1)
 
 .. code-block:: python
 
@@ -67,11 +67,11 @@ node_anchors_and_references
   While scanning
     in "<unicode string>", line 1, column 4:
       x: { a: 1, b: 2, c: 3 }
-         ^
+         ^ (line: 1)
   Found ugly disallowed JSONesque flow mapping (surround with ' and ' to make text appear literally)
     in "<unicode string>", line 1, column 5:
       x: { a: 1, b: 2, c: 3 }
-          ^
+          ^ (line: 1)
 
 .. code-block:: python
 
@@ -80,11 +80,11 @@ node_anchors_and_references
   While scanning
     in "<unicode string>", line 1, column 4:
       x: { a: 1, b: 2, c: 3 }
-         ^
+         ^ (line: 1)
   Found ugly disallowed JSONesque flow mapping (surround with ' and ' to make text appear literally)
     in "<unicode string>", line 1, column 5:
       x: { a: 1, b: 2, c: 3 }
-          ^
+          ^ (line: 1)
 
 .. code-block:: python
 
@@ -93,9 +93,9 @@ node_anchors_and_references
   While scanning
     in "<unicode string>", line 2, column 6:
         a: &node1 3.5
-           ^
+           ^ (line: 2)
   Found confusing disallowed anchor token (surround with ' and ' to make text appear literally)
     in "<unicode string>", line 2, column 12:
         a: &node1 3.5
-                 ^
+                 ^ (line: 2)
 

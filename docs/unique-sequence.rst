@@ -1,12 +1,12 @@
 Sequence pattern validation
 ===========================
 
-valid_sequence
+invalid_sequence_2
 .. code-block:: yaml
 
-  - A
-  - B
-  - C
+  - 3
+  - 3
+  - 3
 
 invalid_sequence_1
 .. code-block:: yaml
@@ -15,12 +15,12 @@ invalid_sequence_1
   - B
   - B
 
-invalid_sequence_2
+valid_sequence
 .. code-block:: yaml
 
-  - 3
-  - 3
-  - 3
+  - A
+  - B
+  - C
 
 .. code-block:: python
 
@@ -40,11 +40,11 @@ invalid_sequence_2
   while parsing a sequence
     in "<unicode string>", line 1, column 1:
       - A
-       ^
+       ^ (line: 1)
   duplicate found
     in "<unicode string>", line 3, column 1:
       - B
-      ^
+      ^ (line: 3)
 
 .. code-block:: python
 
@@ -53,9 +53,9 @@ invalid_sequence_2
   while parsing a sequence
     in "<unicode string>", line 1, column 1:
       - '3'
-       ^
+       ^ (line: 1)
   duplicate found
     in "<unicode string>", line 3, column 1:
       - '3'
-      ^
+      ^ (line: 3)
 

@@ -1,6 +1,33 @@
 Scalar validation
 =================
 
+invalid_sequence_2
+.. code-block:: yaml
+
+  a: string
+  b: 2
+  c: string
+  d: 3.141
+  e: 3.1415926535
+
+invalid_sequence_1
+.. code-block:: yaml
+
+  a: 1
+  b: 2
+  c: string
+  d: 3.141
+  e: 3.1415926535
+
+invalid_sequence_4
+.. code-block:: yaml
+
+  a: 1
+  b: yes
+  c: string
+  d: 3.141
+  e: not a decimal
+
 valid_sequence
 .. code-block:: yaml
 
@@ -18,33 +45,6 @@ invalid_sequence_3
   c: string
   d: not a float
   e: 3.1415926535
-
-invalid_sequence_1
-.. code-block:: yaml
-
-  a: 1
-  b: 2
-  c: string
-  d: 3.141
-  e: 3.1415926535
-
-invalid_sequence_2
-.. code-block:: yaml
-
-  a: string
-  b: 2
-  c: string
-  d: 3.141
-  e: 3.1415926535
-
-invalid_sequence_4
-.. code-block:: yaml
-
-  a: 1
-  b: yes
-  c: string
-  d: 3.141
-  e: not a decimal
 
 .. code-block:: python
 
