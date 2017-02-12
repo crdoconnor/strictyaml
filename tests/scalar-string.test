@@ -1,0 +1,34 @@
+{% for ruamel_version in ruamel_versions %}
+{% for python_version in python_versions %}
+- name: String scalars
+  preconditions:
+    python_version: {{ python_version }}
+    ruamel version: {{ ruamel_version }}
+    files:
+      valid_sequence.yaml: |
+        a: 1
+        b: yes
+        c: string
+        d: |
+          multiline string
+  tags:
+    - scalar
+    - string
+    - py{{ python_version }}
+  scenario:
+    - Run command: |
+        from strictyaml import Str, Map, YAMLValidationError, load
+
+        schema = Map({"a": Str(), "b": Str(), "c": Str(), "d": Str()})
+
+    - Assert True: 'load(valid_sequence, schema) == {"a": "1", "b": "yes", "c": "string", "d": "multiline string\n"}'
+
+    - Assert True: str(load(valid_sequence, schema)["a"]) == "1"
+
+    - Assert True: int(load(valid_sequence, schema)["a"]) == 1
+
+    - Assert Exception:
+        command: bool(load(valid_sequence, schema)["a"])
+        exception: Cannot cast
+{% endfor %}
+{% endfor %}

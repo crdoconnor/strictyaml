@@ -13,7 +13,7 @@ class YAML(object):
         self._location = location
 
     def __int__(self):
-        return self._value
+        return int(self._value)
 
     def __str__(self):
         if type(self._value) is str:
@@ -80,7 +80,9 @@ class YAML(object):
         if isinstance(self._value, bool):
             return self._value
         else:
-            raise TypeError("not bool")
+            raise raise_type_error(
+                repr(self), "bool", "bool(yamlobj.value) or bool(yamlobj.text)"
+            )
 
     def __getitem__(self, index):
         return self._value[index]
