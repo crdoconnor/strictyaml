@@ -131,5 +131,9 @@ class YAML(object):
             raise TypeError("{0} is a sequence, has no text value.".format(repr(self)))
         return self._text
 
+    @property
+    def value(self):
+        return self._value
+
     def __eq__(self, value):
         return self.data == value

@@ -26,6 +26,11 @@ valid_sequence
 
 .. code-block:: python
 
+  >>> load(valid_sequence, schema)["a"].value is True
+  True
+
+.. code-block:: python
+
   >>> load(valid_sequence, schema)["g"].text == "false"
   True
 

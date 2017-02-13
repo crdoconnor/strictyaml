@@ -26,6 +26,8 @@
 
     - Assert True: 'load(valid_sequence, schema)["a"] == True'
 
+    - Assert True: 'load(valid_sequence, schema)["a"].value is True'
+
     - Assert True: 'load(valid_sequence, schema)["g"].text == "false"'
 
     - Assert Exception:
