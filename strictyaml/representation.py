@@ -115,6 +115,14 @@ class YAML(object):
             raise TypeError("{0} not a mapping, cannot use .get()".format(repr(self)))
         return self._value[index] if index in self._value.keys() else default
 
+    def __contains__(self, item):
+        if isinstance(self._value, CommentedSeq):
+            return item in self._value
+        elif isinstance(self._value, CommentedMap):
+            return item in self.keys()
+        else:
+            return item in self._value
+
     @property
     def text(self):
         if isinstance(self._value, CommentedMap):

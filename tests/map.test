@@ -33,6 +33,8 @@
 
     - Assert True: 'load(valid_sequence, schema) == {"a": 1, "b": 2, "c": 3}'
 
+    - Assert True: '"a" in load(valid_sequence, schema)'
+
     - Assert True: 'load(valid_sequence, schema).items() == [("a", 1), ("b", 2), ("c", 3)]'
 
     - Assert True: 'load(valid_sequence, schema)["a"] == 1'
