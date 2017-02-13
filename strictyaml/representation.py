@@ -108,7 +108,12 @@ class YAML(object):
     def keys(self):
         if not isinstance(self._value, CommentedMap):
             raise TypeError("{0} not a mapping, cannot use .keys()".format(repr(self)))
-        return self._value.keys()
+        return [key for key, value in self._value.items()]
+
+    def values(self):
+        if not isinstance(self._value, CommentedMap):
+            raise TypeError("{0} not a mapping, cannot use .values()".format(repr(self)))
+        return [self._value[key] for key, value in self._value.items()]
 
     def get(self, index, default=None):
         if not isinstance(self._value, CommentedMap):
