@@ -37,6 +37,10 @@
 
     - Assert True: 'load(valid_sequence, schema)["a"] == 1'
 
+    - Assert True: 'load(valid_sequence, schema).get("a") == 1'
+
+    - Assert True: 'load(valid_sequence, schema).get("nonexistent") is None'
+
     - Assert True: 'len(load(valid_sequence, schema)) == 3'
 
     - Assert Exception:

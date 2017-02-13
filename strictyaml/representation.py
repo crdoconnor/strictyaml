@@ -101,7 +101,19 @@ class YAML(object):
         return dump(self.as_marked_up(), Dumper=RoundTripDumper)
 
     def items(self):
+        if not isinstance(self._value, CommentedMap):
+            raise TypeError("{0} not a mapping, cannot use .items()".format(repr(self)))
         return [(key, self._value[key]) for key, value in self._value.items()]
+
+    def keys(self):
+        if not isinstance(self._value, CommentedMap):
+            raise TypeError("{0} not a mapping, cannot use .keys()".format(repr(self)))
+        return self._value.keys()
+
+    def get(self, index, default=None):
+        if not isinstance(self._value, CommentedMap):
+            raise TypeError("{0} not a mapping, cannot use .get()".format(repr(self)))
+        return self._value[index] if index in self._value.keys() else default
 
     @property
     def text(self):

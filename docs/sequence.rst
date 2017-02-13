@@ -1,6 +1,26 @@
 Sequence validation
 ===================
 
+invalid_sequence_3
+.. code-block:: yaml
+
+  - 1.1
+  - 1.2
+
+valid_sequence
+.. code-block:: yaml
+
+  - 1
+  - 2
+  - 3
+
+invalid_sequence_1
+.. code-block:: yaml
+
+  a: 1
+  b: 2
+  c: 3
+
 invalid_sequence_2
 .. code-block:: yaml
 
@@ -10,32 +30,12 @@ invalid_sequence_2
     - 1
     - 2
 
-invalid_sequence_1
-.. code-block:: yaml
-
-  a: 1
-  b: 2
-  c: 3
-
 invalid_sequence_4
 .. code-block:: yaml
 
   - 1
   - 2
   - 3.4
-
-valid_sequence
-.. code-block:: yaml
-
-  - 1
-  - 2
-  - 3
-
-invalid_sequence_3
-.. code-block:: yaml
-
-  - 1.1
-  - 1.2
 
 .. code-block:: python
 
