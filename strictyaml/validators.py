@@ -40,6 +40,8 @@ class OrValidator(Validator):
         except YAMLValidationError:
             return self._validator_b(document, location=location)
 
+    def __repr__(self):
+        return u"{0} | {1}".format(repr(self._validator_a), repr(self._validator_b))
 
 def schema_from_data(document):
     if isinstance(document, CommentedMap):
@@ -60,6 +62,8 @@ class Any(Validator):
             document = copy.deepcopy(document)
         return schema_from_data(location.get(document))(document, location=location)
 
+    def __repr__(self):
+        return u"Any()"
 
 class Scalar(Validator):
     @property
@@ -96,6 +100,8 @@ class Enum(Scalar):
         else:
             return YAML(val, document=document, location=location)
 
+    def __repr__(self):
+        return u"Enum({0})".format(repr(self._restricted_to))
 
 class EmptyNone(Scalar):
     def validate_scalar(self, document, location, value):
@@ -112,15 +118,24 @@ class EmptyNone(Scalar):
     def empty(self, document, location):
         return YAML(None, '', document=document, location=location)
 
+    def __repr__(self):
+        return u"EmptyNone()"
+
 
 class EmptyDict(EmptyNone):
     def empty(self, document, location):
         return YAML({}, '', document=document, location=location)
 
+    def __repr__(self):
+        return u"EmptyDict()"
+
 
 class EmptyList(EmptyNone):
     def empty(self, document, location):
         return YAML([], '', document=document, location=location)
+
+    def __repr__(self):
+        return u"EmptyList()"
 
 
 class CommaSeparated(Scalar):
@@ -148,6 +163,9 @@ class Str(Scalar):
             location=location
         )
 
+    def __repr__(self):
+        return u"Str()"
+
 
 class Int(Scalar):
     def validate_scalar(self, document, location, value=None):
@@ -160,6 +178,9 @@ class Int(Scalar):
                 )
         else:
             return YAML(int(val), val, document=document, location=location)
+
+    def __repr__(self):
+        return u"Int()"
 
 
 TRUE_VALUES = ["yes", "true", "on", "1", ]
@@ -184,6 +205,9 @@ class Bool(Scalar):
             else:
                 return YAML(False, val, document=document, location=location)
 
+    def __repr__(self):
+        return u"Bool()"
+
 
 class Float(Scalar):
     def validate_scalar(self, document, location, value=None):
@@ -196,6 +220,9 @@ class Float(Scalar):
             )
         else:
             return YAML(float(val), val, document=document, location=location)
+
+    def __repr__(self):
+        return u"Float()"
 
 
 class Decimal(Scalar):
@@ -210,6 +237,9 @@ class Decimal(Scalar):
         else:
             return YAML(decimal.Decimal(val), val, document=document, location=location)
 
+    def __repr__(self):
+        return u"Decimal()"
+
 
 class Datetime(Scalar):
     def validate_scalar(self, document, location, value=None):
@@ -223,6 +253,9 @@ class Datetime(Scalar):
                 "found non-datetime",
                 document, location=location,
             )
+
+    def __repr__(self):
+        return u"Datetime()"
 
 
 class MapPattern(Validator):
@@ -250,6 +283,8 @@ class MapPattern(Validator):
 
         return YAML(return_snippet, document=document, location=location)
 
+    def __repr__(self):
+        return u"MapPattern({0}, {1})".format(repr(self._key_validator), repr(self._value_validator))
 
 class Map(Validator):
     def __init__(self, validator):
@@ -258,6 +293,14 @@ class Map(Validator):
         self._validator_dict = {
             key.key if type(key) == Optional else key: value for key, value in validator.items()
         }
+
+    def __repr__(self):
+        return u"Map({{{0}}})".format(', '.join([
+            '{0}: {1}'.format(
+                'Optional("{0}")'.format(key.key) if type(key) is Optional else '"{0}"'.format(key),
+                repr(value)
+            ) for key, value in self._validator.items()
+        ]))
 
     def validate(self, document, location=None):
         if location is None:
@@ -294,6 +337,9 @@ class Seq(Validator):
     def __init__(self, validator):
         self._validator = validator
 
+    def __repr__(self):
+        return "Seq({0})".format(repr(self._validator))
+
     def validate(self, document, location=None):
         if location is None:
             location = YAMLLocation()
@@ -315,9 +361,10 @@ class Seq(Validator):
 
 class FixedSeq(Validator):
     def __init__(self, validators):
-        for validator in validators:
-            assert isinstance(validator, Validator)
         self._validators = validators
+
+    def __repr__(self):
+        return "FixedSeq({0})".format(repr(self._validators))
 
     def validate(self, document, location=None):
         if location is None:
@@ -348,6 +395,9 @@ class FixedSeq(Validator):
 class UniqueSeq(Validator):
     def __init__(self, validator):
         self._validator = validator
+
+    def __repr__(self):
+        return "UniqueSeq({0})".format(repr(self._validator))
 
     def validate(self, document, location=None):
         if location is None:
