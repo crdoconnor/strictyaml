@@ -49,6 +49,8 @@
 
     - Assert True: 'len(load(valid_sequence, schema)) == 3'
 
+    - Assert True: 'load(valid_sequence, schema).is_mapping()'
+
     - Assert Exception:
         command: load(valid_sequence, schema)['keynotfound']
         exception: keynotfound

@@ -35,6 +35,8 @@
 
     - Assert True: load(valid_sequence, Seq(Str())) == ["1", "2", "3", ]
 
+    - Assert True: load(valid_sequence, Seq(Str())).is_sequence()
+
     - Assert Exception:
         command: load(valid_sequence, Seq(Str())).text
         exception: is a sequence, has no text value.

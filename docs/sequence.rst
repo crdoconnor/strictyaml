@@ -1,11 +1,12 @@
 Sequence validation
 ===================
 
-invalid_sequence_3
+invalid_sequence_4
 .. code-block:: yaml
 
-  - 1.1
-  - 1.2
+  - 1
+  - 2
+  - 3.4
 
 valid_sequence
 .. code-block:: yaml
@@ -13,13 +14,6 @@ valid_sequence
   - 1
   - 2
   - 3
-
-invalid_sequence_1
-.. code-block:: yaml
-
-  a: 1
-  b: 2
-  c: 3
 
 invalid_sequence_2
 .. code-block:: yaml
@@ -30,12 +24,18 @@ invalid_sequence_2
     - 1
     - 2
 
-invalid_sequence_4
+invalid_sequence_1
 .. code-block:: yaml
 
-  - 1
-  - 2
-  - 3.4
+  a: 1
+  b: 2
+  c: 3
+
+invalid_sequence_3
+.. code-block:: yaml
+
+  - 1.1
+  - 1.2
 
 .. code-block:: python
 
@@ -44,6 +44,11 @@ invalid_sequence_4
 .. code-block:: python
 
   >>> load(valid_sequence, Seq(Str())) == ["1", "2", "3", ]
+  True
+
+.. code-block:: python
+
+  >>> load(valid_sequence, Seq(Str())).is_sequence()
   True
 
 .. code-block:: python

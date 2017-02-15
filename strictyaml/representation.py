@@ -140,5 +140,16 @@ class YAML(object):
     def value(self):
         return self._value
 
+    def is_mapping(self):
+        return isinstance(self._value, CommentedMap)
+
+    def is_sequence(self):
+        return isinstance(self._value, CommentedSeq)
+
+    def is_scalar(self):
+        return not isinstance(self._value, CommentedSeq) \
+            and not isinstance(self._value, CommentedMap)
+
+
     def __eq__(self, value):
         return self.data == value

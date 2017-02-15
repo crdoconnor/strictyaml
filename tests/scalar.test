@@ -51,6 +51,8 @@
 
     - Assert True: 'load(valid_sequence, schema) == {"a": 1, "b": True, "c": "string", "d": 3.141, "e": decimal.Decimal("3.1415926535")}'
 
+    - Assert True: 'load(valid_sequence, schema)["a"].is_scalar()'
+
     - Assert Exception:
         command: load(invalid_sequence_1, schema)
         exception: |
