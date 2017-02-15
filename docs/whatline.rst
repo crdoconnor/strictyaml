@@ -26,7 +26,17 @@ commented_yaml
 
 .. code-block:: python
 
+  >>> load(commented_yaml, schema)["a"].start_line == 2
+  True
+
+.. code-block:: python
+
   >>> load(commented_yaml, schema)["a"].end_line == 7
+  True
+
+.. code-block:: python
+
+  >>> load(commented_yaml, schema).keys()[1].start_line == 2
   True
 
 .. code-block:: python

@@ -42,13 +42,14 @@ class YAML(object):
         if isinstance(self._value, CommentedMap):
             new_commented_map = deepcopy(self._value)
 
-            for key, value in new_commented_map.items():
-                new_commented_map[key] = value.as_marked_up()
+            for key, value in self._value.items():
+                del new_commented_map[key._value]
+                new_commented_map[key._value] = value.as_marked_up()
             return new_commented_map
         elif isinstance(self._value, CommentedSeq):
             new_commented_seq = deepcopy(self._value)
 
-            for i, item in enumerate(new_commented_seq):
+            for i, item in enumerate(self._value):
                 new_commented_seq[i] = item.as_marked_up()
             return new_commented_seq
         else:
@@ -90,6 +91,9 @@ class YAML(object):
 
     def __setitem__(self, index, value):
         self._value[index] = YAML(value)
+
+    def __delitem__(self, index):
+        del self._value[index]
 
     def __hash__(self):
         return hash(self._value)
@@ -149,7 +153,6 @@ class YAML(object):
     def is_scalar(self):
         return not isinstance(self._value, CommentedSeq) \
             and not isinstance(self._value, CommentedMap)
-
 
     def __eq__(self, value):
         return self.data == value

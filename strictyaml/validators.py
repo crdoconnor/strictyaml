@@ -280,7 +280,10 @@ class Map(Validator):
                         document, location=location.key(key)
                     )
 
-                return_snippet[key] = self._validator_dict[key](
+                del return_snippet[key]
+                return_snippet[
+                    YAML(key, document=document, location=location.key(key))
+                ] = self._validator_dict[key](
                     document, location.val(key)
                 )
 

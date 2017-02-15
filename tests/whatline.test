@@ -27,7 +27,11 @@
 
         schema = Map({"y": Str(), "a": Str(), "b": Str(), "c": Str(), "d": Str()})
 
+    - Assert True: 'load(commented_yaml, schema)["a"].start_line == 2'
     - Assert True: 'load(commented_yaml, schema)["a"].end_line == 7'
+    
+    - Assert True: 'load(commented_yaml, schema).keys()[1].start_line == 2'
+    
     - Assert True: 'load(commented_yaml, schema).start_line == 1'
     - Assert True: 'load(commented_yaml, schema).end_line == 10'
     - Assert True: |
