@@ -31,7 +31,7 @@ class YAML(object):
     @property
     def data(self):
         if type(self._value) is CommentedMap:
-            return {key: value.data for key, value in self._value.items()}
+            return {key.data: value.data for key, value in self._value.items()}
         elif type(self._value) is CommentedSeq:
             return [item.data for item in self._value]
         else:

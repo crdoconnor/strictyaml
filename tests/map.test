@@ -5,6 +5,8 @@
     python_version: {{ python_version }}
     ruamel version: {{ ruamel_version }}
     files:
+      onekeymap.yaml: |
+        x: 1
       valid_sequence.yaml: |
         a: 1
         b: 2
@@ -30,6 +32,9 @@
         from strictyaml import Map, Int, YAMLValidationError, load
 
         schema = Map({"a": Int(), "b": Int(), "c": Int()})
+
+    - Assert True: |
+        str(load(onekeymap, Map({"x": Int()})).data) == "{'x': 1}"
 
     - Assert Exception:
         command: load(valid_sequence, schema)['keynotfound']
