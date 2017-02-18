@@ -31,26 +31,6 @@
 
         schema = Map({"a": Int(), "b": Int(), "c": Int()})
 
-    - Assert True: 'load(valid_sequence, schema) == {"a": 1, "b": 2, "c": 3}'
-
-    - Assert True: '"a" in load(valid_sequence, schema)'
-
-    - Assert True: 'load(valid_sequence, schema).items() == [("a", 1), ("b", 2), ("c", 3)]'
-
-    - Assert True: 'load(valid_sequence, schema).values() == [1, 2, 3]'
-
-    - Assert True: 'load(valid_sequence, schema).keys() == ["a", "b", "c"]'
-
-    - Assert True: 'load(valid_sequence, schema)["a"] == 1'
-
-    - Assert True: 'load(valid_sequence, schema).get("a") == 1'
-
-    - Assert True: 'load(valid_sequence, schema).get("nonexistent") is None'
-
-    - Assert True: 'len(load(valid_sequence, schema)) == 3'
-
-    - Assert True: 'load(valid_sequence, schema).is_mapping()'
-
     - Assert Exception:
         command: load(valid_sequence, schema)['keynotfound']
         exception: keynotfound

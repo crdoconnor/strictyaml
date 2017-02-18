@@ -19,8 +19,12 @@ class YAML(object):
     def __str__(self):
         if type(self._value) in (str, int, float, decimal.Decimal):
             return str(self._value)
+        elif isinstance(self._value, CommentedMap) or isinstance(self._value, CommentedSeq):
+            raise TypeError(
+                "Cannot cast mapping/sequence '{0}' to string".format(repr(self._value))
+            )
         else:
-            raise raise_type_error(
+            raise_type_error(
                 repr(self), "str", "str(yamlobj.value) or str(yamlobj.text)"
             )
 
@@ -82,7 +86,7 @@ class YAML(object):
         if isinstance(self._value, bool):
             return self._value
         else:
-            raise raise_type_error(
+            raise_type_error(
                 repr(self), "bool", "bool(yamlobj.value) or bool(yamlobj.text)"
             )
 
@@ -90,7 +94,10 @@ class YAML(object):
         return self._value[index]
 
     def __setitem__(self, index, value):
-        self._value[index] = YAML(value)
+        if isinstance(value, YAML):
+            self._value[index] = value.copy()
+        else:
+            self._value[index] = YAML(value)
 
     def __delitem__(self, index):
         del self._value[index]
@@ -139,6 +146,19 @@ class YAML(object):
         if isinstance(self._value, CommentedSeq):
             raise TypeError("{0} is a sequence, has no text value.".format(repr(self)))
         return self._text
+
+    def copy(self):
+        return deepcopy(self)
+
+    def __gt__(self, val):
+        if isinstance(self._value, CommentedMap) or isinstance(self._value, CommentedSeq):
+            raise TypeError("{0} not an orderable type.".format(repr(self._value)))
+        return self._value > val
+
+    def __lt__(self, val):
+        if isinstance(self._value, CommentedMap) or isinstance(self._value, CommentedSeq):
+            raise TypeError("{0} not an orderable type.".format(repr(self._value)))
+        return self._value < val
 
     @property
     def value(self):

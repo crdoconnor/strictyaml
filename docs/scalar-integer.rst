@@ -30,6 +30,16 @@ valid_sequence
 
 .. code-block:: python
 
+  >>> load(valid_sequence, schema)["a"] > 0
+  True
+
+.. code-block:: python
+
+  >>> load(valid_sequence, schema)["a"] < 2
+  True
+
+.. code-block:: python
+
   >>> bool(load(valid_sequence, schema)['a'])
   EXCEPTION RAISED:
   Cannot cast
