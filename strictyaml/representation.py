@@ -90,6 +90,9 @@ class YAML(object):
                 repr(self), "bool", "bool(yamlobj.value) or bool(yamlobj.text)"
             )
 
+    def __nonzero__(self):
+        return self.__bool__()
+
     def __getitem__(self, index):
         return self._value[index]
 
