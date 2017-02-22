@@ -2,6 +2,7 @@ from ruamel.yaml.comments import CommentedSeq, CommentedMap
 from strictyaml.exceptions import raise_type_error
 from ruamel.yaml import RoundTripDumper
 from ruamel.yaml import dump
+from strictyaml import utils
 from copy import deepcopy
 import decimal
 
@@ -57,7 +58,12 @@ class YAML(object):
                 new_commented_seq[i] = item.as_marked_up()
             return new_commented_seq
         else:
-            return self._text
+            if utils.is_integer(self._text):
+                return int(self._text)
+            elif utils.is_decimal(self._text):
+                return decimal.Decimal(self._text)
+            else:
+                return self._text
 
     @property
     def start_line(self):

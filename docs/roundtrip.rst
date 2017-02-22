@@ -7,16 +7,6 @@ should be preserved.
 Loaded YAML can even be modified and dumped out again too.
 
 
-modified_commented_yaml
-.. code-block:: yaml
-
-  # Some comment
-  
-  a: x # value comment
-  
-  # Another comment
-  b: x
-
 commented_yaml
 .. code-block:: yaml
 
@@ -27,9 +17,24 @@ commented_yaml
   # Another comment
   b: y
 
+with_integer
+.. code-block:: yaml
+
+  x: 1
+
+modified_commented_yaml
+.. code-block:: yaml
+
+  # Some comment
+  
+  a: x # value comment
+  
+  # Another comment
+  b: x
+
 .. code-block:: python
 
-  >>> from strictyaml import Map, Str, YAMLValidationError, load
+  >>> from strictyaml import Map, Str, Int, YAMLValidationError, load
   >>> 
   >>> schema = Map({"a": Str(), "b": Str()})
 
@@ -47,5 +52,10 @@ commented_yaml
 .. code-block:: python
 
   >>> to_modify.as_yaml() == modified_commented_yaml
+  True
+
+.. code-block:: python
+
+  >>> load(with_integer, Map({"x": Int()})).as_yaml() == "x: 1\n"
   True
 

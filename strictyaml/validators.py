@@ -3,6 +3,7 @@ from strictyaml.exceptions import YAMLValidationError
 from strictyaml.yamllocation import YAMLLocation
 from strictyaml.exceptions import raise_exception
 from strictyaml.representation import YAML
+from strictyaml import utils
 
 import dateutil.parser
 import decimal
@@ -170,7 +171,7 @@ class Str(Scalar):
 class Int(Scalar):
     def validate_scalar(self, document, location, value=None):
         val = str(location.get(document)) if value is None else value
-        if re.compile("^[-+]?\d+$").match(val) is None:
+        if not utils.is_integer(val):
             raise_exception(
                     "when expecting an integer",
                     "found non-integer",
@@ -212,7 +213,7 @@ class Bool(Scalar):
 class Float(Scalar):
     def validate_scalar(self, document, location, value=None):
         val = str(location.get(document)) if value is None else value
-        if re.compile(r"^[-+]?[0-9]*\.?[0-9]+([eE][-+]?[0-9]+)?$").match(str(val)) is None:
+        if not utils.is_decimal(str(val)):
             raise_exception(
                 "when expecting a float",
                 "found non-float",
@@ -228,7 +229,7 @@ class Float(Scalar):
 class Decimal(Scalar):
     def validate_scalar(self, document, location, value=None):
         val = str(location.get(document)) if value is None else value
-        if re.compile(r"^[-+]?[0-9]*\.?[0-9]+([eE][-+]?[0-9]+)?$").match(str(val)) is None:
+        if not utils.is_decimal(str(val)):
             raise_exception(
                 "when expecting a decimal",
                 "found non-decimal",
