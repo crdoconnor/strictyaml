@@ -14,36 +14,61 @@ Priorities:
 * Strict validation of markup and straightforward type casting.
 * Clear, human readable exceptions with line numbers.
 * Acting as a drop in replacement for pyyaml, ruamel.yaml or poyo.
+* Roundtripping.
 * Letting you worry about more interesting things than parsing config files.
 
 Simple example:
 
 .. code-block:: yaml
 
+  # All about the character
   name: Ford Prefect
   age: 42
-  posessions:
+  possessions:
     - Towel
 
 Default parse result:
 
 .. code-block:: python
 
-   >>> strictyaml.load(yaml) \
-     == {"name": "Ford Prefect", "age": "42", "possessions": ["Towel", ]}   # All data is str, list or dict
+   >>> strictyaml.load(yaml)
+   YAML({'possessions': ['Towel'], 'age': '42', 'name': 'Ford Prefect'})
 
-Example using optional validator - using mapping, sequence, string and integer:
+   >>> strictyaml.load(yaml).data
+   {"name": "Ford Prefect", "age": "42", "possessions": ["Towel", ]}   # All data is str, list or dict
+
+Using a schema:
 
 .. code-block:: python
 
    >>> from strictyaml import load, Map, Str, Int, Seq
-   >>> load(yaml, Map({"name": Str(), "age": Int(), "possessions": Seq(Str())})) \
-     == {"name": "Ford Prefect", "age": 42, "possessions": ["Towel", ]}     # 42 is now an int
+   >>> person = load(yaml, Map({"name": Str(), "age": Int(), "possessions": Seq(Str())})) \
+   >>> person.data == {"name": "Ford Prefect", "age": 42, "possessions": ["Towel", ]}     # 42 is now an int
 
+
+Once parsed you can change values and roundtrip the whole YAML, with comments preserved:
+
+.. code-block:: python
+
+   >>> person['age'] = 43
+   >>> print(person.as_yaml())
+   # All about the character
+   name: Ford Prefect
+   age: 43
+   possessions:
+     - Towel
+
+As well as look up line numbers:
+
+.. code-block:: python
+
+   >>> person['possessions'][0].start_line
+   5
 
 
 Install It
 ----------
+
 .. code-block:: sh
 
   $ pip install strictyaml
@@ -228,23 +253,21 @@ Custom scalar types
 COMING SOON
 
 
-Using YAML Valdation
---------------------
-
-See: What is kwalify and when should I use it?
-
-COMING SOON
-
-
-Roundtripping YAML
+Kwalify Validation
 ------------------
 
 COMING SOON
+
+
+Changelog
+---------
+
+0.5: Data is now parsed by default as a YAML object instead of directly to dict/list. To get dict/list as before, get yaml_object.data.
 
 
 Contributors
 ------------
 
 * @gvx
-* @ AlexandreDecan
+* @AlexandreDecan
 * @lots0logs
