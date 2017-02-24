@@ -32,7 +32,13 @@ class YAML(object):
     @property
     def data(self):
         if type(self._value) is CommentedMap:
-            return {key.data: value.data for key, value in self._value.items()}
+            mapping = {}
+            for key, value in self._value.items():
+                if type(key) is str:
+                    mapping[key] = value.data
+                else:
+                    mapping[key.data] = value.data
+            return mapping
         elif type(self._value) is CommentedSeq:
             return [item.data for item in self._value]
         else:
@@ -67,13 +73,23 @@ class YAML(object):
 
     @property
     def start_line(self):
+        """
+        Return line number that the element starts on (including preceding comments).
+        """
         return self._location.start_line(self._document)
 
     @property
     def end_line(self):
+        """
+        Return line number that the element ends on (including trailing comments).
+        """
         return self._location.end_line(self._document)
 
     def lines(self):
+        """
+        Return a string of the lines which make up the selected line
+        including preceding and trailing comments.
+        """
         return self._location.lines(self._document)
 
     def lines_before(self, how_many):

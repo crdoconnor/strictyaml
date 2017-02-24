@@ -4,11 +4,9 @@ from strictyaml.yamllocation import YAMLLocation
 from strictyaml.exceptions import raise_exception
 from strictyaml.representation import YAML
 from strictyaml import utils
-
 import dateutil.parser
 import decimal
 import copy
-import re
 
 
 class Optional(object):
@@ -44,6 +42,7 @@ class OrValidator(Validator):
     def __repr__(self):
         return u"{0} | {1}".format(repr(self._validator_a), repr(self._validator_b))
 
+
 def schema_from_data(document):
     if isinstance(document, CommentedMap):
         return Map({key: schema_from_data(value) for key, value in document.items()})
@@ -65,6 +64,7 @@ class Any(Validator):
 
     def __repr__(self):
         return u"Any()"
+
 
 class Scalar(Validator):
     @property
@@ -103,6 +103,7 @@ class Enum(Scalar):
 
     def __repr__(self):
         return u"Enum({0})".format(repr(self._restricted_to))
+
 
 class EmptyNone(Scalar):
     def validate_scalar(self, document, location, value):
@@ -285,7 +286,10 @@ class MapPattern(Validator):
         return YAML(return_snippet, document=document, location=location)
 
     def __repr__(self):
-        return u"MapPattern({0}, {1})".format(repr(self._key_validator), repr(self._value_validator))
+        return u"MapPattern({0}, {1})".format(
+            repr(self._key_validator), repr(self._value_validator)
+        )
+
 
 class Map(Validator):
     def __init__(self, validator):
