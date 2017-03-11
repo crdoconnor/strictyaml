@@ -1,3 +1,5 @@
+validate validator objects.
+
 https://stackoverflow.com/questions/26434053/cargo-toml-for-lib
 
 for why not TOML
