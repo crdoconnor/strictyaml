@@ -1,6 +1,9 @@
 # The all important loader
 from strictyaml.parser import load
 
+# YAML object
+from strictyaml.representation import YAML
+
 # Validators
 from strictyaml.validators import Optional
 from strictyaml.validators import Validator
