@@ -26,10 +26,12 @@
     - py{{ python_version }}
   scenario:
     - Run command: |
-        from strictyaml import Any, YAMLValidationError, load
+        from strictyaml import Any, MapPattern, YAMLValidationError, load
 
-        schema = Any()
-
-    - Assert True: 'load(valid_sequence, schema) == {"a": {"x": "9", "y": "8"}, "b": "2", "c": "3"}'
+    - Assert True: |
+        load(valid_sequence, Any()) == {"a": {"x": "9", "y": "8"}, "b": "2", "c": "3"}
+    
+    - Assert True: |
+        load(valid_sequence, MapPattern(Any(), Any())) == {"a": {"x": "9", "y": "8"}, "b": "2", "c": "3"}
 {% endfor %}
 {% endfor %}

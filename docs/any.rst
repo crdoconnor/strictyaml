@@ -22,12 +22,15 @@ valid_sequence
 
 .. code-block:: python
 
-  >>> from strictyaml import Any, YAMLValidationError, load
-  >>> 
-  >>> schema = Any()
+  >>> from strictyaml import Any, MapPattern, YAMLValidationError, load
 
 .. code-block:: python
 
-  >>> load(valid_sequence, schema) == {"a": {"x": "9", "y": "8"}, "b": "2", "c": "3"}
+  >>> load(valid_sequence, Any()) == {"a": {"x": "9", "y": "8"}, "b": "2", "c": "3"}
+  True
+
+.. code-block:: python
+
+  >>> load(valid_sequence, MapPattern(Any(), Any())) == {"a": {"x": "9", "y": "8"}, "b": "2", "c": "3"}
   True
 
