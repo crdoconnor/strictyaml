@@ -1,10 +1,18 @@
-Optional validation
-===================
+Map Pattern
+===========
 
-invalid_sequence_2
+When you do not wish to let the user define the key
+names in a mapping and and only specify what type the
+keys are, use a MapPattern.
+
+When you wish to specify the exact key name, use the
+'Map' validator instead.
+
+
+valid_sequence_1
 .. code-block:: yaml
 
-  a: a
+  â: 1
   b: 2
 
 valid_sequence_3
@@ -12,10 +20,11 @@ valid_sequence_3
 
   a: 1
 
-valid_sequence_2
+invalid_sequence_3
 .. code-block:: yaml
 
   a: 1
+  b: yâs
   c: 3
 
 invalid_sequence_1
@@ -23,18 +32,17 @@ invalid_sequence_1
 
   b: b
 
-valid_sequence_1
+valid_sequence_2
 .. code-block:: yaml
 
   a: 1
-  b: 2
-
-invalid_sequence_3
-.. code-block:: yaml
-
-  a: 1
-  b: yes
   c: 3
+
+invalid_sequence_2
+.. code-block:: yaml
+
+  a: a
+  b: 2
 
 .. code-block:: python
 
@@ -44,7 +52,7 @@ invalid_sequence_3
 
 .. code-block:: python
 
-  >>> load(valid_sequence_1, schema) == {"a": 1, "b": 2}
+  >>> load(valid_sequence_1, schema) == {u"â": 1, "b": 2}
   True
 
 .. code-block:: python
@@ -84,6 +92,6 @@ invalid_sequence_3
   when expecting an integer
   found non-integer
     in "<unicode string>", line 2, column 1:
-      b: yes
+      b: "y\xE2s"
       ^
 

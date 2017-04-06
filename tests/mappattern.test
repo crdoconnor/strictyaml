@@ -1,12 +1,19 @@
 {% for ruamel_version in ruamel_versions %}
 {% for python_version in python_versions %}
-- name: Optional validation
+- name: Map Pattern
+  description: |
+    When you do not wish to let the user define the key
+    names in a mapping and and only specify what type the
+    keys are, use a MapPattern.
+
+    When you wish to specify the exact key name, use the
+    'Map' validator instead.
   preconditions:
     python_version: {{ python_version }}
     ruamel version: {{ ruamel_version }}
     files:
       valid_sequence_1.yaml: |
-        a: 1
+        â: 1
         b: 2
       valid_sequence_2.yaml: |
         a: 1
@@ -20,7 +27,7 @@
         b: 2
       invalid_sequence_3.yaml: |
         a: 1
-        b: yes
+        b: yâs
         c: 3
   tags:
     - sequence
@@ -31,7 +38,7 @@
 
         schema = MapPattern(Str(), Int())
 
-    - Assert True: 'load(valid_sequence_1, schema) == {"a": 1, "b": 2}'
+    - Assert True: 'load(valid_sequence_1, schema) == {u"â": 1, "b": 2}'
 
     - Assert True: 'load(valid_sequence_2, schema) == {"a": 1, "c": 3}'
 
@@ -61,7 +68,7 @@
           when expecting an integer
           found non-integer
             in "<unicode string>", line 2, column 1:
-              b: yes
+              b: "y\xE2s"
               ^
 
 {% endfor %}

@@ -43,7 +43,7 @@ class YAML(object):
         if type(self._value) is CommentedMap:
             mapping = {}
             for key, value in self._value.items():
-                if type(key) is str:
+                if type(key) in (str, unicode):
                     mapping[key] = value.data
                 else:
                     mapping[key.data] = value.data

@@ -176,7 +176,7 @@ class Str(Scalar):
 
 class Int(Scalar):
     def validate_scalar(self, document, location, value=None):
-        val = str(location.get(document)) if value is None else value
+        val = unicode(location.get(document)) if value is None else value
         if not utils.is_integer(val):
             raise_exception(
                     "when expecting an integer",
