@@ -1,5 +1,27 @@
-Disallow invalid YAML
-=====================
+Overly complex YAML disallowed
+==============================
+
+StrictYAML is an opinionated subset of the YAML
+specification which refuses to parse features which
+are otherwise valid in standard YAML.
+
+For more details on *why* these features are stripped
+out of StrictYAML, see the FAQ.
+
+Note that if this is interfering parsing normal strings
+(e.g. if you are parsing a jinja2 template), surround
+the string with quotes.
+
+
+jinja2
+.. code-block:: yaml
+
+  x: ''
+
+flow_style_sequence
+.. code-block:: yaml
+
+  [a, b]: [x, y]
 
 tag_tokens
 .. code-block:: yaml
@@ -9,10 +31,10 @@ tag_tokens
     b: !!str 3.5
     c: !!str yes
 
-flow_style_sequence
+flow_style
 .. code-block:: yaml
 
-  [a, b]: [x, y]
+  x: { a: 1, b: 2, c: 3 }
 
 node_anchors_and_references
 .. code-block:: yaml
@@ -21,11 +43,6 @@ node_anchors_and_references
     a: &node1 3.5
     b: 1
     c: *node1
-
-flow_style
-.. code-block:: yaml
-
-  x: { a: 1, b: 2, c: 3 }
 
 .. code-block:: python
 
@@ -59,6 +76,11 @@ flow_style
     in "<unicode string>", line 1, column 2:
       [a, b]: [x, y]
        ^ (line: 1)
+
+.. code-block:: python
+
+  >>> load(jinja2) == {"x": ""}
+  True
 
 .. code-block:: python
 

@@ -1,6 +1,17 @@
 {% for ruamel_version in ruamel_versions %}
 {% for python_version in python_versions %}
-- name: Disallow invalid YAML
+- name: Overly complex YAML disallowed
+  description: |
+    StrictYAML is an opinionated subset of the YAML
+    specification which refuses to parse features which
+    are otherwise valid in standard YAML.
+    
+    For more details on *why* these features are stripped
+    out of StrictYAML, see the FAQ.
+    
+    Note that if this is interfering parsing normal strings
+    (e.g. if you are parsing a jinja2 template), surround
+    the string with quotes.
   preconditions:
     python_version: {{ python_version }}
     ruamel version: {{ ruamel_version }}
@@ -12,6 +23,8 @@
           c: !!str yes
       flow_style.yaml: |
         x: { a: 1, b: 2, c: 3 }
+      jinja2.yaml: |
+        x: '{{ value }}'
       flow_style_sequence.yaml: |
         [a, b]: [x, y]
       node_anchors_and_references.yaml: |
@@ -52,6 +65,9 @@
             in "<unicode string>", line 1, column 2:
               [a, b]: [x, y]
                ^ (line: 1)
+
+    - Assert True: |
+        load(jinja2) == {"x": "{{ value }}"}
 
     - Assert Exception:
         command: load(flow_style, schema)
