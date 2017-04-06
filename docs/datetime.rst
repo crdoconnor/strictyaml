@@ -1,7 +1,7 @@
 Datetime validation
 ===================
 
-Datetimes are parsed using the python-dateutil library.
+Datetime validator parses using the python-dateutil library.
 
 
 invalid_sequence_1
@@ -47,4 +47,14 @@ valid_sequence
 
   >>> load(valid_sequence, schema)["date"].text == "2016-10-22"
   True
+
+.. code-block:: python
+
+  >>> load(invalid_sequence_1, schema)
+  EXCEPTION RAISED:
+  when expecting a datetime
+  found non-datetime
+    in "<unicode string>", line 2, column 1:
+      datetime1: a
+      ^ (line: 2)
 

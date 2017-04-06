@@ -2,7 +2,7 @@
 {% for python_version in python_versions %}
 - name: Datetime validation
   description: |
-    Datetimes are parsed using the python-dateutil library.
+    Datetime validator parses using the python-dateutil library.
   preconditions:
     python_version: {{ python_version }}
     ruamel version: {{ ruamel_version }}
@@ -43,5 +43,14 @@
 
     - Assert True: |
         load(valid_sequence, schema)["date"].text == "2016-10-22"
+
+    - Assert Exception:
+        command: load(invalid_sequence_1, schema)
+        exception: |
+          when expecting a datetime
+          found non-datetime
+            in "<unicode string>", line 2, column 1:
+              datetime1: a
+              ^ (line: 2)
 {% endfor %}
 {% endfor %}

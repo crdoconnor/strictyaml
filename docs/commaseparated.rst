@@ -1,30 +1,44 @@
-Comma separated strings
-=======================
+Comma separated
+===============
 
-valid_sequence
-.. code-block:: yaml
+Comma-separated values can be validated and parsed
+using the CommaSeparated validator.
 
-  a: 1, 2, 3
+Note that spaces following the commas are stripped by
+default.
+
 
 invalid_sequence
 .. code-block:: yaml
 
   a: 1, x, 3
 
+valid_sequence
+.. code-block:: yaml
+
+  a: 1, 2, 3
+
 .. code-block:: python
 
-  >>> from strictyaml import CommaSeparated, Int, Map, YAMLValidationError, load
+  >>> from strictyaml import CommaSeparated, Int, Str, Map, YAMLValidationError, load
   >>> 
-  >>> schema = Map({"a": CommaSeparated(Int())})
+  >>> int_schema = Map({"a": CommaSeparated(Int())})
+  >>> 
+  >>> str_schema = Map({"a": CommaSeparated(Str())})
 
 .. code-block:: python
 
-  >>> load(valid_sequence, schema) == {"a": [1, 2, 3]}
+  >>> load(valid_sequence, int_schema) == {"a": [1, 2, 3]}
   True
 
 .. code-block:: python
 
-  >>> load(invalid_sequence, schema)
+  >>> load(valid_sequence, str_schema) == {"a": ["1", "2", "3"]}
+  True
+
+.. code-block:: python
+
+  >>> load(invalid_sequence, int_schema)
   EXCEPTION RAISED:
   when expecting an integer
   found non-integer
