@@ -8,6 +8,11 @@ import dateutil.parser
 import decimal
 import copy
 
+import sys
+
+if sys.version_info[0] == 3:
+    unicode = str
+
 
 class Optional(object):
     def __init__(self, key):
@@ -91,7 +96,7 @@ class Enum(Scalar):
         self._restricted_to = restricted_to
 
     def validate_scalar(self, document, location, value):
-        val = str(location.get(document)) if value is None else value
+        val = unicode(location.get(document)) if value is None else value
         if val not in self._restricted_to:
             raise_exception(
                 "when expecting one of: {0}".format(", ".join(self._restricted_to)),
@@ -107,7 +112,7 @@ class Enum(Scalar):
 
 class EmptyNone(Scalar):
     def validate_scalar(self, document, location, value):
-        val = str(location.get(document)) if value is None else value
+        val = unicode(location.get(document)) if value is None else value
         if val != "":
             raise_exception(
                 "when expecting an empty value",
@@ -145,7 +150,7 @@ class CommaSeparated(Scalar):
         self._item_validator = item_validator
 
     def validate_scalar(self, document, location, value):
-        val = str(location.get(document)) if value is None else value
+        val = unicode(location.get(document)) if value is None else value
         return YAML(
             [
                 YAML(self._item_validator.validate_scalar(document, location, value=item.lstrip()))
@@ -159,7 +164,7 @@ class CommaSeparated(Scalar):
 class Str(Scalar):
     def validate_scalar(self, document, location, value=None):
         return YAML(
-            str(location.get(document)) if value is None else value,
+            unicode(location.get(document)) if value is None else value,
             text=location.get(document),
             document=document,
             location=location

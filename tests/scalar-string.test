@@ -8,7 +8,7 @@
       valid_sequence.yaml: |
         a: 1
         b: yes
-        c: string
+        c: â string
         d: |
           multiline string
   tags:
@@ -21,7 +21,7 @@
 
         schema = Map({"a": Str(), "b": Str(), "c": Str(), "d": Str()})
 
-    - Assert True: 'load(valid_sequence, schema) == {"a": "1", "b": "yes", "c": "string", "d": "multiline string\n"}'
+    - Assert True: 'load(valid_sequence, schema) == {"a": "1", "b": "yes", "c": u"â string", "d": "multiline string\n"}'
 
     - Assert True: str(load(valid_sequence, schema)["a"]) == "1"
 

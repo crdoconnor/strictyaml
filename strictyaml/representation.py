@@ -7,10 +7,19 @@ from copy import deepcopy
 import decimal
 
 
+import sys
+
+if sys.version_info[0] == 3:
+    unicode = str
+
+
 class YAML(object):
     def __init__(self, value, text=None, document=None, location=None):
         self._value = value
-        self._text = str(value) if text is None else text
+        if not isinstance(value, CommentedMap) and not isinstance(value, CommentedSeq):
+            self._text = unicode(value) if text is None else text
+        else:
+            self._text = None
         self._document = deepcopy(document)
         self._location = location
 
@@ -18,7 +27,7 @@ class YAML(object):
         return int(self._value)
 
     def __str__(self):
-        if type(self._value) in (str, int, float, decimal.Decimal):
+        if type(self._value) in (unicode, int, float, decimal.Decimal):
             return str(self._value)
         elif isinstance(self._value, CommentedMap) or isinstance(self._value, CommentedSeq):
             raise TypeError(
