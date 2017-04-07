@@ -10,6 +10,11 @@ Any values that are not among the above
 will cause a validation error.
 
 
+invalid_sequence
+.. code-block:: yaml
+
+  a: yâs
+
 valid_sequence
 .. code-block:: yaml
 
@@ -37,4 +42,25 @@ valid_sequence
 
   >>> load(valid_sequence, schema)["a"].value is True
   True
+
+.. code-block:: python
+
+  >>> load(valid_sequence, schema)["g"].text == "FALSE"
+  True
+
+.. code-block:: python
+
+  >>> str(load(valid_sequence, schema)["g"])
+  EXCEPTION RAISED:
+  Cannot cast
+
+.. code-block:: python
+
+  >>> load(invalid_sequence, schema)
+  EXCEPTION RAISED:
+  when expecting a boolean value (one of "yes", "true", "on", "1", "no", "false", "off", "0")
+  found non-boolean
+    in "<unicode string>", line 1, column 1:
+      a: "y\xE2s"
+       ^ (line: 1)
 

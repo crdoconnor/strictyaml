@@ -197,8 +197,8 @@ BOOL_VALUES = TRUE_VALUES + FALSE_VALUES
 
 class Bool(Scalar):
     def validate_scalar(self, document, location, value=None):
-        val = str(location.get(document)) if value is None else value
-        if str(val).lower() not in BOOL_VALUES:
+        val = unicode(location.get(document)) if value is None else value
+        if unicode(val).lower() not in BOOL_VALUES:
             raise_exception(
                 """when expecting a boolean value (one of "{0}")""".format(
                     '", "'.join(BOOL_VALUES)
