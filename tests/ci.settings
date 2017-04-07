@@ -6,5 +6,4 @@ python_versions:
   - 2.7.10
   - 3.5.0
 ruamel_versions:
-  - 0.13.5  # earliest version known to work with python 2.7
-  - 0.13.13
+  - 0.14.2
