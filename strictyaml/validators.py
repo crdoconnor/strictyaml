@@ -328,8 +328,8 @@ class Map(Validator):
             for key, value in location.get(document).items():
                 if key not in self._validator_dict.keys():
                     raise_exception(
-                        "while parsing a mapping",
-                        "unexpected key not in schema '{0}'".format(key),
+                        u"while parsing a mapping",
+                        u"unexpected key not in schema '{0}'".format(key),
                         document, location=location.key(key)
                     )
 

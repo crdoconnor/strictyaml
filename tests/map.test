@@ -14,7 +14,7 @@
       invalid_sequence_1.yaml: |
         a: 1
         b: 2
-        d: 3
+        â: 3
       invalid_sequence_2.yaml: |
         - 1
         - 2
@@ -48,9 +48,9 @@
         command: load(invalid_sequence_1, schema)
         exception: |
           while parsing a mapping
-          unexpected key not in schema 'd'
+          unexpected key not in schema 'â'
             in "<unicode string>", line 3, column 1:
-              d: '3'
+              "\xE2": '3'
               ^ (line: 3)
 
     - Assert Exception:
