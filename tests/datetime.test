@@ -14,7 +14,7 @@
         datetime3: 20161022T142312Z
       invalid_sequence_1.yaml: |
         date: 1
-        datetime1: a
+        datetime1: â
         datetime2: b
         datetime3: c
   tags:
@@ -50,7 +50,7 @@
           when expecting a datetime
           found non-datetime
             in "<unicode string>", line 2, column 1:
-              datetime1: a
+              datetime1: "\xE2"
               ^ (line: 2)
 {% endfor %}
 {% endfor %}

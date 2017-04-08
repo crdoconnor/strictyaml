@@ -7,3 +7,4 @@ python_versions:
   - 3.5.0
 ruamel_versions:
   - 0.14.2
+  - 0.14.5

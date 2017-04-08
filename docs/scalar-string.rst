@@ -6,7 +6,7 @@ valid_sequence
 
   a: 1
   b: yes
-  c: string
+  c: â string
   d: |
     multiline string
 
@@ -18,7 +18,7 @@ valid_sequence
 
 .. code-block:: python
 
-  >>> load(valid_sequence, schema) == {"a": "1", "b": "yes", "c": "string", "d": "multiline string\n"}
+  >>> load(valid_sequence, schema) == {"a": "1", "b": "yes", "c": u"â string", "d": "multiline string\n"}
   True
 
 .. code-block:: python

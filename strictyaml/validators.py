@@ -218,8 +218,8 @@ class Bool(Scalar):
 
 class Float(Scalar):
     def validate_scalar(self, document, location, value=None):
-        val = str(location.get(document)) if value is None else value
-        if not utils.is_decimal(str(val)):
+        val = unicode(location.get(document)) if value is None else value
+        if not utils.is_decimal(val):
             raise_exception(
                 "when expecting a float",
                 "found non-float",
@@ -234,8 +234,8 @@ class Float(Scalar):
 
 class Decimal(Scalar):
     def validate_scalar(self, document, location, value=None):
-        val = str(location.get(document)) if value is None else value
-        if not utils.is_decimal(str(val)):
+        val = unicode(location.get(document)) if value is None else value
+        if not utils.is_decimal(val):
             raise_exception(
                 "when expecting a decimal",
                 "found non-decimal",
@@ -250,7 +250,7 @@ class Decimal(Scalar):
 
 class Datetime(Scalar):
     def validate_scalar(self, document, location, value=None):
-        val = str(location.get(document)) if value is None else value
+        val = unicode(location.get(document)) if value is None else value
 
         try:
             return YAML(dateutil.parser.parse(val), val, document=document, location=location)

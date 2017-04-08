@@ -27,14 +27,14 @@
         a: 1
         b: yes
         c: string
-        d: not a float
+        d: not â float
         e: 3.1415926535
       invalid_sequence_4.yaml: |
         a: 1
         b: yes
         c: string
         d: 3.141
-        e: not a decimal
+        e: not â decimal
   tags:
     - scalar
     - int
@@ -77,7 +77,7 @@
           when expecting a float
           found non-float
             in "<unicode string>", line 4, column 1:
-              d: not a float
+              d: "not \xE2 float"
               ^
 
     - Assert Exception:
@@ -86,7 +86,7 @@
           when expecting a decimal
           found non-decimal
             in "<unicode string>", line 5, column 1:
-              e: not a decimal
+              e: "not \xE2 decimal"
               ^
 {% endfor %}
 {% endfor %}

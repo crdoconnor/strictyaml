@@ -1,29 +1,20 @@
 Scalar validation
 =================
 
-valid_sequence
-.. code-block:: yaml
-
-  a: 1
-  b: yes
-  c: string
-  d: 3.141
-  e: 3.1415926535
-
-invalid_sequence_1
-.. code-block:: yaml
-
-  a: 1
-  b: 2
-  c: string
-  d: 3.141
-  e: 3.1415926535
-
 invalid_sequence_2
 .. code-block:: yaml
 
   a: string
   b: 2
+  c: string
+  d: 3.141
+  e: 3.1415926535
+
+valid_sequence
+.. code-block:: yaml
+
+  a: 1
+  b: yes
   c: string
   d: 3.141
   e: 3.1415926535
@@ -35,7 +26,7 @@ invalid_sequence_4
   b: yes
   c: string
   d: 3.141
-  e: not a decimal
+  e: not â decimal
 
 invalid_sequence_3
 .. code-block:: yaml
@@ -43,7 +34,16 @@ invalid_sequence_3
   a: 1
   b: yes
   c: string
-  d: not a float
+  d: not â float
+  e: 3.1415926535
+
+invalid_sequence_1
+.. code-block:: yaml
+
+  a: 1
+  b: 2
+  c: string
+  d: 3.141
   e: 3.1415926535
 
 .. code-block:: python
@@ -90,7 +90,7 @@ invalid_sequence_3
   when expecting a float
   found non-float
     in "<unicode string>", line 4, column 1:
-      d: not a float
+      d: "not \xE2 float"
       ^
 
 .. code-block:: python
@@ -100,6 +100,6 @@ invalid_sequence_3
   when expecting a decimal
   found non-decimal
     in "<unicode string>", line 5, column 1:
-      e: not a decimal
+      e: "not \xE2 decimal"
       ^
 
