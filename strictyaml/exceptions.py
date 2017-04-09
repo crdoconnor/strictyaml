@@ -39,17 +39,19 @@ def raise_exception(context, problem, document, location):
     str_document = dump(document, Dumper=RoundTripDumper)
     context_line = location.start_line(document) - 1
     problem_line = location.end_line(document) - 1
-    context_index = len('\n'.join(str_document.split('\n')[:context_line]))
-    problem_index = len('\n'.join(str_document.split('\n')[:problem_line]))
+    context_index = len(u'\n'.join(str_document.split(u'\n')[:context_line]))
+    problem_index = len(u'\n'.join(str_document.split(u'\n')[:problem_line]))
+    string_mark_a = StringMark(
+        u"<unicode string>", context_index, context_line, 0, str_document, context_index + 1
+    )
+    string_mark_b = StringMark(
+        u"<unicode string>", problem_index, problem_line, 0, str_document, problem_index + 1
+    )
     raise YAMLValidationError(
         context,
-        StringMark(
-            "<unicode string>", context_index, context_line, 0, str_document, context_index + 1
-        ),
+        string_mark_a,
         problem,
-        StringMark(
-            "<unicode string>", problem_index, problem_line, 0, str_document, problem_index + 1
-        )
+        string_mark_b,
     )
 
 

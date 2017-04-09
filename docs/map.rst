@@ -1,6 +1,11 @@
 Mapping validation
 ==================
 
+onekeymap
+.. code-block:: yaml
+
+  x: 1
+
 invalid_sequence_2
 .. code-block:: yaml
 
@@ -8,15 +13,10 @@ invalid_sequence_2
   - 2
   - 3
 
-onekeymap
+valid_mapping_2
 .. code-block:: yaml
 
-  x: 1
-
-valid_sequence
-.. code-block:: yaml
-
-  a: 1
+  â: 1
   b: 2
   c: 3
 
@@ -25,7 +25,7 @@ invalid_sequence_1
 
   a: 1
   b: 2
-  d: 3
+  â: 3
 
 invalid_sequence_3
 .. code-block:: yaml
@@ -35,11 +35,20 @@ invalid_sequence_3
   c: 3
   d: 4
 
+valid_mapping
+.. code-block:: yaml
+
+  a: 1
+  b: 2
+  c: 3
+
 .. code-block:: python
 
   >>> from strictyaml import Map, Int, YAMLValidationError, load
   >>> 
   >>> schema = Map({"a": Int(), "b": Int(), "c": Int()})
+  >>> 
+  >>> schema_2 = Map({u"â": Int(), "b": Int(), "c": Int()})
 
 .. code-block:: python
 
@@ -48,13 +57,18 @@ invalid_sequence_3
 
 .. code-block:: python
 
-  >>> load(valid_sequence, schema)['keynotfound']
+  >>> load(valid_mapping_2, schema_2)[u'â'] == 1
+  True
+
+.. code-block:: python
+
+  >>> load(valid_mapping, schema)['keynotfound']
   EXCEPTION RAISED:
   keynotfound
 
 .. code-block:: python
 
-  >>> load(valid_sequence, schema).text
+  >>> load(valid_mapping, schema).text
   EXCEPTION RAISED:
   is a mapping, has no text value.
 
@@ -63,9 +77,9 @@ invalid_sequence_3
   >>> load(invalid_sequence_1, schema)
   EXCEPTION RAISED:
   while parsing a mapping
-  unexpected key not in schema 'd'
+  unexpected key not in schema 'â'
     in "<unicode string>", line 3, column 1:
-      d: '3'
+      "\xE2": '3'
       ^ (line: 3)
 
 .. code-block:: python

@@ -7,8 +7,12 @@
     files:
       onekeymap.yaml: |
         x: 1
-      valid_sequence.yaml: |
+      valid_mapping.yaml: |
         a: 1
+        b: 2
+        c: 3
+      valid_mapping_2.yaml: |
+        â: 1
         b: 2
         c: 3
       invalid_sequence_1.yaml: |
@@ -33,15 +37,20 @@
 
         schema = Map({"a": Int(), "b": Int(), "c": Int()})
 
+        schema_2 = Map({u"â": Int(), "b": Int(), "c": Int()})
+
     - Assert True: |
         str(load(onekeymap, Map({"x": Int()})).data) == "{'x': 1}"
 
+    - Assert True: |
+        load(valid_mapping_2, schema_2)[u'â'] == 1
+
     - Assert Exception:
-        command: load(valid_sequence, schema)['keynotfound']
+        command: load(valid_mapping, schema)['keynotfound']
         exception: keynotfound
 
     - Assert Exception:
-        command: load(valid_sequence, schema).text
+        command: load(valid_mapping, schema).text
         exception: is a mapping, has no text value.
 
     - Assert Exception:
