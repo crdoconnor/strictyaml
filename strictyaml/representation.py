@@ -143,7 +143,7 @@ class YAML(object):
         return len(self._value)
 
     def as_yaml(self):
-        return dump(self.as_marked_up(), Dumper=RoundTripDumper)
+        return dump(self.as_marked_up(), Dumper=RoundTripDumper, allow_unicode=True)
 
     def items(self):
         if not isinstance(self._value, CommentedMap):

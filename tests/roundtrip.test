@@ -13,14 +13,14 @@
       commented_yaml.yaml: |
         # Some comment
         
-        a: x # value comment
+        a: â # value comment
         
         # Another comment
         b: y
       modified_commented_yaml.yaml: |
         # Some comment
         
-        a: x # value comment
+        a: â # value comment
         
         # Another comment
         b: x

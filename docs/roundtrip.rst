@@ -7,16 +7,6 @@ should be preserved.
 Loaded YAML can even be modified and dumped out again too.
 
 
-commented_yaml
-.. code-block:: yaml
-
-  # Some comment
-  
-  a: x # value comment
-  
-  # Another comment
-  b: y
-
 with_integer
 .. code-block:: yaml
 
@@ -27,10 +17,20 @@ modified_commented_yaml
 
   # Some comment
   
-  a: x # value comment
+  a: â # value comment
   
   # Another comment
   b: x
+
+commented_yaml
+.. code-block:: yaml
+
+  # Some comment
+  
+  a: â # value comment
+  
+  # Another comment
+  b: y
 
 .. code-block:: python
 
