@@ -28,7 +28,7 @@ class YAML(object):
 
     def __str__(self):
         if type(self._value) in (unicode, int, float, decimal.Decimal):
-            return str(self._value)
+            return unicode(self._value)
         elif isinstance(self._value, CommentedMap) or isinstance(self._value, CommentedSeq):
             raise TypeError(
                 "Cannot cast mapping/sequence '{0}' to string".format(repr(self._value))
@@ -37,6 +37,9 @@ class YAML(object):
             raise_type_error(
                 repr(self), "str", "str(yamlobj.value) or str(yamlobj.text)"
             )
+
+    def __unicode__(self):
+        return self.__str__()
 
     @property
     def data(self):
@@ -143,7 +146,11 @@ class YAML(object):
         return len(self._value)
 
     def as_yaml(self):
-        return dump(self.as_marked_up(), Dumper=RoundTripDumper, allow_unicode=True)
+        """
+        Render the YAML node and subnodes as string.
+        """
+        dumped = dump(self.as_marked_up(), Dumper=RoundTripDumper, allow_unicode=True)
+        return dumped if sys.version_info[0] == 3 else dumped.decode('utf8')
 
     def items(self):
         if not isinstance(self._value, CommentedMap):

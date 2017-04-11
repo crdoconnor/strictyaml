@@ -35,7 +35,8 @@
 
         schema = Map({"a": Str(), "b": Str()})
 
-    - Assert True: 'load(commented_yaml, schema).as_yaml() == commented_yaml'
+    - Assert True: |
+        load(commented_yaml, schema).as_yaml() == commented_yaml
 
     - Run command: |
         to_modify = load(commented_yaml, schema)
