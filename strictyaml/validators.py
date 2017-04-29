@@ -1,6 +1,6 @@
 from ruamel.yaml.comments import CommentedSeq, CommentedMap
 from strictyaml.exceptions import YAMLValidationError
-from strictyaml.yamllocation import YAMLLocation
+from strictyaml.yamllocation import YAMLPointer
 from strictyaml.exceptions import raise_exception
 from strictyaml.representation import YAML
 from strictyaml import utils
@@ -25,7 +25,7 @@ class Validator(object):
 
     def __call__(self, document, location=None):
         if location is None:
-            location = YAMLLocation()
+            location = YAMLPointer()
         return self.validate(document, location)
 
 
@@ -36,7 +36,7 @@ class OrValidator(Validator):
 
     def validate(self, document, location=None):
         if location is None:
-            location = YAMLLocation()
+            location = YAMLPointer()
             document = copy.deepcopy(document)
 
         try:
@@ -63,7 +63,7 @@ class Any(Validator):
     """
     def validate(self, document, location=None):
         if location is None:
-            location = YAMLLocation()
+            location = YAMLPointer()
             document = copy.deepcopy(document)
         return schema_from_data(location.get(document))(document, location=location)
 
@@ -272,7 +272,7 @@ class MapPattern(Validator):
 
     def validate(self, document, location=None):
         if location is None:
-            location = YAMLLocation()
+            location = YAMLPointer()
             document = copy.deepcopy(document)
         return_snippet = location.get(document)
 
@@ -314,7 +314,7 @@ class Map(Validator):
 
     def validate(self, document, location=None):
         if location is None:
-            location = YAMLLocation()
+            location = YAMLPointer()
             document = copy.deepcopy(document)
         return_snippet = location.get(document)
 
@@ -352,7 +352,7 @@ class Seq(Validator):
 
     def validate(self, document, location=None):
         if location is None:
-            location = YAMLLocation()
+            location = YAMLPointer()
             document = copy.deepcopy(document)
         return_snippet = location.get(document)
 
@@ -378,7 +378,7 @@ class FixedSeq(Validator):
 
     def validate(self, document, location=None):
         if location is None:
-            location = YAMLLocation()
+            location = YAMLPointer()
             document = copy.deepcopy(document)
         return_snippet = location.get(document)
 
@@ -411,7 +411,7 @@ class UniqueSeq(Validator):
 
     def validate(self, document, location=None):
         if location is None:
-            location = YAMLLocation()
+            location = YAMLPointer()
             document = copy.deepcopy(document)
 
         return_snippet = location.get(document)

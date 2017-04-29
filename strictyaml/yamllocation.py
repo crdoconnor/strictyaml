@@ -3,7 +3,7 @@ from ruamel.yaml import dump, RoundTripDumper
 from copy import deepcopy
 
 
-class YAMLLocation(object):
+class YAMLPointer(object):
     def __init__(self):
         self._indices = []
 
@@ -109,4 +109,4 @@ class YAMLLocation(object):
         return segment
 
     def __repr__(self):
-        return "<YAMLLocation: {0}>".format(self._indices)
+        return "<YAMLPointer: {0}>".format(self._indices)
