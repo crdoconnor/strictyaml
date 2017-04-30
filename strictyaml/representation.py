@@ -14,14 +14,15 @@ if sys.version_info[0] == 3:
 
 
 class YAML(object):
-    def __init__(self, value, text=None, document=None, location=None):
+    def __init__(self, value, text=None, chunk=None):
         self._value = value
         if not isinstance(value, CommentedMap) and not isinstance(value, CommentedSeq):
             self._text = unicode(value) if text is None else text
         else:
             self._text = None
-        self._document = deepcopy(document)
-        self._location = location
+        #self._document = deepcopy(document)
+        #self._location = location
+        self._chunk = chunk
 
     def __int__(self):
         return int(self._value)
@@ -88,27 +89,27 @@ class YAML(object):
         """
         Return line number that the element starts on (including preceding comments).
         """
-        return self._location.start_line(self._document)
+        return self._chunk.start_line()
 
     @property
     def end_line(self):
         """
         Return line number that the element ends on (including trailing comments).
         """
-        return self._location.end_line(self._document)
+        return self._chunk.end_line()
 
     def lines(self):
         """
         Return a string of the lines which make up the selected line
         including preceding and trailing comments.
         """
-        return self._location.lines(self._document)
+        return self._chunk.lines()
 
     def lines_before(self, how_many):
-        return self._location.lines_before(self._document, how_many)
+        return self._chunk.lines_before(how_many)
 
     def lines_after(self, how_many):
-        return self._location.lines_after(self._document, how_many)
+        return self._chunk.lines_after(how_many)
 
     def __float__(self):
         return float(self._value)

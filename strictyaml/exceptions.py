@@ -35,10 +35,10 @@ class DuplicateKeysDisallowed(DisallowedToken):
     MESSAGE = "Duplicate keys not allowed"
 
 
-def raise_exception(context, problem, document, location):
-    str_document = dump(document, Dumper=RoundTripDumper)
-    context_line = location.start_line(document) - 1
-    problem_line = location.end_line(document) - 1
+def raise_exception(context, problem, chunk):
+    context_line = chunk.start_line() - 1
+    problem_line = chunk.end_line() - 1
+    str_document = dump(chunk.document, Dumper=RoundTripDumper)
     context_index = len(u'\n'.join(str_document.split(u'\n')[:context_line]))
     problem_index = len(u'\n'.join(str_document.split(u'\n')[:problem_line]))
     string_mark_a = StringMark(

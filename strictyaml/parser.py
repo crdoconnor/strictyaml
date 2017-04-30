@@ -220,5 +220,7 @@ def load(yaml_string, schema=None):
 
     if schema is None:
         schema = Any()
+        
+    from strictyaml.yamllocation import YAMLChunk
 
-    return schema(document)
+    return schema(YAMLChunk(document))

@@ -44,3 +44,8 @@ executable representation of the object.
   >>> repr(sy.Seq(sy.Datetime() | sy.Any())) == "Seq(Datetime() | Any())"
   True
 
+.. code-block:: python
+
+  >>> repr(sy.Map({"x": sy.CommaSeparated(sy.Float())})) == 'Map({"x": CommaSeparated(Float())})'
+  True
+
