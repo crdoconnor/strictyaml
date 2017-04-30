@@ -6,6 +6,7 @@ decorator==4.0.10
 docopt==0.6.2
 faketime==0.9.6.6
 hitchcli==0.2.6
+hitchdoc==0.1
 hitchpython==0.5.3
 hitchquickstart==0.1.4
 hitchserve==0.4.8
@@ -22,6 +23,7 @@ jupyter-core==4.2.0
 MarkupSafe==0.23
 path.py==8.2.1
 patool==1.12
+peewee==2.9.2
 pexpect==4.2.1
 pickleshare==0.7.4
 pkg-resources==0.0.0
@@ -32,15 +34,19 @@ Pygments==2.1.3
 pykwalify==1.5.1
 python-build==0.2.12
 python-dateutil==2.4.2
+python-slugify==1.2.4
 pyuv==1.2.0
 PyYAML==3.11
 pyzmq==16.0.0
 q==2.6
 requests==2.9.1
+ruamel.yaml==0.14.10
 simplegeneric==0.8.1
 six==1.10.0
+strictyaml==0.5.5
 tblib==1.2.0
 tornado==4.4.2
 traitlets==4.3.1
+Unidecode==0.4.20
 unixpackage==0.4.5
 wcwidth==0.1.7
