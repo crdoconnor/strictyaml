@@ -3,6 +3,8 @@ dist/
 .cache
 strictyaml.egg-info/
 tests/.hitch
+state/
 __pycache__
 *.pyc
 *.kate-swp
+hitch/hitchdir
