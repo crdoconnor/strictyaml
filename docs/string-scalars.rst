@@ -8,6 +8,7 @@ None
 valid_sequence.yaml:
 
 .. code-block:: yaml
+
   a: 1
   b: yes
   c: â string

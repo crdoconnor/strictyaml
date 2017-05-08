@@ -11,40 +11,46 @@ it raises an exception.
 
 
 
-invalid_sequence_2.yaml:
-
-.. code-block:: yaml
-  a: B
-
-
-valid_sequence_3.yaml:
-
-.. code-block:: yaml
-  a: no
-
-
-invalid_sequence_1.yaml:
-
-.. code-block:: yaml
-  a: A
-
-
 invalid_sequence_3.yaml:
 
 .. code-block:: yaml
+
   a: 3.14
 
 
 valid_sequence_2.yaml:
 
 .. code-block:: yaml
+
   a: 5
 
 
 valid_sequence_1.yaml:
 
 .. code-block:: yaml
+
   a: yes
+
+
+invalid_sequence_2.yaml:
+
+.. code-block:: yaml
+
+  a: B
+
+
+invalid_sequence_1.yaml:
+
+.. code-block:: yaml
+
+  a: A
+
+
+valid_sequence_3.yaml:
+
+.. code-block:: yaml
+
+  a: no
 
 .. code-block:: python
 

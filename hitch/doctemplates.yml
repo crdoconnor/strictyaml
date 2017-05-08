@@ -10,6 +10,7 @@ documents:
     {{ filename }}:
 
     .. code-block:: yaml
+    
     {{ contents|indent(2, true) }}
     {% endfor %}
 

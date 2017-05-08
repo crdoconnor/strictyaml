@@ -8,6 +8,7 @@ None
 nested.yaml:
 
 .. code-block:: yaml
+
   a: 1
   b: 2
   c:
@@ -18,6 +19,7 @@ nested.yaml:
 valid_sequence.yaml:
 
 .. code-block:: yaml
+
   a: 1
   b: 2
   c: 3

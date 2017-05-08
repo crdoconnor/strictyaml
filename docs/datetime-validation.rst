@@ -10,6 +10,7 @@ returns a python datetime object.
 invalid_sequence_1.yaml:
 
 .. code-block:: yaml
+
   date: 1
   datetime1: â
   datetime2: b
@@ -19,6 +20,7 @@ invalid_sequence_1.yaml:
 valid_sequence.yaml:
 
 .. code-block:: yaml
+
   date: 2016-10-22
   datetime1: 2016-10-22T14:23:12+00:00
   datetime2: 2016-10-22T14:23:12Z

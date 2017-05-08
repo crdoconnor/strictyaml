@@ -15,6 +15,7 @@ the same way.
 invalid_sequence_2.yaml:
 
 .. code-block:: yaml
+
   a: string
   b: 2
 
@@ -22,6 +23,7 @@ invalid_sequence_2.yaml:
 valid_sequence.yaml:
 
 .. code-block:: yaml
+
   a: 1
   b: 5
 

@@ -5,34 +5,39 @@ None
 
 
 
-valid_sequence_3.yaml:
+valid_sequence_1.yaml:
 
 .. code-block:: yaml
+
+  a: A
+
+
+valid_sequence_2.yaml:
+
+.. code-block:: yaml
+
   a:
 
 
 valid_sequence_4.yaml:
 
 .. code-block:: yaml
+
   a:
 
 
 invalid_sequence_1.yaml:
 
 .. code-block:: yaml
+
   a: C
 
 
-valid_sequence_2.yaml:
+valid_sequence_3.yaml:
 
 .. code-block:: yaml
+
   a:
-
-
-valid_sequence_1.yaml:
-
-.. code-block:: yaml
-  a: A
 
 .. code-block:: python
 

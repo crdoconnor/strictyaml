@@ -13,40 +13,45 @@ and features that inhibit markup readability".
 
 
 
+jinja2.yaml:
+
+.. code-block:: yaml
+
+  x: '{{ value }}'
+
+
 node_anchors_and_references.yaml:
 
 .. code-block:: yaml
+
   x: 
     a: &node1 3.5
     b: 1
     c: *node1
 
 
-jinja2.yaml:
-
-.. code-block:: yaml
-  x: '{{ value }}'
-
-
 tag_tokens.yaml:
 
 .. code-block:: yaml
+
   x:
     a: !!str yes
     b: !!str 3.5
     c: !!str yes
 
 
-flow_style.yaml:
-
-.. code-block:: yaml
-  x: { a: 1, b: 2, c: 3 }
-
-
 flow_style_sequence.yaml:
 
 .. code-block:: yaml
+
   [a, b]: [x, y]
+
+
+flow_style.yaml:
+
+.. code-block:: yaml
+
+  x: { a: 1, b: 2, c: 3 }
 
 .. code-block:: python
 

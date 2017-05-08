@@ -21,6 +21,7 @@ values which require precision, like prices.
 invalid_sequence_2.yaml:
 
 .. code-block:: yaml
+
   a: string
   b: 2
 
@@ -28,6 +29,7 @@ invalid_sequence_2.yaml:
 valid_sequence.yaml:
 
 .. code-block:: yaml
+
   a: 1.00000000000000000001
   b: 5.4135
 
