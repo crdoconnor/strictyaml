@@ -11,6 +11,6 @@ Using StrictYAML
 ----------------
 
 .. toctree::
-   :maxdepth: 1
+   :glob:
 
    *
