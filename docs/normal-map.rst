@@ -12,6 +12,7 @@ the keys in advance but you do know the type, use MapPattern.
 
 
 
+
 invalid_sequence_2.yaml:
 
 .. code-block:: yaml
@@ -19,17 +20,12 @@ invalid_sequence_2.yaml:
   - 2
   - 3
 
+
 onekeymap.yaml:
 
 .. code-block:: yaml
   x: 1
 
-valid_mapping.yaml:
-
-.. code-block:: yaml
-  a: 1
-  b: 2
-  c: 3
 
 valid_mapping_2.yaml:
 
@@ -38,12 +34,14 @@ valid_mapping_2.yaml:
   b: 2
   c: 3
 
+
 invalid_sequence_1.yaml:
 
 .. code-block:: yaml
   a: 1
   b: 2
   â: 3
+
 
 invalid_sequence_3.yaml:
 
@@ -52,6 +50,14 @@ invalid_sequence_3.yaml:
   b: 2
   c: 3
   d: 4
+
+
+valid_mapping.yaml:
+
+.. code-block:: yaml
+  a: 1
+  b: 2
+  c: 3
 
 .. code-block:: python
 

@@ -6,6 +6,7 @@ provided they are of a fixed length.
 
 
 
+
 invalid_sequence_2.yaml:
 
 .. code-block:: yaml
@@ -15,6 +16,7 @@ invalid_sequence_2.yaml:
     - 1
     - 2
 
+
 invalid_sequence_1.yaml:
 
 .. code-block:: yaml
@@ -22,11 +24,13 @@ invalid_sequence_1.yaml:
   b: 2
   c: 3
 
+
 invalid_sequence_3.yaml:
 
 .. code-block:: yaml
   - 1
   - a
+
 
 valid_sequence.yaml:
 

@@ -6,6 +6,7 @@ documents:
     {{ story['description'] }}
 
     {% for filename, contents in story['preconditions'].get('files', {}).items() %}
+    
     {{ filename }}:
 
     .. code-block:: yaml

@@ -10,33 +10,25 @@ When you wish to specify the exact key name, use the
 
 
 
+
 invalid_sequence_2.yaml:
 
 .. code-block:: yaml
   a: a
   b: 2
 
+
 valid_sequence_3.yaml:
 
 .. code-block:: yaml
   a: 1
 
-valid_sequence_2.yaml:
-
-.. code-block:: yaml
-  a: 1
-  c: 3
-
-valid_sequence_1.yaml:
-
-.. code-block:: yaml
-  â: 1
-  b: 2
 
 invalid_sequence_1.yaml:
 
 .. code-block:: yaml
   b: b
+
 
 invalid_sequence_3.yaml:
 
@@ -44,6 +36,20 @@ invalid_sequence_3.yaml:
   a: 1
   b: yâs
   c: 3
+
+
+valid_sequence_2.yaml:
+
+.. code-block:: yaml
+  a: 1
+  c: 3
+
+
+valid_sequence_1.yaml:
+
+.. code-block:: yaml
+  â: 1
+  b: 2
 
 .. code-block:: python
 

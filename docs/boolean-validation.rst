@@ -11,10 +11,12 @@ will cause a validation error.
 
 
 
+
 invalid_sequence.yaml:
 
 .. code-block:: yaml
   a: yâs
+
 
 valid_sequence.yaml:
 

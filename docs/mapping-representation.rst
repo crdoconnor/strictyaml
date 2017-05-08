@@ -4,6 +4,7 @@ Mapping representation
 None
 
 
+
 nested.yaml:
 
 .. code-block:: yaml
@@ -12,6 +13,7 @@ nested.yaml:
   c:
     x: 1
     y: 2
+
 
 valid_sequence.yaml:
 

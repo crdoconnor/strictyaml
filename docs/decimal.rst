@@ -17,11 +17,13 @@ values which require precision, like prices.
 
 
 
+
 invalid_sequence_2.yaml:
 
 .. code-block:: yaml
   a: string
   b: 2
+
 
 valid_sequence.yaml:
 

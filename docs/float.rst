@@ -18,11 +18,13 @@ for values for which precision is not required.
 
 
 
+
 invalid_sequence_2.yaml:
 
 .. code-block:: yaml
   a: string
   b: 2
+
 
 valid_sequence.yaml:
 

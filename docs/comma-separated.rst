@@ -9,10 +9,12 @@ default.
 
 
 
+
 invalid_sequence.yaml:
 
 .. code-block:: yaml
   a: 1, x, 3
+
 
 valid_sequence.yaml:
 

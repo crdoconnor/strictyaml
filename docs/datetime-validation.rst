@@ -6,6 +6,7 @@ returns a python datetime object.
 
 
 
+
 invalid_sequence_1.yaml:
 
 .. code-block:: yaml
@@ -13,6 +14,7 @@ invalid_sequence_1.yaml:
   datetime1: â
   datetime2: b
   datetime3: c
+
 
 valid_sequence.yaml:
 

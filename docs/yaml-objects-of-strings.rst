@@ -11,6 +11,7 @@ the same way.
 
 
 
+
 valid_sequence.yaml:
 
 .. code-block:: yaml

@@ -4,6 +4,7 @@ Scalar validation
 None
 
 
+
 invalid_sequence_2.yaml:
 
 .. code-block:: yaml
@@ -13,14 +14,6 @@ invalid_sequence_2.yaml:
   d: 3.141
   e: 3.1415926535
 
-invalid_sequence_4.yaml:
-
-.. code-block:: yaml
-  a: 1
-  b: yes
-  c: string
-  d: 3.141
-  e: not â decimal
 
 invalid_sequence_1.yaml:
 
@@ -31,6 +24,7 @@ invalid_sequence_1.yaml:
   d: 3.141
   e: 3.1415926535
 
+
 invalid_sequence_3.yaml:
 
 .. code-block:: yaml
@@ -40,6 +34,7 @@ invalid_sequence_3.yaml:
   d: not â float
   e: 3.1415926535
 
+
 valid_sequence.yaml:
 
 .. code-block:: yaml
@@ -48,6 +43,16 @@ valid_sequence.yaml:
   c: string
   d: 3.141
   e: 3.1415926535
+
+
+invalid_sequence_4.yaml:
+
+.. code-block:: yaml
+  a: 1
+  b: yes
+  c: string
+  d: 3.141
+  e: not â decimal
 
 .. code-block:: python
 

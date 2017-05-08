@@ -15,6 +15,7 @@ The Any validator can be used inside fixed structures as well.
 
 
 
+
 valid_sequence.yaml:
 
 .. code-block:: yaml

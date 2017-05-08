@@ -7,11 +7,19 @@ you can signal that a key/value pair is not required.
 
 
 
+
 invalid_sequence_2.yaml:
 
 .. code-block:: yaml
   a: 1
   b: 2
+
+
+valid_sequence_3.yaml:
+
+.. code-block:: yaml
+  a: 1
+
 
 valid_sequence_4.yaml:
 
@@ -21,27 +29,12 @@ valid_sequence_4.yaml:
     x: y
     y: z
 
-valid_sequence_3.yaml:
-
-.. code-block:: yaml
-  a: 1
-
-valid_sequence_2.yaml:
-
-.. code-block:: yaml
-  a: 1
-  b: no
-
-valid_sequence_1.yaml:
-
-.. code-block:: yaml
-  a: 1
-  b: yes
 
 invalid_sequence_1.yaml:
 
 .. code-block:: yaml
   b: 2
+
 
 invalid_sequence_3.yaml:
 
@@ -49,6 +42,20 @@ invalid_sequence_3.yaml:
   a: 1
   b: yes
   c: 3
+
+
+valid_sequence_2.yaml:
+
+.. code-block:: yaml
+  a: 1
+  b: no
+
+
+valid_sequence_1.yaml:
+
+.. code-block:: yaml
+  a: 1
+  b: yes
 
 .. code-block:: python
 

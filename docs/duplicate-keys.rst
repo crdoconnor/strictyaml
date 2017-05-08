@@ -12,6 +12,7 @@ arrays where all of the keys are unique. It will throw a DuplicateKeysDisallowed
 
 
 
+
 duplicate.yaml:
 
 .. code-block:: yaml

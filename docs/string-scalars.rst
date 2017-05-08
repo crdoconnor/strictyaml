@@ -4,6 +4,7 @@ String scalars
 None
 
 
+
 valid_sequence.yaml:
 
 .. code-block:: yaml
