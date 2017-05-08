@@ -1,5 +1,8 @@
 Nested mapping validation:
   based on: strictyaml
+  importance: 4
+  description: |
+    Mappings can be nested within one another.
   preconditions:
     files:
       valid_sequence.yaml: |
@@ -20,7 +23,7 @@ Nested mapping validation:
         d: 3
   scenario:
     - Run command: |
-        from strictyaml import Map, Int, YAMLValidationError, load
+        from strictyaml import Map, Int, load
 
         schema = Map({"a": Map({"x": Int(), "y": Int()}), "b": Int(), "c": Int()})
 

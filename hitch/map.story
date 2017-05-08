@@ -1,5 +1,15 @@
 Normal Map:
   based on: strictyaml
+  importance: 3
+  description: |
+    Mappings of one value to another are represented by : in YAML
+    and parsed as python dicts.
+    
+    Using StrictYAML's 'Map' you can validate that a mapping
+    contains the right keys and the right *type* of values.
+    
+    Note: for mappings where you don't know the exact names of
+    the keys in advance but you do know the type, use MapPattern.
   preconditions:
     files:
       onekeymap.yaml: |

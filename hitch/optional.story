@@ -1,5 +1,9 @@
 Optional validation:
   based on: strictyaml
+  description: |
+    Not every key in a YAML mapping will be required. If
+    you use the "Optional('key')" validator with YAML,
+    you can signal that a key/value pair is not required.
   preconditions:
     files:
       valid_sequence_1.yaml: |
@@ -25,19 +29,21 @@ Optional validation:
         b: yes
         c: 3
   scenario:
-    - Run command: |
-        from strictyaml import Map, Int, Str, Bool, Optional, YAMLValidationError, load
+    - Code: |
+        from strictyaml import Map, Int, Str, Bool, Optional, load
 
         schema = Map({"a": Int(), Optional("b"): Bool(), })
 
-    - Assert True: 'load(valid_sequence_1, schema) == {"a": 1, "b": True}'
-    - Assert True: 'load(valid_sequence_2, schema) == {"a": 1, "b": False}'
-    - Assert True: 'load(valid_sequence_3, schema) == {"a": 1}'
+    - Returns True: 'load(valid_sequence_1, schema) == {"a": 1, "b": True}'
 
-    - Run command: |
+    - Returns True: 'load(valid_sequence_2, schema) == {"a": 1, "b": False}'
+
+    - Returns True: 'load(valid_sequence_3, schema) == {"a": 1}'
+
+    - Code: |
         load(valid_sequence_4, Map({"a": Int(), Optional("b"): Map({Optional("x"): Str(), Optional("y"): Str()})}))
 
-    - Assert Exception:
+    - Raises Exception:
         command: load(invalid_sequence_1, schema)
         exception: |
           when expecting a boolean value (one of "yes", "true", "on", "1", "no", "false", "off", "0")
@@ -46,7 +52,7 @@ Optional validation:
               b: '2'
                ^
 
-    - Assert Exception:
+    - Raises Exception:
         command: load(invalid_sequence_2, schema)
         exception: |
           when expecting a boolean value (one of "yes", "true", "on", "1", "no", "false", "off", "0")
@@ -55,7 +61,7 @@ Optional validation:
               b: '2'
               ^
 
-    - Assert Exception:
+    - Raises Exception:
         command: load(invalid_sequence_3, schema)
         exception: |
           while parsing a mapping

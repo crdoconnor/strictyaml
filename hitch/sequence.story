@@ -1,5 +1,15 @@
 Sequence validation:
   based on: strictyaml
+  importance: 5
+  description: |
+    Sequences in YAML are denoted by a series of dashes ('-')
+    and parsed as a list in python.
+    
+    Validating sequences of a particular type can be done with
+    the Seq validator, specifying the type.
+    
+    See also UniqueSeq and FixedSeq for other types of sequence
+    validation.
   preconditions:
     files:
       valid_sequence.yaml: |
@@ -24,18 +34,18 @@ Sequence validation:
         - 2
         - 3.4
   scenario:
-    - Run command: |
+    - Code: |
         from strictyaml import Seq, Str, Int, YAMLValidationError, load
 
-    - Assert True: load(valid_sequence, Seq(Str())) == ["1", "2", "3", ]
+    - Returns True: load(valid_sequence, Seq(Str())) == ["1", "2", "3", ]
 
-    - Assert True: load(valid_sequence, Seq(Str())).is_sequence()
+    - Returns True: load(valid_sequence, Seq(Str())).is_sequence()
 
-    - Assert Exception:
+    - Raises Exception:
         command: load(valid_sequence, Seq(Str())).text
         exception: is a sequence, has no text value.
 
-    - Assert Exception:
+    - Raises Exception:
         command: load(invalid_sequence_1, Seq(Str()))
         exception: |
           when expecting a sequence
@@ -47,7 +57,7 @@ Sequence validation:
               c: '3'
               ^ (line: 3)
 
-    - Assert Exception:
+    - Raises Exception:
         command: load(invalid_sequence_2, Seq(Str()))
         exception: |
           when expecting a str
@@ -60,7 +70,7 @@ Sequence validation:
               ^ (line: 5)
 
 
-    - Assert Exception:
+    - Raises Exception:
         command: load(invalid_sequence_3, Seq(Int()))
         exception: |
           when expecting an integer
@@ -69,7 +79,7 @@ Sequence validation:
               - '1.1'
                ^ (line: 1)
 
-    - Assert Exception:
+    - Raises Exception:
         command: load(invalid_sequence_4, Seq(Int()))
         exception: |
           when expecting an integer

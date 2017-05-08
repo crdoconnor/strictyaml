@@ -9,7 +9,7 @@ import signal
 from path import Path
 from commandlib import Command
 import strictyaml
-from strictyaml import MapPattern, Str, Map
+from strictyaml import MapPattern, Str, Map, Int, Optional
 from pathquery import pathq
 import hitchtest
 import hitchdoc
@@ -44,9 +44,11 @@ class Engine(BaseEngine):
         }),
         params=Map({
             "python version": Str(),
+            "ruamel version": Str(),
         }),
         about={
             "description": Str(),
+            Optional("importance"): Int(),
         },
     )
 

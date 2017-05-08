@@ -1,7 +1,8 @@
 What line:
   based on: strictyaml
+  importance: 2
   description: |
-    Line and context can be determined from the returned YAML object.
+    Line and context can be determined from returned YAML objects.
   preconditions:
     files:
       commented_yaml.yaml: |

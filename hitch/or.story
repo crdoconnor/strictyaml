@@ -1,4 +1,11 @@
 Or validation:
+  description: |
+    StrictYAML can be directed to parse two different elements or
+    blocks of YAML.
+
+    If the first thing does not parse correctly, it attempts to
+    parse the second. If the second does not parse correctly,
+    it raises an exception.
   based on: strictyaml
   preconditions:
     files:
@@ -15,18 +22,18 @@ Or validation:
       invalid_sequence_3.yaml: |
         a: 3.14
   scenario:
-    - Run command: |
+    - Code: |
         from strictyaml import Map, Bool, Int, YAMLValidationError, load
 
         schema = Map({"a": Bool() | Int()})
 
-    - Assert True: 'load(valid_sequence_1, schema) == {"a" : True}'
+    - Returns True: 'load(valid_sequence_1, schema) == {"a" : True}'
 
-    - Assert True: 'load(valid_sequence_2, schema) == {"a" : 5}'
+    - Returns True: 'load(valid_sequence_2, schema) == {"a" : 5}'
 
-    - Assert True: 'load(valid_sequence_3, schema) == {"a" : False}'
+    - Returns True: 'load(valid_sequence_3, schema) == {"a" : False}'
 
-    - Assert Exception:
+    - Raises Exception:
         command: load(invalid_sequence_1, schema)
         exception: |
           when expecting an integer
@@ -35,7 +42,7 @@ Or validation:
               a: A
                ^
 
-    - Assert Exception:
+    - Raises Exception:
         command: load(invalid_sequence_2, schema)
         exception: |
           when expecting an integer
@@ -44,7 +51,7 @@ Or validation:
               a: B
                ^
 
-    - Assert Exception:
+    - Raises Exception:
         command: load(invalid_sequence_3, schema)
         exception: |
           when expecting an integer
