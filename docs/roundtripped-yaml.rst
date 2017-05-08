@@ -1,10 +1,14 @@
 Roundtripped YAML
 -----------------
 
-Loaded YAML can be dumped out again and commments
-should be preserved.
+Loaded YAML can be modified and dumped out again with
+comments preserved using .as_yaml().
 
-Loaded YAML can even be modified and dumped out again too.
+Note that due to some bugs in the library (ruamel.yaml)
+underlying StrictYAML, the YAML loaded and dumped out
+may not always look the same (e.g. 
+implementation, the YAML loaded and dumped out may not
+always look exactly the same.
 
 
 

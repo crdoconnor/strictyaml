@@ -1,8 +1,24 @@
 Or validation
 -------------
 
-None
+StrictYAML can be directed to parse two different elements or
+blocks of YAML.
 
+If the first thing does not parse correctly, it attempts to
+parse the second. If the second does not parse correctly,
+it raises an exception.
+
+
+
+invalid_sequence_2.yaml:
+
+.. code-block:: yaml
+  a: B
+
+valid_sequence_3.yaml:
+
+.. code-block:: yaml
+  a: no
 
 valid_sequence_2.yaml:
 
@@ -14,25 +30,15 @@ valid_sequence_1.yaml:
 .. code-block:: yaml
   a: yes
 
-invalid_sequence_3.yaml:
-
-.. code-block:: yaml
-  a: 3.14
-
 invalid_sequence_1.yaml:
 
 .. code-block:: yaml
   a: A
 
-valid_sequence_3.yaml:
+invalid_sequence_3.yaml:
 
 .. code-block:: yaml
-  a: no
-
-invalid_sequence_2.yaml:
-
-.. code-block:: yaml
-  a: B
+  a: 3.14
 
 .. code-block:: python
 

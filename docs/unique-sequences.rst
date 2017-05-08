@@ -6,12 +6,12 @@ values.
 
 
 
-valid_sequence.yaml:
+invalid_sequence_2.yaml:
 
 .. code-block:: yaml
-  - A
-  - B
-  - C
+  - 3
+  - 3
+  - 3
 
 invalid_sequence_1.yaml:
 
@@ -20,12 +20,12 @@ invalid_sequence_1.yaml:
   - B
   - B
 
-invalid_sequence_2.yaml:
+valid_sequence.yaml:
 
 .. code-block:: yaml
-  - 3
-  - 3
-  - 3
+  - A
+  - B
+  - C
 
 .. code-block:: python
 

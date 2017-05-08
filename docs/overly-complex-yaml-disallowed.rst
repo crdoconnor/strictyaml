@@ -12,16 +12,6 @@ and features that inhibit markup readability".
 
 
 
-flow_style_sequence.yaml:
-
-.. code-block:: yaml
-  [a, b]: [x, y]
-
-jinja2.yaml:
-
-.. code-block:: yaml
-  x: '{{ value }}'
-
 tag_tokens.yaml:
 
 .. code-block:: yaml
@@ -29,6 +19,11 @@ tag_tokens.yaml:
     a: !!str yes
     b: !!str 3.5
     c: !!str yes
+
+flow_style_sequence.yaml:
+
+.. code-block:: yaml
+  [a, b]: [x, y]
 
 node_anchors_and_references.yaml:
 
@@ -42,6 +37,11 @@ flow_style.yaml:
 
 .. code-block:: yaml
   x: { a: 1, b: 2, c: 3 }
+
+jinja2.yaml:
+
+.. code-block:: yaml
+  x: '{{ value }}'
 
 .. code-block:: python
 

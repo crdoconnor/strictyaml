@@ -1,17 +1,16 @@
 Nested mapping validation
 -------------------------
 
-None
+Mappings can be nested within one another.
 
 
-valid_sequence.yaml:
+
+invalid_sequence_2.yaml:
 
 .. code-block:: yaml
-  a:
-    x: 9
-    y: 8
+  a: 11
   b: 2
-  c: 3
+  d: 3
 
 invalid_sequence_1.yaml:
 
@@ -22,16 +21,18 @@ invalid_sequence_1.yaml:
   b: 2
   d: 3
 
-invalid_sequence_2.yaml:
+valid_sequence.yaml:
 
 .. code-block:: yaml
-  a: 11
+  a:
+    x: 9
+    y: 8
   b: 2
-  d: 3
+  c: 3
 
 .. code-block:: python
 
-    from strictyaml import Map, Int, YAMLValidationError, load
+    from strictyaml import Map, Int, load
     
     schema = Map({"a": Map({"x": Int(), "y": Int()}), "b": Int(), "c": Int()})
 

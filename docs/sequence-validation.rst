@@ -1,35 +1,16 @@
 Sequence validation
 -------------------
 
-None
+Sequences in YAML are denoted by a series of dashes ('-')
+and parsed as a list in python.
+
+Validating sequences of a particular type can be done with
+the Seq validator, specifying the type.
+
+See also UniqueSeq and FixedSeq for other types of sequence
+validation.
 
 
-valid_sequence.yaml:
-
-.. code-block:: yaml
-  - 1
-  - 2
-  - 3
-
-invalid_sequence_4.yaml:
-
-.. code-block:: yaml
-  - 1
-  - 2
-  - 3.4
-
-invalid_sequence_3.yaml:
-
-.. code-block:: yaml
-  - 1.1
-  - 1.2
-
-invalid_sequence_1.yaml:
-
-.. code-block:: yaml
-  a: 1
-  b: 2
-  c: 3
 
 invalid_sequence_2.yaml:
 
@@ -39,6 +20,33 @@ invalid_sequence_2.yaml:
   - a:
     - 1
     - 2
+
+invalid_sequence_4.yaml:
+
+.. code-block:: yaml
+  - 1
+  - 2
+  - 3.4
+
+invalid_sequence_1.yaml:
+
+.. code-block:: yaml
+  a: 1
+  b: 2
+  c: 3
+
+invalid_sequence_3.yaml:
+
+.. code-block:: yaml
+  - 1.1
+  - 1.2
+
+valid_sequence.yaml:
+
+.. code-block:: yaml
+  - 1
+  - 2
+  - 3
 
 .. code-block:: python
 

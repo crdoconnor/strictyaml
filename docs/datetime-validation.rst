@@ -6,14 +6,6 @@ returns a python datetime object.
 
 
 
-valid_sequence.yaml:
-
-.. code-block:: yaml
-  date: 2016-10-22
-  datetime1: 2016-10-22T14:23:12+00:00
-  datetime2: 2016-10-22T14:23:12Z
-  datetime3: 20161022T142312Z
-
 invalid_sequence_1.yaml:
 
 .. code-block:: yaml
@@ -21,6 +13,14 @@ invalid_sequence_1.yaml:
   datetime1: â
   datetime2: b
   datetime3: c
+
+valid_sequence.yaml:
+
+.. code-block:: yaml
+  date: 2016-10-22
+  datetime1: 2016-10-22T14:23:12+00:00
+  datetime2: 2016-10-22T14:23:12Z
+  datetime3: 20161022T142312Z
 
 .. code-block:: python
 

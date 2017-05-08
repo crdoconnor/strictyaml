@@ -1,8 +1,25 @@
 Optional validation
 -------------------
 
-None
+Not every key in a YAML mapping will be required. If
+you use the "Optional('key')" validator with YAML,
+you can signal that a key/value pair is not required.
 
+
+
+invalid_sequence_2.yaml:
+
+.. code-block:: yaml
+  a: 1
+  b: 2
+
+valid_sequence_4.yaml:
+
+.. code-block:: yaml
+  a: 1
+  b:
+    x: y
+    y: z
 
 valid_sequence_3.yaml:
 
@@ -21,6 +38,11 @@ valid_sequence_1.yaml:
   a: 1
   b: yes
 
+invalid_sequence_1.yaml:
+
+.. code-block:: yaml
+  b: 2
+
 invalid_sequence_3.yaml:
 
 .. code-block:: yaml
@@ -28,28 +50,9 @@ invalid_sequence_3.yaml:
   b: yes
   c: 3
 
-invalid_sequence_1.yaml:
-
-.. code-block:: yaml
-  b: 2
-
-valid_sequence_4.yaml:
-
-.. code-block:: yaml
-  a: 1
-  b:
-    x: y
-    y: z
-
-invalid_sequence_2.yaml:
-
-.. code-block:: yaml
-  a: 1
-  b: 2
-
 .. code-block:: python
 
-    from strictyaml import Map, Int, Str, Bool, Optional, YAMLValidationError, load
+    from strictyaml import Map, Int, Str, Bool, Optional, load
     
     schema = Map({"a": Int(), Optional("b"): Bool(), })
 

@@ -1,8 +1,20 @@
 No schema validation
 --------------------
 
-None
+No schema is required in order to load YAML, however, the YAML will
+be loaded into one of only three types - list, dict or string.
 
+Note that the numbers below would be parsed as integers using
+PyYAML, ruamel.yaml, poyo or other regular YAML parsers.
+
+
+
+sequence_3.yaml:
+
+.. code-block:: yaml
+  a: 11
+  b: 2
+  d: 3
 
 sequence_2.yaml:
 
@@ -10,13 +22,6 @@ sequence_2.yaml:
   a:
     - 9
     - 8
-  b: 2
-  d: 3
-
-sequence_3.yaml:
-
-.. code-block:: yaml
-  a: 11
   b: 2
   d: 3
 

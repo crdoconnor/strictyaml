@@ -1,7 +1,7 @@
 What line
 ---------
 
-Line and context can be determined from the returned YAML object.
+Line and context can be determined from returned YAML objects.
 
 
 

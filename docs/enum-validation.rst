@@ -4,6 +4,16 @@ Enum validation
 None
 
 
+invalid_sequence_2.yaml:
+
+.. code-block:: yaml
+  a: yes
+
+valid_sequence_3.yaml:
+
+.. code-block:: yaml
+  a: C
+
 valid_sequence_2.yaml:
 
 .. code-block:: yaml
@@ -14,25 +24,15 @@ valid_sequence_1.yaml:
 .. code-block:: yaml
   a: A
 
-invalid_sequence_3.yaml:
-
-.. code-block:: yaml
-  a: 1
-
 invalid_sequence_1.yaml:
 
 .. code-block:: yaml
   a: D
 
-valid_sequence_3.yaml:
+invalid_sequence_3.yaml:
 
 .. code-block:: yaml
-  a: C
-
-invalid_sequence_2.yaml:
-
-.. code-block:: yaml
-  a: yes
+  a: 1
 
 .. code-block:: python
 

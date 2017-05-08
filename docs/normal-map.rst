@@ -1,8 +1,35 @@
 Normal Map
 ----------
 
-None
+Mappings of one value to another are represented by : in YAML
+and parsed as python dicts.
 
+Using StrictYAML's 'Map' you can validate that a mapping
+contains the right keys and the right *type* of values.
+
+Note: for mappings where you don't know the exact names of
+the keys in advance but you do know the type, use MapPattern.
+
+
+
+invalid_sequence_2.yaml:
+
+.. code-block:: yaml
+  - 1
+  - 2
+  - 3
+
+onekeymap.yaml:
+
+.. code-block:: yaml
+  x: 1
+
+valid_mapping.yaml:
+
+.. code-block:: yaml
+  a: 1
+  b: 2
+  c: 3
 
 valid_mapping_2.yaml:
 
@@ -18,11 +45,6 @@ invalid_sequence_1.yaml:
   b: 2
   â: 3
 
-onekeymap.yaml:
-
-.. code-block:: yaml
-  x: 1
-
 invalid_sequence_3.yaml:
 
 .. code-block:: yaml
@@ -30,20 +52,6 @@ invalid_sequence_3.yaml:
   b: 2
   c: 3
   d: 4
-
-valid_mapping.yaml:
-
-.. code-block:: yaml
-  a: 1
-  b: 2
-  c: 3
-
-invalid_sequence_2.yaml:
-
-.. code-block:: yaml
-  - 1
-  - 2
-  - 3
 
 .. code-block:: python
 

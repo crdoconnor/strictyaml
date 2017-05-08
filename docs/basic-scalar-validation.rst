@@ -1,7 +1,15 @@
-Scalar validation
------------------
+Basic scalar validation
+-----------------------
 
-None
+Scalar values are anything that is not a list or a string.
+
+StrictYAML comes with a number of built in scalar values, the
+basic ones are: Str, Int, Float, Decimal.
+
+Note that when parsing values which contain *prices* or any
+other value which requires precision, Decimal is better than
+Float.
+
 
 
 invalid_sequence_2.yaml:
