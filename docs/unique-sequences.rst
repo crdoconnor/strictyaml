@@ -7,15 +7,6 @@ values.
 
 
 
-invalid_sequence_1.yaml:
-
-.. code-block:: yaml
-
-  - A
-  - B
-  - B
-
-
 invalid_sequence_2.yaml:
 
 .. code-block:: yaml
@@ -23,6 +14,15 @@ invalid_sequence_2.yaml:
   - 3
   - 3
   - 3
+
+
+invalid_sequence_1.yaml:
+
+.. code-block:: yaml
+
+  - A
+  - B
+  - B
 
 
 valid_sequence.yaml:

@@ -7,13 +7,15 @@ provided they are of a fixed length.
 
 
 
-invalid_sequence_1.yaml:
+invalid_sequence_2.yaml:
 
 .. code-block:: yaml
 
-  a: 1
-  b: 2
-  c: 3
+  - 2
+  - a
+  - a:
+    - 1
+    - 2
 
 
 invalid_sequence_3.yaml:
@@ -24,15 +26,13 @@ invalid_sequence_3.yaml:
   - a
 
 
-invalid_sequence_2.yaml:
+invalid_sequence_1.yaml:
 
 .. code-block:: yaml
 
-  - 2
-  - a
-  - a:
-    - 1
-    - 2
+  a: 1
+  b: 2
+  c: 3
 
 
 valid_sequence.yaml:

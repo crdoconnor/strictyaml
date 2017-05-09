@@ -6,6 +6,15 @@ Mappings can be nested within one another.
 
 
 
+invalid_sequence_2.yaml:
+
+.. code-block:: yaml
+
+  a: 11
+  b: 2
+  d: 3
+
+
 invalid_sequence_1.yaml:
 
 .. code-block:: yaml
@@ -13,15 +22,6 @@ invalid_sequence_1.yaml:
   a:
     x: 9
     z: 8
-  b: 2
-  d: 3
-
-
-invalid_sequence_2.yaml:
-
-.. code-block:: yaml
-
-  a: 11
   b: 2
   d: 3
 

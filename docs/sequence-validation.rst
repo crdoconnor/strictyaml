@@ -13,6 +13,25 @@ validation.
 
 
 
+invalid_sequence_2.yaml:
+
+.. code-block:: yaml
+
+  - 2
+  - 3
+  - a:
+    - 1
+    - 2
+
+
+invalid_sequence_3.yaml:
+
+.. code-block:: yaml
+
+  - 1.1
+  - 1.2
+
+
 invalid_sequence_4.yaml:
 
 .. code-block:: yaml
@@ -29,25 +48,6 @@ invalid_sequence_1.yaml:
   a: 1
   b: 2
   c: 3
-
-
-invalid_sequence_3.yaml:
-
-.. code-block:: yaml
-
-  - 1.1
-  - 1.2
-
-
-invalid_sequence_2.yaml:
-
-.. code-block:: yaml
-
-  - 2
-  - 3
-  - a:
-    - 1
-    - 2
 
 
 valid_sequence.yaml:

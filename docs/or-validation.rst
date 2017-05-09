@@ -11,11 +11,11 @@ it raises an exception.
 
 
 
-invalid_sequence_3.yaml:
+invalid_sequence_2.yaml:
 
 .. code-block:: yaml
 
-  a: 3.14
+  a: B
 
 
 valid_sequence_2.yaml:
@@ -25,6 +25,13 @@ valid_sequence_2.yaml:
   a: 5
 
 
+invalid_sequence_1.yaml:
+
+.. code-block:: yaml
+
+  a: A
+
+
 valid_sequence_1.yaml:
 
 .. code-block:: yaml
@@ -32,18 +39,11 @@ valid_sequence_1.yaml:
   a: yes
 
 
-invalid_sequence_2.yaml:
+invalid_sequence_3.yaml:
 
 .. code-block:: yaml
 
-  a: B
-
-
-invalid_sequence_1.yaml:
-
-.. code-block:: yaml
-
-  a: A
+  a: 3.14
 
 
 valid_sequence_3.yaml:

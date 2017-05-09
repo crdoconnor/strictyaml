@@ -12,13 +12,6 @@ will cause a validation error.
 
 
 
-invalid_sequence.yaml:
-
-.. code-block:: yaml
-
-  a: yâs
-
-
 valid_sequence.yaml:
 
 .. code-block:: yaml
@@ -31,6 +24,13 @@ valid_sequence.yaml:
   f: Off
   g: FALSE
   h: no
+
+
+invalid_sequence.yaml:
+
+.. code-block:: yaml
+
+  a: yâs
 
 .. code-block:: python
 

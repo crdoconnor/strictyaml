@@ -13,25 +13,6 @@ always look exactly the same.
 
 
 
-commented_yaml.yaml:
-
-.. code-block:: yaml
-
-  # Some comment
-  
-  a: â # value comment
-  
-  # Another comment
-  b: y
-
-
-with_integer:
-
-.. code-block:: yaml
-
-  x: 1
-
-
 modified_commented_yaml.yaml:
 
 .. code-block:: yaml
@@ -42,6 +23,25 @@ modified_commented_yaml.yaml:
   
   # Another comment
   b: x
+
+
+with_integer:
+
+.. code-block:: yaml
+
+  x: 1
+
+
+commented_yaml.yaml:
+
+.. code-block:: yaml
+
+  # Some comment
+  
+  a: â # value comment
+  
+  # Another comment
+  b: y
 
 .. code-block:: python
 

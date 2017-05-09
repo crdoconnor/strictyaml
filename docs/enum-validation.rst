@@ -5,11 +5,11 @@ None
 
 
 
-invalid_sequence_3.yaml:
+invalid_sequence_2.yaml:
 
 .. code-block:: yaml
 
-  a: 1
+  a: yes
 
 
 valid_sequence_2.yaml:
@@ -19,6 +19,13 @@ valid_sequence_2.yaml:
   a: B
 
 
+invalid_sequence_1.yaml:
+
+.. code-block:: yaml
+
+  a: D
+
+
 valid_sequence_1.yaml:
 
 .. code-block:: yaml
@@ -26,18 +33,11 @@ valid_sequence_1.yaml:
   a: A
 
 
-invalid_sequence_2.yaml:
+invalid_sequence_3.yaml:
 
 .. code-block:: yaml
 
-  a: yes
-
-
-invalid_sequence_1.yaml:
-
-.. code-block:: yaml
-
-  a: D
+  a: 1
 
 
 valid_sequence_3.yaml:

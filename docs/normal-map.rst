@@ -13,6 +13,42 @@ the keys in advance but you do know the type, use MapPattern.
 
 
 
+valid_mapping.yaml:
+
+.. code-block:: yaml
+
+  a: 1
+  b: 2
+  c: 3
+
+
+invalid_sequence_2.yaml:
+
+.. code-block:: yaml
+
+  - 1
+  - 2
+  - 3
+
+
+invalid_sequence_1.yaml:
+
+.. code-block:: yaml
+
+  a: 1
+  b: 2
+  â: 3
+
+
+valid_mapping_2.yaml:
+
+.. code-block:: yaml
+
+  â: 1
+  b: 2
+  c: 3
+
+
 invalid_sequence_3.yaml:
 
 .. code-block:: yaml
@@ -28,42 +64,6 @@ onekeymap.yaml:
 .. code-block:: yaml
 
   x: 1
-
-
-valid_mapping.yaml:
-
-.. code-block:: yaml
-
-  a: 1
-  b: 2
-  c: 3
-
-
-invalid_sequence_1.yaml:
-
-.. code-block:: yaml
-
-  a: 1
-  b: 2
-  â: 3
-
-
-invalid_sequence_2.yaml:
-
-.. code-block:: yaml
-
-  - 1
-  - 2
-  - 3
-
-
-valid_mapping_2.yaml:
-
-.. code-block:: yaml
-
-  â: 1
-  b: 2
-  c: 3
 
 .. code-block:: python
 

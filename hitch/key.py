@@ -127,6 +127,17 @@ class Engine(BaseEngine):
         self.ipython_step_library.run(command)
         self.doc.step("code", command=command)
 
+    def variable(self, name, value):
+        self.path.state.joinpath("{}.yaml".format(name)).write_text(
+            value
+        )
+        self.ipython_step_library.run(
+            """{} = Path("{}").bytes().decode("utf8")""".format(
+                name, "{}.yaml".format(name)
+            )
+        )
+        self.doc.step("variable", var_name=name, value=value)
+
     def code(self, command):
         self.ipython_step_library.run(command)
         self.doc.step("code", command=command)
