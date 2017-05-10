@@ -18,7 +18,7 @@ With variable 'valid_sequence_1':
 
 .. code-block:: yaml
 
-a: A
+  a: A
 
 
 
@@ -31,7 +31,7 @@ With variable 'valid_sequence_2':
 
 .. code-block:: yaml
 
-a:
+  a:
 
 
 
@@ -44,7 +44,7 @@ With variable 'valid_sequence_3':
 
 .. code-block:: yaml
 
-a:
+  a:
 
 
 
@@ -57,7 +57,7 @@ With variable 'valid_sequence_4':
 
 .. code-block:: yaml
 
-a:
+  a:
 
 
 
@@ -70,7 +70,7 @@ With variable 'invalid_sequence_1':
 
 .. code-block:: yaml
 
-a: C
+  a: C
 
 
 

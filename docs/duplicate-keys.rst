@@ -20,9 +20,8 @@ With variable 'duplicate':
 
 .. code-block:: yaml
 
-a: cow
-a: bull
-
+  a: cow
+  a: bull
 
 
 

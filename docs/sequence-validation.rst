@@ -13,32 +13,13 @@ validation.
 
 
 
-invalid_sequence_2.yaml:
+invalid_sequence_1.yaml:
 
 .. code-block:: yaml
 
-  - 2
-  - 3
-  - a:
-    - 1
-    - 2
-
-
-valid_sequence.yaml:
-
-.. code-block:: yaml
-
-  - 1
-  - 2
-  - 3
-
-
-invalid_sequence_3.yaml:
-
-.. code-block:: yaml
-
-  - 1.1
-  - 1.2
+  a: 1
+  b: 2
+  c: 3
 
 
 invalid_sequence_4.yaml:
@@ -50,13 +31,32 @@ invalid_sequence_4.yaml:
   - 3.4
 
 
-invalid_sequence_1.yaml:
+invalid_sequence_3.yaml:
 
 .. code-block:: yaml
 
-  a: 1
-  b: 2
-  c: 3
+  - 1.1
+  - 1.2
+
+
+valid_sequence.yaml:
+
+.. code-block:: yaml
+
+  - 1
+  - 2
+  - 3
+
+
+invalid_sequence_2.yaml:
+
+.. code-block:: yaml
+
+  - 2
+  - 3
+  - a:
+    - 1
+    - 2
 
 .. code-block:: python
 

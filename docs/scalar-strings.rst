@@ -21,12 +21,11 @@ With variable 'valid_sequence':
 
 .. code-block:: yaml
 
-a: 1
-b: yes
-c: â string
-d: |
-  multiline string
-
+  a: 1
+  b: yes
+  c: â string
+  d: |
+    multiline string
 
 
 

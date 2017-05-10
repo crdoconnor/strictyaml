@@ -24,12 +24,11 @@ With variable 'valid_sequence':
 
 .. code-block:: yaml
 
-a:
-  x: 9
-  y: 8
-b: 2
-c: 3
-
+  a:
+    x: 9
+    y: 8
+  b: 2
+  c: 3
 
 
 

@@ -17,17 +17,16 @@ With variable 'commented_yaml':
 
 .. code-block:: yaml
 
-y: p
-# Some comment
-
-a: |
-  x
-
-# Another comment
-b: y
-c: a
-d: b
-
+  y: p
+  # Some comment
+  
+  a: |
+    x
+  
+  # Another comment
+  b: y
+  c: a
+  d: b
 
 
 
@@ -68,13 +67,12 @@ With variable 'yaml_snippet':
 
 .. code-block:: yaml
 
-# Some comment
-
-a: |
-  x
-
-# Another comment
-
+  # Some comment
+  
+  a: |
+    x
+  
+  # Another comment
 
 
 

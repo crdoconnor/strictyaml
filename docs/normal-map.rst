@@ -24,7 +24,7 @@ With variable 'onekeymap':
 
 .. code-block:: yaml
 
-x: 1
+  x: 1
 
 
 
@@ -37,10 +37,9 @@ With variable 'valid_mapping_2':
 
 .. code-block:: yaml
 
-â: 1
-b: 2
-c: 3
-
+  â: 1
+  b: 2
+  c: 3
 
 
 
@@ -53,10 +52,9 @@ With variable 'valid_mapping_1':
 
 .. code-block:: yaml
 
-â: 1
-b: 2
-c: 3
-
+  â: 1
+  b: 2
+  c: 3
 
 
 
@@ -78,10 +76,9 @@ With variable 'invalid_sequence_1':
 
 .. code-block:: yaml
 
-a: 1
-b: 2
-â: 3
-
+  a: 1
+  b: 2
+  â: 3
 
 
 
@@ -99,10 +96,9 @@ With variable 'invalid_sequence_2':
 
 .. code-block:: yaml
 
-- 1
-- 2
-- 3
-
+  - 1
+  - 2
+  - 3
 
 
 
@@ -123,11 +119,10 @@ With variable 'invalid_sequence_3':
 
 .. code-block:: yaml
 
-a: 1
-b: 2
-c: 3
-d: 4
-
+  a: 1
+  b: 2
+  c: 3
+  d: 4
 
 
 

@@ -28,9 +28,8 @@ With variable 'valid_sequence':
 
 .. code-block:: yaml
 
-a: 1.00000000000000000001
-b: 5.4135
-
+  a: 1.00000000000000000001
+  b: 5.4135
 
 
 
@@ -79,9 +78,8 @@ With variable 'invalid_sequence_2':
 
 .. code-block:: yaml
 
-a: string
-b: 2
-
+  a: string
+  b: 2
 
 
 

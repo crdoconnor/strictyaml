@@ -22,13 +22,12 @@ With variable 'commented_yaml':
 
 .. code-block:: yaml
 
-# Some comment
-
-a: â # value comment
-
-# Another comment
-b: y
-
+  # Some comment
+  
+  a: â # value comment
+  
+  # Another comment
+  b: y
 
 
 
@@ -47,13 +46,12 @@ With variable 'modified_commented_yaml':
 
 .. code-block:: yaml
 
-# Some comment
-
-a: â # value comment
-
-# Another comment
-b: x
-
+  # Some comment
+  
+  a: â # value comment
+  
+  # Another comment
+  b: x
 
 
 
@@ -66,8 +64,7 @@ With variable 'with_integer':
 
 .. code-block:: yaml
 
-x: 1
-
+  x: 1
 
 
 

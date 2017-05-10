@@ -16,10 +16,9 @@ With variable 'valid_sequence':
 
 .. code-block:: yaml
 
-a: 1
-b: 2
-c: 3
-
+  a: 1
+  b: 2
+  c: 3
 
 
 
@@ -95,12 +94,11 @@ With variable 'nested':
 
 .. code-block:: yaml
 
-a: 1
-b: 2
-c:
-  x: 1
-  y: 2
-
+  a: 1
+  b: 2
+  c:
+    x: 1
+    y: 2
 
 .. code-block:: python
 

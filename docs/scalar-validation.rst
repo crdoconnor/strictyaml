@@ -5,23 +5,12 @@ None
 
 
 
-invalid_sequence_2.yaml:
-
-.. code-block:: yaml
-
-  a: string
-  b: 2
-  c: string
-  d: 3.141
-  e: 3.1415926535
-
-
-valid_sequence.yaml:
+invalid_sequence_1.yaml:
 
 .. code-block:: yaml
 
   a: 1
-  b: yes
+  b: 2
   c: string
   d: 3.141
   e: 3.1415926535
@@ -49,11 +38,22 @@ invalid_sequence_3.yaml:
   e: 3.1415926535
 
 
-invalid_sequence_1.yaml:
+valid_sequence.yaml:
 
 .. code-block:: yaml
 
   a: 1
+  b: yes
+  c: string
+  d: 3.141
+  e: 3.1415926535
+
+
+invalid_sequence_2.yaml:
+
+.. code-block:: yaml
+
+  a: string
   b: 2
   c: string
   d: 3.141

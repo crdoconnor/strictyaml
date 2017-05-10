@@ -21,15 +21,14 @@ With variable 'valid_sequence':
 
 .. code-block:: yaml
 
-a: yes
-b: true
-c: on
-d: 1
-e: 0
-f: Off
-g: FALSE
-h: no
-
+  a: yes
+  b: true
+  c: on
+  d: 1
+  e: 0
+  f: Off
+  g: FALSE
+  h: no
 
 Even though it returns a YAML object, that YAML object resolves to True/False
 
@@ -66,7 +65,7 @@ With variable 'invalid_sequence':
 
 .. code-block:: yaml
 
-a: yâs
+  a: yâs
 
 
 

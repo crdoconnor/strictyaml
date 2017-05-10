@@ -23,11 +23,10 @@ With variable 'valid_sequence':
 
 .. code-block:: yaml
 
-date: 2016-10-22
-datetime1: 2016-10-22T14:23:12+00:00
-datetime2: 2016-10-22T14:23:12Z
-datetime3: 20161022T142312Z
-
+  date: 2016-10-22
+  datetime1: 2016-10-22T14:23:12+00:00
+  datetime2: 2016-10-22T14:23:12Z
+  datetime3: 20161022T142312Z
 
 
 
@@ -52,11 +51,10 @@ With variable 'invalid_sequence':
 
 .. code-block:: yaml
 
-date: 1
-datetime1: â
-datetime2: b
-datetime3: c
-
+  date: 1
+  datetime1: â
+  datetime2: b
+  datetime3: c
 
 
 

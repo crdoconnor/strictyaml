@@ -23,11 +23,10 @@ With variable 'tag_tokens':
 
 .. code-block:: yaml
 
-x:
-  a: !!str yes
-  b: !!str 3.5
-  c: !!str yes
-
+  x:
+    a: !!str yes
+    b: !!str 3.5
+    c: !!str yes
 
 
 
@@ -48,8 +47,7 @@ With variable 'flow_style_sequence':
 
 .. code-block:: yaml
 
-[a, b]: [x, y]
-
+  [a, b]: [x, y]
 
 
 
@@ -70,8 +68,7 @@ With variable 'jinja2':
 
 .. code-block:: yaml
 
-x: '{{ value }}'
-
+  x: '{{ value }}'
 
 Using quotation marks, you can parse a string starting or ending with { or }
 
@@ -84,8 +81,7 @@ With variable 'flow_style':
 
 .. code-block:: yaml
 
-x: { a: 1, b: 2, c: 3 }
-
+  x: { a: 1, b: 2, c: 3 }
 
 
 
@@ -121,11 +117,10 @@ With variable 'node_anchors_and_references':
 
 .. code-block:: yaml
 
-x: 
-  a: &node1 3.5
-  b: 1
-  c: *node1
-
+  x: 
+    a: &node1 3.5
+    b: 1
+    c: *node1
 
 
 

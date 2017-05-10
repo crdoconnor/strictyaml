@@ -26,7 +26,7 @@ steps:
     
     .. code-block:: yaml
     
-    {{ value }}
+    {{ value|indent(2, true) }}
   code: |
     .. code-block:: python
 
