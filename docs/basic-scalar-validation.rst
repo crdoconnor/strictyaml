@@ -24,14 +24,25 @@ invalid_sequence_2.yaml:
   e: 3.1415926535
 
 
-invalid_sequence_3.yaml:
+valid_sequence.yaml:
 
 .. code-block:: yaml
 
   a: 1
   b: yes
   c: string
-  d: not â float
+  d: 3.141
+  e: 3.1415926535
+
+
+invalid_sequence_1.yaml:
+
+.. code-block:: yaml
+
+  a: 1
+  b: 2
+  c: string
+  d: 3.141
   e: 3.1415926535
 
 
@@ -46,25 +57,14 @@ invalid_sequence_4.yaml:
   e: not â decimal
 
 
-invalid_sequence_1.yaml:
-
-.. code-block:: yaml
-
-  a: 1
-  b: 2
-  c: string
-  d: 3.141
-  e: 3.1415926535
-
-
-valid_sequence.yaml:
+invalid_sequence_3.yaml:
 
 .. code-block:: yaml
 
   a: 1
   b: yes
   c: string
-  d: 3.141
+  d: not â float
   e: 3.1415926535
 
 .. code-block:: python

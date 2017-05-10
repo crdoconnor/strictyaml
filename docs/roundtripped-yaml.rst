@@ -12,42 +12,23 @@ always look exactly the same.
 
 
 
-
-modified_commented_yaml.yaml:
-
-.. code-block:: yaml
-
-  # Some comment
-  
-  a: â # value comment
-  
-  # Another comment
-  b: x
-
-
-with_integer:
-
-.. code-block:: yaml
-
-  x: 1
-
-
-commented_yaml.yaml:
-
-.. code-block:: yaml
-
-  # Some comment
-  
-  a: â # value comment
-  
-  # Another comment
-  b: y
-
 .. code-block:: python
 
     from strictyaml import Map, Str, Int, YAMLValidationError, load
     
     schema = Map({"a": Str(), "b": Str()})
+
+With variable 'commented_yaml':
+
+.. code-block:: yaml
+
+# Some comment
+
+a: â # value comment
+
+# Another comment
+b: y
+
 
 
 
@@ -62,12 +43,31 @@ commented_yaml.yaml:
     
     to_modify['b'] = 'x'
 
+With variable 'modified_commented_yaml':
+
+.. code-block:: yaml
+
+# Some comment
+
+a: â # value comment
+
+# Another comment
+b: x
+
+
 
 
 .. code-block:: python
 
     to_modify.as_yaml() == modified_commented_yaml
     >>> True
+
+With variable 'with_integer':
+
+.. code-block:: yaml
+
+x: 1
+
 
 
 

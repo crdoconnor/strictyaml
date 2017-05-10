@@ -1,31 +1,33 @@
 What line
 ---------
 
-Line and context can be determined from returned YAML objects.
+Line numbers, the text of an item and text of surrounding lines
+can be grabbed from returned YAML objects - using .start_line,
+.end_line, lines(), lines_before(x) and lines_after(x).
 
 
-
-
-commented_yaml.yaml:
-
-.. code-block:: yaml
-
-  y: p
-  # Some comment
-  
-  a: |
-    x
-  
-  # Another comment
-  b: y
-  c: a
-  d: b
 
 .. code-block:: python
 
     from strictyaml import Map, Str, YAMLValidationError, load
     
     schema = Map({"y": Str(), "a": Str(), "b": Str(), "c": Str(), "d": Str()})
+
+With variable 'commented_yaml':
+
+.. code-block:: yaml
+
+y: p
+# Some comment
+
+a: |
+  x
+
+# Another comment
+b: y
+c: a
+d: b
+
 
 
 
@@ -62,11 +64,23 @@ commented_yaml.yaml:
     load(commented_yaml, schema).end_line == 10
     >>> True
 
+With variable 'yaml_snippet':
+
+.. code-block:: yaml
+
+# Some comment
+
+a: |
+  x
+
+# Another comment
+
+
 
 
 .. code-block:: python
 
-    load(commented_yaml, schema)['a'].lines() == '# Some comment\n\na: |\n  x\n\n# Another comment'
+    load(commented_yaml, schema)['a'].lines() == yaml_snippet.strip()
     >>> True
 
 

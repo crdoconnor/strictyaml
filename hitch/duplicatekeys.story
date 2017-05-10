@@ -9,14 +9,15 @@ Duplicate keys:
 
     In order to avoid all possible confusion, StrictYAML will simply refuse to parse this and will only accept associative
     arrays where all of the keys are unique. It will throw a DuplicateKeysDisallowed exception.
-  preconditions:
-    files:
-      duplicate.yaml: |
-        a: cow
-        a: bull
   scenario:
     - Run command: |
         from strictyaml import load, DuplicateKeysDisallowed
+    
+    - Variable:
+        name: duplicate
+        value: |
+          a: cow
+          a: bull
 
     - Assert Exception:
         command: load(duplicate)

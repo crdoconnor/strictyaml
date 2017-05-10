@@ -11,27 +11,19 @@ the same way.
 
 
 
-
-invalid_sequence_2.yaml:
-
-.. code-block:: yaml
-
-  a: string
-  b: 2
-
-
-valid_sequence.yaml:
-
-.. code-block:: yaml
-
-  a: 1
-  b: 5
-
 .. code-block:: python
 
     from strictyaml import Map, Int, load
     
     schema = Map({"a": Int(), "b": Int()})
+
+With variable 'valid_sequence':
+
+.. code-block:: yaml
+
+a: 1
+b: 5
+
 
 
 
@@ -75,6 +67,14 @@ valid_sequence.yaml:
     bool(load(valid_sequence, schema)['a'])
     >>> EXCEPTION RAISED:
       Cannot cast
+
+With variable 'invalid_sequence_2':
+
+.. code-block:: yaml
+
+a: string
+b: 2
+
 
 
 

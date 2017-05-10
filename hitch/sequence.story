@@ -1,4 +1,4 @@
-Sequence validation:
+Seq validator:
   based on: strictyaml
   importance: 5
   description: |
@@ -10,32 +10,16 @@ Sequence validation:
     
     See also UniqueSeq and FixedSeq for other types of sequence
     validation.
-  preconditions:
-    files:
-      valid_sequence.yaml: |
-        - 1
-        - 2
-        - 3
-      invalid_sequence_1.yaml: |
-        a: 1
-        b: 2
-        c: 3
-      invalid_sequence_2.yaml: |
-        - 2
-        - 3
-        - a:
-          - 1
-          - 2
-      invalid_sequence_3.yaml: |
-        - 1.1
-        - 1.2
-      invalid_sequence_4.yaml: |
-        - 1
-        - 2
-        - 3.4
   scenario:
     - Code: |
-        from strictyaml import Seq, Str, Int, YAMLValidationError, load
+        from strictyaml import Seq, Str, Int, load
+
+    - Variable:
+        name: valid_sequence
+        value: |
+          - 1
+          - 2
+          - 3
 
     - Returns True: load(valid_sequence, Seq(Str())) == ["1", "2", "3", ]
 
@@ -44,6 +28,13 @@ Sequence validation:
     - Raises Exception:
         command: load(valid_sequence, Seq(Str())).text
         exception: is a sequence, has no text value.
+
+    - Variable:
+        name: invalid_sequence_1
+        value: |
+          a: 1
+          b: 2
+          c: 3
 
     - Raises Exception:
         command: load(invalid_sequence_1, Seq(Str()))
@@ -57,6 +48,15 @@ Sequence validation:
               c: '3'
               ^ (line: 3)
 
+    - Variable:
+        name: invalid_sequence_2
+        value: |
+          - 2
+          - 3
+          - a:
+            - 1
+            - 2
+
     - Raises Exception:
         command: load(invalid_sequence_2, Seq(Str()))
         exception: |
@@ -69,6 +69,11 @@ Sequence validation:
                 - '2'
               ^ (line: 5)
 
+    - Variable:
+        name: invalid_sequence_3
+        value: |
+          - 1.1
+          - 1.2
 
     - Raises Exception:
         command: load(invalid_sequence_3, Seq(Int()))
@@ -78,6 +83,13 @@ Sequence validation:
             in "<unicode string>", line 1, column 1:
               - '1.1'
                ^ (line: 1)
+
+    - Variable:
+        name: invalid_sequence_4
+        value: |
+          - 1
+          - 2
+          - 3.4
 
     - Raises Exception:
         command: load(invalid_sequence_4, Seq(Int()))

@@ -8,24 +8,23 @@ Boolean validation:
 
     Any values that are not one of those will
     will cause a validation error.
-  preconditions:
-    files:
-      valid_sequence.yaml: |
-        a: yes
-        b: true
-        c: on
-        d: 1
-        e: 0
-        f: Off
-        g: FALSE
-        h: no
-      invalid_sequence.yaml: |
-        a: yâs
   scenario:
     - Code: |
         from strictyaml import Bool, Str, MapPattern, YAMLValidationError, load
 
         schema = MapPattern(Str(), Bool())
+
+    - Variable:
+        name: valid_sequence
+        value: |
+          a: yes
+          b: true
+          c: on
+          d: 1
+          e: 0
+          f: Off
+          g: FALSE
+          h: no
 
     - Returns True:
         why: Even though it returns a YAML object, that YAML object resolves to True/False
@@ -45,6 +44,10 @@ Boolean validation:
           the expected value is ambiguous ("False" or "FALSE"?)
         command: str(load(valid_sequence, schema)["g"])
         exception: Cannot cast
+
+    - Variable:
+        name: invalid_sequence
+        value: 'a: yâs'
 
     - Raises Exception:
         command: load(invalid_sequence, schema)

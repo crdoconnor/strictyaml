@@ -7,36 +7,38 @@ Map Pattern:
 
     When you wish to specify the exact key name, use the
     'Map' validator instead.
-  preconditions:
-    files:
-      valid_sequence_1.yaml: |
-        â: 1
-        b: 2
-      valid_sequence_2.yaml: |
-        a: 1
-        c: 3
-      valid_sequence_3.yaml: |
-        a: 1
-      invalid_sequence_1.yaml: |
-        b: b
-      invalid_sequence_2.yaml: |
-        a: a
-        b: 2
-      invalid_sequence_3.yaml: |
-        a: 1
-        b: yâs
-        c: 3
   scenario:
     - Run command: |
         from strictyaml import MapPattern, Int, Str, YAMLValidationError, load
 
         schema = MapPattern(Str(), Int())
 
+    - Variable:
+        name: valid_sequence_1
+        value: |
+          â: 1
+          b: 2
+
     - Assert True: 'load(valid_sequence_1, schema) == {u"â": 1, "b": 2}'
+
+    - Variable:
+        name: valid_sequence_2
+        value: |
+          a: 1
+          c: 3
 
     - Assert True: 'load(valid_sequence_2, schema) == {"a": 1, "c": 3}'
 
+    - Variable:
+        name: valid_sequence_3
+        value: 'a: 1'
+
     - Assert True: 'load(valid_sequence_3, schema) == {"a": 1, }'
+
+    - Variable:
+        name: invalid_sequence_1
+        value: |
+          b: b
 
     - Assert Exception:
         command: load(invalid_sequence_1, schema)
@@ -47,6 +49,12 @@ Map Pattern:
               b: b
                ^
 
+    - Variable:
+        name: invalid_sequence_2
+        value: |
+          a: a
+          b: 2
+
     - Assert Exception:
         command: load(invalid_sequence_2, schema)
         exception: |
@@ -55,6 +63,13 @@ Map Pattern:
             in "<unicode string>", line 1, column 1:
               a: a
                ^
+
+    - Variable:
+        name: invalid_sequence_3
+        value: |
+          a: 1
+          b: yâs
+          c: 3
 
     - Assert Exception:
         command: load(invalid_sequence_3, schema)

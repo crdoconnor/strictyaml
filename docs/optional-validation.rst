@@ -7,68 +7,19 @@ you can signal that a key/value pair is not required.
 
 
 
-
-invalid_sequence_2.yaml:
-
-.. code-block:: yaml
-
-  a: 1
-  b: 2
-
-
-valid_sequence_2.yaml:
-
-.. code-block:: yaml
-
-  a: 1
-  b: no
-
-
-valid_sequence_4.yaml:
-
-.. code-block:: yaml
-
-  a: 1
-  b:
-    x: y
-    y: z
-
-
-valid_sequence_1.yaml:
-
-.. code-block:: yaml
-
-  a: 1
-  b: yes
-
-
-invalid_sequence_3.yaml:
-
-.. code-block:: yaml
-
-  a: 1
-  b: yes
-  c: 3
-
-
-valid_sequence_3.yaml:
-
-.. code-block:: yaml
-
-  a: 1
-
-
-invalid_sequence_1.yaml:
-
-.. code-block:: yaml
-
-  b: 2
-
 .. code-block:: python
 
     from strictyaml import Map, Int, Str, Bool, Optional, load
     
     schema = Map({"a": Int(), Optional("b"): Bool(), })
+
+With variable 'valid_sequence_1':
+
+.. code-block:: yaml
+
+a: 1
+b: yes
+
 
 
 
@@ -77,12 +28,26 @@ invalid_sequence_1.yaml:
     load(valid_sequence_1, schema) == {"a": 1, "b": True}
     >>> True
 
+With variable 'valid_sequence_2':
+
+.. code-block:: yaml
+
+a: 1
+b: no
+
+
 
 
 .. code-block:: python
 
     load(valid_sequence_2, schema) == {"a": 1, "b": False}
     >>> True
+
+With variable 'valid_sequence_3':
+
+.. code-block:: yaml
+
+a: 1
 
 
 
@@ -91,9 +56,25 @@ invalid_sequence_1.yaml:
     load(valid_sequence_3, schema) == {"a": 1}
     >>> True
 
+With variable 'valid_sequence_4':
+
+.. code-block:: yaml
+
+a: 1
+b:
+  x: y
+  y: z
+
+
 .. code-block:: python
 
     load(valid_sequence_4, Map({"a": Int(), Optional("b"): Map({Optional("x"): Str(), Optional("y"): Str()})}))
+
+With variable 'invalid_sequence_1':
+
+.. code-block:: yaml
+
+b: 2
 
 
 
@@ -107,6 +88,14 @@ invalid_sequence_1.yaml:
           b: '2'
            ^
 
+With variable 'invalid_sequence_2':
+
+.. code-block:: yaml
+
+a: 1
+b: 2
+
+
 
 
 .. code-block:: python
@@ -118,6 +107,15 @@ invalid_sequence_1.yaml:
         in "<unicode string>", line 2, column 1:
           b: '2'
           ^
+
+With variable 'invalid_sequence_3':
+
+.. code-block:: yaml
+
+a: 1
+b: yes
+c: 3
+
 
 
 

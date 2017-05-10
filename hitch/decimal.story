@@ -14,20 +14,18 @@ Decimal:
     
     Parsing and validating as a Decimal is best for
     values which require precision, like prices.
-  preconditions:
-    files:
-      valid_sequence.yaml: |
-        a: 1.00000000000000000001
-        b: 5.4135
-      invalid_sequence_2.yaml: |
-        a: string
-        b: 2
   scenario:
     - Code: |
         from strictyaml import Map, Decimal, load
         from decimal import Decimal as Dec
 
         schema = Map({"a": Decimal(), "b": Decimal()})
+
+    - Variable:
+        name: valid_sequence
+        value: |
+          a: 1.00000000000000000001
+          b: 5.4135
 
     - Returns True: |
         load(valid_sequence, schema) == {"a": Dec('1.00000000000000000001'), "b": Dec('5.4135')}
@@ -47,6 +45,12 @@ Decimal:
     - Raises Exception:
         command: bool(load(valid_sequence, schema)['a'])
         exception: Cannot cast
+
+    - Variable:
+        name: invalid_sequence_2
+        value: |
+          a: string
+          b: 2
 
     - Assert Exception:
         command: load(invalid_sequence_2, schema)

@@ -2,33 +2,34 @@ Nested mapping validation:
   based on: strictyaml
   importance: 4
   description: |
-    Mappings can be nested within one another.
-  preconditions:
-    files:
-      valid_sequence.yaml: |
-        a:
-          x: 9
-          y: 8
-        b: 2
-        c: 3
-      invalid_sequence_1.yaml: |
-        a:
-          x: 9
-          z: 8
-        b: 2
-        d: 3
-      invalid_sequence_2.yaml: |
-        a: 11
-        b: 2
-        d: 3
+    Mappings can be nested within one another, which
+    will be parsed as a dict within a dict.
   scenario:
     - Run command: |
         from strictyaml import Map, Int, load
 
         schema = Map({"a": Map({"x": Int(), "y": Int()}), "b": Int(), "c": Int()})
 
+    - Variable:
+        name: valid_sequence
+        value: |
+          a:
+            x: 9
+            y: 8
+          b: 2
+          c: 3
+
     - Assert True: 'load(valid_sequence, schema) == {"a": {"x": 9, "y": 8}, "b": 2, "c": 3}'
-    
+
+    - Variable:
+        name: invalid_sequence_1
+        value: |
+          a:
+            x: 9
+            z: 8
+          b: 2
+          d: 3
+
     - Assert Exception:
         command: load(invalid_sequence_1, schema)
         exception: |
@@ -37,6 +38,13 @@ Nested mapping validation:
             in "<unicode string>", line 3, column 1:
                 z: '8'
               ^
+
+    - Variable:
+        name: invalid_sequence_2
+        value: |
+          a: 11
+          b: 2
+          d: 3
 
     - Assert Exception:
         command: load(invalid_sequence_2, schema)

@@ -1,47 +1,10 @@
 Fixed length sequence validation
 --------------------------------
 
-Sequences can have multiple different types of within them
-provided they are of a fixed length.
+Sequences of fixed length can be validated with a series
+of different (or the same) types.
 
 
-
-
-invalid_sequence_2.yaml:
-
-.. code-block:: yaml
-
-  - 2
-  - a
-  - a:
-    - 1
-    - 2
-
-
-invalid_sequence_3.yaml:
-
-.. code-block:: yaml
-
-  - 1
-  - a
-
-
-invalid_sequence_1.yaml:
-
-.. code-block:: yaml
-
-  a: 1
-  b: 2
-  c: 3
-
-
-valid_sequence.yaml:
-
-.. code-block:: yaml
-
-  - 1
-  - a
-  - 2.5
 
 .. code-block:: python
 
@@ -49,12 +12,30 @@ valid_sequence.yaml:
     
     schema = FixedSeq([Int(), Str(), Float()])
 
+With variable 'valid_sequence':
+
+.. code-block:: yaml
+
+- 1
+- a
+- 2.5
+
+
 
 
 .. code-block:: python
 
     load(valid_sequence, schema) == [1, "a", 2.5, ]
     >>> True
+
+With variable 'invalid_sequence_1':
+
+.. code-block:: yaml
+
+a: 1
+b: 2
+c: 3
+
 
 
 
@@ -71,6 +52,17 @@ valid_sequence.yaml:
           c: '3'
           ^ (line: 3)
 
+With variable 'invalid_sequence_2':
+
+.. code-block:: yaml
+
+- 2
+- a
+- a:
+  - 1
+  - 2
+
+
 
 
 .. code-block:: python
@@ -85,6 +77,14 @@ valid_sequence.yaml:
         in "<unicode string>", line 5, column 1:
             - '2'
           ^ (line: 5)
+
+With variable 'invalid_sequence_3':
+
+.. code-block:: yaml
+
+- 1
+- a
+
 
 
 

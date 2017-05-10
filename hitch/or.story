@@ -7,31 +7,33 @@ Or validation:
     parse the second. If the second does not parse correctly,
     it raises an exception.
   based on: strictyaml
-  preconditions:
-    files:
-      valid_sequence_1.yaml: |
-        a: yes
-      valid_sequence_2.yaml: |
-        a: 5
-      valid_sequence_3.yaml: |
-        a: no
-      invalid_sequence_1.yaml: |
-        a: A
-      invalid_sequence_2.yaml: |
-        a: B
-      invalid_sequence_3.yaml: |
-        a: 3.14
   scenario:
     - Code: |
         from strictyaml import Map, Bool, Int, YAMLValidationError, load
 
         schema = Map({"a": Bool() | Int()})
 
+    - Variable:
+        name: valid_sequence_1
+        value: 'a: yes'
+
     - Returns True: 'load(valid_sequence_1, schema) == {"a" : True}'
+
+    - Variable:
+        name: valid_sequence_2
+        value: 'a: 5'
 
     - Returns True: 'load(valid_sequence_2, schema) == {"a" : 5}'
 
+    - Variable:
+        name: valid_sequence_3
+        value: 'a: no'
+
     - Returns True: 'load(valid_sequence_3, schema) == {"a" : False}'
+
+    - Variable:
+        name: invalid_sequence_1
+        value: 'a: A'
 
     - Raises Exception:
         command: load(invalid_sequence_1, schema)
@@ -42,6 +44,10 @@ Or validation:
               a: A
                ^
 
+    - Variable:
+        name: invalid_sequence_2
+        value: 'a: B'
+
     - Raises Exception:
         command: load(invalid_sequence_2, schema)
         exception: |
@@ -50,6 +56,10 @@ Or validation:
             in "<unicode string>", line 1, column 1:
               a: B
                ^
+
+    - Variable:
+        name: invalid_sequence_3
+        value: 'a: 3.14'
 
     - Raises Exception:
         command: load(invalid_sequence_3, schema)

@@ -3,18 +3,6 @@ Datetime validation:
   description: |
     Datetime validator parses using the python-dateutil library and
     returns a python datetime object.
-  preconditions:
-    files:
-      valid_sequence.yaml: |
-        date: 2016-10-22
-        datetime1: 2016-10-22T14:23:12+00:00
-        datetime2: 2016-10-22T14:23:12Z
-        datetime3: 20161022T142312Z
-      invalid_sequence_1.yaml: |
-        date: 1
-        datetime1: â
-        datetime2: b
-        datetime3: c
   scenario:
     - Code: |
         from strictyaml import Map, Datetime, YAMLValidationError, load
@@ -28,6 +16,14 @@ Datetime validation:
             "datetime3": Datetime(),
         })
 
+    - Variable:
+        name: valid_sequence
+        value: |
+          date: 2016-10-22
+          datetime1: 2016-10-22T14:23:12+00:00
+          datetime2: 2016-10-22T14:23:12Z
+          datetime3: 20161022T142312Z
+
     - Returns True: |
         load(valid_sequence, schema) == {
             "date": datetime(2016, 10, 22, 0, 0),
@@ -39,8 +35,16 @@ Datetime validation:
     - Returns True: |
         load(valid_sequence, schema)["date"].text == "2016-10-22"
 
+    - Variable:
+        name: invalid_sequence
+        value: |
+          date: 1
+          datetime1: â
+          datetime2: b
+          datetime3: c
+
     - Raises Exception:
-        command: load(invalid_sequence_1, schema)
+        command: load(invalid_sequence, schema)
         exception: |
           when expecting a datetime
           found non-datetime

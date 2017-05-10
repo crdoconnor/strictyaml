@@ -17,28 +17,20 @@ values which require precision, like prices.
 
 
 
-
-invalid_sequence_2.yaml:
-
-.. code-block:: yaml
-
-  a: string
-  b: 2
-
-
-valid_sequence.yaml:
-
-.. code-block:: yaml
-
-  a: 1.00000000000000000001
-  b: 5.4135
-
 .. code-block:: python
 
     from strictyaml import Map, Decimal, load
     from decimal import Decimal as Dec
     
     schema = Map({"a": Decimal(), "b": Decimal()})
+
+With variable 'valid_sequence':
+
+.. code-block:: yaml
+
+a: 1.00000000000000000001
+b: 5.4135
+
 
 
 
@@ -82,6 +74,14 @@ valid_sequence.yaml:
     bool(load(valid_sequence, schema)['a'])
     >>> EXCEPTION RAISED:
       Cannot cast
+
+With variable 'invalid_sequence_2':
+
+.. code-block:: yaml
+
+a: string
+b: 2
+
 
 
 

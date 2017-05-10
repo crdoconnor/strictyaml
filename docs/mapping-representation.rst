@@ -4,33 +4,22 @@ Mapping representation
 None
 
 
-
-nested.yaml:
-
-.. code-block:: yaml
-
-  a: 1
-  b: 2
-  c:
-    x: 1
-    y: 2
-
-
-valid_sequence.yaml:
-
-.. code-block:: yaml
-
-  a: 1
-  b: 2
-  c: 3
-
 .. code-block:: python
 
-    from strictyaml import Map, Int, YAMLValidationError, load
+    from strictyaml import Map, Int, load
     
     schema = Map({"a": Int(), "b": Int(), "c": Int()})
     
     nested_schema = Map({"a": Int(), "b": Int(), "c": Map({"x": Int(), "y": Int()})})
+
+With variable 'valid_sequence':
+
+.. code-block:: yaml
+
+a: 1
+b: 2
+c: 3
+
 
 
 
@@ -101,6 +90,17 @@ valid_sequence.yaml:
 
     load(valid_sequence, schema).is_mapping()
     >>> True
+
+With variable 'nested':
+
+.. code-block:: yaml
+
+a: 1
+b: 2
+c:
+  x: 1
+  y: 2
+
 
 .. code-block:: python
 

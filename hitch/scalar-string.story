@@ -1,26 +1,27 @@
-YAML objects of strings:
+Scalar strings:
+  based on: strictyaml
   description: |
     StrictYAML parses to a YAML object, not
     the value directly to give you more flexibility
     and control over what you can do with the YAML.
     
-    This is what that can object can do - in many
+    This is what that can object can do - in most
     cases if parsed as a string, it will behave in
     the same way.
-  based on: strictyaml
-  preconditions:
-    files:
-      valid_sequence.yaml: |
-        a: 1
-        b: yes
-        c: â string
-        d: |
-          multiline string
   scenario:
     - Code: |
         from strictyaml import Str, Map, load
 
         schema = Map({"a": Str(), "b": Str(), "c": Str(), "d": Str()})
+
+    - Variable:
+        name: valid_sequence
+        value: |
+          a: 1
+          b: yes
+          c: â string
+          d: |
+            multiline string
 
     - Returns True: 'load(valid_sequence, schema) == {"a": "1", "b": "yes", "c": u"â string", "d": "multiline string\n"}'
 

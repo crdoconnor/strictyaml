@@ -3,27 +3,27 @@ Unique sequences:
   description: |
     UniqueSeq validates sequences which contain no duplicate
     values.
-  preconditions:
-    files:
-      valid_sequence.yaml: |
-        - A
-        - B
-        - C
-      invalid_sequence_1.yaml: |
-        - A
-        - B
-        - B
-      invalid_sequence_2.yaml: |
-        - 3
-        - 3
-        - 3
   scenario:
     - Code: |
         from strictyaml import UniqueSeq, Str, YAMLValidationError, load
 
         schema = UniqueSeq(Str())
 
+    - Variable:
+        name: valid_sequence
+        value: |
+          - A
+          - B
+          - C
+
     - Returns True: 'load(valid_sequence, schema) == ["A", "B", "C", ]'
+
+    - Variable:
+        name: invalid_sequence_1
+        value: |
+          - A
+          - B
+          - B
 
     - Raises Exception:
         command: load(invalid_sequence_1, schema)
@@ -36,6 +36,13 @@ Unique sequences:
             in "<unicode string>", line 3, column 1:
               - B
               ^ (line: 3)
+
+    - Variable:
+        name: invalid_sequence_2
+        value: |
+          - 3
+          - 3
+          - 3
 
     - Assert Exception:
         command: load(invalid_sequence_2, schema)

@@ -1,5 +1,5 @@
-Sequence validation
--------------------
+Seq validator
+-------------
 
 Sequences in YAML are denoted by a series of dashes ('-')
 and parsed as a list in python.
@@ -12,55 +12,18 @@ validation.
 
 
 
-
-invalid_sequence_2.yaml:
-
-.. code-block:: yaml
-
-  - 2
-  - 3
-  - a:
-    - 1
-    - 2
-
-
-valid_sequence.yaml:
-
-.. code-block:: yaml
-
-  - 1
-  - 2
-  - 3
-
-
-invalid_sequence_3.yaml:
-
-.. code-block:: yaml
-
-  - 1.1
-  - 1.2
-
-
-invalid_sequence_4.yaml:
-
-.. code-block:: yaml
-
-  - 1
-  - 2
-  - 3.4
-
-
-invalid_sequence_1.yaml:
-
-.. code-block:: yaml
-
-  a: 1
-  b: 2
-  c: 3
-
 .. code-block:: python
 
-    from strictyaml import Seq, Str, Int, YAMLValidationError, load
+    from strictyaml import Seq, Str, Int, load
+
+With variable 'valid_sequence':
+
+.. code-block:: yaml
+
+- 1
+- 2
+- 3
+
 
 
 
@@ -84,6 +47,15 @@ invalid_sequence_1.yaml:
     >>> EXCEPTION RAISED:
       is a sequence, has no text value.
 
+With variable 'invalid_sequence_1':
+
+.. code-block:: yaml
+
+a: 1
+b: 2
+c: 3
+
+
 
 
 .. code-block:: python
@@ -98,6 +70,17 @@ invalid_sequence_1.yaml:
         in "<unicode string>", line 3, column 1:
           c: '3'
           ^ (line: 3)
+
+With variable 'invalid_sequence_2':
+
+.. code-block:: yaml
+
+- 2
+- 3
+- a:
+  - 1
+  - 2
+
 
 
 
@@ -114,6 +97,14 @@ invalid_sequence_1.yaml:
             - '2'
           ^ (line: 5)
 
+With variable 'invalid_sequence_3':
+
+.. code-block:: yaml
+
+- 1.1
+- 1.2
+
+
 
 
 .. code-block:: python
@@ -125,6 +116,15 @@ invalid_sequence_1.yaml:
         in "<unicode string>", line 1, column 1:
           - '1.1'
            ^ (line: 1)
+
+With variable 'invalid_sequence_4':
+
+.. code-block:: yaml
+
+- 1
+- 2
+- 3.4
+
 
 
 

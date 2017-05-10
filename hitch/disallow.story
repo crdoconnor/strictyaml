@@ -9,30 +9,20 @@ Overly complex YAML disallowed:
     out of StrictYAML, see the FAQ, although for the
     most part the answer is "because they're overcomplicated
     and features that inhibit markup readability".
-  preconditions:
-    files:
-      tag_tokens.yaml: |
-        x:
-          a: !!str yes
-          b: !!str 3.5
-          c: !!str yes
-      flow_style.yaml: |
-        x: { a: 1, b: 2, c: 3 }
-      jinja2.yaml: |
-        x: '{{ value }}'
-      flow_style_sequence.yaml: |
-        [a, b]: [x, y]
-      node_anchors_and_references.yaml: |
-        x: 
-          a: &node1 3.5
-          b: 1
-          c: *node1
   scenario:
     - Code: |
         from strictyaml import Map, Int, Any, load
         from strictyaml import TagTokenDisallowed, FlowMappingDisallowed, AnchorTokenDisallowed
 
         schema = Map({"x": Map({"a": Any(), "b": Any(), "c": Any()})})
+
+    - Variable:
+        name: tag_tokens
+        value: |
+          x:
+            a: !!str yes
+            b: !!str 3.5
+            c: !!str yes
 
     - Raises Exception:
         command: load(tag_tokens, schema)
@@ -46,6 +36,11 @@ Overly complex YAML disallowed:
                 a: !!str yes
                    ^ (line: 2)
 
+    - Variable:
+        name: flow_style_sequence
+        value: |
+          [a, b]: [x, y]
+
     - Raises Exception:
         command: load(flow_style_sequence)
         exception: |
@@ -58,10 +53,20 @@ Overly complex YAML disallowed:
               [a, b]: [x, y]
                ^ (line: 1)
 
+    - Variable:
+        name: jinja2
+        value: |
+          x: '{{ value }}'
+
     - Returns True:
         why: Using quotation marks, you can parse a string starting or ending with { or }
         command: 'load(jinja2) == {"x": "{{ value }}"}'
 
+    - Variable:
+        name: flow_style
+        value: |
+          x: { a: 1, b: 2, c: 3 }
+
     - Raises Exception:
         command: load(flow_style, schema)
         exception: |
@@ -85,6 +90,14 @@ Overly complex YAML disallowed:
             in "<unicode string>", line 1, column 5:
               x: { a: 1, b: 2, c: 3 }
                   ^ (line: 1)
+
+    - Variable:
+        name: node_anchors_and_references
+        value: |
+          x: 
+            a: &node1 3.5
+            b: 1
+            c: *node1
 
     - Raises Exception:
         command: load(node_anchors_and_references, schema)

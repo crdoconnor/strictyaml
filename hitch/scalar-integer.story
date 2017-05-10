@@ -8,19 +8,17 @@ Scalar integer:
     This is what that can object can do - in many
     cases if parsed as a integer, it will behave in
     the same way.
-  preconditions:
-    files:
-      valid_sequence.yaml: |
-        a: 1
-        b: 5
-      invalid_sequence_2.yaml: |
-        a: string
-        b: 2
   scenario:
     - Code: |
         from strictyaml import Map, Int, load
 
         schema = Map({"a": Int(), "b": Int()})
+
+    - Variable:
+        name: valid_sequence
+        value: |
+          a: 1
+          b: 5
 
     - Returns True: 'load(valid_sequence, schema) == {"a": 1, "b": 5}'
 
@@ -35,6 +33,12 @@ Scalar integer:
     - Raises Exception:
         command: bool(load(valid_sequence, schema)['a'])
         exception: Cannot cast
+
+    - Variable:
+        name: invalid_sequence_2
+        value: |
+          a: string
+          b: 2
 
     - Assert Exception:
         command: load(invalid_sequence_2, schema)

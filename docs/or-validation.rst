@@ -10,53 +10,17 @@ it raises an exception.
 
 
 
-
-invalid_sequence_2.yaml:
-
-.. code-block:: yaml
-
-  a: B
-
-
-valid_sequence_2.yaml:
-
-.. code-block:: yaml
-
-  a: 5
-
-
-invalid_sequence_1.yaml:
-
-.. code-block:: yaml
-
-  a: A
-
-
-valid_sequence_1.yaml:
-
-.. code-block:: yaml
-
-  a: yes
-
-
-invalid_sequence_3.yaml:
-
-.. code-block:: yaml
-
-  a: 3.14
-
-
-valid_sequence_3.yaml:
-
-.. code-block:: yaml
-
-  a: no
-
 .. code-block:: python
 
     from strictyaml import Map, Bool, Int, YAMLValidationError, load
     
     schema = Map({"a": Bool() | Int()})
+
+With variable 'valid_sequence_1':
+
+.. code-block:: yaml
+
+a: yes
 
 
 
@@ -65,6 +29,12 @@ valid_sequence_3.yaml:
     load(valid_sequence_1, schema) == {"a" : True}
     >>> True
 
+With variable 'valid_sequence_2':
+
+.. code-block:: yaml
+
+a: 5
+
 
 
 .. code-block:: python
@@ -72,12 +42,24 @@ valid_sequence_3.yaml:
     load(valid_sequence_2, schema) == {"a" : 5}
     >>> True
 
+With variable 'valid_sequence_3':
+
+.. code-block:: yaml
+
+a: no
+
 
 
 .. code-block:: python
 
     load(valid_sequence_3, schema) == {"a" : False}
     >>> True
+
+With variable 'invalid_sequence_1':
+
+.. code-block:: yaml
+
+a: A
 
 
 
@@ -91,6 +73,12 @@ valid_sequence_3.yaml:
           a: A
            ^
 
+With variable 'invalid_sequence_2':
+
+.. code-block:: yaml
+
+a: B
+
 
 
 .. code-block:: python
@@ -102,6 +90,12 @@ valid_sequence_3.yaml:
         in "<unicode string>", line 1, column 1:
           a: B
            ^
+
+With variable 'invalid_sequence_3':
+
+.. code-block:: yaml
+
+a: 3.14
 
 
 

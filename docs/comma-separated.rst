@@ -5,31 +5,24 @@ Comma-separated values can be validated and parsed
 using the CommaSeparated validator.
 
 Note that the space following the commas is stripped by
-default.
+default when parsed.
 
 
-
-
-valid_sequence.yaml:
-
-.. code-block:: yaml
-
-  a: 1, 2, 3
-
-
-invalid_sequence.yaml:
-
-.. code-block:: yaml
-
-  a: 1, x, 3
 
 .. code-block:: python
 
-    from strictyaml import CommaSeparated, Int, Str, Map, YAMLValidationError, load
+    from strictyaml import CommaSeparated, Int, Str, Map, load
     
     int_schema = Map({"a": CommaSeparated(Int())})
     
     str_schema = Map({"a": CommaSeparated(Str())})
+
+With variable 'valid_sequence':
+
+.. code-block:: yaml
+
+a: 1, 2, 3
+
 
 
 
@@ -44,6 +37,13 @@ invalid_sequence.yaml:
 
     load(valid_sequence, str_schema) == {"a": ["1", "2", "3"]}
     >>> True
+
+With variable 'invalid_sequence':
+
+.. code-block:: yaml
+
+a: 1, x, 3
+
 
 
 

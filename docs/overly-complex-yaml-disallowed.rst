@@ -12,53 +12,22 @@ and features that inhibit markup readability".
 
 
 
-
-tag_tokens.yaml:
-
-.. code-block:: yaml
-
-  x:
-    a: !!str yes
-    b: !!str 3.5
-    c: !!str yes
-
-
-flow_style.yaml:
-
-.. code-block:: yaml
-
-  x: { a: 1, b: 2, c: 3 }
-
-
-jinja2.yaml:
-
-.. code-block:: yaml
-
-  x: '{{ value }}'
-
-
-node_anchors_and_references.yaml:
-
-.. code-block:: yaml
-
-  x: 
-    a: &node1 3.5
-    b: 1
-    c: *node1
-
-
-flow_style_sequence.yaml:
-
-.. code-block:: yaml
-
-  [a, b]: [x, y]
-
 .. code-block:: python
 
     from strictyaml import Map, Int, Any, load
     from strictyaml import TagTokenDisallowed, FlowMappingDisallowed, AnchorTokenDisallowed
     
     schema = Map({"x": Map({"a": Any(), "b": Any(), "c": Any()})})
+
+With variable 'tag_tokens':
+
+.. code-block:: yaml
+
+x:
+  a: !!str yes
+  b: !!str 3.5
+  c: !!str yes
+
 
 
 
@@ -75,6 +44,13 @@ flow_style_sequence.yaml:
             a: !!str yes
                ^ (line: 2)
 
+With variable 'flow_style_sequence':
+
+.. code-block:: yaml
+
+[a, b]: [x, y]
+
+
 
 
 .. code-block:: python
@@ -90,6 +66,13 @@ flow_style_sequence.yaml:
           [a, b]: [x, y]
            ^ (line: 1)
 
+With variable 'jinja2':
+
+.. code-block:: yaml
+
+x: '{{ value }}'
+
+
 Using quotation marks, you can parse a string starting or ending with { or }
 
 .. code-block:: python
@@ -97,20 +80,12 @@ Using quotation marks, you can parse a string starting or ending with { or }
     load(jinja2) == {"x": "{{ value }}"}
     >>> True
 
+With variable 'flow_style':
 
+.. code-block:: yaml
 
-.. code-block:: python
+x: { a: 1, b: 2, c: 3 }
 
-    load(flow_style, schema)
-    >>> EXCEPTION RAISED:
-      While scanning
-        in "<unicode string>", line 1, column 4:
-          x: { a: 1, b: 2, c: 3 }
-             ^ (line: 1)
-      Found ugly disallowed JSONesque flow mapping (surround with ' and ' to make text appear literally)
-        in "<unicode string>", line 1, column 5:
-          x: { a: 1, b: 2, c: 3 }
-              ^ (line: 1)
 
 
 
@@ -126,6 +101,31 @@ Using quotation marks, you can parse a string starting or ending with { or }
         in "<unicode string>", line 1, column 5:
           x: { a: 1, b: 2, c: 3 }
               ^ (line: 1)
+
+
+
+.. code-block:: python
+
+    load(flow_style, schema)
+    >>> EXCEPTION RAISED:
+      While scanning
+        in "<unicode string>", line 1, column 4:
+          x: { a: 1, b: 2, c: 3 }
+             ^ (line: 1)
+      Found ugly disallowed JSONesque flow mapping (surround with ' and ' to make text appear literally)
+        in "<unicode string>", line 1, column 5:
+          x: { a: 1, b: 2, c: 3 }
+              ^ (line: 1)
+
+With variable 'node_anchors_and_references':
+
+.. code-block:: yaml
+
+x: 
+  a: &node1 3.5
+  b: 1
+  c: *node1
+
 
 
 

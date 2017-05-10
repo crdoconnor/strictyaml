@@ -18,27 +18,19 @@ for values for which precision is not required.
 
 
 
-
-invalid_sequence_2.yaml:
-
-.. code-block:: yaml
-
-  a: string
-  b: 2
-
-
-valid_sequence.yaml:
-
-.. code-block:: yaml
-
-  a: 1.00000000000000000001
-  b: 5.4135
-
 .. code-block:: python
 
     from strictyaml import Map, Float, load
     
     schema = Map({"a": Float(), "b": Float()})
+
+With variable 'valid_sequence':
+
+.. code-block:: yaml
+
+a: 1.00000000000000000001
+b: 5.4135
+
 
 
 
@@ -83,11 +75,19 @@ valid_sequence.yaml:
     >>> EXCEPTION RAISED:
       Cannot cast
 
+With variable 'invalid_sequence':
+
+.. code-block:: yaml
+
+a: string
+b: 2
+
+
 
 
 .. code-block:: python
 
-    load(invalid_sequence_2, schema)
+    load(invalid_sequence, schema)
     >>> EXCEPTION RAISED:
       when expecting a float
       found non-float

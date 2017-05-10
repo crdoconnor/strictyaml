@@ -1,56 +1,25 @@
 Enum validation
 ---------------
 
-None
+StrictYAML allows you to ensure that a scalar
+value can only be one of a set number of items.
+
+It will throw an exception if any strings not
+in the list are found.
 
 
-
-invalid_sequence_2.yaml:
-
-.. code-block:: yaml
-
-  a: yes
-
-
-valid_sequence_2.yaml:
-
-.. code-block:: yaml
-
-  a: B
-
-
-invalid_sequence_1.yaml:
-
-.. code-block:: yaml
-
-  a: D
-
-
-valid_sequence_1.yaml:
-
-.. code-block:: yaml
-
-  a: A
-
-
-invalid_sequence_3.yaml:
-
-.. code-block:: yaml
-
-  a: 1
-
-
-valid_sequence_3.yaml:
-
-.. code-block:: yaml
-
-  a: C
 
 .. code-block:: python
 
     from strictyaml import Map, Enum, MapPattern, YAMLValidationError, load
     
     schema = Map({"a": Enum(["A", "B", "C"])})
+
+With variable 'valid_sequence_1':
+
+.. code-block:: yaml
+
+a: A
 
 
 
@@ -59,6 +28,12 @@ valid_sequence_3.yaml:
     load(valid_sequence_1, schema) == {"a": "A"}
     >>> True
 
+With variable 'valid_sequence_2':
+
+.. code-block:: yaml
+
+a: B
+
 
 
 .. code-block:: python
@@ -66,12 +41,24 @@ valid_sequence_3.yaml:
     load(valid_sequence_2, schema) == {"a": "B"}
     >>> True
 
+With variable 'valid_sequence_3':
+
+.. code-block:: yaml
+
+a: C
+
 
 
 .. code-block:: python
 
     load(valid_sequence_3, schema) == {"a": "C"}
     >>> True
+
+With variable 'invalid_sequence_1':
+
+.. code-block:: yaml
+
+a: D
 
 
 
@@ -81,6 +68,12 @@ valid_sequence_3.yaml:
     >>> EXCEPTION RAISED:
       
 
+With variable 'invalid_sequence_2':
+
+.. code-block:: yaml
+
+a: yes
+
 
 
 .. code-block:: python
@@ -88,6 +81,12 @@ valid_sequence_3.yaml:
     load(invalid_sequence_2, schema)
     >>> EXCEPTION RAISED:
       
+
+With variable 'invalid_sequence_3':
+
+.. code-block:: yaml
+
+a: 1
 
 
 

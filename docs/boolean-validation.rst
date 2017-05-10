@@ -11,32 +11,25 @@ will cause a validation error.
 
 
 
-
-valid_sequence.yaml:
-
-.. code-block:: yaml
-
-  a: yes
-  b: true
-  c: on
-  d: 1
-  e: 0
-  f: Off
-  g: FALSE
-  h: no
-
-
-invalid_sequence.yaml:
-
-.. code-block:: yaml
-
-  a: yâs
-
 .. code-block:: python
 
     from strictyaml import Bool, Str, MapPattern, YAMLValidationError, load
     
     schema = MapPattern(Str(), Bool())
+
+With variable 'valid_sequence':
+
+.. code-block:: yaml
+
+a: yes
+b: true
+c: on
+d: 1
+e: 0
+f: Off
+g: FALSE
+h: no
+
 
 Even though it returns a YAML object, that YAML object resolves to True/False
 
@@ -68,6 +61,12 @@ the expected value is ambiguous ("False" or "FALSE"?)
     str(load(valid_sequence, schema)["g"])
     >>> EXCEPTION RAISED:
       Cannot cast
+
+With variable 'invalid_sequence':
+
+.. code-block:: yaml
+
+a: yâs
 
 
 

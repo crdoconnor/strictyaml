@@ -10,58 +10,19 @@ When you wish to specify the exact key name, use the
 
 
 
-
-invalid_sequence_2.yaml:
-
-.. code-block:: yaml
-
-  a: a
-  b: 2
-
-
-valid_sequence_2.yaml:
-
-.. code-block:: yaml
-
-  a: 1
-  c: 3
-
-
-invalid_sequence_1.yaml:
-
-.. code-block:: yaml
-
-  b: b
-
-
-valid_sequence_1.yaml:
-
-.. code-block:: yaml
-
-  â: 1
-  b: 2
-
-
-invalid_sequence_3.yaml:
-
-.. code-block:: yaml
-
-  a: 1
-  b: yâs
-  c: 3
-
-
-valid_sequence_3.yaml:
-
-.. code-block:: yaml
-
-  a: 1
-
 .. code-block:: python
 
     from strictyaml import MapPattern, Int, Str, YAMLValidationError, load
     
     schema = MapPattern(Str(), Int())
+
+With variable 'valid_sequence_1':
+
+.. code-block:: yaml
+
+â: 1
+b: 2
+
 
 
 
@@ -70,6 +31,14 @@ valid_sequence_3.yaml:
     load(valid_sequence_1, schema) == {u"â": 1, "b": 2}
     >>> True
 
+With variable 'valid_sequence_2':
+
+.. code-block:: yaml
+
+a: 1
+c: 3
+
+
 
 
 .. code-block:: python
@@ -77,12 +46,25 @@ valid_sequence_3.yaml:
     load(valid_sequence_2, schema) == {"a": 1, "c": 3}
     >>> True
 
+With variable 'valid_sequence_3':
+
+.. code-block:: yaml
+
+a: 1
+
 
 
 .. code-block:: python
 
     load(valid_sequence_3, schema) == {"a": 1, }
     >>> True
+
+With variable 'invalid_sequence_1':
+
+.. code-block:: yaml
+
+b: b
+
 
 
 
@@ -96,6 +78,14 @@ valid_sequence_3.yaml:
           b: b
            ^
 
+With variable 'invalid_sequence_2':
+
+.. code-block:: yaml
+
+a: a
+b: 2
+
+
 
 
 .. code-block:: python
@@ -107,6 +97,15 @@ valid_sequence_3.yaml:
         in "<unicode string>", line 1, column 1:
           a: a
            ^
+
+With variable 'invalid_sequence_3':
+
+.. code-block:: yaml
+
+a: 1
+b: yâs
+c: 3
+
 
 
 

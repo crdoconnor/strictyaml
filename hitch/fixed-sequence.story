@@ -1,36 +1,31 @@
 Fixed length sequence validation:
   based on: strictyaml
   description: |
-    Sequences can have multiple different types of within them
-    provided they are of a fixed length.
-  preconditions:
-    files:
-      valid_sequence.yaml: |
-        - 1
-        - a
-        - 2.5
-      invalid_sequence_1.yaml: |
-        a: 1
-        b: 2
-        c: 3
-      invalid_sequence_2.yaml: |
-        - 2
-        - a
-        - a:
-          - 1
-          - 2
-      invalid_sequence_3.yaml: |
-        - 1
-        - a
+    Sequences of fixed length can be validated with a series
+    of different (or the same) types.
   scenario:
     - Run command: |
         from strictyaml import FixedSeq, Str, Int, Float, YAMLValidationError, load
 
         schema = FixedSeq([Int(), Str(), Float()])
 
-    - Assert True: load(valid_sequence, schema) == [1, "a", 2.5, ]
+    - Variable:
+        name: valid_sequence
+        value: |
+          - 1
+          - a
+          - 2.5
 
-    - Assert Exception:
+    - Returns True: load(valid_sequence, schema) == [1, "a", 2.5, ]
+
+    - Variable:
+        name: invalid_sequence_1
+        value: |
+          a: 1
+          b: 2
+          c: 3
+
+    - Raises Exception:
         command: load(invalid_sequence_1, schema)
         exception: |
           when expecting a sequence of 3 elements
@@ -42,7 +37,16 @@ Fixed length sequence validation:
               c: '3'
               ^ (line: 3)
 
-    - Assert Exception:
+    - Variable:
+        name: invalid_sequence_2
+        value: |
+          - 2
+          - a
+          - a:
+            - 1
+            - 2
+
+    - Raises Exception:
         command: load(invalid_sequence_2, schema)
         exception: |
           when expecting a float
@@ -54,7 +58,13 @@ Fixed length sequence validation:
                 - '2'
               ^ (line: 5)
 
-    - Assert Exception:
+    - Variable:
+        name: invalid_sequence_3
+        value: |
+          - 1
+          - a
+
+    - Raises Exception:
         command: load(invalid_sequence_3, schema)
         exception: |
           when expecting a sequence of 3 elements

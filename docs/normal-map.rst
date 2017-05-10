@@ -12,66 +12,19 @@ the keys in advance but you do know the type, use MapPattern.
 
 
 
-
-valid_mapping.yaml:
-
-.. code-block:: yaml
-
-  a: 1
-  b: 2
-  c: 3
-
-
-invalid_sequence_2.yaml:
-
-.. code-block:: yaml
-
-  - 1
-  - 2
-  - 3
-
-
-invalid_sequence_1.yaml:
-
-.. code-block:: yaml
-
-  a: 1
-  b: 2
-  â: 3
-
-
-valid_mapping_2.yaml:
-
-.. code-block:: yaml
-
-  â: 1
-  b: 2
-  c: 3
-
-
-invalid_sequence_3.yaml:
-
-.. code-block:: yaml
-
-  a: 1
-  b: 2
-  c: 3
-  d: 4
-
-
-onekeymap.yaml:
-
-.. code-block:: yaml
-
-  x: 1
-
 .. code-block:: python
 
-    from strictyaml import Map, Int, YAMLValidationError, load
+    from strictyaml import Map, Int, load
     
     schema = Map({"a": Int(), "b": Int(), "c": Int()})
     
     schema_2 = Map({u"â": Int(), "b": Int(), "c": Int()})
+
+With variable 'onekeymap':
+
+.. code-block:: yaml
+
+x: 1
 
 
 
@@ -80,6 +33,15 @@ onekeymap.yaml:
     str(load(onekeymap, Map({"x": Int()})).data) == "{'x': 1}"
     >>> True
 
+With variable 'valid_mapping_2':
+
+.. code-block:: yaml
+
+â: 1
+b: 2
+c: 3
+
+
 
 
 .. code-block:: python
@@ -87,11 +49,20 @@ onekeymap.yaml:
     load(valid_mapping_2, schema_2)[u'â'] == 1
     >>> True
 
+With variable 'valid_mapping_1':
+
+.. code-block:: yaml
+
+â: 1
+b: 2
+c: 3
+
+
 
 
 .. code-block:: python
 
-    load(valid_mapping, schema)['keynotfound']
+    load(valid_mapping_1, schema_2)['keynotfound']
     >>> EXCEPTION RAISED:
       keynotfound
 
@@ -99,9 +70,18 @@ onekeymap.yaml:
 
 .. code-block:: python
 
-    load(valid_mapping, schema).text
+    load(valid_mapping_1, schema_2).text
     >>> EXCEPTION RAISED:
       is a mapping, has no text value.
+
+With variable 'invalid_sequence_1':
+
+.. code-block:: yaml
+
+a: 1
+b: 2
+â: 3
+
 
 
 
@@ -114,6 +94,15 @@ onekeymap.yaml:
         in "<unicode string>", line 3, column 1:
           "\xE2": '3'
           ^ (line: 3)
+
+With variable 'invalid_sequence_2':
+
+.. code-block:: yaml
+
+- 1
+- 2
+- 3
+
 
 
 
@@ -129,6 +118,16 @@ onekeymap.yaml:
         in "<unicode string>", line 3, column 1:
           - '3'
           ^ (line: 3)
+
+With variable 'invalid_sequence_3':
+
+.. code-block:: yaml
+
+a: 1
+b: 2
+c: 3
+d: 4
+
 
 
 

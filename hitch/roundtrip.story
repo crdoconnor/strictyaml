@@ -9,40 +9,48 @@ Roundtripped YAML:
     may not always look the same (e.g. 
     implementation, the YAML loaded and dumped out may not
     always look exactly the same.
-  preconditions:
-    files:
-      commented_yaml.yaml: |
-        # Some comment
-        
-        a: â # value comment
-        
-        # Another comment
-        b: y
-      modified_commented_yaml.yaml: |
-        # Some comment
-        
-        a: â # value comment
-        
-        # Another comment
-        b: x
-      with_integer: |
-        x: 1
   scenario:
     - Code: |
         from strictyaml import Map, Str, Int, YAMLValidationError, load
 
         schema = Map({"a": Str(), "b": Str()})
+    
+    - Variable:
+        name: commented_yaml
+        value: |
+          # Some comment
+          
+          a: â # value comment
+          
+          # Another comment
+          b: y
 
     - Returns True: |
         load(commented_yaml, schema).as_yaml() == commented_yaml
+
 
     - Code: |
         to_modify = load(commented_yaml, schema)
 
         to_modify['b'] = 'x'
 
+    - Variable:
+        name: modified_commented_yaml
+        value: |
+          # Some comment
+          
+          a: â # value comment
+          
+          # Another comment
+          b: x
+
     - Returns True: |
         to_modify.as_yaml() == modified_commented_yaml
+
+    - Variable:
+        name: with_integer
+        value: |
+          x: 1
 
     - Returns True: |
        load(with_integer, Map({"x": Int()})).as_yaml() == "x: 1\n"

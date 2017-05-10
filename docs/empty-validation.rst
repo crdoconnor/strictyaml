@@ -1,47 +1,24 @@
 Empty validation
 ----------------
 
-None
+Sometimes you may wish to not specify a value or specify
+that it does not exist.
+
+Using StrictYAML you can accept this as a valid value and
+have it parsed to one of three things - None, {} (empty dict),
+or [] (empty list).
 
 
-
-valid_sequence_4.yaml:
-
-.. code-block:: yaml
-
-  a:
-
-
-valid_sequence_3.yaml:
-
-.. code-block:: yaml
-
-  a:
-
-
-valid_sequence_2.yaml:
-
-.. code-block:: yaml
-
-  a:
-
-
-invalid_sequence_1.yaml:
-
-.. code-block:: yaml
-
-  a: C
-
-
-valid_sequence_1.yaml:
-
-.. code-block:: yaml
-
-  a: A
 
 .. code-block:: python
 
-    from strictyaml import Map, Enum, EmptyNone, EmptyDict, EmptyList, YAMLValidationError, load
+    from strictyaml import Map, Enum, EmptyNone, EmptyDict, EmptyList, load
+
+With variable 'valid_sequence_1':
+
+.. code-block:: yaml
+
+a: A
 
 
 
@@ -50,12 +27,24 @@ valid_sequence_1.yaml:
     load(valid_sequence_1, Map({"a": Enum(["A", "B",]) | EmptyNone()})) == {"a": "A"}
     >>> True
 
+With variable 'valid_sequence_2':
+
+.. code-block:: yaml
+
+a:
+
 
 
 .. code-block:: python
 
     load(valid_sequence_2, Map({"a": Enum(["A", "B",]) | EmptyNone()})) == {"a": None}
     >>> True
+
+With variable 'valid_sequence_3':
+
+.. code-block:: yaml
+
+a:
 
 
 
@@ -64,12 +53,24 @@ valid_sequence_1.yaml:
     load(valid_sequence_3, Map({"a": Enum(["A", "B",]) | EmptyDict()})) == {"a": {}}
     >>> True
 
+With variable 'valid_sequence_4':
+
+.. code-block:: yaml
+
+a:
+
 
 
 .. code-block:: python
 
     load(valid_sequence_3, Map({"a": Enum(["A", "B",]) | EmptyList()})) == {"a": []}
     >>> True
+
+With variable 'invalid_sequence_1':
+
+.. code-block:: yaml
+
+a: C
 
 
 

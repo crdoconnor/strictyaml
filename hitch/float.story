@@ -15,19 +15,17 @@ Float:
     Parsing and validating as a Decimal is best for
     values which require precision, but float is better
     for values for which precision is not required.
-  preconditions:
-    files:
-      valid_sequence.yaml: |
-        a: 1.00000000000000000001
-        b: 5.4135
-      invalid_sequence_2.yaml: |
-        a: string
-        b: 2
   scenario:
     - Code: |
         from strictyaml import Map, Float, load
 
         schema = Map({"a": Float(), "b": Float()})
+
+    - Variable:
+        name: valid_sequence
+        value: |
+          a: 1.00000000000000000001
+          b: 5.4135
 
     - Returns True: 'load(valid_sequence, schema) == {"a": 1.0, "b": 5.4135}'
     - Returns True: 'str(load(valid_sequence, schema)["a"]) == "1.0"'
@@ -38,8 +36,14 @@ Float:
         command: bool(load(valid_sequence, schema)['a'])
         exception: Cannot cast
 
+    - Variable:
+        name: invalid_sequence
+        value: |
+          a: string
+          b: 2
+
     - Assert Exception:
-        command: load(invalid_sequence_2, schema)
+        command: load(invalid_sequence, schema)
         exception: |
           when expecting a float
           found non-float

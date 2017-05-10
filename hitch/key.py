@@ -186,7 +186,7 @@ class Engine(BaseEngine):
             ):
                 call([
                         sys.executable, "-m", "IPython", "console",
-                        "--existing",
+                        "--existing", "--no-confirm-exit",
                         path.join(
                             path.expanduser("~"),
                             ".ipython/profile_default/security/",

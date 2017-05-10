@@ -12,17 +12,17 @@ arrays where all of the keys are unique. It will throw a DuplicateKeysDisallowed
 
 
 
-
-duplicate.yaml:
-
-.. code-block:: yaml
-
-  a: cow
-  a: bull
-
 .. code-block:: python
 
     from strictyaml import load, DuplicateKeysDisallowed
+
+With variable 'duplicate':
+
+.. code-block:: yaml
+
+a: cow
+a: bull
+
 
 
 

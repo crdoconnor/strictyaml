@@ -6,38 +6,20 @@ values.
 
 
 
-
-invalid_sequence_2.yaml:
-
-.. code-block:: yaml
-
-  - 3
-  - 3
-  - 3
-
-
-invalid_sequence_1.yaml:
-
-.. code-block:: yaml
-
-  - A
-  - B
-  - B
-
-
-valid_sequence.yaml:
-
-.. code-block:: yaml
-
-  - A
-  - B
-  - C
-
 .. code-block:: python
 
     from strictyaml import UniqueSeq, Str, YAMLValidationError, load
     
     schema = UniqueSeq(Str())
+
+With variable 'valid_sequence':
+
+.. code-block:: yaml
+
+- A
+- B
+- C
+
 
 
 
@@ -45,6 +27,15 @@ valid_sequence.yaml:
 
     load(valid_sequence, schema) == ["A", "B", "C", ]
     >>> True
+
+With variable 'invalid_sequence_1':
+
+.. code-block:: yaml
+
+- A
+- B
+- B
+
 
 
 
@@ -60,6 +51,15 @@ valid_sequence.yaml:
         in "<unicode string>", line 3, column 1:
           - B
           ^ (line: 3)
+
+With variable 'invalid_sequence_2':
+
+.. code-block:: yaml
+
+- 3
+- 3
+- 3
+
 
 
 

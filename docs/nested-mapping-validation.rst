@@ -1,40 +1,10 @@
 Nested mapping validation
 -------------------------
 
-Mappings can be nested within one another.
+Mappings can be nested within one another, which
+will be parsed as a dict within a dict.
 
 
-
-
-invalid_sequence_2.yaml:
-
-.. code-block:: yaml
-
-  a: 11
-  b: 2
-  d: 3
-
-
-invalid_sequence_1.yaml:
-
-.. code-block:: yaml
-
-  a:
-    x: 9
-    z: 8
-  b: 2
-  d: 3
-
-
-valid_sequence.yaml:
-
-.. code-block:: yaml
-
-  a:
-    x: 9
-    y: 8
-  b: 2
-  c: 3
 
 .. code-block:: python
 
@@ -42,12 +12,34 @@ valid_sequence.yaml:
     
     schema = Map({"a": Map({"x": Int(), "y": Int()}), "b": Int(), "c": Int()})
 
+With variable 'valid_sequence':
+
+.. code-block:: yaml
+
+a:
+  x: 9
+  y: 8
+b: 2
+c: 3
+
+
 
 
 .. code-block:: python
 
     load(valid_sequence, schema) == {"a": {"x": 9, "y": 8}, "b": 2, "c": 3}
     >>> True
+
+With variable 'invalid_sequence_1':
+
+.. code-block:: yaml
+
+a:
+  x: 9
+  z: 8
+b: 2
+d: 3
+
 
 
 
@@ -60,6 +52,15 @@ valid_sequence.yaml:
         in "<unicode string>", line 3, column 1:
             z: '8'
           ^
+
+With variable 'invalid_sequence_2':
+
+.. code-block:: yaml
+
+a: 11
+b: 2
+d: 3
+
 
 
 
