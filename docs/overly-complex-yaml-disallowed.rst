@@ -10,8 +10,6 @@ out of StrictYAML, see the FAQ, although for the
 most part the answer is "because they're overcomplicated
 and features that inhibit markup readability".
 
-
-
 .. code-block:: python
 
     from strictyaml import Map, Int, Any, load

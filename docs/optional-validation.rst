@@ -5,8 +5,6 @@ Not every key in a YAML mapping will be required. If
 you use the "Optional('key')" validator with YAML,
 you can signal that a key/value pair is not required.
 
-
-
 .. code-block:: python
 
     from strictyaml import Map, Int, Str, Bool, Optional, load

@@ -7,8 +7,6 @@ using the CommaSeparated validator.
 Note that the space following the commas is stripped by
 default when parsed.
 
-
-
 .. code-block:: python
 
     from strictyaml import CommaSeparated, Int, Str, Map, load

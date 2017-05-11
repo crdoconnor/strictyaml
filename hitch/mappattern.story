@@ -19,7 +19,7 @@ Map Pattern:
           â: 1
           b: 2
 
-    - Assert True: 'load(valid_sequence_1, schema) == {u"â": 1, "b": 2}'
+    - Returns True: 'load(valid_sequence_1, schema) == {u"â": 1, "b": 2}'
 
     - Variable:
         name: valid_sequence_2
@@ -27,20 +27,20 @@ Map Pattern:
           a: 1
           c: 3
 
-    - Assert True: 'load(valid_sequence_2, schema) == {"a": 1, "c": 3}'
+    - Returns True: 'load(valid_sequence_2, schema) == {"a": 1, "c": 3}'
 
     - Variable:
         name: valid_sequence_3
         value: 'a: 1'
 
-    - Assert True: 'load(valid_sequence_3, schema) == {"a": 1, }'
+    - Returns True: 'load(valid_sequence_3, schema) == {"a": 1, }'
 
     - Variable:
         name: invalid_sequence_1
         value: |
           b: b
 
-    - Assert Exception:
+    - Raises Exception:
         command: load(invalid_sequence_1, schema)
         exception: |
           when expecting an integer
@@ -55,7 +55,7 @@ Map Pattern:
           a: a
           b: 2
 
-    - Assert Exception:
+    - Raises Exception:
         command: load(invalid_sequence_2, schema)
         exception: |
           when expecting an integer
@@ -71,7 +71,7 @@ Map Pattern:
           b: yâs
           c: 3
 
-    - Assert Exception:
+    - Raises Exception:
         command: load(invalid_sequence_3, schema)
         exception: |
           when expecting an integer

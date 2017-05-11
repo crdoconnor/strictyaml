@@ -10,8 +10,6 @@ the Seq validator, specifying the type.
 See also UniqueSeq and FixedSeq for other types of sequence
 validation.
 
-
-
 .. code-block:: python
 
     from strictyaml import Seq, Str, Int, load

@@ -10,8 +10,6 @@ may not always look the same (e.g.
 implementation, the YAML loaded and dumped out may not
 always look exactly the same.
 
-
-
 .. code-block:: python
 
     from strictyaml import Map, Str, Int, YAMLValidationError, load

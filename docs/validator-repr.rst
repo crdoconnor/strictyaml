@@ -4,8 +4,6 @@ Validator repr
 When repr(x) is called on validators it should print an
 executable representation of the object.
 
-
-
 .. code-block:: python
 
     import strictyaml as sy

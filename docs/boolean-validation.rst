@@ -9,8 +9,6 @@ opposites as False.
 Any values that are not one of those will
 will cause a validation error.
 
-
-
 .. code-block:: python
 
     from strictyaml import Bool, Str, MapPattern, YAMLValidationError, load

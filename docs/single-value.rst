@@ -9,8 +9,6 @@ Where standard YAML implicitly converts certain strings
 to other types, StrictYAML will only parse to strings
 unless otherwise directed.
 
-
-
 .. code-block:: python
 
     from strictyaml import Str, Int, load

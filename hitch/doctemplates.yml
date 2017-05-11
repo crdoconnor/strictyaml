@@ -5,15 +5,6 @@ documents:
 
     {{ story['description'] }}
 
-    {% for filename, contents in story['preconditions'].get('files', {}).items() %}
-    
-    {{ filename }}:
-
-    .. code-block:: yaml
-    
-    {{ contents|indent(2, true) }}
-    {% endfor %}
-
     {%- for step in story.steps %}
     {{ step }}
     {% endfor %}

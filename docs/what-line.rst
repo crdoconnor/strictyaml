@@ -5,8 +5,6 @@ Line numbers, the text of an item and text of surrounding lines
 can be grabbed from returned YAML objects - using .start_line,
 .end_line, lines(), lines_before(x) and lines_after(x).
 
-
-
 .. code-block:: python
 
     from strictyaml import Map, Str, YAMLValidationError, load

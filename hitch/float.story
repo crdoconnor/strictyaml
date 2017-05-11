@@ -1,4 +1,4 @@
-Float:
+Floats:
   based on: strictyaml
   description: |
     StrictYAML parses to a YAML object representing

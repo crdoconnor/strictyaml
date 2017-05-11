@@ -4,8 +4,6 @@ Datetime validation
 Datetime validator parses using the python-dateutil library and
 returns a python datetime object.
 
-
-
 .. code-block:: python
 
     from strictyaml import Map, Datetime, YAMLValidationError, load

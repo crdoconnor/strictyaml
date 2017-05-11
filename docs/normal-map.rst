@@ -10,8 +10,6 @@ contains the right keys and the right *type* of values.
 Note: for mappings where you don't know the exact names of
 the keys in advance but you do know the type, use MapPattern.
 
-
-
 .. code-block:: python
 
     from strictyaml import Map, Int, load

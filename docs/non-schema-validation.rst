@@ -14,8 +14,6 @@ structure, we recommend that you 'lock it down' with a schema.
 
 The Any validator can be used inside fixed structures as well.
 
-
-
 .. code-block:: python
 
     from strictyaml import Any, MapPattern, load

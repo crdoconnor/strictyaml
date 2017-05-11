@@ -9,8 +9,6 @@ This is what that can object can do - in most
 cases if parsed as a string, it will behave in
 the same way.
 
-
-
 .. code-block:: python
 
     from strictyaml import Str, Map, load

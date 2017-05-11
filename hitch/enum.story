@@ -1,4 +1,4 @@
-Enum validation:
+Enum validation (Enum):
   description: |
     StrictYAML allows you to ensure that a scalar
     value can only be one of a set number of items.

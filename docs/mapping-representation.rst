@@ -1,8 +1,16 @@
 Mapping representation
 ----------------------
 
-None
+When a YAML document with mappings is parsed, it is not parsed
+as a dict but as a YAML object which behaves very similarly to
+a dict, but also has some extra capabilities.
 
+You can use .items(), .keys(), .values(), look up items with
+square bracket notation, .get(key, with_default_if_nonexistent)
+and use "x in y" notation to determine key membership.
+
+To retrieve the equivalent dict (containing just other dicts, lists
+and strings/ints/etc.) use .data.
 
 .. code-block:: python
 
@@ -20,14 +28,14 @@ With variable 'valid_sequence':
   b: 2
   c: 3
 
-
+Tests of equivalence with equivalent plain dicts with keys/values return True.
 
 .. code-block:: python
 
     load(valid_sequence, schema) == {"a": 1, "b": 2, "c": 3}
     >>> True
 
-
+Similar to dicts, you can test for the presence of a key in the mapping like this.
 
 .. code-block:: python
 

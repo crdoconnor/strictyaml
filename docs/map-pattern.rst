@@ -8,8 +8,6 @@ keys are, use a MapPattern.
 When you wish to specify the exact key name, use the
 'Map' validator instead.
 
-
-
 .. code-block:: python
 
     from strictyaml import MapPattern, Int, Str, YAMLValidationError, load

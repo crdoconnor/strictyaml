@@ -4,8 +4,6 @@ Unique sequences
 UniqueSeq validates sequences which contain no duplicate
 values.
 
-
-
 .. code-block:: python
 
     from strictyaml import UniqueSeq, Str, YAMLValidationError, load

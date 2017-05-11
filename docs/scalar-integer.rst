@@ -9,8 +9,6 @@ This is what that can object can do - in many
 cases if parsed as a integer, it will behave in
 the same way.
 
-
-
 .. code-block:: python
 
     from strictyaml import Map, Int, load

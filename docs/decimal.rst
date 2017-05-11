@@ -15,8 +15,6 @@ To get a python decimal.Decimal object, use .data.
 Parsing and validating as a Decimal is best for
 values which require precision, like prices.
 
-
-
 .. code-block:: python
 
     from strictyaml import Map, Decimal, load

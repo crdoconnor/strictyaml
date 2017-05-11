@@ -1,4 +1,4 @@
-Fixed length sequence validation:
+Fixed length sequences (FixedSeq):
   based on: strictyaml
   description: |
     Sequences of fixed length can be validated with a series

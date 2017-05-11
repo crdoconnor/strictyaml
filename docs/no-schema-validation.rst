@@ -10,17 +10,6 @@ PyYAML, ruamel.yaml, poyo or other regular YAML parsers.
 
 
 
-sequence_2.yaml:
-
-.. code-block:: yaml
-
-  a:
-    - 9
-    - 8
-  b: 2
-  d: 3
-
-
 sequence_1.yaml:
 
 .. code-block:: yaml
@@ -30,6 +19,17 @@ sequence_1.yaml:
     y: 8
   b: 2
   c: 3
+
+
+sequence_2.yaml:
+
+.. code-block:: yaml
+
+  a:
+    - 9
+    - 8
+  b: 2
+  d: 3
 
 
 sequence_3.yaml:

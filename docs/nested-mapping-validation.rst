@@ -4,8 +4,6 @@ Nested mapping validation
 Mappings can be nested within one another, which
 will be parsed as a dict within a dict.
 
-
-
 .. code-block:: python
 
     from strictyaml import Map, Int, load

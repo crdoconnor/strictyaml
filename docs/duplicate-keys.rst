@@ -10,8 +10,6 @@ that the resulting value of x has been changed - when it hasn't.
 In order to avoid all possible confusion, StrictYAML will simply refuse to parse this and will only accept associative
 arrays where all of the keys are unique. It will throw a DuplicateKeysDisallowed exception.
 
-
-
 .. code-block:: python
 
     from strictyaml import load, DuplicateKeysDisallowed

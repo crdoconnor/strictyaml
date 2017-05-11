@@ -19,7 +19,7 @@ Duplicate keys:
           a: cow
           a: bull
 
-    - Assert Exception:
+    - Raises Exception:
         command: load(duplicate)
         exception: |
           While parsing

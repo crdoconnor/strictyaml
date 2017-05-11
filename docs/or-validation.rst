@@ -8,8 +8,6 @@ If the first thing does not parse correctly, it attempts to
 parse the second. If the second does not parse correctly,
 it raises an exception.
 
-
-
 .. code-block:: python
 
     from strictyaml import Map, Bool, Int, YAMLValidationError, load
