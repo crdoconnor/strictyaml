@@ -1,5 +1,5 @@
-Empty validation
-----------------
+Empty validation (EmptyNone, EmptyDict, EmptyList)
+--------------------------------------------------
 
 Sometimes you may wish to not specify a value or specify
 that it does not exist.
@@ -7,8 +7,6 @@ that it does not exist.
 Using StrictYAML you can accept this as a valid value and
 have it parsed to one of three things - None, {} (empty dict),
 or [] (empty list).
-
-
 
 .. code-block:: python
 

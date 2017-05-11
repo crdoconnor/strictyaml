@@ -1,13 +1,11 @@
-Enum validation
----------------
+Enum validation (Enum)
+----------------------
 
 StrictYAML allows you to ensure that a scalar
 value can only be one of a set number of items.
 
 It will throw an exception if any strings not
 in the list are found.
-
-
 
 .. code-block:: python
 

@@ -1,5 +1,5 @@
-Float
------
+Floats
+------
 
 StrictYAML parses to a YAML object representing
 a decimal, not the value directly to give you more
@@ -15,8 +15,6 @@ To get a python float object, use .data.
 Parsing and validating as a Decimal is best for
 values which require precision, but float is better
 for values for which precision is not required.
-
-
 
 .. code-block:: python
 

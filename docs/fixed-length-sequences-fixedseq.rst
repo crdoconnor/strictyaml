@@ -1,10 +1,8 @@
-Fixed length sequence validation
---------------------------------
+Fixed length sequences (FixedSeq)
+---------------------------------
 
 Sequences of fixed length can be validated with a series
 of different (or the same) types.
-
-
 
 .. code-block:: python
 
