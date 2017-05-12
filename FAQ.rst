@@ -187,23 +187,30 @@ It's also makes `Christopher Null <http://www.wired.com/2015/11/null/>`_ unhappy
 In the above cases, implicit typing violates the `principle of least astonishment <https://en.wikipedia.org/wiki/Principle_of_least_astonishment>`_.
 
 
-What is wrong with explicit syntax typing in readable configuration languages?
-------------------------------------------------------------------------------
+What is wrong with explicit syntax typing in a readable configuration languages?
+--------------------------------------------------------------------------------
 
-Explicit syntax typing is the process of using syntax to define types in markup. So, for instance in JSON, quotation marks are used to define types:
+Explicit syntax typing is the process of using syntax to define types in markup. So, for instance in JSON, quotation marks are used to define name as a string and age as a number:
 
 .. code-block:: json
 
   {"name": "Arthur Dent", "age": 42}
 
-This also has two disadvantages:
+This helps distinguish the types for the parser but it alsos has two disadvantages:
 
-* The distinction is subtle and not particularly clear to non-programmers, who will understand that *age needs to be an number* and will *probably put in a number* but *not why a number should be surrounded by quotes* -- or not.
-* It's not as DRY - two superfluous characters per string makes the markup longer and noisier.
+* The distinction is subtle and not particularly clear to non-programmers, who will not necessarily understand that a directive needs to be given to the parser to avoid it being misinterpreted.
+* It's not necessary if type information is kept outside of the markup.
+* Verbosity - two extra characters per string makes the markup longer and noisier.
 
-In JSON when being used as a REST API, this is an advantage - it is explicit to the machine reading the JSON that "string" and "age" is an integer and it can convert accordingly in the absence of a schema.
+In JSON when being used as a REST API, syntax typing is often an *advantage* - it is explicit to the machine reading the JSON that "string" and "age" is an integer and it can convert accordingly *in the absence of a schema*.
 
-Regular YAML has optional explicit syntax typing to explicitly declare strings, although it's *not at all obvious* when to use it::
+StrictYAML assumes all scalar strings unless the schema explicitly indicates otherwise (e.g. Map(Int(), Int())).
+
+StrictYAML does require quotation marks for some strings, but only strings that are syntactically
+confusing for it.
+
+Regular YAML has explicit `syntax typing <https://github.com/crdoconnor/strictyaml/blob/master/FAQ.rst#whats-wrong-with-syntax-typing-in-a-readable-configuration-language>`_
+to explicitly declare strings, although it's confusing as hell to know when it's necessary. For example::
 
   a: text               # not necessary
   b: "yes"              # necessary
@@ -214,14 +221,14 @@ Regular YAML has optional explicit syntax typing to explicitly declare strings, 
   g: shake it all about # not necessary
   h: "on"               # necessary
 
-Separating the schema from the markup as StrictYAML does, frees the language from needing such hints, so it becomes superfluous.
-
-Several other configuration language formats also have explicit syntax typing in lieu of schemas. They are:
+Several other configuration language formats also have syntax typing in lieu of schemas, and
+suffer from the same problems. They are:
 
 * TOML
 * JSON5
 * HJSON
 * SDLang
+* HOCON
 
 
 What is wrong with binary data?
@@ -254,8 +261,9 @@ For example, if it were to be applied to "fix" the Godfather movie script parsin
   - Clemenza: !!str Yes
   - Don Corleone: Do I have your loyalty?
 
-Explicit typecasts in YAML markup are not only ugly, they confuse non-programmers. StrictYAML's philosophy is that type information should be
-kept strictly separated from data, so this 'feature' of YAML is switched off. It will raise an exception if used.
+Explicit typecasts in YAML markup are not only ugly, they confuse non-programmers. StrictYAML's philosophy is that type information should be kept strictly separated from data, so this 'feature' of YAML is switched off.
+
+If data like this is seen in a YAML file it will raise a special exception.
 
 
 What is wrong with node anchors and references?
@@ -338,7 +346,7 @@ While much more repetitive, the intent of the above is *so much* clearer and eas
 to work with, that it more than compensates for the increased repetition.
 
 While it makes little sense to refactor the above snippet to deduplicate repetititve data it may make
-sense to refactor the structure as it grows larger (and more repetitive). However, there are a number of
+sense to refactor the *structure* as it grows larger (and more repetitive). However, there are a number of
 ways this could be done without using YAML's nodes and anchors (e.g. splitting the file into two files -
 step definitions and step sequences), depending on the nature and quantity of the repetitiveness.
 
@@ -357,7 +365,8 @@ This use of JSONesque { and } is also ugly and hampers readability - *especially
 
 The *first* question in the FAQ of pyyaml actually subtly indicates that this feature wasn't a good idea - see "`why does my YAML look wrong? <http://pyyaml.org/wiki/PyYAMLDocumentation#Dictionarieswithoutnestedcollectionsarenotdumpedcorrectly>`_".
 
-To take a real life example, `this saltstack YAML definition <https://github.com/saltstack-formulas/mysql-formula/blob/master/mysql/server.sls#L22>`_ makes the distinction between flow style and jinja2 templates unclear.
+To take a real life example, use of flow style in `this saltstack YAML definition <https://github.com/saltstack-formulas/mysql-formula/blob/master/mysql/server.sls#L22>`_ blurs the distinction between flow style and jinja2,
+confusing the reader.
 
 
 What is wrong with duplicate keys?
@@ -372,11 +381,9 @@ Duplicate keys are allowed in regular YAML - as parsed by pyyaml, ruamel.yaml an
     x: bull
 
 Not only is it unclear whether x should be "cow" or "bull" (the parser will decide 'bull', but did you know that?),
-if there are 200 lines between x: cow and x: bull, a user might very likely change the *first* x and erroneously believe
-that the resulting value of x has been changed - when it hasn't.
+if there are 200 lines between x: cow and x: bull, a user might very likely change the *first* x and erroneously believe that the resulting value of x has been changed - when it hasn't.
 
-In order to avoid all possible confusion, StrictYAML will simply refuse to parse this and will only accept associative
-arrays where all of the keys are unique. It will throw a DuplicateKeysDisallowed exception.
+In order to avoid all possible confusion, StrictYAML will simply refuse to parse this and will *only* accept associative arrays where all of the keys are unique. It will throw a DuplicateKeysDisallowed exception.
 
 
 Why not use INI files for configuration or DSLs?
@@ -402,11 +409,11 @@ While this may not intrinsically seem like a good thing (more power seems better
  * `Principle of least power by Tim Berners Lee <https://www.w3.org/DesignIssues/Principles.html#PLP>`_.
  * `Principle of least power by Jeff Atwood (coding horror blogger / stack overflow founder) <https://blog.codinghorror.com/the-principle-of-least-power/>`_.
 
-A good way of refactoring, in fact, is to take turing complete python code that *can* be transformed directly into YAML with no loss in expressiveness and and transform it.
+A good way of refactoring, in fact, is to take a large chunk of turing complete python code that *can* be transformed directly into YAML with no loss in expressiveness and and to transform it - for example, a list of translation strings, countries or other configuration information.
 
 This has a number of advantages.
 
-The less powerful a language is, the more likely it is that you can hand it off to a non-programmer to maintain it.
+Less powerful languages are easier to maintain and can be given to non-programmers to maintain.
 
 For example, a YAML translations configuration file like this could easily be edited by a non programmer:
 
@@ -419,18 +426,36 @@ For example, a YAML translations configuration file like this could easily be ed
     French: Au revoir
     German: Auf wiedersehen
 
-It also makes it more justifiable to have the markup generated by another program or a templating language. While you can do this with turing complete code, it will often lead to a debugging nightmare - `just ask C++ programmers <https://stackoverflow.com/questions/622659/what-are-the-good-and-bad-points-of-c-templates>`_!
+Whereas this python is more likely to cause problems, especially in a large file:
+
+.. code-block:: python
+
+  TRANS = {
+      "Hello": {
+          "French": "Bonjour",
+          "German": "Guten tag",
+      },
+      "Hello": {
+          "French": "Bonjour",
+          "German": "Auf wiedersehen",
+      },
+  }
+
+
+It also makes it easier to have the markup generated by another program or a templating language. While you 
+technicall *can* do this with turing complete code, it will often lead to a debugging nightmare - `just ask C++ programmers <https://stackoverflow.com/questions/622659/what-are-the-good-and-bad-points-of-c-templates>`_!
 
 Why not use XML for configuration or DSLs?
 ------------------------------------------
 
-XML suffers from overcomplication much like vanilla YAML does - although to an ever greater degree, thanks to way it was designed - largely by committee. Doctypes and namespaces are horrendous additions to the language, for instance. XML is not only not human readable (beyond a very basic subset of the language), it's often barely *programmer* readable despite being less expressive than most turing complete languages. It's a flagrant violation of the `rule of least power <https://en.wikipedia.org/wiki/Rule_of_least_power>`_.
+XML suffers from overcomplication much like vanilla YAML does - although to an ever greater degree, thanks to 
+the committee driven design. Doctypes and namespaces are horrendous additions to the language, for instance. XML is not only not really human readable (beyond a very basic subset of the language), it's often barely *programmer* readable despite being less expressive than most turing complete languages. It's a flagrant violation of the `rule of least power <https://en.wikipedia.org/wiki/Rule_of_least_power>`_.
 
 The language was, in fact, *so* overcomplicated that it ended up increasing the attack surface of the parser itself to the point that it led to parsers with `security vulnerabilities <https://en.wikipedia.org/wiki/Billion_laughs>`_.
 
 Unlike JSON and YAML, XML's structure also does not map well on to the default data types used by most languages, often requiring a *third* language to act as a go between - e.g. either XQuery or XPath.
 
-XML's decline in favor of JSON as a default API format is largely due to its complication and the lack of any real benefit drawn from them. The associated technologies (e.g. XSLT) also suffered from design by committee.
+XML's decline in favor of JSON as a default API format is largely due to these complications and the lack of any real benefit drawn from them. The associated technologies (e.g. XSLT) also suffered from design by committee.
 
 Using it as a configuration language will all but ensure that you need to write extra boilerplate code to manage its quirks.
 
@@ -537,13 +562,13 @@ Why not HOCON?
 
 `HOCON <https://github.com/typesafehub/config/blob/master/HOCON.md>`_ is another "redesigned" JSON, ironically enough, taking JSON and making it even more complicated.
 
-Along with JSON's syntax typing - a downside of most non-YAML alternatives, HOCON makes the following mistakes in its design:
+Along with JSON's `syntax typing <https://github.com/crdoconnor/strictyaml/blob/master/FAQ.rst#whats-wrong-with-syntax-typing-in-a-readable-configuration-language>`_ - a downside of most non-YAML alternatives, HOCON makes the following mistakes in its design:
 
 * It does not fail loudly on duplicate keys.
 * It has a confusing rules for deciding on concatenations and substitutions.
-* It has a mechanism for substitutions similar to YAML's node/anchor feature - which, unless used extremely sparingly, can create confusing markup that is *not* human optimized.
+* It has a mechanism for substitutions similar to YAML's node/anchor feature - which, unless used extremely sparingly, can create confusing markup that, ironically, is *not* human optimized.
 
-In addition, its attempt at using "less pedantic" syntax creates a system of rules which makes the behavior of the parser less obvious.
+In addition, its attempt at using "less pedantic" syntax creates a system of rules which makes the behavior of the parser much less obvious and edge cases more frequent.
 
 
 

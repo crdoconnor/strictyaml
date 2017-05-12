@@ -1,8 +1,8 @@
 StrictYAML
 ==========
 
-StrictYAML is a `type-safe <https://en.wikipedia.org/wiki/Type_safety>`_ YAML parser
-built atop `ruamel.yaml <https://github.com/crdoconnor/strictyaml/blob/master/FAQ.rst#why-is-strictyaml-built-on-ruamelyaml>`_ that parses a
+StrictYAML is an optionally `type-safe <https://en.wikipedia.org/wiki/Type_safety>`_ YAML parser
+that parses a
 `restricted subset <https://github.com/crdoconnor/strictyaml/blob/master/FAQ.rst#what-features-does-strictyaml-remove>`_
 of the YAML specificaton.
 
@@ -13,9 +13,9 @@ Priorities:
 * Secure by default.
 * Strict validation of markup and straightforward type casting.
 * Clear, human readable exceptions with line numbers.
-* Acting as a drop in replacement for pyyaml, ruamel.yaml or poyo.
-* Roundtripping.
-* Letting you worry about more interesting things than parsing config files.
+* Acting as a near-drop in replacement for pyyaml, ruamel.yaml or poyo.
+* Roundtripping - reading in (commented) YAML and writing it out with comments.
+* Letting you worry about more interesting things than parsing or writing config files.
 
 Simple example:
 
