@@ -693,10 +693,6 @@ Why not use pykwalify to validate YAML instead?
 
 See the question above for the correct times to use kwalify to validate your code and crucially, when not to.
 
-Apart from the kinds of YAML structures which pykwalify is simply *unable* to validate, it also
-`fixes versions in setup.py <https://github.com/Grokzen/pykwalify/issues/55>`_
-which will break your code when upgrading.
-
 
 Why is StrictYAML built upon ruamel.yaml?
 -----------------------------------------
