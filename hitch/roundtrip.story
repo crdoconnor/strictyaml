@@ -13,7 +13,7 @@ Roundtripped YAML:
     - Code: |
         from strictyaml import Map, Str, Int, YAMLValidationError, load
 
-        schema = Map({"a": Str(), "b": Str()})
+        schema = Map({"a": Str(), "b": Int()})
     
     - Variable:
         name: commented_yaml
@@ -23,7 +23,7 @@ Roundtripped YAML:
           a: â # value comment
           
           # Another comment
-          b: y
+          b: 1
 
     - Returns True: |
         load(commented_yaml, schema).as_yaml() == commented_yaml
@@ -32,7 +32,12 @@ Roundtripped YAML:
     - Code: |
         to_modify = load(commented_yaml, schema)
 
-        to_modify['b'] = 'x'
+        to_modify['b'] = 2
+    
+    - Raises Exception:
+        command: |
+          to_modify['b'] = 'not an integer'
+        exception: expected
 
     - Variable:
         name: modified_commented_yaml
@@ -42,7 +47,7 @@ Roundtripped YAML:
           a: â # value comment
           
           # Another comment
-          b: x
+          b: 2
 
     - Returns True: |
         to_modify.as_yaml() == modified_commented_yaml

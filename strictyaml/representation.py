@@ -135,6 +135,14 @@ class YAML(object):
         if isinstance(value, YAML):
             self._value[index] = value.copy()
         else:
+            if type(value) is not type(self._value[index].value):
+                raise TypeError(
+                    "{0} is of type {1}, expected {2}".format(
+                        value,
+                        type(value),
+                        type(self._value[index].value),
+                    )
+                )
             self._value[index] = YAML(value)
 
     def __delitem__(self, index):
