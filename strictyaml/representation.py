@@ -15,13 +15,17 @@ if sys.version_info[0] == 3:
 
 class YAML(object):
     def __init__(self, value, text=None, chunk=None):
+        if isinstance(value, YAML):
+            self._value = value._value
+            self._text = value._text
+            self._chunk = value._chunk
+            return
+
         self._value = value
         if not isinstance(value, CommentedMap) and not isinstance(value, CommentedSeq):
             self._text = unicode(value) if text is None else text
         else:
             self._text = None
-        #self._document = deepcopy(document)
-        #self._location = location
         self._chunk = chunk
 
     def __int__(self):
@@ -132,9 +136,7 @@ class YAML(object):
         return self._value[index]
 
     def __setitem__(self, index, value):
-        if isinstance(value, YAML):
-            self._value[index] = value.copy()
-        else:
+        if not isinstance(value, YAML):
             if type(value) is not type(self._value[index].value):
                 raise TypeError(
                     "{0} is of type {1}, expected {2}".format(
@@ -143,7 +145,8 @@ class YAML(object):
                         type(self._value[index].value),
                     )
                 )
-            self._value[index] = YAML(value)
+        del self._value[index]
+        self._value[YAML(index)] = YAML(value)
 
     def __delitem__(self, index):
         del self._value[index]

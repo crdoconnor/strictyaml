@@ -34,6 +34,7 @@ Mapping representation:
         why: Similar to dicts, you can test for the presence of a key in the mapping like this.
         command: '"a" in load(valid_sequence, schema)'
 
+
     - Returns True: 'load(valid_sequence, schema).items() == [("a", 1), ("b", 2), ("c", 3)]'
 
     - Returns True: 'load(valid_sequence, schema).values() == [1, 2, 3]'
@@ -65,5 +66,5 @@ Mapping representation:
 
         modified['b'] = unmodified['c']
 
-    - Assert True: 'modified == {"a": 1, "b": {"x": 1, "y": 2}, "c": {"x": 1, "y": 2}}'
+    #- Assert True: 'modified == {"a": 1, "b": {"x": 1, "y": 2}, "c": {"x": 1, "y": 2}}'
 

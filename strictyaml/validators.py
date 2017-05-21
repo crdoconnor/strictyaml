@@ -276,6 +276,13 @@ class MapPattern(Validator):
                 valid_val = self._value_validator(chunk.val(key))
                 return_snippet[valid_key] = valid_val
 
+                del return_snippet[valid_key]
+                x = YAML(valid_key, chunk=chunk.key(valid_key))
+                y = self._value_validator(
+                    chunk.val(key)
+                )
+                return_snippet[valid_key] = y
+
         return YAML(return_snippet, chunk=chunk)
 
     def __repr__(self):

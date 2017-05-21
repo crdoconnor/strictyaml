@@ -5,15 +5,19 @@ Roundtripped YAML:
     comments preserved using .as_yaml().
     
     Note that due to some bugs in the library (ruamel.yaml)
-    underlying StrictYAML, the YAML loaded and dumped out
-    may not always look the same (e.g. 
-    implementation, the YAML loaded and dumped out may not
-    always look exactly the same.
+    underlying StrictYAML, while the data parsed should
+    be precisely the same, the exact syntax (newlines, comment
+    locations, etc.) may not be identical.
   scenario:
     - Code: |
-        from strictyaml import Map, Str, Int, YAMLValidationError, load
+        from strictyaml import Map, MapPattern, Str, Seq, Int, YAMLValidationError, load
+        import difflib
 
-        schema = Map({"a": Str(), "b": Int()})
+        schema = Map({
+            "a": Str(),
+            "b": Map({"x": Int(), "y": Int()}),
+            "c": Seq(MapPattern(Str(), Str())),
+        })
     
     - Variable:
         name: commented_yaml
@@ -23,20 +27,25 @@ Roundtripped YAML:
           a: â # value comment
           
           # Another comment
-          b: 1
-
+          b:
+            x: 4
+            y: 5
+          c:
+          - a: 1
+          - b: 2
+    
     - Returns True: |
         load(commented_yaml, schema).as_yaml() == commented_yaml
-
 
     - Code: |
         to_modify = load(commented_yaml, schema)
 
-        to_modify['b'] = 2
-    
+        to_modify['b']['x'] = 2
+        to_modify['c'][0]['a'] = '3'
+
     - Raises Exception:
         command: |
-          to_modify['b'] = 'not an integer'
+          to_modify['b']['x'] = 'not an integer'
         exception: expected
 
     - Variable:
@@ -47,8 +56,13 @@ Roundtripped YAML:
           a: â # value comment
           
           # Another comment
-          b: 2
-
+          b:
+            y: 5
+            x: 2
+          c:
+          - a: 3
+          - b: 2
+    
     - Returns True: |
         to_modify.as_yaml() == modified_commented_yaml
 

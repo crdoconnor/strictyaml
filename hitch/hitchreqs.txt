@@ -15,7 +15,7 @@ faketime==0.9.6.6         # via hitchserve
 first==2.0.1              # via hitch-pip-tools
 flake8==3.3.0
 hitch-pip-tools==1.8.3    # via hitchrun
-hitchdoc==0.1
+hitchdoc==0.1.1
 hitchpython==0.5.3
 hitchrun==0.2.0
 hitchserve==0.5.1         # via hitchpython
