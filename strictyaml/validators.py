@@ -198,7 +198,7 @@ class Bool(Scalar):
                 chunk,
             )
         else:
-            if val in TRUE_VALUES:
+            if val.lower() in TRUE_VALUES:
                 return YAML(True, val, chunk=chunk)
             else:
                 return YAML(False, val, chunk=chunk)

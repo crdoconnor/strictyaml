@@ -21,14 +21,21 @@ Boolean validation:
           b: true
           c: on
           d: 1
-          e: 0
-          f: Off
-          g: FALSE
-          h: no
+          e: True
+          v: False
+          w: 0
+          x: Off
+          y: FALSE
+          z: no
+
+    - Returns True:
+        command: |
+            load(valid_sequence, schema) == \
+              {"a": True, "b": True, "c": True, "d": True, "e": True, "v": False, "w": False, "x": False, "y": False, "z": False,}
 
     - Returns True:
         why: Even though it returns a YAML object, that YAML object resolves to True/False
-        command: 'load(valid_sequence, schema)["e"] == False'
+        command: 'load(valid_sequence, schema)["w"] == False'
 
     - Returns True:
         why: Using .value you can get the actual boolean value parsed
@@ -36,13 +43,13 @@ Boolean validation:
 
     - Returns True:
         why: Whereas using .text you can get the text
-        command: 'load(valid_sequence, schema)["g"].text == "FALSE"'
+        command: 'load(valid_sequence, schema)["y"].text == "FALSE"'
 
     - Raises Exception:
         why: |
           The YAML boolean object cannot be cast directly to string since
           the expected value is ambiguous ("False" or "FALSE"?)
-        command: str(load(valid_sequence, schema)["g"])
+        command: str(load(valid_sequence, schema)["y"])
         exception: Cannot cast
 
     - Variable:

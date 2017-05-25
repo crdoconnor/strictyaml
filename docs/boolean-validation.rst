@@ -23,16 +23,26 @@ With variable 'valid_sequence':
   b: true
   c: on
   d: 1
-  e: 0
-  f: Off
-  g: FALSE
-  h: no
+  e: True
+  v: False
+  w: 0
+  x: Off
+  y: FALSE
+  z: no
+
+
+
+.. code-block:: python
+
+    load(valid_sequence, schema) == \
+      {"a": True, "b": True, "c": True, "d": True, "e": True, "v": False, "w": False, "x": False, "y": False, "z": False,}
+    >>> True
 
 Even though it returns a YAML object, that YAML object resolves to True/False
 
 .. code-block:: python
 
-    load(valid_sequence, schema)["e"] == False
+    load(valid_sequence, schema)["w"] == False
     >>> True
 
 Using .value you can get the actual boolean value parsed
@@ -46,7 +56,7 @@ Whereas using .text you can get the text
 
 .. code-block:: python
 
-    load(valid_sequence, schema)["g"].text == "FALSE"
+    load(valid_sequence, schema)["y"].text == "FALSE"
     >>> True
 
 The YAML boolean object cannot be cast directly to string since
@@ -55,7 +65,7 @@ the expected value is ambiguous ("False" or "FALSE"?)
 
 .. code-block:: python
 
-    str(load(valid_sequence, schema)["g"])
+    str(load(valid_sequence, schema)["y"])
     >>> EXCEPTION RAISED:
       Cannot cast
 

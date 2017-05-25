@@ -5,16 +5,20 @@ Loaded YAML can be modified and dumped out again with
 comments preserved using .as_yaml().
 
 Note that due to some bugs in the library (ruamel.yaml)
-underlying StrictYAML, the YAML loaded and dumped out
-may not always look the same (e.g. 
-implementation, the YAML loaded and dumped out may not
-always look exactly the same.
+underlying StrictYAML, while the data parsed should
+be precisely the same, the exact syntax (newlines, comment
+locations, etc.) may not be identical.
 
 .. code-block:: python
 
-    from strictyaml import Map, Str, Int, YAMLValidationError, load
+    from strictyaml import Map, MapPattern, Str, Seq, Int, YAMLValidationError, load
+    import difflib
     
-    schema = Map({"a": Str(), "b": Str()})
+    schema = Map({
+        "a": Str(),
+        "b": Map({"x": Int(), "y": Int()}),
+        "c": Seq(MapPattern(Str(), Str())),
+    })
 
 With variable 'commented_yaml':
 
@@ -25,7 +29,12 @@ With variable 'commented_yaml':
   a: â # value comment
   
   # Another comment
-  b: y
+  b:
+    x: 4
+    y: 5
+  c:
+  - a: 1
+  - b: 2
 
 
 
@@ -38,7 +47,16 @@ With variable 'commented_yaml':
 
     to_modify = load(commented_yaml, schema)
     
-    to_modify['b'] = 'x'
+    to_modify['b']['x'] = 2
+    to_modify['c'][0]['a'] = '3'
+
+
+
+.. code-block:: python
+
+    to_modify['b']['x'] = 'not an integer'
+    >>> EXCEPTION RAISED:
+      expected
 
 With variable 'modified_commented_yaml':
 
@@ -49,7 +67,12 @@ With variable 'modified_commented_yaml':
   a: â # value comment
   
   # Another comment
-  b: x
+  b:
+    y: 5
+    x: 2
+  c:
+  - a: 3
+  - b: 2
 
 
 
