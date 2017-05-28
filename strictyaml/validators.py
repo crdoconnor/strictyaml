@@ -6,8 +6,6 @@ from strictyaml.representation import YAML
 from strictyaml import utils
 import dateutil.parser
 import decimal
-import copy
-
 import sys
 
 if sys.version_info[0] == 3:
