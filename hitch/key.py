@@ -263,6 +263,28 @@ def lint():
     print("Lint success!")
 
 
+def deploy(version):
+    """
+    Deploy to pypi as specified version.
+    """
+    version_file = KEYPATH.parent.joinpath("VERSION")
+    old_version = version_file.bytes().decode('utf8')
+    if version_file.bytes().decode("utf8") != version:
+        KEYPATH.parent.joinpath("VERSION").write_text(version)
+        git("add", "VERSION").run()
+        git("commit", "-m", "RELEASE: Version {0} -> {1}".format(
+            old_version,
+            version
+        )).run()
+        git("push").run()
+        git("tag", "-a", version, "-m", "Version {0}".format(version)).run()
+        git("push", "origin", version).run()
+    else:
+        git("push").run()
+    python("setup.py", "sdist", "upload").in_dir(KEYPATH.parent).run()
+
+
+
 def docgen():
     """
     Generate documentation.
