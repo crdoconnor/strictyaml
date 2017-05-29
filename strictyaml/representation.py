@@ -3,7 +3,7 @@ from strictyaml.exceptions import raise_type_error
 from ruamel.yaml import RoundTripDumper
 from ruamel.yaml import dump
 from strictyaml import utils
-from copy import deepcopy
+from copy import copy, deepcopy
 import decimal
 
 
@@ -201,7 +201,7 @@ class YAML(object):
         return self._text
 
     def copy(self):
-        return deepcopy(self)
+        return copy(self)
 
     def __gt__(self, val):
         if isinstance(self._value, CommentedMap) or isinstance(self._value, CommentedSeq):
