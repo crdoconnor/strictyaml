@@ -6,17 +6,13 @@ for why not TOML
 
 Add scalar types
 
-* Date and time related types
 * Unix timestamp
-* Regex
-* URL
 * Domain
-* Enum (case insensitive)
-* Email
+* CaseInsensitiveEnum
 * PositiveInt
 * Base64
-* Simex
 * UNIX path
+* Templex
 
 Add kwalify parsing.
 
