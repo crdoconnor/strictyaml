@@ -12,6 +12,8 @@ from strictyaml.validators import Any
 from strictyaml.scalar import Scalar
 from strictyaml.scalar import Enum
 from strictyaml.scalar import Regex
+from strictyaml.scalar import Email
+from strictyaml.scalar import Url
 from strictyaml.scalar import Str
 from strictyaml.scalar import Int
 from strictyaml.scalar import Bool

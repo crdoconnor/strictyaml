@@ -11,19 +11,19 @@ Regex strings:
         schema = Map({"a": Regex(u"[1-4]"), "b": Regex(u"[5-9]")})
 
     - Variable:
-        name: valid_sequence
+        name: valid
         value: |
           a: 1
           b: 5
 
-    - Returns True: 'load(valid_sequence, schema) == {"a": "1", "b": "5"}'
+    - Returns True: 'load(valid, schema) == {"a": "1", "b": "5"}'
 
     - Variable:
-        name: invalid_sequence
+        name: invalid
         value: |
           a: 5
           b: 5
 
     - Raises Exception:
-        command: load(invalid_sequence, schema)
+        command: load(invalid, schema)
         exception: invalid

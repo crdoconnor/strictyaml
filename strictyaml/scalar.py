@@ -2,6 +2,7 @@ from ruamel.yaml.comments import CommentedSeq, CommentedMap
 from strictyaml.exceptions import raise_exception
 from strictyaml.validators import Validator
 from strictyaml.representation import YAML
+from strictyaml import constants
 from strictyaml import utils
 import dateutil.parser
 import decimal
@@ -76,11 +77,12 @@ class Regex(Scalar):
         Give regular expression, e.g. u'[0-9]'
         """
         self._regex = regular_expression
+        self._matching_message = "when expecting string matching {0}".format(self._regex)
 
     def validate_scalar(self, chunk, value=None):
         if re.compile(self._regex).match(chunk.contents) is None:
             raise_exception(
-                "when expecting string matching {0}".format(self._regex),
+                self._matching_message,
                 "found non-matching string",
                 chunk,
             )
@@ -89,6 +91,18 @@ class Regex(Scalar):
             text=chunk.contents,
             chunk=chunk
         )
+
+
+class Email(Regex):
+    def __init__(self):
+        self._regex = constants.REGEXES['email']
+        self._matching_message = "when expecting an email address"
+
+
+class Url(Regex):
+    def __init__(self):
+        self._regex = constants.REGEXES['url']
+        self._matching_message = "when expecting a url"
 
 
 class Str(Scalar):
@@ -119,24 +133,19 @@ class Int(Scalar):
         return u"Int()"
 
 
-TRUE_VALUES = ["yes", "true", "on", "1", ]
-FALSE_VALUES = ["no", "false", "off", "0", ]
-BOOL_VALUES = TRUE_VALUES + FALSE_VALUES
-
-
 class Bool(Scalar):
     def validate_scalar(self, chunk, value=None):
         val = unicode(chunk.contents) if value is None else value
-        if unicode(val).lower() not in BOOL_VALUES:
+        if unicode(val).lower() not in constants.BOOL_VALUES:
             raise_exception(
                 """when expecting a boolean value (one of "{0}")""".format(
-                    '", "'.join(BOOL_VALUES)
+                    '", "'.join(constants.BOOL_VALUES)
                 ),
                 "found non-boolean",
                 chunk,
             )
         else:
-            if val.lower() in TRUE_VALUES:
+            if val.lower() in constants.TRUE_VALUES:
                 return YAML(True, val, chunk=chunk)
             else:
                 return YAML(False, val, chunk=chunk)
@@ -192,8 +201,6 @@ class Datetime(Scalar):
 
     def __repr__(self):
         return u"Datetime()"
-
-
 
 
 class EmptyNone(Scalar):
