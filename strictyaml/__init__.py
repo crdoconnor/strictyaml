@@ -8,7 +8,7 @@ from strictyaml.representation import YAML
 from strictyaml.validators import Optional
 from strictyaml.validators import Validator
 from strictyaml.validators import OrValidator
-from strictyaml.validators import Any
+from strictyaml.any_validator import Any
 from strictyaml.scalar import Scalar
 from strictyaml.scalar import Enum
 from strictyaml.scalar import Regex

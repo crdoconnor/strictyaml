@@ -1,4 +1,4 @@
-Email, URL validators:
+Email and URL validators:
   based on: strictyaml
   description: |
     StrictYAML can validate emails (using a simplified regex) and

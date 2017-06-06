@@ -37,27 +37,6 @@ class OrValidator(Validator):
         return u"{0} | {1}".format(repr(self._validator_a), repr(self._validator_b))
 
 
-def schema_from_data(document):
-    if isinstance(document, CommentedMap):
-        return Map({key: schema_from_data(value) for key, value in document.items()})
-    elif isinstance(document, CommentedSeq):
-        return FixedSeq([schema_from_data(item) for item in document])
-    else:
-        return Str()
-
-
-class Any(Validator):
-    """
-    Validates any YAML and returns simple dicts/lists of strings.
-    """
-    def validate(self, chunk):
-        return schema_from_data(chunk.contents)(chunk)
-
-    def __repr__(self):
-        return u"Any()"
-
-
-
 class MapPattern(Validator):
     def __init__(self, key_validator, value_validator):
         self._key_validator = key_validator

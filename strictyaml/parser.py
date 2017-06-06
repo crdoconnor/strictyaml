@@ -1,7 +1,7 @@
 from ruamel import yaml as ruamelyaml
 from strictyaml import exceptions
 from ruamel.yaml.comments import CommentedSeq, CommentedMap
-from strictyaml.validators import Any
+from strictyaml.any_validator import Any
 
 
 from ruamel.yaml.reader import Reader
