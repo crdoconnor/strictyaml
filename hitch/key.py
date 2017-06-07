@@ -15,7 +15,7 @@ import hitchtest
 import hitchdoc
 
 from simex import DefaultSimex
-from hitchrun import genpath
+from hitchrun import genpath, hitch_maintenance
 from commandlib import python
 
 
@@ -269,6 +269,17 @@ def lint():
     print("Lint success!")
 
 
+def hitch(*args):
+    """
+    Use 'h hitch --help' to get help on these commands.
+    """
+    hitch_maintenance(*args)
+
+
+def upload(version):
+    python("-m", "twine", "dist/strictyaml-{0}.tar.gz".format(version)).run()
+
+
 def deploy(version):
     """
     Deploy to pypi as specified version.
@@ -287,7 +298,8 @@ def deploy(version):
         git("push", "origin", version).run()
     else:
         git("push").run()
-    python("setup.py", "sdist", "upload").in_dir(KEYPATH.parent).run()
+    #python("setup.py", "sdist", "upload").in_dir(KEYPATH.parent).run()
+    upload(version)
 
 
 
