@@ -276,10 +276,6 @@ def hitch(*args):
     hitch_maintenance(*args)
 
 
-def upload(version):
-    python("-m", "twine", "dist/strictyaml-{0}.tar.gz".format(version)).run()
-
-
 def deploy(version):
     """
     Deploy to pypi as specified version.
@@ -298,8 +294,10 @@ def deploy(version):
         git("push", "origin", version).run()
     else:
         git("push").run()
-    #python("setup.py", "sdist", "upload").in_dir(KEYPATH.parent).run()
-    upload(version)
+    python("setup.py", "sdist").in_dir(KEYPATH.parent).run()
+    python(
+        "-m", "twine", "upload", "dist/strictyaml-{0}.tar.gz".format(version)
+    ).in_dir(KEYPATH.parent).run()
 
 
 
