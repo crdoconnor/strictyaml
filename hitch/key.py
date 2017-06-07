@@ -113,6 +113,7 @@ class Engine(BaseEngine):
         #self.assert_exception = self.ipython_step_library.assert_exception
         self.shutdown_connection = self.ipython_step_library.shutdown_connection
         self.ipython_step_library.run("import os")
+        self.ipython_step_library.run("import sure")
         self.ipython_step_library.run("from path import Path")
         self.ipython_step_library.run("os.chdir('{}')".format(self.path.state))
 
@@ -156,6 +157,11 @@ class Engine(BaseEngine):
 
     def returns_true(self, command, why=''):
         self.ipython_step_library.assert_true(command)
+        self.doc.step("true", command=command, why=why)
+    
+    def should_be_equal(self, lhs='', rhs='', why=''):
+        command = """({0}).should.be.equal({1})""".format(lhs, rhs)
+        self.ipython_step_library.run(command)
         self.doc.step("true", command=command, why=why)
 
     def assert_true(self, command):
