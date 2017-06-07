@@ -69,17 +69,14 @@ What line:
           a:
             b:
             - 1
-            
+            # comment
             - 2
-            
             - 3
             - 4
-    
-    - Run command: Path("/tmp/t").write_text(load(yaml_with_list).as_yaml())
-    
+
     - Should be equal:
         lhs: load(yaml_with_list)['a']['b'][1].start_line
-        rhs: 5
+        rhs: 4
 
     - Should be equal:
         lhs: load(yaml_with_list)['a']['b'][1].end_line

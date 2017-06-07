@@ -1,6 +1,6 @@
 from ruamel.yaml.comments import CommentedSeq, CommentedMap
 from ruamel.yaml import dump, RoundTripDumper
-from copy import deepcopy, copy
+from copy import deepcopy
 
 
 class YAMLChunk(object):
@@ -93,7 +93,7 @@ class YAMLPointer(object):
                 if type(segment) == CommentedSeq:
                     for i, value in enumerate(segment):
                         if start_popping:
-                            slicedpart.pop(0)
+                            del slicedpart[-1]
 
                         if i == index:
                             start_popping = True
