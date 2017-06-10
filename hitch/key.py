@@ -13,24 +13,9 @@ from strictyaml import MapPattern, Str, Map, Int, Optional
 from pathquery import pathq
 import hitchtest
 import hitchdoc
-
 from simex import DefaultSimex
-from hitchrun import genpath, hitch_maintenance
+from hitchrun import hitch_maintenance
 from commandlib import python
-
-
-KEYPATH = Path(__file__).abspath().dirname()
-git = Command("git").in_dir(KEYPATH.parent)
-
-
-class Paths(object):
-    def __init__(self, keypath):
-        self.genpath = genpath
-        self.keypath = keypath
-        self.project = keypath.parent
-        self.state = keypath.parent.joinpath("state")
-        self.engine = keypath
-
 
 
 class Engine(BaseEngine):
@@ -53,22 +38,21 @@ class Engine(BaseEngine):
     )
 
     def __init__(self, keypath, settings):
-        self.path = Paths(keypath)
+        self.path = keypath
         self.settings = settings
 
 
     def set_up(self):
         """Set up your applications and the test environment."""
-        self.path.project = self.path.keypath.parent
-
         self.doc = hitchdoc.Recorder(
             hitchdoc.HitchStory(self),
-            self.path.genpath.joinpath('storydb.sqlite'),
+            self.path.gen.joinpath('storydb.sqlite'),
         )
 
-        if self.path.state.exists():
-            self.path.state.rmtree(ignore_errors=True)
-        self.path.state.mkdir()
+        if self.path.gen.joinpath("state").exists():
+            self.path.gen.joinpath("state").rmtree(ignore_errors=True)
+        self.path.gen.joinpath("state").mkdir()
+        self.path.state = self.path.gen.joinpath("state")
 
         for filename, text in self.preconditions.get("files", {}).items():
             filepath = self.path.state.joinpath(filename)
@@ -85,9 +69,9 @@ class Engine(BaseEngine):
         self.python = self.python_package.cmd.python
 
         # Install debugging packages
-        with hitchtest.monitor([self.path.keypath.joinpath("debugrequirements.txt")]) as changed:
+        with hitchtest.monitor([self.path.key.joinpath("debugrequirements.txt")]) as changed:
             if changed:
-                run(self.pip("install", "-r", "debugrequirements.txt").in_dir(self.path.keypath))
+                run(self.pip("install", "-r", "debugrequirements.txt").in_dir(self.path.key))
 
         # Uninstall and reinstall
         run(self.pip("uninstall", "strictyaml", "-y").ignore_errors())
@@ -158,7 +142,7 @@ class Engine(BaseEngine):
     def returns_true(self, command, why=''):
         self.ipython_step_library.assert_true(command)
         self.doc.step("true", command=command, why=why)
-    
+
     def should_be_equal(self, lhs='', rhs='', why=''):
         command = """({0}).should.be.equal({1})""".format(lhs, rhs)
         self.ipython_step_library.run(command)
@@ -235,7 +219,7 @@ def test(*words):
     """
     print(
         StoryCollection(
-            pathq(KEYPATH).ext("story"), Engine(KEYPATH, {"overwrite artefacts": True})
+            pathq(DIR.key).ext("story"), Engine(DIR, {"overwrite artefacts": True})
         ).shortcut(*words).play().report()
     )
 
@@ -247,7 +231,7 @@ def ci():
     #lint()
     print(
         StoryCollection(
-            pathq(KEYPATH).ext("story"), Engine(KEYPATH, {})
+            pathq(DIR.key).ext("story"), Engine(DIR, {})
         ).ordered_by_name().play().report()
     )
 
@@ -257,7 +241,7 @@ def lint():
     Lint all code.
     """
     python("-m", "flake8")(
-        KEYPATH.parent.joinpath("strictyaml"),
+        DIR.project.joinpath("strictyaml"),
         "--max-line-length=100",
         "--exclude=__init__.py",
     ).run()
@@ -280,10 +264,11 @@ def deploy(version):
     """
     Deploy to pypi as specified version.
     """
-    version_file = KEYPATH.parent.joinpath("VERSION")
+    git = Command("git").in_dir(DIR.project)
+    version_file = DIR.project.joinpath("VERSION")
     old_version = version_file.bytes().decode('utf8')
     if version_file.bytes().decode("utf8") != version:
-        KEYPATH.parent.joinpath("VERSION").write_text(version)
+        DIR.project.joinpath("VERSION").write_text(version)
         git("add", "VERSION").run()
         git("commit", "-m", "RELEASE: Version {0} -> {1}".format(
             old_version,
@@ -294,10 +279,10 @@ def deploy(version):
         git("push", "origin", version).run()
     else:
         git("push").run()
-    python("setup.py", "sdist").in_dir(KEYPATH.parent).run()
+    python("setup.py", "sdist").in_dir(DIR.project).run()
     python(
         "-m", "twine", "upload", "dist/strictyaml-{0}.tar.gz".format(version)
-    ).in_dir(KEYPATH.parent).run()
+    ).in_dir(DIR.project).run()
 
 
 
@@ -305,7 +290,7 @@ def docgen():
     """
     Generate documentation.
     """
-    docpath = KEYPATH.parent.joinpath("docs")
+    docpath = DIR.project.joinpath("docs")
 
     if not docpath.exists():
         docpath.mkdir()
