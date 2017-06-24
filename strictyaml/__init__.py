@@ -45,3 +45,6 @@ from strictyaml.exceptions import FlowMappingDisallowed
 from strictyaml.exceptions import AnchorTokenDisallowed
 from strictyaml.exceptions import DuplicateKeysDisallowed
 from strictyaml import exceptions
+
+
+__version__ = "DEVELOPMENT_VERSION"
