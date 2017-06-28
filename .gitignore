@@ -8,3 +8,4 @@ __pycache__
 *.pyc
 *.kate-swp
 hitch/hitchdir
+hitch/gen
