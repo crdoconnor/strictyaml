@@ -176,15 +176,15 @@ It's also makes `Christopher Null <http://www.wired.com/2015/11/null/>`_ unhappy
 .. code-block:: yaml
 
    first name: Christopher
-   surname: null
+   surname: Null
 
 .. code-block:: python
 
-    # Chris deserves a unit test but he ain't ever gonna get a unit test
+    # Is it okay if we just call you Christopher None instead?
     >>> load(name) == {"first name": "Christopher", "surname": None}
 
 
-In the above cases, implicit typing violates the `principle of least astonishment <https://en.wikipedia.org/wiki/Principle_of_least_astonishment>`_.
+In the above cases, implicit typing represents a major violation of `the principle of least astonishment <https://en.wikipedia.org/wiki/Principle_of_least_astonishment>`_.
 
 
 What is wrong with explicit syntax typing in a readable configuration languages?
@@ -196,21 +196,20 @@ Explicit syntax typing is the process of using syntax to define types in markup.
 
   {"name": "Arthur Dent", "age": 42}
 
-This helps distinguish the types for the parser but it alsos has two disadvantages:
+This helps distinguish the types for the parser, which is useful for JSON, but it also comes with two disadvantages:
 
-* The distinction is subtle and not particularly clear to non-programmers, who will not necessarily understand that a directive needs to be given to the parser to avoid it being misinterpreted.
-* It's not necessary if type information is kept outside of the markup.
+* The distinction is subtle and not particularly clear to *non-programmers*, who will not necessarily understand that a directive needs to be given to the parser to avoid it being misinterpreted.
+* It's not necessary if the type structure is maintained outside of the markup.
 * Verbosity - two extra characters per string makes the markup longer and noisier.
 
 In JSON when being used as a REST API, syntax typing is often an *advantage* - it is explicit to the machine reading the JSON that "string" and "age" is an integer and it can convert accordingly *in the absence of a schema*.
 
-StrictYAML assumes all scalar strings unless the schema explicitly indicates otherwise (e.g. Map(Int(), Int())).
+StrictYAML assumes all values are strings unless the schema explicitly indicates otherwise (e.g. Map(Int(), Int())).
 
-StrictYAML does require quotation marks for some strings, but only strings that are syntactically
-confusing for it.
+StrictYAML does require quotation marks for strings that are implicitly converted to other types (e.g. yes or 1.5), but it does require quotation marks for strings that are syntactically confusing (e.g. "{ text in curly brackets }")
 
 Regular YAML has explicit `syntax typing <https://github.com/crdoconnor/strictyaml/blob/master/FAQ.rst#whats-wrong-with-syntax-typing-in-a-readable-configuration-language>`_
-to explicitly declare strings, although it's confusing as hell to know when it's necessary. For example::
+to explicitly declare strings, although it's confusing as hell to know when it's required and when it is not. For example::
 
   a: text               # not necessary
   b: "yes"              # necessary
@@ -221,14 +220,15 @@ to explicitly declare strings, although it's confusing as hell to know when it's
   g: shake it all about # not necessary
   h: "on"               # necessary
 
-Several other configuration language formats also have syntax typing in lieu of schemas, and
-suffer from the same problems. They are:
+Several other configuration language formats also have syntax typing in lieu of schemas. They are:
 
 * TOML
 * JSON5
 * HJSON
 * SDLang
 * HOCON
+
+INI does not.
 
 
 What is wrong with binary data?
@@ -365,7 +365,7 @@ This use of JSONesque { and } is also ugly and hampers readability - *especially
 
 The *first* question in the FAQ of pyyaml actually subtly indicates that this feature wasn't a good idea - see "`why does my YAML look wrong? <http://pyyaml.org/wiki/PyYAMLDocumentation#Dictionarieswithoutnestedcollectionsarenotdumpedcorrectly>`_".
 
-To take a real life example, use of flow style in `this saltstack YAML definition <https://github.com/saltstack-formulas/mysql-formula/blob/master/mysql/server.sls#L22>`_ blurs the distinction between flow style and jinja2,
+To take a real life example, use of flow style in `this saltstack YAML definition <https://github.com/saltstack-formulas/mysql-formula/blob/master/mysql/server.sls#L27>`_ blurs the distinction between flow style and jinja2,
 confusing the reader.
 
 
