@@ -2,6 +2,7 @@ from ruamel import yaml as ruamelyaml
 from strictyaml import exceptions
 from ruamel.yaml.comments import CommentedSeq, CommentedMap
 from strictyaml.any_validator import Any
+from strictyaml.yamllocation import YAMLChunk
 
 
 from ruamel.yaml.reader import Reader
@@ -220,7 +221,5 @@ def load(yaml_string, schema=None):
 
     if schema is None:
         schema = Any()
-        
-    from strictyaml.yamllocation import YAMLChunk
 
     return schema(YAMLChunk(document))

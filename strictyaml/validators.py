@@ -1,9 +1,7 @@
 from ruamel.yaml.comments import CommentedSeq, CommentedMap
 from strictyaml.exceptions import YAMLValidationError
-from strictyaml.yamllocation import YAMLPointer
 from strictyaml.exceptions import raise_exception
 from strictyaml.representation import YAML
-from strictyaml import utils
 import sys
 
 if sys.version_info[0] == 3:
@@ -21,6 +19,7 @@ class Validator(object):
 
     def __call__(self, chunk):
         return self.validate(chunk)
+
 
 class OrValidator(Validator):
     def __init__(self, validator_a, validator_b):
@@ -58,11 +57,9 @@ class MapPattern(Validator):
                 return_snippet[valid_key] = valid_val
 
                 del return_snippet[valid_key]
-                x = YAML(valid_key, chunk=chunk.key(valid_key))
-                y = self._value_validator(
+                return_snippet[valid_key] = self._value_validator(
                     chunk.val(key)
                 )
-                return_snippet[valid_key] = y
 
         return YAML(return_snippet, chunk=chunk)
 
@@ -162,7 +159,7 @@ class FixedSeq(Validator):
                     "found a sequence of {0} elements".format(len(chunk.contents)),
                     chunk,
                 )
-            for i, item_and_val in enumerate(zip(chunk.contents , self._validators)):
+            for i, item_and_val in enumerate(zip(chunk.contents, self._validators)):
                 item, validator = item_and_val
                 return_snippet[i] = validator(chunk.index(i))
 

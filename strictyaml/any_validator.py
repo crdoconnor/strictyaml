@@ -3,7 +3,6 @@ from strictyaml.validators import Validator, FixedSeq, Map
 from strictyaml.scalar import Str
 
 
-
 def schema_from_data(document):
     if isinstance(document, CommentedMap):
         return Map({key: schema_from_data(value) for key, value in document.items()})

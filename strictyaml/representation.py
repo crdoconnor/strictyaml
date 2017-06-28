@@ -48,7 +48,7 @@ class YAML(object):
 
     @property
     def data(self):
-        if type(self._value) is CommentedMap:
+        if isinstance(self._value, CommentedMap):
             mapping = {}
             for key, value in self._value.items():
                 if type(key) in (str, unicode):
@@ -56,7 +56,7 @@ class YAML(object):
                 else:
                     mapping[key.data] = value.data
             return mapping
-        elif type(self._value) is CommentedSeq:
+        elif isinstance(self._value, CommentedSeq):
             return [item.data for item in self._value]
         else:
             return self._value
@@ -137,7 +137,7 @@ class YAML(object):
 
     def __setitem__(self, index, value):
         if not isinstance(value, YAML):
-            if type(value) is not type(self._value[index].value):
+            if not isinstance(self._value[index].value, type(value)):
                 raise TypeError(
                     "{0} is of type {1}, expected {2}".format(
                         value,
