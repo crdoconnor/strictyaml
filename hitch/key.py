@@ -1,21 +1,19 @@
-from subprocess import check_call, call, PIPE, CalledProcessError
-from os import path, system, chdir
-from commandlib import run, CommandError
+from subprocess import call
+from os import path
+from commandlib import run
 import hitchpython
 import hitchserve
 from hitchstory import StoryCollection, StorySchema, BaseEngine, exceptions
 from hitchrun import expected
-import signal
-from path import Path
 from commandlib import Command
 import strictyaml
 from strictyaml import MapPattern, Str, Map, Int, Optional
 from pathquery import pathq
 import hitchtest
 import hitchdoc
-from simex import DefaultSimex
 from hitchrun import hitch_maintenance
 from commandlib import python
+from hitchrun import DIR
 
 
 class Engine(BaseEngine):
@@ -40,7 +38,6 @@ class Engine(BaseEngine):
     def __init__(self, keypath, settings):
         self.path = keypath
         self.settings = settings
-
 
     def set_up(self):
         """Set up your applications and the test environment."""
@@ -93,8 +90,6 @@ class Engine(BaseEngine):
         self.ipython_step_library = hitchpython.IPythonStepLibrary()
         self.ipython_step_library.startup_connection(self.ipython_kernel_filename)
 
-        #self.assert_true = self.ipython_step_library.assert_true
-        #self.assert_exception = self.ipython_step_library.assert_exception
         self.shutdown_connection = self.ipython_step_library.shutdown_connection
         self.ipython_step_library.run("import os")
         self.ipython_step_library.run("import sure")
@@ -169,7 +164,8 @@ class Engine(BaseEngine):
         if hasattr(self, 'services'):
             self.services.start_interactive_mode()
             import sys
-            import time ; time.sleep(0.5)
+            import time
+            time.sleep(0.5)
             if path.exists(path.join(
                 path.expanduser("~"), ".ipython/profile_default/security/",
                 self.ipython_kernel_filename)
@@ -197,10 +193,10 @@ class Engine(BaseEngine):
     def pause(self, message="Pause"):
         if hasattr(self, 'services'):
             self.services.start_interactive_mode()
-        import IPython ; IPython.embed()
+        import IPython
+        IPython.embed()
         if hasattr(self, 'services'):
             self.services.stop_interactive_mode()
-
 
     def tear_down(self):
         try:
@@ -226,9 +222,9 @@ def test(*words):
 
 def ci():
     """
-    Continuos integration - run all tests and linter.
+    Continuous integration - run all tests and linter.
     """
-    #lint()
+    lint()
     print(
         StoryCollection(
             pathq(DIR.key).ext("story"), Engine(DIR, {})
@@ -246,7 +242,7 @@ def lint():
         "--exclude=__init__.py",
     ).run()
     python("-m", "flake8")(
-        KEYPATH.joinpath("key.py"),
+        DIR.key.joinpath("key.py"),
         "--max-line-length=100",
         "--exclude=__init__.py",
     ).run()
@@ -296,7 +292,6 @@ def deploy(version):
     ).in_dir(DIR.project).run()
 
 
-
 def docgen():
     """
     Generate documentation.
@@ -307,7 +302,7 @@ def docgen():
         docpath.mkdir()
 
     documentation = hitchdoc.Documentation(
-        genpath.joinpath('storydb.sqlite'),
+        DIR.gen.joinpath('storydb.sqlite'),
         'doctemplates.yml'
     )
 
