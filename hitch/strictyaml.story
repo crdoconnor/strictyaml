@@ -4,4 +4,4 @@ strictyaml:
     ruamel version: (( ruamel version ))
   params:
     python version: 3.5.0
-    ruamel version: 0.15.12
+    ruamel version: 0.15.15
