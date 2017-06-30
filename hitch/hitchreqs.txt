@@ -14,7 +14,7 @@ hitchdoc==0.1.1
 hitchpython==0.5.3
 hitchrun==0.2.4
 hitchserve==0.5.1         # via hitchpython
-hitchstory==0.2.3
+hitchstory==0.2.4
 hitchtest==0.9.12         # via hitchpython
 humanize==0.5.1           # via hitchserve
 idna==2.5                 # via requests
