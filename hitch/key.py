@@ -128,12 +128,14 @@ class Engine(BaseEngine):
         Command raises exception.
         """
         import re
-        self.error = self.ipython_step_library.run(
+        error = self.ipython_step_library.run(
             command, swallow_exception=True
-        )
+        ).error
+        if error is None:
+            raise Exception("Expected exception, but got none")
         full_exception = re.compile("(?:{0})+(?:\n+)+{1}".format(
-            re.escape("\x1b[0m"), re.escape("\x1b[0;31m"))
-        ).split(self.error)[-1]
+            re.escape("\x1b[s0m"), re.escape("\x1b[0;31m"))
+        ).split(error)[-1]
         exception_class_name, exception_text = full_exception.split("\x1b[0m: ")
         if self.settings.get("overwrite"):
             self.current_step.update(exception=str(exception_text))
