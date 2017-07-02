@@ -3,7 +3,7 @@ from os import path
 from commandlib import run
 import hitchpython
 import hitchserve
-from hitchstory import StoryCollection, StorySchema, BaseEngine, exceptions
+from hitchstory import StoryCollection, StorySchema, BaseEngine, exceptions, validate
 from hitchrun import expected
 from commandlib import Command
 import strictyaml
@@ -122,15 +122,28 @@ class Engine(BaseEngine):
         self.ipython_step_library.run(command)
         self.doc.step("code", command=command)
 
+    @validate(exception=Str())
     def raises_exception(self, command, exception, why=''):
-        error = self.ipython_step_library.run(
+        """
+        Command raises exception.
+        """
+        import re
+        self.error = self.ipython_step_library.run(
             command, swallow_exception=True
-        ).error
-        assert exception.strip() in error
+        )
+        full_exception = re.compile("(?:{0})+(?:\n+)+{1}".format(
+            re.escape("\x1b[0m"), re.escape("\x1b[0;31m"))
+        ).split(self.error)[-1]
+        exception_class_name, exception_text = full_exception.split("\x1b[0m: ")
+        if self.settings.get("overwrite"):
+            self.current_step.update(exception=str(exception_text))
+        else:
+            assert exception.strip() in exception_text
         self.doc.step(
             "exception",
             command=command,
-            exception=exception,
+            exception_class_name=exception_class_name,
+            exception=exception_text,
             why=why,
         )
 
@@ -198,6 +211,10 @@ class Engine(BaseEngine):
         if hasattr(self, 'services'):
             self.services.stop_interactive_mode()
 
+    def on_success(self):
+        if self.settings.get("overwrite"):
+            self.new_story.save()
+
     def tear_down(self):
         try:
             self.shutdown_connection()
@@ -215,7 +232,7 @@ def test(*words):
     """
     print(
         StoryCollection(
-            pathq(DIR.key).ext("story"), Engine(DIR, {"overwrite artefacts": True})
+            pathq(DIR.key).ext("story"), Engine(DIR, {})
         ).shortcut(*words).play().report()
     )
 

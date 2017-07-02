@@ -25,4 +25,4 @@ Email and URL validators:
 
     - Raises Exception:
         command: load(invalid, schema)
-        exception: invalid
+        exception: non-matching

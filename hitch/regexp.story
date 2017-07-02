@@ -26,4 +26,4 @@ Regex strings:
 
     - Raises Exception:
         command: load(invalid, schema)
-        exception: invalid
+        exception: found non-matching string
