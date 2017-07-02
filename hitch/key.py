@@ -140,7 +140,7 @@ class Engine(BaseEngine):
         if self.settings.get("overwrite"):
             self.current_step.update(exception=str(exception_text))
         else:
-            assert exception.strip() in exception_text
+            assert exception.strip() in exception_text, "UNEXPECTED:\n{0}".format(exception_text)
         self.doc.step(
             "exception",
             command=command,
