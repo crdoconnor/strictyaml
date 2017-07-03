@@ -260,10 +260,12 @@ Kwalify Validation
 COMING SOON
 
 
-Changelog
----------
+Breaking changes
+----------------
 
-0.5: Data is now parsed by default as a YAML object instead of directly to dict/list. To get dict/list as before, get yaml_object.data.
+0.5: Data is now parsed by default as a YAML object instead of directly to dict/list. To get dict/list and ordinary values as before, get yaml_object.data.
+
+0.7: Roundtripping now requires that you only assign YAML objects to index: e.g. yaml_object['x'] = another_yaml_obj
 
 
 Contributors
