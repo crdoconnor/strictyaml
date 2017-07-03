@@ -42,7 +42,7 @@ With variable 'valid_sequence':
 
     load(valid_sequence, Seq(Str())).text
     >>> EXCEPTION RAISED:
-      is a sequence, has no text value.
+      YAML(['1', '2', '3']) is a sequence, has no text value.
 
 With variable 'invalid_sequence_1':
 

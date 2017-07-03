@@ -63,7 +63,8 @@ With variable 'valid_sequence':
 
     bool(load(valid_sequence, schema)['a'])
     >>> EXCEPTION RAISED:
-      Cannot cast
+      Cannot cast 'YAML(1)' to bool.
+      Use bool(yamlobj.value) or bool(yamlobj.text) instead.
 
 With variable 'invalid_sequence_2':
 

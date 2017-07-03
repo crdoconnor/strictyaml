@@ -67,7 +67,8 @@ the expected value is ambiguous ("False" or "FALSE"?)
 
     str(load(valid_sequence, schema)["y"])
     >>> EXCEPTION RAISED:
-      Cannot cast
+      Cannot cast 'YAML(False)' to str.
+      Use str(yamlobj.value) or str(yamlobj.text) instead.
 
 With variable 'invalid_sequence':
 

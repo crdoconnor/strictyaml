@@ -24,6 +24,7 @@ With variable 'commented_yaml':
   # Another comment
   b: y
   c: a
+  
   d: b
 
 
@@ -44,6 +45,20 @@ With variable 'commented_yaml':
 
 .. code-block:: python
 
+    load(commented_yaml, schema)["d"].start_line == 10
+    >>> True
+
+
+
+.. code-block:: python
+
+    load(commented_yaml, schema)["d"].end_line == 11
+    >>> True
+
+
+
+.. code-block:: python
+
     load(commented_yaml, schema).keys()[1].start_line == 2
     >>> True
 
@@ -58,7 +73,7 @@ With variable 'commented_yaml':
 
 .. code-block:: python
 
-    load(commented_yaml, schema).end_line == 10
+    load(commented_yaml, schema).end_line == 11
     >>> True
 
 With variable 'yaml_snippet':
@@ -90,7 +105,34 @@ With variable 'yaml_snippet':
 
 .. code-block:: python
 
-    load(commented_yaml, schema)['a'].lines_after(4) == "b: y\nc: a\nd: b\n"
+    (load(commented_yaml, schema)['a'].lines_after(4)).should.be.equal("b: y\nc: a\n\nd: b"
+    )
+    >>> True
+
+With variable 'yaml_with_list':
+
+.. code-block:: yaml
+
+  a:
+    b:
+    - 1
+    # comment
+    - 2
+    - 3
+    - 4
+
+
+
+.. code-block:: python
+
+    (load(yaml_with_list)['a']['b'][1].start_line).should.be.equal(4)
+    >>> True
+
+
+
+.. code-block:: python
+
+    (load(yaml_with_list)['a']['b'][1].end_line).should.be.equal(5)
     >>> True
 
 

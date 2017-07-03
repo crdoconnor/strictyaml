@@ -11,7 +11,7 @@ locations, etc.) may not be identical.
 
 .. code-block:: python
 
-    from strictyaml import Map, MapPattern, Str, Seq, Int, YAMLValidationError, load
+    from strictyaml import Map, MapPattern, Str, Seq, Int, load
     import difflib
     
     schema = Map({
@@ -46,17 +46,26 @@ With variable 'commented_yaml':
 .. code-block:: python
 
     to_modify = load(commented_yaml, schema)
-    
-    to_modify['b']['x'] = 2
-    to_modify['c'][0]['a'] = '3'
+
+.. code-block:: python
+
+    to_modify['b']['x'] = load('2')
+    to_modify['c'][0]['a'] = load('3')
 
 
 
 .. code-block:: python
 
-    to_modify['b']['x'] = 'not an integer'
+    to_modify['b']['x'] = load('not an integer')
     >>> EXCEPTION RAISED:
-      expected
+      when expecting an integer
+        in "<unicode string>", line 1, column 1:
+          not an integer
+           ^ (line: 1)
+      found non-integer
+        in "<unicode string>", line 2, column 1:
+          ...
+          ^ (line: 2)
 
 With variable 'modified_commented_yaml':
 
@@ -78,7 +87,7 @@ With variable 'modified_commented_yaml':
 
 .. code-block:: python
 
-    to_modify.as_yaml() == modified_commented_yaml
+    (to_modify.as_yaml()).should.be.equal(modified_commented_yaml)
     >>> True
 
 With variable 'with_integer':
