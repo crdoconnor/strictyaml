@@ -2,15 +2,9 @@ Floats:
   based on: strictyaml
   description: |
     StrictYAML parses to a YAML object representing
-    a decimal, not the value directly to give you more
-    flexibility and control over what you can do with the
-    YAML.
+    a decimal - e.g. YAML(1.0000000000000001)
     
-    This is what that can object can do - in many
-    cases if parsed as a decimal, it will behave in
-    the same way.
-    
-    To get a python float object, use .data.
+    To get a python float literal, use .data.
     
     Parsing and validating as a Decimal is best for
     values which require precision, but float is better
