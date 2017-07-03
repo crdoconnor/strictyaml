@@ -47,7 +47,7 @@ class Enum(Scalar):
                 chunk,
             )
         else:
-            return YAML(val, chunk=chunk)
+            return YAML(val, chunk=chunk, validator=self)
 
     def __repr__(self):
         return u"Enum({0})".format(repr(self._restricted_to))
@@ -65,6 +65,7 @@ class CommaSeparated(Scalar):
                 for item in val.split(",")
             ],
             chunk=chunk,
+            validator=self,
         )
 
     def __repr__(self):
@@ -89,7 +90,8 @@ class Regex(Scalar):
         return YAML(
             unicode(chunk.contents) if value is None else value,
             text=chunk.contents,
-            chunk=chunk
+            chunk=chunk,
+            validator=self,
         )
 
 
@@ -111,6 +113,7 @@ class Str(Scalar):
             unicode(chunk.contents) if value is None else value,
             text=chunk.contents,
             chunk=chunk,
+            validator=self,
         )
 
     def __repr__(self):
@@ -127,7 +130,7 @@ class Int(Scalar):
                     chunk,
                 )
         else:
-            return YAML(int(val), val, chunk=chunk)
+            return YAML(int(val), val, chunk=chunk, validator=self)
 
     def __repr__(self):
         return u"Int()"
@@ -146,9 +149,9 @@ class Bool(Scalar):
             )
         else:
             if val.lower() in constants.TRUE_VALUES:
-                return YAML(True, val, chunk=chunk)
+                return YAML(True, val, chunk=chunk, validator=self)
             else:
-                return YAML(False, val, chunk=chunk)
+                return YAML(False, val, chunk=chunk, validator=self)
 
     def __repr__(self):
         return u"Bool()"
@@ -164,7 +167,7 @@ class Float(Scalar):
                 chunk,
             )
         else:
-            return YAML(float(val), val, chunk=chunk)
+            return YAML(float(val), val, chunk=chunk, validator=self)
 
     def __repr__(self):
         return u"Float()"
@@ -180,7 +183,7 @@ class Decimal(Scalar):
                 chunk,
             )
         else:
-            return YAML(decimal.Decimal(val), val, chunk=chunk)
+            return YAML(decimal.Decimal(val), val, chunk=chunk, validator=self)
 
     def __repr__(self):
         return u"Decimal()"
@@ -191,7 +194,12 @@ class Datetime(Scalar):
         val = unicode(chunk.contents) if value is None else value
 
         try:
-            return YAML(dateutil.parser.parse(val), val, chunk=chunk)
+            return YAML(
+                dateutil.parser.parse(val),
+                val,
+                chunk=chunk,
+                validator=self
+            )
         except ValueError:
             raise_exception(
                 "when expecting a datetime",
@@ -216,7 +224,7 @@ class EmptyNone(Scalar):
             return self.empty(chunk)
 
     def empty(self, chunk):
-        return YAML(None, '', chunk=chunk)
+        return YAML(None, '', chunk=chunk, validator=self)
 
     def __repr__(self):
         return u"EmptyNone()"
@@ -224,7 +232,7 @@ class EmptyNone(Scalar):
 
 class EmptyDict(EmptyNone):
     def empty(self, chunk):
-        return YAML({}, '', chunk=chunk)
+        return YAML({}, '', chunk=chunk, validator=self)
 
     def __repr__(self):
         return u"EmptyDict()"
@@ -232,7 +240,7 @@ class EmptyDict(EmptyNone):
 
 class EmptyList(EmptyNone):
     def empty(self, chunk):
-        return YAML([], '', chunk=chunk)
+        return YAML([], '', chunk=chunk, validator=self)
 
     def __repr__(self):
         return u"EmptyList()"

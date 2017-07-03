@@ -61,7 +61,7 @@ class MapPattern(Validator):
                     chunk.val(key)
                 )
 
-        return YAML(return_snippet, chunk=chunk)
+        return YAML(return_snippet, chunk=chunk, validator=self)
 
     def __repr__(self):
         return u"MapPattern({0}, {1})".format(
@@ -103,14 +103,13 @@ class Map(Validator):
                         chunk.key(key)
                     )
 
+                validator = self._validator_dict[key]
                 del return_snippet[key]
                 return_snippet[
-                    YAML(key, chunk=chunk.key(key))
-                ] = self._validator_dict[key](
-                    chunk.val(key)
-                )
+                    YAML(key, chunk=chunk.key(key), validator=validator)
+                ] = validator(chunk.val(key))
 
-        return YAML(return_snippet, chunk=chunk)
+        return YAML(return_snippet, chunk=chunk, validator=self)
 
 
 class Seq(Validator):
@@ -133,7 +132,7 @@ class Seq(Validator):
             for i, item in enumerate(chunk.contents):
                 return_snippet[i] = self._validator(chunk.index(i))
 
-        return YAML(return_snippet, chunk=chunk)
+        return YAML(return_snippet, chunk=chunk, validator=self)
 
 
 class FixedSeq(Validator):
@@ -163,7 +162,7 @@ class FixedSeq(Validator):
                 item, validator = item_and_val
                 return_snippet[i] = validator(chunk.index(i))
 
-        return YAML(return_snippet, chunk=chunk)
+        return YAML(return_snippet, chunk=chunk, validator=self)
 
 
 class UniqueSeq(Validator):
@@ -196,4 +195,4 @@ class UniqueSeq(Validator):
                     existing_items.add(item)
                     return_snippet[i] = self._validator(chunk.index(i))
 
-        return YAML(return_snippet, chunk=chunk)
+        return YAML(return_snippet, chunk=chunk, validator=self)

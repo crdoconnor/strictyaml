@@ -14,13 +14,15 @@ if sys.version_info[0] == 3:
 
 
 class YAML(object):
-    def __init__(self, value, text=None, chunk=None):
+    def __init__(self, value, text=None, chunk=None, validator=None):
         if isinstance(value, YAML):
             self._value = value._value
             self._text = value._text
             self._chunk = value._chunk
+            self._validator = value._validator
             return
 
+        self._validator = validator
         self._value = value
         if not isinstance(value, CommentedMap) and not isinstance(value, CommentedSeq):
             self._text = unicode(value) if text is None else text
@@ -137,16 +139,12 @@ class YAML(object):
 
     def __setitem__(self, index, value):
         if not isinstance(value, YAML):
-            if not isinstance(self._value[index].value, type(value)):
-                raise TypeError(
-                    "{0} is of type {1}, expected {2}".format(
-                        value,
-                        type(value),
-                        type(self._value[index].value),
-                    )
-                )
+            raise TypeError(
+                "Expected parsed YAML object, got {0}.".format(type(self._value))
+            )
+        new_value = self._value[index]._validator(value._chunk)
         del self._value[index]
-        self._value[YAML(index)] = YAML(value)
+        self._value[YAML(index)] = new_value
 
     def __delitem__(self, index):
         del self._value[index]

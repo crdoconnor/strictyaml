@@ -10,7 +10,7 @@ Roundtripped YAML:
     locations, etc.) may not be identical.
   scenario:
     - Code: |
-        from strictyaml import Map, MapPattern, Str, Seq, Int, YAMLValidationError, load
+        from strictyaml import Map, MapPattern, Str, Seq, Int, load
         import difflib
 
         schema = Map({
@@ -40,13 +40,14 @@ Roundtripped YAML:
     - Code: |
         to_modify = load(commented_yaml, schema)
 
-        to_modify['b']['x'] = 2
-        to_modify['c'][0]['a'] = '3'
+    - Code: |
+        to_modify['b']['x'] = load('2')
+        to_modify['c'][0]['a'] = load('3')
 
     - Raises Exception:
         command: |
-          to_modify['b']['x'] = 'not an integer'
-        exception: expected
+          to_modify['b']['x'] = load('not an integer')
+        exception: found non-integer
 
     - Variable:
         name: modified_commented_yaml
@@ -62,9 +63,10 @@ Roundtripped YAML:
           c:
           - a: 3
           - b: 2
-    
-    - Returns True: |
-        to_modify.as_yaml() == modified_commented_yaml
+
+    - Should be equal:
+        lhs: to_modify.as_yaml()
+        rhs: modified_commented_yaml
 
     - Variable:
         name: with_integer
