@@ -48,6 +48,7 @@ python-slugify==1.2.4     # via hitchdoc, hitchstory
 pyuv==1.3.0               # via hitchserve
 pyyaml==3.12              # via hitchtest, pykwalify
 pyzmq==16.0.2             # via jupyter-client
+q==2.6
 requests-toolbelt==0.8.0  # via twine
 requests==2.17.3          # via requests-toolbelt, twine
 ruamel.yaml==0.15.15      # via strictyaml
