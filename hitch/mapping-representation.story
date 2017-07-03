@@ -60,11 +60,11 @@ Mapping representation:
             x: 1
             y: 2
 
-    - Run command: |
-        unmodified = load(nested, nested_schema)
-        modified = unmodified.copy()
+    #- Run command: |
+        #unmodified = load(nested, nested_schema)
+        #modified = unmodified.copy()
 
-        modified['b'] = unmodified['c']
+        #modified['b'] = unmodified['c']
 
     #- Assert True: 'modified == {"a": 1, "b": {"x": 1, "y": 2}, "c": {"x": 1, "y": 2}}'
 
