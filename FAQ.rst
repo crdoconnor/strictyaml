@@ -491,20 +491,20 @@ ends up being simpler than TOML.
 
 The main complication in TOML is its inconsistency in how it handles tables and arrays. For example:
 
-``` toml
-# not clear that this is an array
-[[tables]]
-foo = "foo"
-```
+.. code-block:: toml
+
+  # not clear that this is an array
+  [[tables]]
+  foo = "foo"
 
 Similarly, all arrays have the type `array`. So even though arrays are homogenous in TOML, you can oddly do:
 
-``` toml
-array = [["foo"], [1]]
+.. code-block:: toml
 
-# but not
-array = ["foo", 1]
-```
+  array = [["foo"], [1]]
+
+  # but not
+  array = ["foo", 1]
 
 TOML's use of special characters for delimiters instead of whitespace like YAML makes the resulting output noiser and harder for humans
 to parse. Here's an example from the TOML site:
