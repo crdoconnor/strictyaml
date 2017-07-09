@@ -41,12 +41,12 @@ Roundtripped YAML:
         to_modify = load(commented_yaml, schema)
 
     - Code: |
-        to_modify['b']['x'] = load('2')
-        to_modify['c'][0]['a'] = load('3')
+        to_modify['b']['x'] = 2
+        to_modify['c'][0]['a'] = '3'
 
     - Raises Exception:
         command: |
-          to_modify['b']['x'] = load('not an integer')
+          to_modify['b']['x'] = 'not an integer'
         exception: found non-integer
 
     - Variable:

@@ -5,9 +5,8 @@ from ruamel.yaml import dump
 from strictyaml import utils
 from copy import copy, deepcopy
 import decimal
-
-
 import sys
+
 
 if sys.version_info[0] == 3:
     unicode = str
@@ -139,9 +138,7 @@ class YAML(object):
 
     def __setitem__(self, index, value):
         if not isinstance(value, YAML):
-            raise TypeError(
-                "Expected parsed YAML object, got {0}.".format(type(self._value))
-            )
+            value = yaml_object_from_values(value)
         new_value = self._value[index]._validator(value._chunk)
         del self._value[index]
         self._value[YAML(index)] = new_value
@@ -227,3 +224,12 @@ class YAML(object):
 
     def __eq__(self, value):
         return self.data == value
+
+
+def yaml_object_from_values(value):
+    """
+    Create uncommented YAML object.
+    """
+    from strictyaml.parser import load
+    from ruamel.yaml import dump
+    return load(dump({"yaml": value}, default_flow_style=False))['yaml']
