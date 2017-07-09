@@ -14,6 +14,7 @@ import hitchdoc
 from hitchrun import hitch_maintenance
 from commandlib import python
 from hitchrun import DIR
+from hitchrun.decorators import ignore_ctrlc
 
 
 class Engine(BaseEngine):
@@ -330,3 +331,11 @@ def docgen():
             "rst",
             docpath.joinpath("{0}.rst".format(story.slug))
         )
+
+
+@ignore_ctrlc
+def ipy():
+    """
+    Run IPython in environment."
+    """
+    Command(DIR.gen.joinpath("py3.5.0", "bin", "ipython")).run()
