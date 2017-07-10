@@ -231,5 +231,12 @@ def yaml_object_from_values(value):
     Create uncommented YAML object.
     """
     from strictyaml.parser import load
+    from ruamel.yaml.scalarstring import PreservedScalarString
     from ruamel.yaml import dump
-    return load(dump({"yaml": value}, default_flow_style=False))['yaml']
+    output = load(dump({"yaml": value}, default_flow_style=False))['yaml']
+    if isinstance(output._chunk._document['yaml'], unicode):
+        if "\n" in output._chunk.contents:
+            output._chunk._document['yaml'] = PreservedScalarString(
+                output._chunk._document['yaml']
+            )
+    return output

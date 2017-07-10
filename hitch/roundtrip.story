@@ -67,6 +67,31 @@ Roundtripped YAML:
     - Should be equal:
         lhs: to_modify.as_yaml()
         rhs: modified_commented_yaml
+    
+    - Code: |
+        to_modify['c'][0]['a'] = "text\nacross\nlines"
+    
+    - Variable:
+        name: modified_commented_yaml
+        value: |
+          # Some comment
+          
+          a: â # value comment
+          
+          # Another comment
+          b:
+            y: 5
+            x: 2
+          c:
+          - a: |-
+              text
+              across
+              lines
+          - b: 2
+
+    - Should be equal:
+        lhs: to_modify.as_yaml()
+        rhs: modified_commented_yaml
 
     - Variable:
         name: with_integer
