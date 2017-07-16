@@ -554,7 +554,7 @@ Or this:
 
   load(yaml, Map({"flt2": Float(), "string": Str()})) == {"flt": 3.1415, "string": "hello"}
 
-Which not only eliminates the need for `syntax typing <https://github.com/crdoconnor/strictyaml/blob/master/FAQ.rst#whats-wrong-with-syntax-typing-in-a-readable-configuration-language>`_, is more type safe.
+Which not only eliminates the need for `syntax typing <https://github.com/crdoconnor/strictyaml/blob/master/FAQ.rst#what-is-wrong-with-explicit-syntax-typing-in-a-readable-configuration-languages>`_, is more type safe.
 
 
 Why not HOCON?
