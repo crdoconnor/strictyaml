@@ -7,7 +7,7 @@ from hitchstory import StoryCollection, StorySchema, BaseEngine, exceptions, val
 from hitchrun import expected
 from commandlib import Command
 import strictyaml
-from strictyaml import MapPattern, Str, Map, Int, Optional
+from strictyaml import MapPattern, Str, Map, Int, Optional, load
 from pathquery import pathq
 import hitchtest
 import hitchdoc
@@ -15,6 +15,7 @@ from hitchrun import hitch_maintenance
 from commandlib import python
 from hitchrun import DIR
 from hitchrun.decorators import ignore_ctrlc
+import requests
 
 
 class Engine(BaseEngine):
@@ -240,9 +241,9 @@ def test(*words):
     )
 
 
-def ci():
+def regression():
     """
-    Continuous integration - run all tests and linter.
+    Run regression testing - lint and then run all tests.
     """
     lint()
     print(
@@ -339,3 +340,20 @@ def ipy():
     Run IPython in environment."
     """
     Command(DIR.gen.joinpath("py3.5.0", "bin", "ipython")).run()
+
+
+def rot():
+    """
+    Test for code rot by upgrading dependency and running tests (ruamel.yaml).
+    """
+    print("Checking code rot for strictyaml project...")
+    latest_version = requests.get("https://pypi.python.org/pypi/ruamel.yaml/json").json()['info']['version']
+    base_story = load(DIR.key.joinpath("strictyaml.story").bytes().decode("utf8"))
+    latest_tested_version = str(base_story['strictyaml']['params']['ruamel version'])
+    
+    if latest_version != latest_tested_version:
+        base_story['strictyaml']['params']['ruamel version'] = load(latest_version)
+        DIR.key.joinpath("strictyaml.story").write_text(base_story.as_yaml())
+        regression()
+    else:
+        print("No dependency changes")
