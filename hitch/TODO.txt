@@ -1,3 +1,10 @@
+Reorganize doc generation so that scalar validators, non-scalar validators are treated separately.
+Add section on jsonschema + yaml
+Add section on kwalify + yaml
+Add section on schema + yaml
+
+* Something like MapPattern, but with just one key.
+
 validate validator objects.
 
 https://stackoverflow.com/questions/26434053/cargo-toml-for-lib
