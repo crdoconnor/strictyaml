@@ -4,20 +4,25 @@ from copy import deepcopy
 
 
 class YAMLChunk(object):
-    def __init__(self, document, pointer=None):
+    def __init__(self, document, pointer=None, label=None):
         self._contents = None
         self._document = document
         self._pointer = pointer if pointer is not None \
             else YAMLPointer()
+        self._label = label
+
+    @property
+    def label(self):
+        return self._label
 
     def index(self, index):
-        return YAMLChunk(self._document, self._pointer.index(index))
+        return YAMLChunk(self._document, pointer=self._pointer.index(index), label=self._label)
 
     def val(self, index):
-        return YAMLChunk(self._document, self._pointer.val(index))
+        return YAMLChunk(self._document, pointer=self._pointer.val(index), label=self._label)
 
     def key(self, name):
-        return YAMLChunk(self._document, self._pointer.key(name))
+        return YAMLChunk(self._document, pointer=self._pointer.key(name), label=self._label)
 
     def start_line(self):
         return self._pointer.start_line(self._document)

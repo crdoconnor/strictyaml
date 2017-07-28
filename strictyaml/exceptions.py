@@ -42,10 +42,10 @@ def raise_exception(context, problem, chunk):
     context_index = len(u'\n'.join(str_document.split(u'\n')[:context_line]))
     problem_index = len(u'\n'.join(str_document.split(u'\n')[:problem_line]))
     string_mark_a = StringMark(
-        u"<unicode string>", context_index, context_line, 0, str_document, context_index + 1
+        chunk.label, context_index, context_line, 0, str_document, context_index + 1
     )
     string_mark_b = StringMark(
-        u"<unicode string>", problem_index, problem_line, 0, str_document, problem_index + 1
+        chunk.label, problem_index, problem_line, 0, str_document, problem_index + 1
     )
     raise YAMLValidationError(
         context,

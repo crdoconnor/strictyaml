@@ -205,7 +205,7 @@ class StrictYAMLLoader(
         VersionedResolver.__init__(self, version, loader=self)
 
 
-def load(yaml_string, schema=None):
+def load(yaml_string, schema=None, label=u"<unicode string>"):
     """
     Parse the first YAML document in a string
     and produce corresponding python object (dict, list, string).
@@ -222,4 +222,4 @@ def load(yaml_string, schema=None):
     if schema is None:
         schema = Any()
 
-    return schema(YAMLChunk(document))
+    return schema(YAMLChunk(document, label=label))

@@ -56,8 +56,8 @@ Normal Map:
           a: 1
           b: 2
           â: 3
-
-    - Assert Exception:
+          
+    - Raises Exception:
         command: load(invalid_sequence_1, schema)
         exception: |
           while parsing a mapping
