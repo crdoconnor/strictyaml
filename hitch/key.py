@@ -230,7 +230,7 @@ class Engine(BaseEngine):
 
 @expected(strictyaml.exceptions.YAMLValidationError)
 @expected(exceptions.HitchStoryException)
-def test(*words):
+def tdd(*words):
     """
     Run test with words.
     """
