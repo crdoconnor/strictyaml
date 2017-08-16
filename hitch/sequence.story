@@ -10,92 +10,104 @@ Seq validator:
     
     See also UniqueSeq and FixedSeq for other types of sequence
     validation.
+  preconditions:
+    setup: |
+      from strictyaml import Seq, Str, Int, load
+ 
+
+Valid Seq:
+  based on: Seq validator
+  preconditions:
+    yaml_snippet: |
+      - 1
+      - 2
+      - 3
+  variations:
+    Parsed:
+      preconditions:
+        code: |
+          load(yaml_snippet, Seq(Str()))
+      scenario:
+        - Should be equal to: |
+            ["1", "2", "3", ]
+    Is sequence:
+      preconditions:
+        code: load(yaml_snippet, Seq(Str())).is_sequence()
+      scenario:
+        - Should be equal to: True
+    .text is nonsensical:
+      preconditions:
+        code: load(yaml_snippet, Seq(Str())).text
+      scenario:
+        - Raises exception: is a sequence, has no text value
+
+Invalid Seq - Mapping instead:
+  based on: Seq validator
+  preconditions:
+    yaml_snippet: |
+      a: 1
+      b: 2
+      c: 3
+    code: load(yaml_snippet, Seq(Str()))
   scenario:
-    - Code: |
-        from strictyaml import Seq, Str, Int, load
+    - Raises Exception: |
+        when expecting a sequence
+          in "<unicode string>", line 1, column 1:
+            a: '1'
+             ^ (line: 1)
+        found non-sequence
+          in "<unicode string>", line 3, column 1:
+            c: '3'
+            ^ (line: 3)
 
-    - Variable:
-        name: valid_sequence
-        value: |
-          - 1
-          - 2
-          - 3
+Invalid sequence - nested mapping instead:
+  based on: Seq validator
+  preconditions:
+    yaml_snippet: |
+      - 2
+      - 3
+      - a:
+        - 1
+        - 2
+    code: load(yaml_snippet, Seq(Str()))
+  scenario:
+    - Raises Exception: |
+        when expecting a str
+          in "<unicode string>", line 3, column 1:
+            - a:
+            ^ (line: 3)
+        found mapping/sequence
+          in "<unicode string>", line 5, column 1:
+              - '2'
+            ^ (line: 5)
 
-    - Returns True: load(valid_sequence, Seq(Str())) == ["1", "2", "3", ]
-
-    - Returns True: load(valid_sequence, Seq(Str())).is_sequence()
-
-    - Raises Exception:
-        command: load(valid_sequence, Seq(Str())).text
-        exception: is a sequence, has no text value.
-
-    - Variable:
-        name: invalid_sequence_1
-        value: |
-          a: 1
-          b: 2
-          c: 3
-
-    - Raises Exception:
-        command: load(invalid_sequence_1, Seq(Str()))
-        exception: |
-          when expecting a sequence
-            in "<unicode string>", line 1, column 1:
-              a: '1'
-               ^ (line: 1)
-          found non-sequence
-            in "<unicode string>", line 3, column 1:
-              c: '3'
-              ^ (line: 3)
-
-    - Variable:
-        name: invalid_sequence_2
-        value: |
-          - 2
-          - 3
-          - a:
-            - 1
-            - 2
-
-    - Raises Exception:
-        command: load(invalid_sequence_2, Seq(Str()))
-        exception: |
-          when expecting a str
-            in "<unicode string>", line 3, column 1:
-              - a:
-              ^ (line: 3)
-          found mapping/sequence
-            in "<unicode string>", line 5, column 1:
-                - '2'
-              ^ (line: 5)
-
-    - Variable:
-        name: invalid_sequence_3
-        value: |
-          - 1.1
-          - 1.2
-
-    - Raises Exception:
-        command: load(invalid_sequence_3, Seq(Int()))
-        exception: |
-          when expecting an integer
-          found non-integer
-            in "<unicode string>", line 1, column 1:
-              - '1.1'
-               ^ (line: 1)
-
-    - Variable:
-        name: invalid_sequence_4
-        value: |
-          - 1
-          - 2
-          - 3.4
-
-    - Raises Exception:
-        command: load(invalid_sequence_4, Seq(Int()))
-        exception: |
-          when expecting an integer
-          found non-integer
-            in "<unicode string>", line 3, column 1:
-              - '3.4'
-              ^ (line: 3)
+Invalid sequence - invalid item in sequence:
+  based on: Seq validator
+  preconditions:
+    yaml_snippet: |
+      - 1.1
+      - 1.2
+    code: load(yaml_snippet, Seq(Int()))
+  scenario:
+    - Raises exception: |
+        when expecting an integer
+        found non-integer
+          in "<unicode string>", line 1, column 1:
+            - '1.1'
+             ^ (line: 1)
+             
+Invalid sequence - one invalid item in sequence:
+  based on: Seq validator
+  preconditions:
+    yaml_snippet: |
+      - 1
+      - 2
+      - 3.4
+    code: load(yaml_snippet, Seq(Int()))
+  scenario:
+    - Raises exception: |
+        when expecting an integer
+        found non-integer
+          in "<unicode string>", line 3, column 1:
+            - '3.4'
+            ^ (line: 3)

@@ -8,59 +8,64 @@ Boolean validation:
 
     Any values that are not one of those will
     will cause a validation error.
-  scenario:
-    - Code: |
-        from strictyaml import Bool, Str, MapPattern, YAMLValidationError, load
+  preconditions:
+    setup: |
+      from strictyaml import Bool, Str, MapPattern, YAMLValidationError, load
 
-        schema = MapPattern(Str(), Bool())
+      schema = MapPattern(Str(), Bool())
+      
+    yaml_snippet: |
+        a: yes
+        b: true
+        c: on
+        d: 1
+        e: True
+        v: False
+        w: 0
+        x: Off
+        y: FALSE
+        z: no
+  variations:
+    Valid:
+      preconditions:
+        code: load(yaml_snippet, schema)
+      scenario:
+        - Should be equal to: |
+            {"a": True, "b": True, "c": True, "d": True, "e": True, "v": False, "w": False, "x": False, "y": False, "z": False,}
 
-    - Variable:
-        name: valid_sequence
-        value: |
-          a: yes
-          b: true
-          c: on
-          d: 1
-          e: True
-          v: False
-          w: 0
-          x: Off
-          y: FALSE
-          z: no
+    YAML object should resolve to True or False:
+      preconditions:
+        code: load(yaml_snippet, schema)["w"]
+      scenario:
+        - Should be equal to: False
+    
+    Using .value you can get the actual boolean value parsed:
+      preconditions:
+        code: load(yaml_snippet, schema)["a"].value is True
+      scenario:
+        - Should be equal to: True
+    
+    .text returns the text of the:
+      preconditions:
+        code: load(yaml_snippet, schema)["y"].text
+      scenario:
+        - Should be equal to: |
+            "FALSE"
 
-    - Returns True:
-        command: |
-            load(valid_sequence, schema) == \
-              {"a": True, "b": True, "c": True, "d": True, "e": True, "v": False, "w": False, "x": False, "y": False, "z": False,}
+    Cannot cast to string:
+      preconditions:
+        code: str(load(yaml_snippet, schema)["y"])
+      scenario:
+        - Raises exception: Cannot cast
 
-    - Returns True:
-        why: Even though it returns a YAML object, that YAML object resolves to True/False
-        command: 'load(valid_sequence, schema)["w"] == False'
-
-    - Returns True:
-        why: Using .value you can get the actual boolean value parsed
-        command: 'load(valid_sequence, schema)["a"].value is True'
-
-    - Returns True:
-        why: Whereas using .text you can get the text
-        command: 'load(valid_sequence, schema)["y"].text == "FALSE"'
-
-    - Raises Exception:
-        why: |
-          The YAML boolean object cannot be cast directly to string since
-          the expected value is ambiguous ("False" or "FALSE"?)
-        command: str(load(valid_sequence, schema)["y"])
-        exception: Cannot cast
-
-    - Variable:
-        name: invalid_sequence
-        value: 'a: yâs'
-
-    - Raises Exception:
-        command: load(invalid_sequence, schema)
-        exception: |
-          when expecting a boolean value (one of "yes", "true", "on", "1", "no", "false", "off", "0")
-          found non-boolean
-            in "<unicode string>", line 1, column 1:
-              a: "y\xE2s"
-               ^ (line: 1)
+    Invalid string:
+      preconditions:
+        yaml_snippet: 'a: yâs'
+        code: load(yaml_snippet, schema)
+      scenario:
+        - Raises exception: |
+            when expecting a boolean value (one of "yes", "true", "on", "1", "no", "false", "off", "0")
+            found non-boolean
+              in "<unicode string>", line 1, column 1:
+                a: "y\xE2s"
+                 ^ (line: 1)

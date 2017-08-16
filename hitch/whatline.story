@@ -5,79 +5,97 @@ What line:
     Line numbers, the text of an item and text of surrounding lines
     can be grabbed from returned YAML objects - using .start_line,
     .end_line, lines(), lines_before(x) and lines_after(x).
+  preconditions:
+    yaml_snippet: |
+      y: p
+      # Some comment
+          
+      a: |
+        x
+
+      # Another comment
+      b: y
+      c: a
+
+      d: b
+      
+    setup: |
+      from strictyaml import Map, Str, YAMLValidationError, load
+
+      schema = Map({"y": Str(), "a": Str(), "b": Str(), "c": Str(), "d": Str()})
+      
+      snippet = load(yaml_snippet, schema)
+
+  variations:
+    Start line includes previous comment:
+      preconditions:
+        code: |
+          snippet["a"].start_line, snippet["d"].start_line
+      scenario:
+        - Should be equal to: (2, 9)
+
+    End line includes comment:
+      preconditions:
+        code: |
+          snippet["a"].end_line , snippet["d"].end_line
+      scenario:
+        - Should be equal to: (6, 10)
+  
+    Start line of key:
+      preconditions:
+        code: snippet.keys()[1].start_line
+      scenario:
+        - Should be equal to: 2
+
+    Start and end line of all YAML:
+      preconditions:
+        code: snippet.start_line, snippet.end_line
+      scenario:
+        - Should be equal to: (1, 10)
+        
+    Lines before:
+      preconditions:
+        code: |
+          snippet['a'].lines_before(1)
+      scenario:
+        - Should be equal to: |
+            "y: p"
+
+    Lines after:
+      preconditions:
+        code: |
+         snippet['a'].lines_after(4)
+      scenario:
+        - Should be equal to: |
+            "b: y\nc: a\n\nd: b"
+
+    Relevant lines:
+      preconditions:
+        modified_yaml_snippet: |
+          # Some comment
+          a: |
+            x
+
+          # Another comment
+        code: |
+          load(yaml_snippet, schema)['a'].lines()
+      scenario:
+        - Should be equal to: modified_yaml_snippet.strip()
+
+Start line of YAML with list:
+  based on: strictyaml
+  preconditions:
+    yaml_snippet: |
+      a:
+        b:
+        - 1
+        # comment
+        - 2
+        - 3
+        - 4
+    setup: |
+      from strictyaml import load
+    code: |
+      load(yaml_snippet)['a']['b'][1].start_line, load(yaml_snippet)['a']['b'][1].end_line
   scenario:
-    - Run command: |
-        from strictyaml import Map, Str, YAMLValidationError, load
-
-        schema = Map({"y": Str(), "a": Str(), "b": Str(), "c": Str(), "d": Str()})
-
-    - Variable:
-        name: commented_yaml
-        value: |
-          y: p
-          # Some comment
-          
-          a: |
-            x
-          
-          # Another comment
-          b: y
-          c: a
-          
-          d: b
-
-
-    - Returns True: 'load(commented_yaml, schema)["a"].start_line == 2'
-
-    - Returns True: 'load(commented_yaml, schema)["a"].end_line == 7'
-
-    - Returns True: 'load(commented_yaml, schema)["d"].start_line == 10'
-
-    - Returns True: 'load(commented_yaml, schema)["d"].end_line == 11'
-
-    - Returns True: 'load(commented_yaml, schema).keys()[1].start_line == 2'
-
-    - Returns True: 'load(commented_yaml, schema).start_line == 1'
-
-    - Returns True: 'load(commented_yaml, schema).end_line == 11'
-
-    - Variable:
-        name: yaml_snippet
-        value: |
-          # Some comment
-          
-          a: |
-            x
-          
-          # Another comment
-
-
-    - Returns True: |
-        load(commented_yaml, schema)['a'].lines() == yaml_snippet.strip()
-
-    - Returns True: |
-        load(commented_yaml, schema)['a'].lines_before(1) == "y: p"
-
-    - Should be equal:
-        lhs: load(commented_yaml, schema)['a'].lines_after(4)
-        rhs: |
-          "b: y\nc: a\n\nd: b"
-    
-    - Variable:
-        name: yaml_with_list
-        value: |
-          a:
-            b:
-            - 1
-            # comment
-            - 2
-            - 3
-            - 4
-
-    - Should be equal:
-        lhs: load(yaml_with_list)['a']['b'][1].start_line
-        rhs: 4
-
-    - Should be equal:
-        lhs: load(yaml_with_list)['a']['b'][1].end_line
-        rhs: 5
+    - Should be equal to: (4, 5)

@@ -7,75 +7,73 @@ Map Pattern:
 
     When you wish to specify the exact key name, use the
     'Map' validator instead.
-  scenario:
-    - Run command: |
-        from strictyaml import MapPattern, Int, Str, YAMLValidationError, load
+  preconditions:
+    setup: |
+      from strictyaml import MapPattern, Int, Str, YAMLValidationError, load
 
-        schema = MapPattern(Str(), Int())
+      schema = MapPattern(Str(), Int())
 
-    - Variable:
-        name: valid_sequence_1
-        value: |
+    code: load(yaml_snippet, schema)
+  variations:
+    Equivalence 1:
+      preconditions:
+        yaml_snippet: |
           â: 1
           b: 2
-
-    - Returns True: 'load(valid_sequence_1, schema) == {u"â": 1, "b": 2}'
-
-    - Variable:
-        name: valid_sequence_2
-        value: |
+      scenario:
+        - Should be equal to: '{u"â": 1, "b": 2}'
+        
+    Equivalence 2:
+      preconditions:
+        yaml_snippet: |
           a: 1
           c: 3
+      scenario:
+        - Should be equal to: '{"a": 1, "c": 3}'
+        
+    Equivalence 3:
+      preconditions:
+        yaml_snippet: |
+          a: 1
+      scenario:
+        - Should be equal to: '{"a": 1, }'
 
-    - Returns True: 'load(valid_sequence_2, schema) == {"a": 1, "c": 3}'
-
-    - Variable:
-        name: valid_sequence_3
-        value: 'a: 1'
-
-    - Returns True: 'load(valid_sequence_3, schema) == {"a": 1, }'
-
-    - Variable:
-        name: invalid_sequence_1
-        value: |
+        
+    Invalid 1:
+      preconditions:
+        yaml_snippet: |
           b: b
-
-    - Raises Exception:
-        command: load(invalid_sequence_1, schema)
-        exception: |
-          when expecting an integer
-          found non-integer
-            in "<unicode string>", line 1, column 1:
-              b: b
-               ^
-
-    - Variable:
-        name: invalid_sequence_2
-        value: |
+      scenario:
+        - Raises exception: |
+            when expecting an integer
+            found non-integer
+              in "<unicode string>", line 1, column 1:
+                b: b
+                 ^
+        
+    Invalid 2:
+      preconditions:
+        yaml_snippet: |
           a: a
           b: 2
-
-    - Raises Exception:
-        command: load(invalid_sequence_2, schema)
-        exception: |
-          when expecting an integer
-          found non-integer
-            in "<unicode string>", line 1, column 1:
-              a: a
-               ^
-
-    - Variable:
-        name: invalid_sequence_3
-        value: |
+      scenario:
+        - Raises exception: |
+            when expecting an integer
+            found non-integer
+              in "<unicode string>", line 1, column 1:
+                a: a
+                 ^
+    
+    Invalid with non-ascii:
+      preconditions:
+        yaml_snippet: |
           a: 1
           b: yâs
           c: 3
-
-    - Raises Exception:
-        command: load(invalid_sequence_3, schema)
-        exception: |
-          when expecting an integer
-          found non-integer
-            in "<unicode string>", line 2, column 1:
-              b: "y\xE2s"
-              ^
+      scenario:
+        - Raises exception: |
+            when expecting an integer
+            found non-integer
+              in "<unicode string>", line 2, column 1:
+                b: "y\xE2s"
+                ^

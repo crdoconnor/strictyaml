@@ -8,47 +8,71 @@ Scalar integer:
     This is what that can object can do - in many
     cases if parsed as a integer, it will behave in
     the same way.
+  preconditions:
+    yaml_snippet: |
+      a: 1
+      b: 5
+    setup: |
+      from strictyaml import Map, Int, load
+
+      schema = Map({"a": Int(), "b": Int()})
+
+      parsed = load(yaml_snippet, schema)
+  variations:
+    Parsed correctly:
+      preconditions:
+        code: parsed
+      scenario:
+        - Should be equal to: |
+            {"a": 1, "b": 5}
+    Cast with str:
+      preconditions:
+        code: str(parsed["a"])
+      scenario:
+        - Should be equal to: |
+            "1"
+    Cast with float:
+      preconditions:
+        code: float(parsed["a"])
+      scenario:
+        - Should be equal to: 1.0
+    Greater than:
+      preconditions:
+        code: parsed["a"] > 0
+      scenario:
+        - Should be equal to: True
+    Less than:
+      preconditions:
+        code: parsed["a"] < 2
+      scenario:
+        - Should be equal to: True
+    To get actual int, use .data:
+      preconditions:
+        code: type(load(yaml_snippet, schema)["a"].data) is int
+      scenario:
+        - Should be equal to: True
+    Cannot cast to bool:
+      preconditions:
+        code: bool(load(yaml_snippet, schema)['a'])
+      scenario:
+        - Raises exception: Cannot cast
+
+Invalid scalar integer:
+  based on: strictyaml
+  preconditions:
+    yaml_snippet: |
+      a: string
+      b: 2
+    setup: |
+      from strictyaml import Map, Int, load
+
+      schema = Map({"a": Int(), "b": Int()})
+    code: |
+      load(yaml_snippet, schema)
   scenario:
-    - Code: |
-        from strictyaml import Map, Int, load
-
-        schema = Map({"a": Int(), "b": Int()})
-
-    - Variable:
-        name: valid_sequence
-        value: |
-          a: 1
-          b: 5
-
-    - Returns True: 'load(valid_sequence, schema) == {"a": 1, "b": 5}'
-
-    - Returns True: 'str(load(valid_sequence, schema)["a"]) == "1"'
-
-    - Returns True: 'float(load(valid_sequence, schema)["a"]) == 1.0'
-
-    - Returns True: 'load(valid_sequence, schema)["a"] > 0'
-
-    - Returns True: 'load(valid_sequence, schema)["a"] < 2'
-
-    - Raises Exception:
-        command: bool(load(valid_sequence, schema)['a'])
-        exception: Cannot cast
-
-    - Variable:
-        name: invalid_sequence_2
-        value: |
-          a: string
-          b: 2
-
-    - Assert Exception:
-        command: load(invalid_sequence_2, schema)
-        exception: |
-          when expecting an integer
-          found non-integer
-            in "<unicode string>", line 1, column 1:
-              a: string
-               ^
-
-    - Returns True:
-        why: To just get an actual integer, use .data
-        command: 'type(load(valid_sequence, schema)["a"].data) is int'
+    - Raises exception: |
+        when expecting an integer
+        found non-integer
+          in "<unicode string>", line 1, column 1:
+            a: string
+             ^

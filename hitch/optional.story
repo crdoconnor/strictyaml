@@ -4,85 +4,83 @@ Optional validation:
     Not every key in a YAML mapping will be required. If
     you use the "Optional('key')" validator with YAML,
     you can signal that a key/value pair is not required.
-  scenario:
-    - Code: |
-        from strictyaml import Map, Int, Str, Bool, Optional, load
+  preconditions:
+    setup: |
+      from strictyaml import Map, Int, Str, Bool, Optional, load
 
-        schema = Map({"a": Int(), Optional("b"): Bool(), })
-
-    - Variable:
-        name: valid_sequence_1
-        value: |
+      schema = Map({"a": Int(), Optional("b"): Bool(), })
+    code: load(yaml_snippet, schema)
+  variations:
+    Valid example 1:
+      preconditions:
+        yaml_snippet: |
           a: 1
           b: yes
+      scenario:
+        - Should be equal to: '{"a": 1, "b": True}'
 
-    - Returns True: 'load(valid_sequence_1, schema) == {"a": 1, "b": True}'
-
-    - Variable:
-        name: valid_sequence_2
-        value: |
+    Valid example 2:
+      preconditions:
+        yaml_snippet: |
           a: 1
           b: no
+      scenario:
+        - Should be equal to: '{"a": 1, "b": False}'
 
-    - Returns True: 'load(valid_sequence_2, schema) == {"a": 1, "b": False}'
+    Valid example missing key:
+      preconditions:
+        yaml_snippet: 'a: 1'
+      scenario:
+        - Should be equal to: '{"a": 1}'
 
-    - Variable:
-        name: valid_sequence_3
-        value: 'a: 1'
+    Invalid 1:
+      preconditions:
+        yaml_snippet: |
+          a: 1
+          b: 2
+      scenario:
+        - Raises exception: |
+            when expecting a boolean value (one of "yes", "true", "on", "1", "no", "false", "off", "0")
+            found non-boolean
+              in "<unicode string>", line 2, column 1:
+                b: '2'
+                ^ (line: 2)
+                
+    Invalid 2:
+      preconditions:
+        yaml_snippet: |
+          a: 1
+          b: yes
+          c: 3
+      scenario:
+        - Raises exception: |
+            while parsing a mapping
+            unexpected key not in schema 'c'
+              in "<unicode string>", line 3, column 1:
+                c: '3'
+                ^
 
-    - Returns True: 'load(valid_sequence_3, schema) == {"a": 1}'
+    
+Nested optional validation:
+  based on: strictyaml
+  preconditions:
+    setup: |
+      from strictyaml import Map, Int, Str, Bool, Optional, load
 
-    - Variable:
-        name: valid_sequence_4
-        value: |
+      schema = Map({"a": Int(), Optional("b"): Map({Optional("x"): Str(), Optional("y"): Str()})})
+    code: load(yaml_snippet, schema)
+  variations:
+    Valid 1:
+      preconditions:
+        yaml_snippet: 'a: 1'
+      scenario:
+        - Should be equal to: '{"a": 1}'
+    Valid 2:
+      preconditions:
+        yaml_snippet: |
           a: 1
           b:
             x: y
             y: z
-
-    - Code: |
-        load(valid_sequence_4, Map({"a": Int(), Optional("b"): Map({Optional("x"): Str(), Optional("y"): Str()})}))
-
-    - Variable:
-        name: invalid_sequence_1
-        value: 'b: 2'
-
-    - Raises Exception:
-        command: load(invalid_sequence_1, schema)
-        exception: |
-          when expecting a boolean value (one of "yes", "true", "on", "1", "no", "false", "off", "0")
-          found non-boolean
-            in "<unicode string>", line 1, column 1:
-              b: '2'
-               ^
-
-    - Variable:
-        name: invalid_sequence_2
-        value: |
-          a: 1
-          b: 2
-
-    - Raises Exception:
-        command: load(invalid_sequence_2, schema)
-        exception: |
-          when expecting a boolean value (one of "yes", "true", "on", "1", "no", "false", "off", "0")
-          found non-boolean
-            in "<unicode string>", line 2, column 1:
-              b: '2'
-              ^
-
-    - Variable:
-        name: invalid_sequence_3
-        value: |
-          a: 1
-          b: yes
-          c: 3
-
-    - Raises Exception:
-        command: load(invalid_sequence_3, schema)
-        exception: |
-          while parsing a mapping
-          unexpected key not in schema 'c'
-            in "<unicode string>", line 3, column 1:
-              c: '3'
-              ^
+      scenario:
+        - Should be equal to: '{"a": 1, "b": {"x": "y", "y": "z"}}'

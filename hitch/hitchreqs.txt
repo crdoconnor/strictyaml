@@ -14,7 +14,7 @@ hitchdoc==0.1.1
 hitchpython==0.5.3
 hitchrun==0.2.4
 hitchserve==0.5.1         # via hitchpython
-hitchstory==0.2.5
+hitchstory==0.2.9
 hitchtest==0.9.12         # via hitchpython
 humanize==0.5.1           # via hitchserve
 idna==2.5                 # via requests
@@ -28,7 +28,7 @@ jupyter-core==4.3.0       # via jupyter-client
 markupsafe==1.0           # via jinja2
 mccabe==0.6.1             # via flake8
 path.py==10.3.1           # via hitchdoc, hitchrun, hitchstory, hitchtest, pathquery, prettystack
-pathquery==0.2.0          # via hitchstory
+pathquery==0.2.2          # via hitchstory
 patool==1.12              # via hitchtest
 peewee==2.9.2             # via hitchdoc
 pexpect==4.2.1            # via ipython

@@ -9,42 +9,69 @@ Floats:
     Parsing and validating as a Decimal is best for
     values which require precision, but float is better
     for values for which precision is not required.
-  scenario:
-    - Code: |
-        from strictyaml import Map, Float, load
+  preconditions:
+    setup: |
+      from strictyaml import Map, Float, load
 
-        schema = Map({"a": Float(), "b": Float()})
+      schema = Map({"a": Float(), "b": Float()})
 
-    - Variable:
-        name: valid_sequence
-        value: |
-          a: 1.00000000000000000001
-          b: 5.4135
+    yaml_snippet: |
+      a: 1.00000000000000000001
+      b: 5.4135
+  variations:
+    Use .data to get float type:
+      preconditions:
+        code: type(load(yaml_snippet, schema)["a"].data)
+      scenario:
+        - Should be equal to: float
+    
+    Equal to equivalent float which is different number:
+      preconditions:
+        code: load(yaml_snippet, schema)
+      scenario:
+        - Should be equal to: '{"a": 1.0, "b": 5.4135}'
 
-    - Returns True: 'load(valid_sequence, schema) == {"a": 1.0, "b": 5.4135}'
-    - Returns True: 'str(load(valid_sequence, schema)["a"]) == "1.0"'
-    - Returns True: 'float(load(valid_sequence, schema)["a"]) == 1.0'
-    - Returns True: 'load(valid_sequence, schema)["a"] > 0'
-    - Returns True: 'load(valid_sequence, schema)["a"] < 2'
-    - Raises Exception:
-        command: bool(load(valid_sequence, schema)['a'])
-        exception: Cannot cast
+    Cast to str:
+      preconditions:
+        code: str(load(yaml_snippet, schema)["a"])
+      scenario:
+        - Should be equal to: |
+            "1.0"
+    
+    Cast to float:
+      preconditions:
+        code: float(load(yaml_snippet, schema)["a"])
+      scenario:
+        - Should be equal to: 1.0
 
-    - Variable:
-        name: invalid_sequence
-        value: |
+    Greater than:
+      preconditions:
+        code: load(yaml_snippet, schema)["a"] > 0
+      scenario:
+        - Should be equal to: True
+        
+    Less than:
+      preconditions:
+        code: load(yaml_snippet, schema)["a"] < 0
+      scenario:
+        - Should be equal to: False
+
+    Cannot cast to bool:
+      preconditions:
+        code: bool(load(yaml_snippet, schema)['a'])
+      scenario:
+        - Raises Exception: Cannot cast
+
+    Cannot parse non-float:
+      preconditions:
+        yaml_snippet: |
           a: string
           b: 2
-
-    - Assert Exception:
-        command: load(invalid_sequence, schema)
-        exception: |
-          when expecting a float
-          found non-float
-            in "<unicode string>", line 1, column 1:
-              a: string
-               ^
-
-    - Returns True:
-        why: To just get an actual float, use .data
-        command: 'type(load(valid_sequence, schema)["a"].data) is float'
+        code: load(yaml_snippet, schema)
+      scenario:
+        - Raises Exception: |
+            when expecting a float
+            found non-float
+              in "<unicode string>", line 1, column 1:
+                a: string
+                 ^

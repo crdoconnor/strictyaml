@@ -6,33 +6,44 @@ Comma separated:
 
     Note that the space following the commas is stripped by
     default when parsed.
-  scenario:
-    - Run command: |
-        from strictyaml import CommaSeparated, Int, Str, Map, load
+  preconditions:
+    setup: |
+      from strictyaml import CommaSeparated, Int, Str, Map, load
 
-        int_schema = Map({"a": CommaSeparated(Int())})
+      int_schema = Map({"a": CommaSeparated(Int())})
 
-        str_schema = Map({"a": CommaSeparated(Str())})
-
-    - Variable:
-        name: valid_sequence
-        value: |
+      str_schema = Map({"a": CommaSeparated(Str())})
+  variations:
+    Parse as int:
+      preconditions:
+        yaml_snippet: |
           a: 1, 2, 3
-
-    - Returns True: 'load(valid_sequence, int_schema) == {"a": [1, 2, 3]}'
-
-    - Returns True: 'load(valid_sequence, str_schema) == {"a": ["1", "2", "3"]}'
-
-    - Variable:
-        name: invalid_sequence
-        value: |
+        code: |
+          load(yaml_snippet, int_schema)
+      scenario:
+        - Should be equal to: |
+            {"a": [1, 2, 3]}
+    
+    Parse as string:
+      preconditions:
+        yaml_snippet: |
+          a: 1, 2, 3
+        code: |
+          load(yaml_snippet, str_schema)
+      scenario:
+        - Should be equal to: |
+            {"a": ["1", "2", "3"]}
+    
+    Invalid int comma separated sequence:
+      preconditions:
+        yaml_snippet: |
           a: 1, x, 3
-
-    - Raises exception:
-        command: load(invalid_sequence, int_schema)
-        exception: |
-          when expecting an integer
-          found non-integer
-            in "<unicode string>", line 1, column 1:
-              a: 1, x, 3
-               ^
+        code: |
+          load(yaml_snippet, int_schema)
+      scenario:
+        - Raises Exception: |
+            when expecting an integer
+            found non-integer
+              in "<unicode string>", line 1, column 1:
+                a: 1, x, 3
+                 ^

@@ -1,4 +1,8 @@
+ordereddict by default
 Reorganize doc generation so that scalar validators, non-scalar validators are treated separately.
+Handle updating YAML objects with new data.
+Version YAML docs with readthedocs.
+Move explanatory docs to readthedocs with links from FAQ, README.rst, etc.
 Add section on jsonschema + yaml
 Add section on kwalify + yaml
 Add section on schema + yaml
@@ -13,6 +17,8 @@ for why not TOML
 
 Add scalar types
 
+* AbsoluteUrl(), RelativeUrl(), Url()
+* Bool should handle y and n
 * Unix timestamp
 * Domain
 * CaseInsensitiveEnum
@@ -24,5 +30,3 @@ Add scalar types
 Add kwalify parsing.
 
 Refactor so that custom scalar validators can be written.
-
-Add 'IncompleteMap' -- allows string based parsing in mapping.

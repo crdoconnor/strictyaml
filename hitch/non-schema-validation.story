@@ -13,28 +13,30 @@ Non-schema validation:
     structure, we recommend that you 'lock it down' with a schema.
 
     The Any validator can be used inside fixed structures as well.
-  scenario:
-    - Code: |
-        from strictyaml import Any, MapPattern, load
-
-    - Variable:
-        name: valid_sequence
-        value: |
-          a:
-            x: 9
-            y: 8
-          b: 2
-          c: 3
-
-    - Returns True: |
-        load(valid_sequence) == {"a": {"x": "9", "y": "8"}, "b": "2", "c": "3"}
-
-    - Returns True:
-        why: This is equivalent to the above statement
-        command: |
-          load(valid_sequence, Any()) == {"a": {"x": "9", "y": "8"}, "b": "2", "c": "3"}
-
-    - Returns True:
-        why: You can fix the schema of higher levels of the YAML and not lower levels
-        command: |
-          load(valid_sequence, MapPattern(Any(), Any())) == {"a": {"x": "9", "y": "8"}, "b": "2", "c": "3"}
+  preconditions:
+    setup: |
+      from strictyaml import Any, MapPattern, load
+    yaml_snippet: |
+      a:
+        x: 9
+        y: 8
+      b: 2
+      c: 3
+  variations:
+    Parse without validator:
+      preconditions:
+        code: load(yaml_snippet)
+      scenario:
+        - Should be equal to: '{"a": {"x": "9", "y": "8"}, "b": "2", "c": "3"}'
+        
+    Parse with any validator - equivalent:
+      preconditions:
+        code: load(yaml_snippet, Any())
+      scenario:
+        - Should be equal to: '{"a": {"x": "9", "y": "8"}, "b": "2", "c": "3"}'
+        
+    Fix higher levels of schema:
+      preconditions:
+        code: load(yaml_snippet, MapPattern(Any(), Any()))
+      scenario:
+        - Should be equal to: '{"a": {"x": "9", "y": "8"}, "b": "2", "c": "3"}'

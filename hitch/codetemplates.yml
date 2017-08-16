@@ -1,0 +1,48 @@
+shouldbeequal: |
+  from path import Path
+  import sure
+  
+  {% if variables %}
+  {% for name, value in variables.items() %}
+  {{ name }} = """{{ value }}"""
+  {% endfor %}
+  {% endif %}
+  
+  {% if yaml_snippet %}
+  yaml_snippet = """{{ yaml_snippet }}"""
+  {% endif %}
+  
+  {% if modified_yaml_snippet %}
+  modified_yaml_snippet = """{{ modified_yaml_snippet }}"""
+  {% endif %}
+
+  {{ setup }}
+
+  try:
+      ({{ code }}).should.be.equal({{ rhs }})
+  except Exception as error:
+      Path("{{ error_path }}").write_text(str(error))
+raises_exception: |
+  from path import Path
+  import sure
+  
+  {% if variables %}
+  {% for name, value in variables.items() %}
+  {{ name }} = """{{ value }}"""
+  {% endfor %}
+  {% endif %}
+  
+  {% if yaml_snippet %}
+  yaml_snippet = """{{ yaml_snippet }}"""
+  {% endif %}
+  
+  {% if modified_yaml_snippet %}
+  modified_yaml_snippet = """{{ modified_yaml_snippet }}"""
+  {% endif %}
+
+  {{ setup }}
+  
+  try:
+      {{ code|indent(4) }}
+  except Exception as error:
+      Path("{{ error_path }}").write_text(str(error))
