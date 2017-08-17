@@ -1,12 +1,8 @@
-from subprocess import call
-from os import path
 from commandlib import run
 import hitchpython
-import hitchserve
-from hitchstory import StoryCollection, StorySchema, BaseEngine, exceptions, validate
+from hitchstory import StoryCollection, StorySchema, BaseEngine, exceptions
 from hitchrun import expected
 from commandlib import Command
-import strictyaml
 from strictyaml import MapPattern, Str, Map, Int, Optional, load
 from pathquery import pathq
 import hitchtest
@@ -81,7 +77,9 @@ class Engine(BaseEngine):
                 run(self.pip("install", "-r", "debugrequirements.txt").in_dir(self.path.key))
 
         # Uninstall and reinstall
-        with hitchtest.monitor(pathq(self.path.project.joinpath("strictyaml")).ext("py")) as changed:
+        with hitchtest.monitor(
+            pathq(self.path.project.joinpath("strictyaml")).ext("py")
+        ) as changed:
             if changed:
                 run(self.pip("uninstall", "strictyaml", "-y").ignore_errors())
                 run(self.pip("install", ".").in_dir(self.path.project))
@@ -89,25 +87,6 @@ class Engine(BaseEngine):
                     self.preconditions["ruamel version"]
                 )))
 
-    def run_command(self, command):
-        self.ipython_step_library.run(command)
-        self.doc.step("code", command=command)
-
-    def variable(self, name, value):
-        self.path.state.joinpath("{}.yaml".format(name)).write_text(
-            value
-        )
-        self.ipython_step_library.run(
-            """{} = Path("{}").bytes().decode("utf8")""".format(
-                name, "{}.yaml".format(name)
-            )
-        )
-        self.doc.step("variable", var_name=name, value=value)
-
-    def code(self, command):
-        self.ipython_step_library.run(command)
-        self.doc.step("code", command=command)
-    
     def raises_exception(self, exception):
         """
         Expect an exception.
@@ -120,7 +99,9 @@ class Engine(BaseEngine):
         if error_path.exists():
             error_path.remove()
         env = Environment()
-        env.loader = DictLoader(load(self.path.key.joinpath("codetemplates.yml").bytes().decode('utf8')).data)
+        env.loader = DictLoader(
+            load(self.path.key.joinpath("codetemplates.yml").bytes().decode('utf8')).data
+        )
         runpy.write_text(env.get_template("raises_exception").render(
             setup=self.preconditions['setup'],
             code=self.preconditions['code'],
@@ -134,11 +115,11 @@ class Engine(BaseEngine):
         if not error_path.exists():
             raise ExpectedExceptionDidNotHappen()
         else:
-            assert exception.strip() in error_path.bytes().decode('utf8'), "expected:\n{0}\nshould be:\n{1}".format(
+            actual_error = error_path.bytes().decode('utf8')
+            assert exception.strip() in actual_error, "actual:\n{0}\nexpected:\n{1}".format(
                 exception,
-                error_path.bytes().decode('utf8'),
+                actual_error,
             )
-        
 
     def should_be_equal_to(self, rhs):
         """
@@ -152,7 +133,9 @@ class Engine(BaseEngine):
         if error_path.exists():
             error_path.remove()
         env = Environment()
-        env.loader = DictLoader(load(self.path.key.joinpath("codetemplates.yml").bytes().decode('utf8')).data)
+        env.loader = DictLoader(
+            load(self.path.key.joinpath("codetemplates.yml").bytes().decode('utf8')).data
+        )
         runpy.write_text(env.get_template("shouldbeequal").render(
             setup=self.preconditions['setup'],
             code=self.preconditions['code'],
@@ -166,61 +149,10 @@ class Engine(BaseEngine):
         if error_path.exists():
             raise UnexpectedException(error_path.bytes().decode("utf8"))
 
-    def returns_true(self, command, why=''):
-        self.ipython_step_library.assert_true(command)
-        self.doc.step("true", command=command, why=why)
-
-    def should_be_equal(self, lhs='', rhs='', why=''):
-        command = """({0}).should.be.equal({1})""".format(lhs, rhs)
-        self.ipython_step_library.run(command)
-        self.doc.step("true", command=command, why=why)
-
-    def assert_true(self, command):
-        self.ipython_step_library.assert_true(command)
-        self.doc.step("true", command=command)
-
-    def assert_exception(self, command, exception):
-        error = self.ipython_step_library.run(
-            command, swallow_exception=True
-        ).error
-        assert exception.strip() in error
-        self.doc.step("exception", command=command, exception=exception)
-
     def on_failure(self, result):
         if self.settings.get("pause_on_failure", True):
             if self.preconditions.get("launch_shell", False):
                 self.services.log(message=self.stacktrace.to_template())
-                self.shell()
-
-    def shell(self):
-        if hasattr(self, 'services'):
-            self.services.start_interactive_mode()
-            import sys
-            import time
-            time.sleep(0.5)
-            if path.exists(path.join(
-                path.expanduser("~"), ".ipython/profile_default/security/",
-                self.ipython_kernel_filename)
-            ):
-                call([
-                        sys.executable, "-m", "IPython", "console",
-                        "--existing", "--no-confirm-exit",
-                        path.join(
-                            path.expanduser("~"),
-                            ".ipython/profile_default/security/",
-                            self.ipython_kernel_filename
-                        )
-                    ])
-            else:
-                call([
-                    sys.executable, "-m", "IPython", "console",
-                    "--existing", self.ipython_kernel_filename
-                ])
-            self.services.stop_interactive_mode()
-
-    def assert_file_contains(self, filename, contents):
-        assert self.path.state.joinpath(filename).bytes().decode('utf8').strip() == contents.strip()
-        self.doc.step("filename contains", filename=filename, contents=contents)
 
     def pause(self, message="Pause"):
         if hasattr(self, 'services'):
@@ -287,11 +219,11 @@ def lint():
         "--max-line-length=100",
         "--exclude=__init__.py",
     ).run()
-    #python("-m", "flake8")(
-        #DIR.key.joinpath("key.py"),
-        #"--max-line-length=100",
-        #"--exclude=__init__.py",
-    #).run()
+    python("-m", "flake8")(
+        DIR.key.joinpath("key.py"),
+        "--max-line-length=100",
+        "--exclude=__init__.py",
+    ).run()
     print("Lint success!")
 
 
@@ -357,6 +289,7 @@ def docgen():
             "rst",
             docpath.joinpath("{0}.rst".format(story.slug))
         )
+
 
 @ignore_ctrlc
 def ipy():
