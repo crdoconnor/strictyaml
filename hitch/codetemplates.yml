@@ -1,48 +1,46 @@
-shouldbeequal: |
+base: |
+  # -*- coding: utf-8 -*-
   from path import Path
   import sure
+  import sys
+  
+  if sys.version_info[0] == 3:
+    unicode = str
   
   {% if variables %}
   {% for name, value in variables.items() %}
-  {{ name }} = """{{ value }}"""
+  {{ name }} = u"""{{ value }}"""
   {% endfor %}
   {% endif %}
   
   {% if yaml_snippet %}
-  yaml_snippet = """{{ yaml_snippet }}"""
+  yaml_snippet = u"""{{ yaml_snippet }}"""
   {% endif %}
   
   {% if modified_yaml_snippet %}
-  modified_yaml_snippet = """{{ modified_yaml_snippet }}"""
+  modified_yaml_snippet = u"""{{ modified_yaml_snippet }}"""
   {% endif %}
 
   {{ setup }}
+  
+  {% block main %}
 
+  {% endblock %}
+shouldbeequal: |
+  {% extends 'base' %}
+
+  {% block main %}
   try:
       ({{ code }}).should.be.equal({{ rhs }})
   except Exception as error:
-      Path("{{ error_path }}").write_text(str(error))
+      Path("{{ error_path }}").write_bytes(unicode(error).encode('utf8'))
+  {% endblock %}
 raises_exception: |
-  from path import Path
-  import sure
-  
-  {% if variables %}
-  {% for name, value in variables.items() %}
-  {{ name }} = """{{ value }}"""
-  {% endfor %}
-  {% endif %}
-  
-  {% if yaml_snippet %}
-  yaml_snippet = """{{ yaml_snippet }}"""
-  {% endif %}
-  
-  {% if modified_yaml_snippet %}
-  modified_yaml_snippet = """{{ modified_yaml_snippet }}"""
-  {% endif %}
+  {% extends 'base' %}
 
-  {{ setup }}
-  
+  {% block main %}
   try:
       {{ code|indent(4) }}
   except Exception as error:
-      Path("{{ error_path }}").write_text(str(error))
+      Path("{{ error_path }}").write_bytes(unicode(error).encode('utf8'))
+  {% endblock %}

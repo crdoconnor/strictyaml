@@ -64,7 +64,7 @@ class Engine(BaseEngine):
             filepath.write_text(text)
 
         self.python_package = hitchpython.PythonPackage(
-            self.preconditions.get('python_version', '3.5.0')
+            self.preconditions['python version']
         )
         self.python_package.build()
 
@@ -115,11 +115,16 @@ class Engine(BaseEngine):
         if not error_path.exists():
             raise ExpectedExceptionDidNotHappen()
         else:
+            import difflib
             actual_error = error_path.bytes().decode('utf8')
-            assert exception.strip() in actual_error, "actual:\n{0}\nexpected:\n{1}".format(
-                exception,
-                actual_error,
-            )
+            if not exception.strip() in actual_error:
+                raise Exception(
+                    "actual:\n{0}\nexpected:\n{1}\ndiff:\n{2}".format(
+                        exception,
+                        actual_error,
+                        ''.join(difflib.context_diff(exception, actual_error)),
+                    )
+                )
 
     def should_be_equal_to(self, rhs):
         """
