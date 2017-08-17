@@ -1,9 +1,14 @@
+"""
+Parsing code for strictyaml.
+
+This whole module is a mess because ruamel.yaml's design is a fucking trainwreck.
+"""
+
 from ruamel import yaml as ruamelyaml
 from strictyaml import exceptions
 from ruamel.yaml.comments import CommentedSeq, CommentedMap
 from strictyaml.any_validator import Any
 from strictyaml.yamllocation import YAMLChunk
-
 
 from ruamel.yaml.reader import Reader
 from ruamel.yaml.scanner import RoundTripScanner
@@ -76,6 +81,9 @@ class StrictYAMLConstructor(RoundTripConstructor):
                     ]
                 )
                 if key in maptyp:
+                    key_node.start_mark.name = self.label
+                    key_node.end_mark.name = self.label
+
                     raise exceptions.DuplicateKeysDisallowed(
                         "While parsing",
                         key_node.start_mark,
@@ -208,12 +216,15 @@ class StrictYAMLLoader(
 def load(yaml_string, schema=None, label=u"<unicode string>"):
     """
     Parse the first YAML document in a string
-    and produce corresponding python object (dict, list, string).
+    and produce corresponding YAML object.
     """
     if str(type(yaml_string)) not in ("<type 'unicode'>", "<type 'str'>", "<class 'str'>"):
         raise TypeError("StrictYAML can only read a string of valid YAML.")
 
-    document = ruamelyaml.load(yaml_string, Loader=StrictYAMLLoader)
+    # We manufacture a class that has the label we want
+    DynamicStrictYAMLLoader = type('DynamicStrictYAMLLoader', (StrictYAMLLoader,), {"label": label})
+    
+    document = ruamelyaml.load(yaml_string, Loader=DynamicStrictYAMLLoader)
 
     # Document is just a  (string, int, etc.)
     if type(document) not in (CommentedMap, CommentedSeq):

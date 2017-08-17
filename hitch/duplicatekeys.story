@@ -16,13 +16,31 @@ Duplicate keys:
       a: cow
       a: bull
     code: load(yaml_snippet)
-  scenario:
-    - Raises exception: |
-        While parsing
-          in "<unicode string>", line 2, column 1:
-            a: bull
-            ^ (line: 2)
-        Duplicate key 'a' found
-          in "<unicode string>", line 2, column 2:
-            a: bull
-             ^ (line: 2)
+  variations:
+    Nameless exception:
+      scenario:
+        - Raises exception: |
+            While parsing
+              in "<unicode string>", line 2, column 1:
+                a: bull
+                ^ (line: 2)
+            Duplicate key 'a' found
+              in "<unicode string>", line 2, column 2:
+                a: bull
+                 ^ (line: 2)
+
+
+    Named exception:
+      preconditions:
+        code: |
+          load(yaml_snippet, label="mylabel")
+      scenario:
+        - Raises exception: |
+            While parsing
+              in "mylabel", line 2, column 1:
+                a: bull
+                ^ (line: 2)
+            Duplicate key 'a' found
+              in "mylabel", line 2, column 2:
+                a: bull
+                 ^ (line: 2)
