@@ -233,7 +233,23 @@ def yaml_object_from_values(value):
     from strictyaml.parser import load
     from ruamel.yaml.scalarstring import PreservedScalarString
     from ruamel.yaml import dump
-    output = load(dump({"yaml": value}, default_flow_style=False))['yaml']
+
+    if isinstance(value, (unicode, str)):
+        if "\n" in value:
+            output = load(dump(
+                {"yaml": PreservedScalarString(value)},
+                default_flow_style=False,
+                Dumper=RoundTripDumper
+            ))['yaml']
+        else:
+            output = load(dump(
+                {"yaml": value}, default_flow_style=False, Dumper=RoundTripDumper
+            ))['yaml']
+    else:
+        output = load(dump(
+            {"yaml": value}, default_flow_style=False, Dumper=RoundTripDumper
+        ))['yaml']
+
     if isinstance(output._chunk._document['yaml'], unicode):
         if "\n" in output._chunk.contents:
             output._chunk._document['yaml'] = PreservedScalarString(
