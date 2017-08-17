@@ -120,8 +120,8 @@ class Engine(BaseEngine):
             if not exception.strip() in actual_error:
                 raise Exception(
                     "actual:\n{0}\nexpected:\n{1}\ndiff:\n{2}".format(
-                        exception,
                         actual_error,
+                        exception,
                         ''.join(difflib.context_diff(exception, actual_error)),
                     )
                 )
