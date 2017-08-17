@@ -35,7 +35,8 @@ Roundtripped YAML:
         code: load(yaml_snippet, schema).as_yaml()
       scenario:
         - Should be equal to: yaml_snippet
-    Modified:
+
+    Modified with invalid variable:
       preconditions:
         code: |
           to_modify = load(yaml_snippet, schema)
