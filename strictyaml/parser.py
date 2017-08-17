@@ -167,7 +167,7 @@ class StrictYAMLScanner(RoundTripScanner):
                     token = self.tokens[0]
                     token.start_mark.name = self.label
                     token.end_mark.name = self.label
-                    
+
                     if isinstance(token, ruamelyaml.tokens.TagToken):
                         raise exceptions.TagTokenDisallowed(
                             "While scanning",
@@ -226,7 +226,7 @@ def load(yaml_string, schema=None, label=u"<unicode string>"):
 
     # We manufacture a class that has the label we want
     DynamicStrictYAMLLoader = type('DynamicStrictYAMLLoader', (StrictYAMLLoader,), {"label": label})
-    
+
     document = ruamelyaml.load(yaml_string, Loader=DynamicStrictYAMLLoader)
 
     # Document is just a  (string, int, etc.)
