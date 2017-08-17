@@ -165,6 +165,9 @@ class StrictYAMLScanner(RoundTripScanner):
             for choice in choices:
                 if isinstance(self.tokens[0], choice):
                     token = self.tokens[0]
+                    token.start_mark.name = self.label
+                    token.end_mark.name = self.label
+                    
                     if isinstance(token, ruamelyaml.tokens.TagToken):
                         raise exceptions.TagTokenDisallowed(
                             "While scanning",
