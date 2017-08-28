@@ -1,4 +1,4 @@
-Normal Map:
+Mapping:
   based on: strictyaml
   importance: 3
   description: |
@@ -22,96 +22,89 @@ Normal Map:
         â: 1
         b: 2
         c: 3
+  
+  variations:
+    one key mapping:
+      preconditions:
+        variables:
+          onekeymap: 'x: 1'
+        code: |
+          str(load(onekeymap, Map({"x": Int()})).data)
+      scenario:
+        - Should be equal to: |
+            str({'x': 1})
 
-Mapping - one key mapping:
-  based on: Normal Map
-  preconditions:
-    variables:
-      onekeymap: 'x: 1'
-    code: |
-      str(load(onekeymap, Map({"x": Int()})).data)
-  scenario:
-    - Should be equal to: |
-        str({'x': 1})
+    key value:
+      preconditions:
+        code: |
+          load(valid_mapping_2, schema_2)[u'â']
+      scenario:
+        - Should be equal to: 1
 
-Mapping - key value:
-  based on: Normal Map
-  preconditions:
-    code: |
-      load(valid_mapping_2, schema_2)[u'â']
-  scenario:
-    - Should be equal to: 1
+    get item key not found:
+      preconditions:
+        code: |
+          load(valid_mapping_2, schema_2)['keynotfound']
+      scenario:
+        - Raises exception: keynotfound
 
-Mapping - get item key not found:
-  based on: Normal Map
-  preconditions:
-    code: |
-      load(valid_mapping_2, schema_2)['keynotfound']
-  scenario:
-    - Raises exception: keynotfound
+    cannot use .text:
+      preconditions:
+        code: |
+          load(valid_mapping_2, schema_2).text
+      scenario:
+        - Raises Exception: is a mapping, has no text value.
 
-Mapping - cannot use .text:
-  based on: Normal Map
-  preconditions:
-    code: |
-      load(valid_mapping_2, schema_2).text
-  scenario:
-    - Raises Exception: is a mapping, has no text value.
+    key not found in schema:
+      preconditions:
+        variables:
+          invalid_sequence_1: |
+            a: 1
+            b: 2
+            â: 3
+        code: |
+          load(invalid_sequence_1, schema)
+      scenario:
+        - Raises Exception: |
+            while parsing a mapping
+            unexpected key not in schema 'â'
+              in "<unicode string>", line 3, column 1:
+                "\xE2": '3'
+                ^ (line: 3)
 
-Mapping - key not found in schema:
-   based on: Normal Map
-   preconditions:
-     variables:
-       invalid_sequence_1: |
-         a: 1
-         b: 2
-         â: 3
-     code: |
-       load(invalid_sequence_1, schema)
-   scenario:
-    - Raises Exception: |
-        while parsing a mapping
-        unexpected key not in schema 'â'
-          in "<unicode string>", line 3, column 1:
-            "\xE2": '3'
-            ^ (line: 3)
-
-Mapping - sequence not expected:
-   based on: Normal Map
-   preconditions:
-     variables:
-       invalid_sequence_2: |
-         - 1
-         - 2
-         - 3
-     code: load(invalid_sequence_2, schema)
-   scenario:
-    - Raises Exception: |
-        when expecting a mapping
-          in "<unicode string>", line 1, column 1:
-            - '1'
-             ^ (line: 1)
-        found non-mapping
-          in "<unicode string>", line 3, column 1:
-            - '3'
-            ^ (line: 3)
-
+    sequence not expected:
+      preconditions:
+        variables:
+          invalid_sequence_2: |
+            - 1
+            - 2
+            - 3
+        code: load(invalid_sequence_2, schema)
+      scenario:
+        - Raises Exception: |
+            when expecting a mapping
+              in "<unicode string>", line 1, column 1:
+                - '1'
+                 ^ (line: 1)
+            found non-mapping
+              in "<unicode string>", line 3, column 1:
+                - '3'
+                ^ (line: 3)
               
-Mapping - unexpected key:
-  based on: Normal Map
-  preconditions:
-    variables:
-      invalid_sequence_3: |
-        a: 1
-        b: 2
-        c: 3
-        d: 4
-    code: |
-      load(invalid_sequence_3, schema)
-  scenario:
-    - Raises exception: |
-        while parsing a mapping
-        unexpected key not in schema 'd'
-          in "<unicode string>", line 4, column 1:
-            d: '4'
-            ^ (line: 4)
+    unexpected key:
+      preconditions:
+        variables:
+          invalid_sequence_3: |
+            a: 1
+            b: 2
+            c: 3
+            d: 4
+        code: |
+          load(invalid_sequence_3, schema)
+      scenario:
+        - Raises exception: |
+            while parsing a mapping
+            unexpected key not in schema 'd'
+              in "<unicode string>", line 4, column 1:
+                d: '4'
+                ^ (line: 4)
