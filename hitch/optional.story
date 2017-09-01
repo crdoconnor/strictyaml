@@ -40,7 +40,7 @@ Optional validation:
           b: 2
       scenario:
         - Raises exception: |
-            when expecting a boolean value (one of "yes", "true", "on", "1", "no", "false", "off", "0")
+            when expecting a boolean value (one of "yes", "true", "on", "1", "y", "no", "false", "off", "0", "n")
             found non-boolean
               in "<unicode string>", line 2, column 1:
                 b: '2'

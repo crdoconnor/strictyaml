@@ -20,18 +20,24 @@ Boolean validation:
         c: on
         d: 1
         e: True
+        f: Y
+
+        u: n
         v: False
         w: 0
         x: Off
         y: FALSE
         z: no
   variations:
-    Valid:
+    Parse to YAML object:
       preconditions:
         code: load(yaml_snippet, schema)
       scenario:
         - Should be equal to: |
-            {"a": True, "b": True, "c": True, "d": True, "e": True, "v": False, "w": False, "x": False, "y": False, "z": False,}
+            {
+                "a": True, "b": True, "c": True, "d": True, "e": True, "f": True,
+                "u": False, "v": False, "w": False, "x": False, "y": False, "z": False,
+            }
 
     YAML object should resolve to True or False:
       preconditions:
@@ -64,7 +70,7 @@ Boolean validation:
         code: load(yaml_snippet, schema)
       scenario:
         - Raises exception: |
-            when expecting a boolean value (one of "yes", "true", "on", "1", "no", "false", "off", "0")
+            when expecting a boolean value (one of "yes", "true", "on", "1", "y", "no", "false", "off", "0", "n")
             found non-boolean
               in "<unicode string>", line 1, column 1:
                 a: "y\xE2s"
