@@ -32,7 +32,7 @@ Mapping:
           str(load(onekeymap, Map({"x": Int()})).data)
       scenario:
         - Should be equal to: |
-            str({'x': 1})
+            "OrderedDict([('x', 1)])"
 
     key value:
       preconditions:

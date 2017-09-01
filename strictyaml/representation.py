@@ -4,6 +4,7 @@ from ruamel.yaml import RoundTripDumper
 from ruamel.yaml import dump
 from strictyaml import utils
 from copy import copy, deepcopy
+from collections import OrderedDict
 import decimal
 import sys
 
@@ -50,7 +51,7 @@ class YAML(object):
     @property
     def data(self):
         if isinstance(self._value, CommentedMap):
-            mapping = {}
+            mapping = OrderedDict()
             for key, value in self._value.items():
                 if type(key) in (str, unicode):
                     mapping[key] = value.data
