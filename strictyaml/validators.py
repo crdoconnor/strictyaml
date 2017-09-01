@@ -74,8 +74,10 @@ class Map(Validator):
         self._validator = validator
 
         self._validator_dict = {
-            key.key if type(key) == Optional else key: value for key, value in validator.items()
+            key.key if isinstance(key, Optional) else key: value for key, value in validator.items()
         }
+
+        self._required_keys = [key for key in validator.keys() if not isinstance(key, Optional)]
 
     def __repr__(self):
         return u"Map({{{0}}})".format(', '.join([
@@ -95,6 +97,7 @@ class Map(Validator):
                 chunk,
             )
         else:
+            found_keys = set()
             for key, value in chunk.contents.items():
                 if key not in self._validator_dict.keys():
                     raise_exception(
@@ -103,11 +106,21 @@ class Map(Validator):
                         chunk.key(key)
                     )
 
+                found_keys.add(key)
                 validator = self._validator_dict[key]
                 del return_snippet[key]
                 return_snippet[
                     YAML(key, chunk=chunk.key(key), validator=validator)
                 ] = validator(chunk.val(key))
+
+            if not set(self._required_keys).issubset(found_keys):
+                raise_exception(
+                    u"while parsing a mapping",
+                    u"required key(s) '{0}' not found".format(
+                        "', '".join(sorted(list(set(self._required_keys).difference(found_keys))))
+                    ),
+                    chunk,
+                )
 
         return YAML(return_snippet, chunk=chunk, validator=self)
 

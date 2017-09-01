@@ -108,3 +108,19 @@ Mapping:
               in "<unicode string>", line 4, column 1:
                 d: '4'
                 ^ (line: 4)
+
+
+    required key not found:
+      preconditions:
+        variables:
+          snippet: |
+            a: 1
+        code: |
+          load(snippet, schema)
+      scenario:
+        - Raises exception: |
+            while parsing a mapping
+            required key(s) 'b', 'c' not found
+              in "<unicode string>", line 1, column 1:
+                a: '1'
+                 ^ (line: 1)
