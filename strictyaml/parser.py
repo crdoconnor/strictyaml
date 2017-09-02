@@ -1,7 +1,5 @@
 """
 Parsing code for strictyaml.
-
-This whole module is a mess because ruamel.yaml's design is a fucking trainwreck.
 """
 
 from ruamel import yaml as ruamelyaml
@@ -227,9 +225,17 @@ def load(yaml_string, schema=None, label=u"<unicode string>"):
     # We manufacture a class that has the label we want
     DynamicStrictYAMLLoader = type('DynamicStrictYAMLLoader', (StrictYAMLLoader,), {"label": label})
 
-    document = ruamelyaml.load(yaml_string, Loader=DynamicStrictYAMLLoader)
+    try:
+        document = ruamelyaml.load(yaml_string, Loader=DynamicStrictYAMLLoader)
+    except ruamelyaml.YAMLError as parse_error:
+        if parse_error.context_mark is not None:
+            parse_error.context_mark.name = label
+        if parse_error.problem_mark is not None:
+            parse_error.problem_mark.name = label
 
-    # Document is just a  (string, int, etc.)
+        raise parse_error
+
+    # Document is just a (string, int, etc.)
     if type(document) not in (CommentedMap, CommentedSeq):
         document = yaml_string
 

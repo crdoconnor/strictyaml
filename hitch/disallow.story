@@ -1,14 +1,18 @@
-Overly complex YAML disallowed:
+Disallowed YAML:
   based on: strictyaml
   description: |
-    StrictYAML is an opinionated subset of the YAML
+    StrictYAML parses an opinionated subset of the YAML
     specification which refuses to parse features which
     are otherwise valid in standard YAML.
     
-    For extra details on *why* these features are stripped
-    out of StrictYAML, see the FAQ, although for the
-    most part the answer is "because they're overcomplicated
-    and features that inhibit markup readability".
+    For an explanation as to why these features are stripped
+    out of StrictYAML, see the FAQ.
+    
+    Disallowed YAML features raise Disallowed exceptions
+    while syntactically invalid YAML raises ScannerError
+    or ComposerError.
+    
+    Every error inherits from YAMLError.
   preconditions:
     setup: |
       from strictyaml import Map, Int, Any, load
@@ -87,3 +91,23 @@ Overly complex YAML disallowed:
               in "disallowed", line 2, column 12:
                   a: &node1 3.5
                            ^ (line: 2)
+
+
+    Syntactically invalid YAML:
+      description: |
+        To use literally, surround with quotes, e.g. x: '{ a: 1, b: 2, c: 3 }'
+      preconditions:
+        yaml_snippet: |
+          - invalid
+          string
+      scenario:
+        - Raises exception: |
+            while scanning a simple key
+              in "disallowed", line 2, column 1:
+                string
+                ^ (line: 2)
+            could not find expected ':'
+              in "disallowed", line 3, column 1:
+                
+                ^ (line: 3)
+
