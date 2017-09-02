@@ -12,9 +12,9 @@ Priorities:
 * Ease of use of API.
 * Secure by default.
 * Strict validation of markup and straightforward type casting.
-* Clear, human readable exceptions with line numbers.
+* Clear, readable exceptions with line numbers.
 * Acting as a near-drop in replacement for pyyaml, ruamel.yaml or poyo.
-* Roundtripping - reading in (commented) YAML and writing it out with comments.
+* Ability to read in (commented) YAML and write it out again with comments preserved.
 * Letting you worry about more interesting things than parsing or writing config files.
 
 Simple example:
@@ -31,26 +31,52 @@ Default parse result:
 
 .. code-block:: python
 
-   >>> strictyaml.load(yaml)
+   >>> strictyaml.load(yaml_str)
    YAML({'possessions': ['Towel'], 'age': '42', 'name': 'Ford Prefect'})
 
-   >>> strictyaml.load(yaml).data
+   >>> strictyaml.load(yaml_str).data
    {"name": "Ford Prefect", "age": "42", "possessions": ["Towel", ]}   # All data is str, list or dict
 
 Using a schema:
 
 .. code-block:: python
 
-   >>> from strictyaml import load, Map, Str, Int, Seq
-   >>> person = load(yaml, Map({"name": Str(), "age": Int(), "possessions": Seq(Str())})) \
+   >>> from strictyaml import load, Map, Str, Int, Seq, YAMLError
+   >>> schema = Map({"name": Str(), "age": Int(), "possessions": Seq(Str())})
+   >>> person = load(yaml_str, schema)
    >>> person.data == {"name": "Ford Prefect", "age": 42, "possessions": ["Towel", ]}     # 42 is now an int
 
+A YAMLError will be raised if there are syntactic problems, violations of your schema or use of disallowed YAML features:
 
-Once parsed you can change values and roundtrip the whole YAML, with comments preserved:
+
+.. code-block:: yaml
+
+  # All about the character
+  name: Ford Prefect
+  age: 42
 
 .. code-block:: python
 
-   >>> person['age'] = load('43')
+   >>> try:
+   >>>     person = load(yaml_str, schema)
+   >>> except YAMLError as error:
+   >>>     print(error)
+
+   while parsing a mapping
+     in "<unicode string>", line 1, column 1:
+       # All about the character
+       ^ (line: 1)
+   required key(s) 'possessions' not found
+     in "<unicode string>", line 3, column 1:
+       age: '42'
+       ^ (line: 3)
+
+
+If parsed correctly you can modify values and write out the YAML with comments preserved:
+
+.. code-block:: python
+
+   >>> person['age'] = 43
    >>> print(person.as_yaml())
    # All about the character
    name: Ford Prefect
@@ -65,8 +91,7 @@ As well as look up line numbers:
    >>> person['possessions'][0].start_line
    5
 
-
-See more `example driven documentation <http://strictyaml.readthedocs.org/>`_.
+All other features are documented using the `example driven documentation <http://strictyaml.readthedocs.org/>`_.
 
 
 Install It
