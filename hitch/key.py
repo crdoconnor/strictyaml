@@ -87,9 +87,17 @@ class Engine(BaseEngine):
                     self.preconditions["ruamel version"]
                 )))
 
-    def raises_exception(self, exception):
+    def raises_exception(self, exception_type=None, message=None):
         """
         Expect an exception.
+        """
+        from hitchrunpy import ExamplePythonCode
+        ExamplePythonCode(
+            self.preconditions['code']
+        ).with_setup_code(self.preconditions.get('setup', ''))\
+         .expect_exception(exception_type, message)\
+         .run(self.path.state, self.python)
+
         """
         class ExpectedExceptionDidNotHappen(Exception):
             pass
@@ -125,6 +133,7 @@ class Engine(BaseEngine):
                         ''.join(difflib.context_diff(exception, actual_error)),
                     )
                 )
+        """
 
     def should_be_equal_to(self, rhs):
         """

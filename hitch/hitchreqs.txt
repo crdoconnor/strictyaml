@@ -3,7 +3,7 @@ certifi==2017.4.17        # via requests
 chardet==3.0.3            # via requests
 click==6.7                # via hitch-pip-tools, hitchrun, hitchtest
 colorama==0.3.9           # via hitchrun, hitchserve, hitchstory, hitchtest, prettystack
-commandlib==0.2.7         # via hitchrun, hitchserve, hitchtest
+commandlib==0.2.7         # via hitchrun, hitchrunpy, hitchserve, hitchtest
 decorator==4.0.11         # via ipython, traitlets
 docopt==0.6.2             # via pykwalify
 faketime==0.9.6.6         # via hitchserve
@@ -13,6 +13,7 @@ hitch-pip-tools==1.8.3    # via hitchrun
 hitchdoc==0.1.1
 hitchpython==0.5.3
 hitchrun==0.2.4
+hitchrunpy==0.1.0
 hitchserve==0.5.1         # via hitchpython
 hitchstory==0.2.9
 hitchtest==0.9.12         # via hitchpython
@@ -21,13 +22,13 @@ idna==2.5                 # via requests
 ipykernel==4.6.1          # via jupyter-console
 ipython-genutils==0.2.0   # via traitlets
 ipython==4.2.1            # via hitchtest, ipykernel, jupyter-console
-jinja2==2.9.6             # via hitchdoc, hitchstory, hitchtest, prettystack
+jinja2==2.9.6             # via hitchdoc, hitchrunpy, hitchstory, hitchtest, prettystack
 jupyter-client==5.0.1     # via hitchpython, ipykernel, jupyter-console
-jupyter-console==5.1.0
+jupyter-console==5.2.0
 jupyter-core==4.3.0       # via jupyter-client
 markupsafe==1.0           # via jinja2
 mccabe==0.6.1             # via flake8
-path.py==10.3.1           # via hitchdoc, hitchrun, hitchstory, hitchtest, pathquery, prettystack
+path.py==10.3.1           # via hitchdoc, hitchrun, hitchrunpy, hitchstory, hitchtest, pathquery, prettystack
 pathquery==0.2.2          # via hitchstory
 patool==1.12              # via hitchtest
 peewee==2.9.2             # via hitchdoc
