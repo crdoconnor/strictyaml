@@ -13,17 +13,13 @@ To run integration tests / environment on a Mac::
 
     $ brew install python python3
 
-    $ pip install --upgrade hitch virtualenv
+    $ pip install --upgrade hitchkey virtualenv
 
 Git clone the repository somewhere new (e.g. a temporary directory) and switch to the branch you want.
 
 Then::
 
-    $ cd tests/
-
-    $ hitch init
-
-    $ hitch test map.test --settings tdd.settings
+    $ hk regression
 
 
 Running on Linux
@@ -33,22 +29,8 @@ To set up::
 
     $ sudo apt-get install python3 python-pip python-virtualenv
 
-    $ sudo pip install --upgrade hitch
+    $ sudo pip install --upgrade hitchkey
 
 Then::
 
-    $ cd tests
-
-    $ hitch init
-
-    $ hitch test map.test --settings tdd.settings
-
-Troubleshooting
-===============
-
-If something goes wrong during set up you can do the following:
-
-* Note that if you see some assertion errors during hitch init they can *safely be ignored*.
-* Try running the test again if it fails a first time.
-* Try running hitch clean and hitch cleanpkg and then running hitch init / hitch test again.
-* Email me with the stacktrace (crdoconnor@gmail.com) if you can't figure out why it's failing.
+    $ hk regression
