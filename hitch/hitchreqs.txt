@@ -13,7 +13,7 @@ hitch-pip-tools==1.8.3    # via hitchrun
 hitchdoc==0.1.1
 hitchpython==0.5.3
 hitchrun==0.2.4
-hitchrunpy==0.1.0
+hitchrunpy==0.1.2
 hitchserve==0.5.1         # via hitchpython
 hitchstory==0.2.9
 hitchtest==0.9.12         # via hitchpython

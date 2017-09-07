@@ -92,9 +92,11 @@ class Engine(BaseEngine):
         Expect an exception.
         """
         from hitchrunpy import ExamplePythonCode
+
         ExamplePythonCode(
             self.preconditions['code']
         ).with_setup_code(self.preconditions.get('setup', ''))\
+         .with_long_strings(yaml_snippet=self.preconditions.get('yaml_snippet'))\
          .expect_exception(exception_type, message)\
          .run(self.path.state, self.python)
 
