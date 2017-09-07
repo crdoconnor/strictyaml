@@ -51,7 +51,7 @@ YAML is a simple, human readable format for representing associative and hierarc
     customer:
       first name: Harry
       family name: Potter
-    address: |
+    address: |-
       4 Privet Drive,
       Little Whinging,
       England
@@ -71,9 +71,9 @@ Key features:
 
 * Things which are associated with other things - delimited by the colon (:).
 * Ordered lists of things - delimited by the prepended dash (-).
-* Multi-line strings - delimited by the bar (|).
+* Multi-line strings - delimited by the bar (|) if there is another newline at the end of the string, or bar + dash (|-) if not.
 * Indentation describing the hierarchy of data.
-* Easily maps to data types common to most high level languages - lists, dicts, scalars.
+* Maps directly to data types common to most high level languages - lists, dicts, scalars.
 
 This is all you really need to know.
 
