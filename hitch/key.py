@@ -78,7 +78,7 @@ class Engine(BaseEngine):
                     self.preconditions["ruamel version"]
                 )))
 
-        self.example_py_code = ExamplePythonCode(self.preconditions['code'])\
+        self.example_py_code = ExamplePythonCode(self.preconditions.get('code', ''))\
             .with_setup_code(self.preconditions.get('setup', ''))\
             .with_long_strings(
                 yaml_snippet=self.preconditions.get('yaml_snippet'),
@@ -102,8 +102,13 @@ class Engine(BaseEngine):
         """
         Code should be equal to rhs
         """
-        self.example_py_code.is_equal(self.preconditions.get("code"), rhs)\
-                            .run(self.path.state, self.python)
+        self.example_py_code = ExamplePythonCode(self.preconditions['setup'])\
+            .with_long_strings(
+                yaml_snippet=self.preconditions.get('yaml_snippet'),
+                modified_yaml_snippet=self.preconditions.get('modified_yaml_snippet'),
+            )\
+            .is_equal(self.preconditions.get("code"), rhs)\
+            .run(self.path.state, self.python)
 
     def pause(self, message="Pause"):
         import IPython

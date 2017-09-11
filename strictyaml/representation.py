@@ -86,7 +86,7 @@ class YAML(object):
             if utils.is_integer(self._text):
                 return int(self._text)
             elif utils.is_decimal(self._text):
-                return decimal.Decimal(self._text)
+                return float(self._text)
             else:
                 return self._text
 

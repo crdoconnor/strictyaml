@@ -53,6 +53,36 @@ Roundtripped YAML:
                 yaml: not an integer
                  ^ (line: 1)
 
+    Modified with float:
+      preconditions:
+        setup: |
+          from strictyaml import Map, MapPattern, Str, Seq, Int, load
+
+          schema = Map({
+              "a": Str(),
+              "b": Map({"x": Int(), "y": Int()}),
+              "c": Seq(MapPattern(Str(), Str())),
+          })
+
+          to_modify = load(yaml_snippet, schema)
+          to_modify['c'][0]['a'] = "1.0001"
+        code: |
+          to_modify.as_yaml()
+        modified_yaml_snippet: |
+          # Some comment
+
+          a: â # value comment
+
+          # Another comment
+          b:
+            x: 4
+            y: 5
+          c:
+          - a: 1.0001
+          - b: 2
+      scenario:
+      - Should be equal to: modified_yaml_snippet
+
 
     Modified with one variable:
       preconditions:
