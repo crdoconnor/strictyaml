@@ -16,14 +16,10 @@ for why not TOML
 
 Add scalar types
 
-* AbsoluteUrl(), RelativeUrl(), Url()
-* Bool should handle y and n
-* Unix timestamp
-* Domain
+* AbsoluteUrl(), RelativeUrl(), UNIXPath(), Domain()
 * CaseInsensitiveEnum
 * PositiveInt
 * Base64
-* UNIX path
 * Templex
 
 Add kwalify parsing.
