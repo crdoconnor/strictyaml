@@ -226,6 +226,9 @@ class YAML(object):
     def __eq__(self, value):
         return self.data == value
 
+    def __ne__(self, value):
+        return self.data != value
+
 
 def yaml_object_from_values(value):
     """
