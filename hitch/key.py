@@ -11,6 +11,7 @@ from hitchrun import hitch_maintenance
 from commandlib import python
 from hitchrun import DIR
 from hitchrun.decorators import ignore_ctrlc
+from hitchrunpy import ExamplePythonCode, ExpectedExceptionMessageWasDifferent
 import requests
 
 
@@ -48,16 +49,10 @@ class Engine(BaseEngine):
             self.path.gen.joinpath('storydb.sqlite'),
         )
 
-        if self.path.gen.joinpath("state").exists():
-            self.path.gen.joinpath("state").rmtree(ignore_errors=True)
-        self.path.gen.joinpath("state").mkdir()
         self.path.state = self.path.gen.joinpath("state")
-
-        for filename, text in self.preconditions.get("files", {}).items():
-            filepath = self.path.state.joinpath(filename)
-            if not filepath.dirname().exists():
-                filepath.dirname().mkdir()
-            filepath.write_text(text)
+        if self.path.state.exists():
+            self.path.state.rmtree(ignore_errors=True)
+        self.path.state.mkdir()
 
         self.python_package = hitchpython.PythonPackage(
             self.preconditions['python version']
@@ -83,22 +78,20 @@ class Engine(BaseEngine):
                     self.preconditions["ruamel version"]
                 )))
 
+        self.example_py_code = ExamplePythonCode(self.preconditions['code'])\
+            .with_setup_code(self.preconditions.get('setup', ''))\
+            .with_long_strings(
+                yaml_snippet=self.preconditions.get('yaml_snippet'),
+                modified_yaml_snippet=self.preconditions.get('modified_yaml_snippet'),
+            )
+
     def raises_exception(self, exception_type=None, message=None):
         """
         Expect an exception.
         """
-        from hitchrunpy import ExamplePythonCode, ExpectedExceptionMessageWasDifferent
-
         try:
-            ExamplePythonCode(
-                self.preconditions['code']
-            ).with_setup_code(self.preconditions.get('setup', ''))\
-             .with_long_strings(
-                yaml_snippet=self.preconditions.get('yaml_snippet'),
-                modified_yaml_snippet=self.preconditions.get('modified_yaml_snippet'),
-              )\
-             .expect_exception(exception_type, message)\
-             .run(self.path.state, self.python)
+            self.example_py_code.expect_exception(exception_type, message)\
+                                .run(self.path.state, self.python)
         except ExpectedExceptionMessageWasDifferent as error:
             if self.settings.get("rewrite"):
                 self.current_step.update(message=error.actual_message)
@@ -109,40 +102,16 @@ class Engine(BaseEngine):
         """
         Code should be equal to rhs
         """
-        from hitchrunpy import ExamplePythonCode
-        ExamplePythonCode(
-            self.preconditions['setup']
-        ).with_long_strings(
-              yaml_snippet=self.preconditions.get('yaml_snippet'),
-              modified_yaml_snippet=self.preconditions.get('modified_yaml_snippet'),
-          )\
-         .is_equal(self.preconditions.get("code"), rhs)\
-         .run(self.path.state, self.python)
-
-    def on_failure(self, result):
-        if self.settings.get("pause_on_failure", True):
-            if self.preconditions.get("launch_shell", False):
-                self.services.log(message=self.stacktrace.to_template())
+        self.example_py_code.is_equal(self.preconditions.get("code"), rhs)\
+                            .run(self.path.state, self.python)
 
     def pause(self, message="Pause"):
-        if hasattr(self, 'services'):
-            self.services.start_interactive_mode()
         import IPython
         IPython.embed()
-        if hasattr(self, 'services'):
-            self.services.stop_interactive_mode()
 
     def on_success(self):
         if self.settings.get("rewrite"):
             self.new_story.save()
-
-    def tear_down(self):
-        try:
-            self.shutdown_connection()
-        except:
-            pass
-        if hasattr(self, 'services'):
-            self.services.shutdown()
 
 
 def _storybook(settings):
