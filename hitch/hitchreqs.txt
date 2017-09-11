@@ -3,7 +3,7 @@ certifi==2017.4.17        # via requests
 chardet==3.0.3            # via requests
 click==6.7                # via hitch-pip-tools, hitchrun, hitchtest
 colorama==0.3.9           # via hitchrun, hitchserve, hitchstory, hitchtest, prettystack
-commandlib==0.2.7         # via hitchrun, hitchrunpy, hitchserve, hitchtest
+commandlib==0.2.8         # via hitchrun, hitchrunpy, hitchserve, hitchtest
 decorator==4.0.11         # via ipython, traitlets
 docopt==0.6.2             # via pykwalify
 faketime==0.9.6.6         # via hitchserve
@@ -13,9 +13,9 @@ hitch-pip-tools==1.8.3    # via hitchrun
 hitchdoc==0.1.1
 hitchpython==0.5.3
 hitchrun==0.2.4
-hitchrunpy==0.1.2
+hitchrunpy==0.1.3
 hitchserve==0.5.1         # via hitchpython
-hitchstory==0.2.9
+hitchstory==0.3.0
 hitchtest==0.9.12         # via hitchpython
 humanize==0.5.1           # via hitchserve
 idna==2.5                 # via requests
@@ -56,8 +56,9 @@ ruamel.yaml==0.15.15      # via strictyaml
 simex==0.3.5
 simplegeneric==0.8.1      # via ipython
 six==1.10.0               # via hitch-pip-tools, prompt-toolkit, python-dateutil, traitlets
-strictyaml==0.7.0         # via hitchdoc, hitchstory
+strictyaml==0.7.1         # via hitchdoc, hitchstory
 tblib==1.3.2              # via hitchserve
+templex==0.1.0
 tornado==4.5.1            # via ipykernel
 tqdm==4.14.0              # via twine
 traitlets==4.3.2          # via ipykernel, ipython, jupyter-client, jupyter-core

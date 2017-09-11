@@ -24,20 +24,20 @@ Datetime:
   variations:
     Valid:
       scenario:
-        - Should be equal to: |
-            {
-                "date": datetime(2016, 10, 22, 0, 0),
-                "datetime1": datetime(2016, 10, 22, 14, 23, 12, tzinfo=tzutc()),
-                "datetime2": datetime(2016, 10, 22, 14, 23, 12, tzinfo=tzutc()),
-                "datetime3": datetime(2016, 10, 22, 14, 23, 12, tzinfo=tzutc()),
-            }
-        
+      - Should be equal to: |
+          {
+              "date": datetime(2016, 10, 22, 0, 0),
+              "datetime1": datetime(2016, 10, 22, 14, 23, 12, tzinfo=tzutc()),
+              "datetime2": datetime(2016, 10, 22, 14, 23, 12, tzinfo=tzutc()),
+              "datetime3": datetime(2016, 10, 22, 14, 23, 12, tzinfo=tzutc()),
+          }
+
     .text:
       preconditions:
         code: load(yaml_snippet, schema)["date"].text
       scenario:
-        - Should be equal to: |
-            "2016-10-22"
+      - Should be equal to: |
+          "2016-10-22"
 
     Non datetime:
       preconditions:
@@ -47,7 +47,9 @@ Datetime:
           datetime2: b
           datetime3: c
       scenario:
-        - Raises exception: |
+      - Raises exception:
+          exception type: strictyaml.exceptions.YAMLValidationError
+          message: |-
             when expecting a datetime
             found non-datetime
               in "<unicode string>", line 2, column 1:

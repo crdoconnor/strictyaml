@@ -20,8 +20,8 @@ Nested mapping validation:
           c: 3
         code: load(yaml_snippet, schema)
       scenario:
-        - Should be equal to: |
-            {"a": {"x": 9, "y": 8}, "b": 2, "c": 3}
+      - Should be equal to: |
+          {"a": {"x": 9, "y": 8}, "b": 2, "c": 3}
 
     Invalid nested mapping:
       preconditions:
@@ -33,12 +33,14 @@ Nested mapping validation:
           d: 3
         code: load(yaml_snippet, schema)
       scenario:
-        - Raises exception: |
+      - Raises exception:
+          exception type: strictyaml.exceptions.YAMLValidationError
+          message: |-
             while parsing a mapping
             unexpected key not in schema 'z'
               in "<unicode string>", line 3, column 1:
                   z: '8'
-                ^
+                ^ (line: 3)
 
     No nested mapping where expected:
       preconditions:
@@ -48,9 +50,11 @@ Nested mapping validation:
           d: 3
         code: load(yaml_snippet, schema)
       scenario:
-        - Raises exception: |
+      - Raises exception:
+          exception type: strictyaml.exceptions.YAMLValidationError
+          message: |-
             when expecting a mapping
             found non-mapping
               in "<unicode string>", line 1, column 1:
                 a: '11'
-                 ^
+                 ^ (line: 1)

@@ -19,7 +19,7 @@ Unique sequence valid:
   preconditions:
     code: load(yaml_snippet, schema)
   scenario:
-    - Should be equal to: ' ["A", "B", "C", ]'
+  - Should be equal to: ' ["A", "B", "C", ]'
 
 Unique sequence invalid:
   based on: Unique sequences
@@ -31,7 +31,9 @@ Unique sequence invalid:
     code: |
       load(yaml_snippet, schema)
   scenario:
-    - Raises Exception: |
+  - Raises Exception:
+      exception type: strictyaml.exceptions.YAMLValidationError
+      message: |-
         while parsing a sequence
           in "<unicode string>", line 1, column 1:
             - A
@@ -51,7 +53,9 @@ Unique sequence all invalid:
     code: |
       load(yaml_snippet, schema)
   scenario:
-    - Raises Exception: |
+  - Raises Exception:
+      exception type: strictyaml.exceptions.YAMLValidationError
+      message: |-
         while parsing a sequence
           in "<unicode string>", line 1, column 1:
             - '3'

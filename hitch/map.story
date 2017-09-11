@@ -4,68 +4,72 @@ Mapping:
   description: |
     Mappings of one value to another are represented by : in YAML
     and parsed as python dicts.
-    
+
     Using StrictYAML's 'Map' you can validate that a mapping
     contains the right keys and the right *type* of values.
-    
+
     Note: for mappings where you don't know the exact names of
     the keys in advance but you do know the type, use MapPattern.
   preconditions:
     setup: |
+      from collections import OrderedDict
       from strictyaml import Map, Int, load
 
       schema = Map({"a": Int(), "b": Int(), "c": Int()})
 
       schema_2 = Map({u"â": Int(), "b": Int(), "c": Int()})
-    variables:
-      valid_mapping_2: |
-        â: 1
-        b: 2
-        c: 3
-  
+    yaml_snippet: |
+      â: 1
+      b: 2
+      c: 3
+
   variations:
     one key mapping:
       preconditions:
-        variables:
-          onekeymap: 'x: 1'
+        yaml_snippet: 'x: 1'
         code: |
-          str(load(onekeymap, Map({"x": Int()})).data)
+          load(yaml_snippet, Map({"x": Int()})).data
       scenario:
-        - Should be equal to: |
-            "OrderedDict([('x', 1)])"
+      - Should be equal to: |
+          OrderedDict([('x', 1)])
 
     key value:
       preconditions:
         code: |
-          load(valid_mapping_2, schema_2)[u'â']
+          load(yaml_snippet, schema_2)[u'â']
       scenario:
-        - Should be equal to: 1
+      - Should be equal to: 1
 
     get item key not found:
       preconditions:
         code: |
-          load(valid_mapping_2, schema_2)['keynotfound']
+          load(yaml_snippet, schema_2)['keynotfound']
       scenario:
-        - Raises exception: keynotfound
+      - Raises exception:
+          exception type: exceptions.KeyError
+          message: "'keynotfound'"
 
     cannot use .text:
       preconditions:
         code: |
-          load(valid_mapping_2, schema_2).text
+          load(yaml_snippet, schema_2).text
       scenario:
-        - Raises Exception: is a mapping, has no text value.
-
+      - Raises Exception:
+          exception type: exceptions.TypeError
+          message: YAML(OrderedDict([(u'\xe2', 1), ('b', 2), ('c', 3)])) is a mapping,
+            has no text value.
     key not found in schema:
       preconditions:
-        variables:
-          invalid_sequence_1: |
-            a: 1
-            b: 2
-            â: 3
+        yaml_snippet: |
+          a: 1
+          b: 2
+          â: 3
         code: |
-          load(invalid_sequence_1, schema)
+          load(yaml_snippet, schema)
       scenario:
-        - Raises Exception: |
+      - Raises Exception:
+          exception type: strictyaml.exceptions.YAMLValidationError
+          message: |-
             while parsing a mapping
             unexpected key not in schema 'â'
               in "<unicode string>", line 3, column 1:
@@ -74,14 +78,15 @@ Mapping:
 
     sequence not expected:
       preconditions:
-        variables:
-          invalid_sequence_2: |
-            - 1
-            - 2
-            - 3
-        code: load(invalid_sequence_2, schema)
+        yaml_snippet: |
+          - 1
+          - 2
+          - 3
+        code: load(yaml_snippet, schema)
       scenario:
-        - Raises Exception: |
+      - Raises Exception:
+          exception type: strictyaml.exceptions.YAMLValidationError
+          message: |-
             when expecting a mapping
               in "<unicode string>", line 1, column 1:
                 - '1'
@@ -90,19 +95,20 @@ Mapping:
               in "<unicode string>", line 3, column 1:
                 - '3'
                 ^ (line: 3)
-              
+
     unexpected key:
       preconditions:
-        variables:
-          invalid_sequence_3: |
-            a: 1
-            b: 2
-            c: 3
-            d: 4
+        yaml_snippet: |
+          a: 1
+          b: 2
+          c: 3
+          d: 4
         code: |
-          load(invalid_sequence_3, schema)
+          load(yaml_snippet, schema)
       scenario:
-        - Raises exception: |
+      - Raises exception:
+          exception type: strictyaml.exceptions.YAMLValidationError
+          message: |-
             while parsing a mapping
             unexpected key not in schema 'd'
               in "<unicode string>", line 4, column 1:
@@ -112,13 +118,14 @@ Mapping:
 
     required key not found:
       preconditions:
-        variables:
-          snippet: |
-            a: 1
+        yaml_snippet: |
+          a: 1
         code: |
-          load(snippet, schema)
+          load(yaml_snippet, schema)
       scenario:
-        - Raises exception: |
+      - Raises exception:
+          exception type: strictyaml.exceptions.YAMLValidationError
+          message: |-
             while parsing a mapping
             required key(s) 'b', 'c' not found
               in "<unicode string>", line 1, column 1:

@@ -1,4 +1,4 @@
-Boolean validation:
+op Boolean validation:
   based on: strictyaml
   description: |
     Boolean values can be parsed using a Bool
@@ -13,63 +13,69 @@ Boolean validation:
       from strictyaml import Bool, Str, MapPattern, YAMLValidationError, load
 
       schema = MapPattern(Str(), Bool())
-      
-    yaml_snippet: |
-        a: yes
-        b: true
-        c: on
-        d: 1
-        e: True
-        f: Y
 
-        u: n
-        v: False
-        w: 0
-        x: Off
-        y: FALSE
-        z: no
+    yaml_snippet: |
+      a: yes
+      b: true
+      c: on
+      d: 1
+      e: True
+      f: Y
+
+      u: n
+      v: False
+      w: 0
+      x: Off
+      y: FALSE
+      z: no
   variations:
     Parse to YAML object:
       preconditions:
         code: load(yaml_snippet, schema)
       scenario:
-        - Should be equal to: |
-            {
-                "a": True, "b": True, "c": True, "d": True, "e": True, "f": True,
-                "u": False, "v": False, "w": False, "x": False, "y": False, "z": False,
-            }
+      - Should be equal to: |
+          {
+              "a": True, "b": True, "c": True, "d": True, "e": True, "f": True,
+              "u": False, "v": False, "w": False, "x": False, "y": False, "z": False,
+          }
 
     YAML object should resolve to True or False:
       preconditions:
         code: load(yaml_snippet, schema)["w"]
       scenario:
-        - Should be equal to: False
-    
+      - Should be equal to: 'False'
+
     Using .value you can get the actual boolean value parsed:
       preconditions:
         code: load(yaml_snippet, schema)["a"].value is True
       scenario:
-        - Should be equal to: True
-    
+      - Should be equal to: 'True'
+
     .text returns the text of the:
       preconditions:
         code: load(yaml_snippet, schema)["y"].text
       scenario:
-        - Should be equal to: |
-            "FALSE"
+      - Should be equal to: |
+          "FALSE"
 
     Cannot cast to string:
       preconditions:
         code: str(load(yaml_snippet, schema)["y"])
       scenario:
-        - Raises exception: Cannot cast
+      - Raises exception:
+          exception type: exceptions.TypeError
+          message: |-
+            Cannot cast 'YAML(False)' to str.
+            Use str(yamlobj.value) or str(yamlobj.text) instead.
 
     Invalid string:
       preconditions:
         yaml_snippet: 'a: yâs'
         code: load(yaml_snippet, schema)
       scenario:
-        - Raises exception: |
+      - Raises exception:
+          exception type: strictyaml.exceptions.YAMLValidationError
+          message: |-
             when expecting a boolean value (one of "yes", "true", "on", "1", "y", "no", "false", "off", "0", "n")
             found non-boolean
               in "<unicode string>", line 1, column 1:

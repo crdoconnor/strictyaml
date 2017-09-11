@@ -3,7 +3,7 @@ Roundtripped YAML:
   description: |
     Loaded YAML can be modified and dumped out again with
     comments preserved using .as_yaml().
-    
+
     Note that due to some bugs in the library (ruamel.yaml)
     underlying StrictYAML, while the data parsed should
     be precisely the same, the exact syntax (newlines, comment
@@ -11,9 +11,9 @@ Roundtripped YAML:
   preconditions:
     yaml_snippet: |
       # Some comment
-      
+
       a: â # value comment
-      
+
       # Another comment
       b:
         x: 4
@@ -22,19 +22,19 @@ Roundtripped YAML:
       - a: 1
       - b: 2
     setup: |
-        from strictyaml import Map, MapPattern, Str, Seq, Int, load
+      from strictyaml import Map, MapPattern, Str, Seq, Int, load
 
-        schema = Map({
-            "a": Str(),
-            "b": Map({"x": Int(), "y": Int()}),
-            "c": Seq(MapPattern(Str(), Str())),
-        })
-  variations: 
+      schema = Map({
+          "a": Str(),
+          "b": Map({"x": Int(), "y": Int()}),
+          "c": Seq(MapPattern(Str(), Str())),
+      })
+  variations:
     Commented:
       preconditions:
         code: load(yaml_snippet, schema).as_yaml()
       scenario:
-        - Should be equal to: yaml_snippet
+      - Should be equal to: yaml_snippet
 
     Modified with invalid variable:
       preconditions:
@@ -44,7 +44,15 @@ Roundtripped YAML:
           to_modify['c'][0]['a'] = '3'
           to_modify['b']['x'] = 'not an integer'
       scenario:
-        - Raises exception: found non-integer
+      - Raises exception:
+          exception type: strictyaml.exceptions.YAMLValidationError
+          message: |-
+            when expecting an integer
+            found non-integer
+              in "<unicode string>", line 1, column 1:
+                yaml: not an integer
+                 ^ (line: 1)
+
 
     Modified with one variable:
       preconditions:
@@ -56,7 +64,7 @@ Roundtripped YAML:
               "b": Map({"x": Int(), "y": Int()}),
               "c": Seq(MapPattern(Str(), Str())),
           })
-        
+
           to_modify = load(yaml_snippet, schema)
           to_modify['b']['x'] = 2
           to_modify['c'][0]['a'] = '3'
@@ -64,9 +72,9 @@ Roundtripped YAML:
           to_modify.as_yaml()
         modified_yaml_snippet: |
           # Some comment
-          
+
           a: â # value comment
-          
+
           # Another comment
           b:
             y: 5
@@ -75,7 +83,7 @@ Roundtripped YAML:
           - a: 3
           - b: 2
       scenario:
-        - Should be equal to: modified_yaml_snippet
+      - Should be equal to: modified_yaml_snippet
 
     Text across lines:
       preconditions:
@@ -87,15 +95,15 @@ Roundtripped YAML:
               "b": Map({"x": Int(), "y": Int()}),
               "c": Seq(MapPattern(Str(), Str())),
           })
-        
+
           to_modify = load(yaml_snippet, schema)
 
           to_modify['c'][0]['a'] = "text\nacross\nlines"
         modified_yaml_snippet: |
           # Some comment
-          
+
           a: â # value comment
-          
+
           # Another comment
           b:
             x: 4
@@ -108,4 +116,4 @@ Roundtripped YAML:
           - b: 2
         code: to_modify.as_yaml()
       scenario:
-        - Should be equal to: modified_yaml_snippet
+      - Should be equal to: modified_yaml_snippet

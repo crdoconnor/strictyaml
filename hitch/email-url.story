@@ -17,8 +17,8 @@ Email and URL validators:
           a: billg@microsoft.com
           b: http://www.google.com/
       scenario:
-        - Should be equal to: |
-            {"a": "billg@microsoft.com", "b": "http://www.google.com/"}
+      - Should be equal to: |
+          {"a": "billg@microsoft.com", "b": "http://www.google.com/"}
 
     Invalid:
       preconditions:
@@ -26,14 +26,11 @@ Email and URL validators:
           a: notanemail
           b: notaurl
       scenario:
-        - Raises exception: non-matching
-        
-    #- Variable:
-        #name: invalid
-        #value: |
-          #a: notanemail
-          #b: notaurl
-
-    #- Raises Exception:
-        #command: load(invalid, schema)
-        #exception: non-matching
+      - Raises exception:
+          exception type: strictyaml.exceptions.YAMLValidationError
+          message: |-
+            when expecting an email address
+            found non-matching string
+              in "<unicode string>", line 1, column 1:
+                a: notanemail
+                 ^ (line: 1)

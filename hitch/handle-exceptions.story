@@ -14,5 +14,14 @@ Handle exceptions:
     code: |
       load(yaml_snippet, Map({"a": Int(), "b": Map({"x": Int(), "y": Int()})}), label="myfilename")
   scenario:
-    - Raises exception: |
-        in "myfilename", line 2, column 1
+  - Raises exception:
+      exception type: strictyaml.exceptions.YAMLValidationError
+      message: |-
+        when expecting a mapping
+          in "myfilename", line 2, column 1:
+            b:
+            ^ (line: 2)
+        found non-mapping
+          in "myfilename", line 4, column 1:
+            - '2'
+            ^ (line: 4)

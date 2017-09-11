@@ -19,7 +19,9 @@ Duplicate keys:
   variations:
     Nameless exception:
       scenario:
-        - Raises exception: |
+      - Raises exception:
+          exception type: strictyaml.exceptions.DuplicateKeysDisallowed
+          message: |-
             While parsing
               in "<unicode string>", line 2, column 1:
                 a: bull
@@ -35,7 +37,9 @@ Duplicate keys:
         code: |
           load(yaml_snippet, label="mylabel")
       scenario:
-        - Raises exception: |
+      - Raises exception:
+          exception type: strictyaml.exceptions.DuplicateKeysDisallowed
+          message: |-
             While parsing
               in "mylabel", line 2, column 1:
                 a: bull

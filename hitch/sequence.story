@@ -4,16 +4,15 @@ Seq validator:
   description: |
     Sequences in YAML are denoted by a series of dashes ('-')
     and parsed as a list in python.
-    
+
     Validating sequences of a particular type can be done with
     the Seq validator, specifying the type.
-    
+
     See also UniqueSeq and FixedSeq for other types of sequence
     validation.
   preconditions:
     setup: |
       from strictyaml import Seq, Str, Int, load
- 
 
 Valid Seq:
   based on: Seq validator
@@ -28,19 +27,20 @@ Valid Seq:
         code: |
           load(yaml_snippet, Seq(Str()))
       scenario:
-        - Should be equal to: |
-            ["1", "2", "3", ]
+      - Should be equal to: |
+          ["1", "2", "3", ]
     Is sequence:
       preconditions:
         code: load(yaml_snippet, Seq(Str())).is_sequence()
       scenario:
-        - Should be equal to: True
+      - Should be equal to: 'True'
     .text is nonsensical:
       preconditions:
         code: load(yaml_snippet, Seq(Str())).text
       scenario:
-        - Raises exception: is a sequence, has no text value
-
+      - Raises exception:
+          exception type: exceptions.TypeError
+          message: YAML([u'1', u'2', u'3']) is a sequence, has no text value.
 Invalid Seq - Mapping instead:
   based on: Seq validator
   preconditions:
@@ -50,7 +50,9 @@ Invalid Seq - Mapping instead:
       c: 3
     code: load(yaml_snippet, Seq(Str()))
   scenario:
-    - Raises Exception: |
+  - Raises Exception:
+      exception type: strictyaml.exceptions.YAMLValidationError
+      message: |-
         when expecting a sequence
           in "<unicode string>", line 1, column 1:
             a: '1'
@@ -71,7 +73,9 @@ Invalid sequence - nested mapping instead:
         - 2
     code: load(yaml_snippet, Seq(Str()))
   scenario:
-    - Raises Exception: |
+  - Raises Exception:
+      exception type: strictyaml.exceptions.YAMLValidationError
+      message: |-
         when expecting a str
           in "<unicode string>", line 3, column 1:
             - a:
@@ -89,13 +93,14 @@ Invalid sequence - invalid item in sequence:
       - 1.2
     code: load(yaml_snippet, Seq(Int()))
   scenario:
-    - Raises exception: |
+  - Raises exception:
+      exception type: strictyaml.exceptions.YAMLValidationError
+      message: |-
         when expecting an integer
         found non-integer
           in "<unicode string>", line 1, column 1:
             - '1.1'
              ^ (line: 1)
-             
 Invalid sequence - one invalid item in sequence:
   based on: Seq validator
   preconditions:
@@ -105,7 +110,9 @@ Invalid sequence - one invalid item in sequence:
       - 3.4
     code: load(yaml_snippet, Seq(Int()))
   scenario:
-    - Raises exception: |
+  - Raises exception:
+      exception type: strictyaml.exceptions.YAMLValidationError
+      message: |-
         when expecting an integer
         found non-integer
           in "<unicode string>", line 3, column 1:

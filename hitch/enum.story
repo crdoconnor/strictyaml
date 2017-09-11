@@ -3,7 +3,7 @@ Enum (enum validation):
   description: |
     StrictYAML allows you to ensure that a scalar
     value can only be one of a set number of items.
-    
+
     It will throw an exception if any strings not
     in the list are found.
   preconditions:
@@ -17,31 +17,43 @@ Enum (enum validation):
       preconditions:
         yaml_snippet: 'a: A'
       scenario:
-        - Should be equal to: '{"a": "A"}'
+      - Should be equal to: '{"a": "A"}'
 
     Valid B:
       preconditions:
         yaml_snippet: 'a: B'
       scenario:
-        - Should be equal to: '{"a": "B"}'
-        
+      - Should be equal to: '{"a": "B"}'
+
     Valid C:
       preconditions:
         yaml_snippet: 'a: C'
       scenario:
-        - Should be equal to: '{"a": "C"}'
-        
+      - Should be equal to: '{"a": "C"}'
+
     Invalid not in enum:
       preconditions:
         yaml_snippet: 'a: D'
       scenario:
-        - Raises exception: |
+      - Raises exception:
+          exception type: strictyaml.exceptions.YAMLValidationError
+          message: |-
             when expecting one of: A, B, C
-        
+            found 'D'
+              in "<unicode string>", line 1, column 1:
+                a: D
+                 ^ (line: 1)
+
     Invalid blank string:
       preconditions:
         yaml_snippet: 'a:'
       scenario:
-        - Raises exception: |
+      - Raises exception:
+          exception type: strictyaml.exceptions.YAMLValidationError
+          message: |-
             when expecting one of: A, B, C
+            found ''
+              in "<unicode string>", line 1, column 1:
+                a: ''
+                 ^ (line: 1)
 

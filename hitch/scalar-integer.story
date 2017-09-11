@@ -55,7 +55,12 @@ Scalar integer:
       preconditions:
         code: bool(load(yaml_snippet, schema)['a'])
       scenario:
-        - Raises exception: Cannot cast
+        - Raises exception:
+            exception type: exceptions.TypeError
+            message: |-
+              Cannot cast 'YAML(1)' to bool.
+              Use bool(yamlobj.value) or bool(yamlobj.text) instead.
+
 
 Invalid scalar integer:
   based on: strictyaml
@@ -70,9 +75,11 @@ Invalid scalar integer:
     code: |
       load(yaml_snippet, schema)
   scenario:
-    - Raises exception: |
-        when expecting an integer
-        found non-integer
-          in "<unicode string>", line 1, column 1:
-            a: string
-             ^
+    - Raises exception:
+        exception type: strictyaml.exceptions.YAMLValidationError
+        message: |-
+          when expecting an integer
+          found non-integer
+            in "<unicode string>", line 1, column 1:
+              a: string
+               ^ (line: 1)

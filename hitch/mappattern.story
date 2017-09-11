@@ -21,22 +21,20 @@ Map Pattern:
           â: 1
           b: 2
       scenario:
-        - Should be equal to: '{u"â": 1, "b": 2}'
-        
+      - Should be equal to: '{u"â": 1, "b": 2}'
     Equivalence 2:
       preconditions:
         yaml_snippet: |
           a: 1
           c: 3
       scenario:
-        - Should be equal to: '{"a": 1, "c": 3}'
-        
+      - Should be equal to: '{"a": 1, "c": 3}'
     Equivalence 3:
       preconditions:
         yaml_snippet: |
           a: 1
       scenario:
-        - Should be equal to: '{"a": 1, }'
+      - Should be equal to: '{"a": 1, }'
 
         
     Invalid 1:
@@ -44,26 +42,30 @@ Map Pattern:
         yaml_snippet: |
           b: b
       scenario:
-        - Raises exception: |
+      - Raises exception:
+          exception type: strictyaml.exceptions.YAMLValidationError
+          message: |-
             when expecting an integer
             found non-integer
               in "<unicode string>", line 1, column 1:
                 b: b
-                 ^
-        
+                 ^ (line: 1)
+
     Invalid 2:
       preconditions:
         yaml_snippet: |
           a: a
           b: 2
       scenario:
-        - Raises exception: |
+      - Raises exception:
+          exception type: strictyaml.exceptions.YAMLValidationError
+          message: |-
             when expecting an integer
             found non-integer
               in "<unicode string>", line 1, column 1:
                 a: a
-                 ^
-    
+                 ^ (line: 1)
+
     Invalid with non-ascii:
       preconditions:
         yaml_snippet: |
@@ -71,9 +73,11 @@ Map Pattern:
           b: yâs
           c: 3
       scenario:
-        - Raises exception: |
+      - Raises exception:
+          exception type: strictyaml.exceptions.YAMLValidationError
+          message: |-
             when expecting an integer
             found non-integer
               in "<unicode string>", line 2, column 1:
                 b: "y\xE2s"
-                ^
+                ^ (line: 2)

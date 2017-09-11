@@ -17,12 +17,19 @@ Regex strings:
           a: 1
           b: 5
       scenario:
-        - Should be equal to: |
-            {"a": "1", "b": "5"}
+      - Should be equal to: |
+          {"a": "1", "b": "5"}
     Non-matching:
       preconditions:
         yaml_snippet: |
           a: 5
           b: 5
       scenario:
-        - Raises exception: found non-matching string
+      - Raises exception:
+          exception type: strictyaml.exceptions.YAMLValidationError
+          message: |-
+            when expecting string matching [1-4]
+            found non-matching string
+              in "<unicode string>", line 1, column 1:
+                a: '5'
+                 ^ (line: 1)

@@ -14,29 +14,25 @@ from hitchrun.decorators import ignore_ctrlc
 import requests
 
 
-from jinja2.environment import Environment
-from jinja2 import DictLoader
-
-
 class Engine(BaseEngine):
     """Python engine for running tests."""
     schema = StorySchema(
         preconditions=Map({
-            "files": MapPattern(Str(), Str()),
-            "variables": MapPattern(Str(), Str()),
-            "yaml_snippet": Str(),
-            "modified_yaml_snippet": Str(),
-            "python version": Str(),
-            "ruamel version": Str(),
-            "setup": Str(),
-            "code": Str(),
+            Optional("files"): MapPattern(Str(), Str()),
+            Optional("variables"): MapPattern(Str(), Str()),
+            Optional("yaml_snippet"): Str(),
+            Optional("modified_yaml_snippet"): Str(),
+            Optional("python version"): Str(),
+            Optional("ruamel version"): Str(),
+            Optional("setup"): Str(),
+            Optional("code"): Str(),
         }),
         params=Map({
-            "python version": Str(),
-            "ruamel version": Str(),
+            Optional("python version"): Str(),
+            Optional("ruamel version"): Str(),
         }),
         about={
-            "description": Str(),
+            Optional("description"): Str(),
             Optional("importance"): Int(),
         },
     )
@@ -91,79 +87,37 @@ class Engine(BaseEngine):
         """
         Expect an exception.
         """
-        from hitchrunpy import ExamplePythonCode
+        from hitchrunpy import ExamplePythonCode, ExpectedExceptionMessageWasDifferent
 
-        ExamplePythonCode(
-            self.preconditions['code']
-        ).with_setup_code(self.preconditions.get('setup', ''))\
-         .with_long_strings(yaml_snippet=self.preconditions.get('yaml_snippet'))\
-         .expect_exception(exception_type, message)\
-         .run(self.path.state, self.python)
-
-        """
-        class ExpectedExceptionDidNotHappen(Exception):
-            pass
-
-        error_path = self.path.state.joinpath("error.txt")
-        runpy = self.path.gen.joinpath("runmypy.py")
-        if error_path.exists():
-            error_path.remove()
-        env = Environment()
-        env.loader = DictLoader(
-            load(self.path.key.joinpath("codetemplates.yml").bytes().decode('utf8')).data
-        )
-        runpy.write_text(env.get_template("raises_exception").render(
-            setup=self.preconditions['setup'],
-            code=self.preconditions['code'],
-            variables=self.preconditions.get('variables', None),
-            yaml_snippet=self.preconditions.get("yaml_snippet"),
-            modified_yaml_snippet=self.preconditions.get("modified_yaml_snippet"),
-            exception=exception,
-            error_path=error_path,
-        ))
-        self.python(runpy).run()
-        if not error_path.exists():
-            raise ExpectedExceptionDidNotHappen()
-        else:
-            import difflib
-            actual_error = error_path.bytes().decode('utf8')
-            if not exception.strip() in actual_error:
-                raise Exception(
-                    "actual:\n{0}\nexpected:\n{1}\ndiff:\n{2}".format(
-                        actual_error,
-                        exception,
-                        ''.join(difflib.context_diff(exception, actual_error)),
-                    )
-                )
-        """
+        try:
+            ExamplePythonCode(
+                self.preconditions['code']
+            ).with_setup_code(self.preconditions.get('setup', ''))\
+             .with_long_strings(
+                yaml_snippet=self.preconditions.get('yaml_snippet'),
+                modified_yaml_snippet=self.preconditions.get('modified_yaml_snippet'),
+              )\
+             .expect_exception(exception_type, message)\
+             .run(self.path.state, self.python)
+        except ExpectedExceptionMessageWasDifferent as error:
+            if self.settings.get("rewrite"):
+                self.current_step.update(message=error.actual_message)
+            else:
+                raise
 
     def should_be_equal_to(self, rhs):
         """
         Code should be equal to rhs
         """
-        class UnexpectedException(Exception):
-            pass
-
-        error_path = self.path.gen.joinpath("error.txt")
-        runpy = self.path.gen.joinpath("runmypy.py")
-        if error_path.exists():
-            error_path.remove()
-        env = Environment()
-        env.loader = DictLoader(
-            load(self.path.key.joinpath("codetemplates.yml").bytes().decode('utf8')).data
-        )
-        runpy.write_text(env.get_template("shouldbeequal").render(
-            setup=self.preconditions['setup'],
-            code=self.preconditions['code'],
-            variables=self.preconditions.get('variables', None),
-            yaml_snippet=self.preconditions.get("yaml_snippet"),
-            modified_yaml_snippet=self.preconditions.get("modified_yaml_snippet"),
-            rhs=rhs,
-            error_path=error_path,
-        ))
-        self.python(runpy).run()
-        if error_path.exists():
-            raise UnexpectedException(error_path.bytes().decode("utf8"))
+        from hitchrunpy import ExamplePythonCode
+        ExamplePythonCode(
+            self.preconditions['setup']
+        ).with_long_strings(
+              yaml_snippet=self.preconditions.get('yaml_snippet'),
+              modified_yaml_snippet=self.preconditions.get('modified_yaml_snippet'),
+          )\
+         .is_equal(self.preconditions.get("code"), rhs)\
+         .run(self.path.state, self.python)
 
     def on_failure(self, result):
         if self.settings.get("pause_on_failure", True):
@@ -179,7 +133,7 @@ class Engine(BaseEngine):
             self.services.stop_interactive_mode()
 
     def on_success(self):
-        if self.settings.get("overwrite"):
+        if self.settings.get("rewrite"):
             self.new_story.save()
 
     def tear_down(self):
@@ -201,7 +155,7 @@ def tdd(*words):
     Run all tests
     """
     print(
-        _storybook({}).shortcut(*words).play().report()
+        _storybook({"rewrite": True}).shortcut(*words).play().report()
     )
 
 
@@ -211,7 +165,7 @@ def testfile(filename):
     Run all stories in filename 'filename'.
     """
     print(
-        _storybook({}).in_filename(filename).ordered_by_name().play().report()
+        _storybook({"rewrite": True}).in_filename(filename).ordered_by_name().play().report()
     )
 
 
@@ -313,6 +267,15 @@ def ipy():
     Run IPython in environment."
     """
     Command(DIR.gen.joinpath("py3.5.0", "bin", "ipython")).run()
+
+
+def hvenvup(package, directory):
+    """
+    Install a new version of a package in the hitch venv.
+    """
+    pip = Command(DIR.gen.joinpath("hvenv", "bin", "pip"))
+    pip("uninstall", package, "-y").run()
+    pip("install", DIR.project.joinpath(directory).abspath()).run()
 
 
 def rot():

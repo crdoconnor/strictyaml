@@ -18,26 +18,28 @@ Or validation:
       preconditions:
         yaml_snippet: 'a: yes'
       scenario:
-        - Should be equal to: '{"a": True}'
+      - Should be equal to: '{"a": True}'
 
     Boolean first choice false:
       preconditions:
         yaml_snippet: 'a: no'
       scenario:
-        - Should be equal to: '{"a": False}'
+      - Should be equal to: '{"a": False}'
 
     Int second choice:
       preconditions:
         yaml_snippet: 'a: 5'
       scenario:
-        - Should be equal to: '{"a" : 5}'
-    
+      - Should be equal to: '{"a" : 5}'
     Invalid not bool or int:
       preconditions:
         yaml_snippet: 'a: A'
       scenario:
-        - Raises exception: |
+      - Raises exception:
+          exception type: strictyaml.exceptions.YAMLValidationError
+          message: |-
             when expecting an integer
             found non-integer
               in "<unicode string>", line 1, column 1:
                 a: A
+                 ^ (line: 1)

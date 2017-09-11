@@ -4,14 +4,14 @@ Disallowed YAML:
     StrictYAML parses an opinionated subset of the YAML
     specification which refuses to parse features which
     are otherwise valid in standard YAML.
-    
+
     For an explanation as to why these features are stripped
     out of StrictYAML, see the FAQ.
-    
+
     Disallowed YAML features raise Disallowed exceptions
     while syntactically invalid YAML raises ScannerError
     or ComposerError.
-    
+
     Every error inherits from YAMLError.
   preconditions:
     setup: |
@@ -30,7 +30,9 @@ Disallowed YAML:
             b: !!str 3.5
             c: !!str yes
       scenario:
-        - Raises exception: |
+      - Raises exception:
+          exception type: strictyaml.exceptions.TagTokenDisallowed
+          message: |-
             While scanning
               in "disallowed", line 2, column 11:
                   a: !!str yes
@@ -45,7 +47,9 @@ Disallowed YAML:
         yaml_snippet: |
           [a, b]: [x, y]
       scenario:
-        - Raises exception: |
+      - Raises exception:
+          exception type: strictyaml.exceptions.FlowMappingDisallowed
+          message: |-
             While scanning
               in "disallowed", line 1, column 1:
                 [a, b]: [x, y]
@@ -62,7 +66,9 @@ Disallowed YAML:
         yaml_snippet: |
           x: { a: 1, b: 2, c: 3 }
       scenario:
-        - Raises exception: |
+      - Raises exception:
+          exception type: strictyaml.exceptions.FlowMappingDisallowed
+          message: |-
             While scanning
               in "disallowed", line 1, column 4:
                 x: { a: 1, b: 2, c: 3 }
@@ -82,7 +88,9 @@ Disallowed YAML:
             b: 1
             c: *node1
       scenario:
-        - Raises exception: |
+      - Raises exception:
+          exception type: strictyaml.exceptions.AnchorTokenDisallowed
+          message: |-
             While scanning
               in "disallowed", line 2, column 6:
                   a: &node1 3.5
@@ -101,7 +109,9 @@ Disallowed YAML:
           - invalid
           string
       scenario:
-        - Raises exception: |
+      - Raises exception:
+          exception type: ruamel.yaml.scanner.ScannerError
+          message: |-
             while scanning a simple key
               in "disallowed", line 2, column 1:
                 string

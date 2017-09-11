@@ -21,9 +21,9 @@ Comma separated:
         code: |
           load(yaml_snippet, int_schema)
       scenario:
-        - Should be equal to: |
-            {"a": [1, 2, 3]}
-    
+      - Should be equal to: |
+          {"a": [1, 2, 3]}
+
     Parse as string:
       preconditions:
         yaml_snippet: |
@@ -31,9 +31,9 @@ Comma separated:
         code: |
           load(yaml_snippet, str_schema)
       scenario:
-        - Should be equal to: |
-            {"a": ["1", "2", "3"]}
-    
+      - Should be equal to: |
+          {"a": ["1", "2", "3"]}
+
     Invalid int comma separated sequence:
       preconditions:
         yaml_snippet: |
@@ -41,9 +41,11 @@ Comma separated:
         code: |
           load(yaml_snippet, int_schema)
       scenario:
-        - Raises Exception: |
+      - Raises Exception:
+          exception type: strictyaml.exceptions.YAMLValidationError
+          message: |-
             when expecting an integer
             found non-integer
               in "<unicode string>", line 1, column 1:
                 a: 1, x, 3
-                 ^
+                 ^ (line: 1)

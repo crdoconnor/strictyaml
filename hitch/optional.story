@@ -17,7 +17,7 @@ Optional validation:
           a: 1
           b: yes
       scenario:
-        - Should be equal to: '{"a": 1, "b": True}'
+      - Should be equal to: '{"a": 1, "b": True}'
 
     Valid example 2:
       preconditions:
@@ -25,13 +25,13 @@ Optional validation:
           a: 1
           b: no
       scenario:
-        - Should be equal to: '{"a": 1, "b": False}'
+      - Should be equal to: '{"a": 1, "b": False}'
 
     Valid example missing key:
       preconditions:
         yaml_snippet: 'a: 1'
       scenario:
-        - Should be equal to: '{"a": 1}'
+      - Should be equal to: '{"a": 1}'
 
     Invalid 1:
       preconditions:
@@ -39,13 +39,14 @@ Optional validation:
           a: 1
           b: 2
       scenario:
-        - Raises exception: |
+      - Raises exception:
+          exception type: strictyaml.exceptions.YAMLValidationError
+          message: |-
             when expecting a boolean value (one of "yes", "true", "on", "1", "y", "no", "false", "off", "0", "n")
             found non-boolean
               in "<unicode string>", line 2, column 1:
                 b: '2'
                 ^ (line: 2)
-                
     Invalid 2:
       preconditions:
         yaml_snippet: |
@@ -53,14 +54,16 @@ Optional validation:
           b: yes
           c: 3
       scenario:
-        - Raises exception: |
+      - Raises exception:
+          exception type: strictyaml.exceptions.YAMLValidationError
+          message: |-
             while parsing a mapping
             unexpected key not in schema 'c'
               in "<unicode string>", line 3, column 1:
                 c: '3'
-                ^
+                ^ (line: 3)
 
-    
+
 Nested optional validation:
   based on: strictyaml
   preconditions:
@@ -74,7 +77,7 @@ Nested optional validation:
       preconditions:
         yaml_snippet: 'a: 1'
       scenario:
-        - Should be equal to: '{"a": 1}'
+      - Should be equal to: '{"a": 1}'
     Valid 2:
       preconditions:
         yaml_snippet: |
@@ -83,4 +86,4 @@ Nested optional validation:
             x: y
             y: z
       scenario:
-        - Should be equal to: '{"a": 1, "b": {"x": "y", "y": "z"}}'
+      - Should be equal to: '{"a": 1, "b": {"x": "y", "y": "z"}}'

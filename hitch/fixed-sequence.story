@@ -18,7 +18,7 @@ Fixed length sequences (FixedSeq):
           - a
           - 2.5
       scenario:
-        - Should be equal to: '[1, "a", 2.5, ]'
+      - Should be equal to: '[1, "a", 2.5, ]'
 
     Invalid list 1:
       preconditions:
@@ -27,7 +27,9 @@ Fixed length sequences (FixedSeq):
           b: 2
           c: 3
       scenario:
-        - Raises exception: |
+      - Raises exception:
+          exception type: strictyaml.exceptions.YAMLValidationError
+          message: |-
             when expecting a sequence of 3 elements
               in "<unicode string>", line 1, column 1:
                 a: '1'
@@ -36,7 +38,7 @@ Fixed length sequences (FixedSeq):
               in "<unicode string>", line 3, column 1:
                 c: '3'
                 ^ (line: 3)
-        
+
     Invalid list 2:
       preconditions:
         yaml_snippet: |
@@ -46,7 +48,9 @@ Fixed length sequences (FixedSeq):
             - 1
             - 2
       scenario:
-        - Raises exception: |
+      - Raises exception:
+          exception type: strictyaml.exceptions.YAMLValidationError
+          message: |-
             when expecting a float
               in "<unicode string>", line 3, column 1:
                 - a:
@@ -62,7 +66,9 @@ Fixed length sequences (FixedSeq):
           - 1
           - a
       scenario:
-        - Raises exception: |
+      - Raises exception:
+          exception type: strictyaml.exceptions.YAMLValidationError
+          message: |-
             when expecting a sequence of 3 elements
               in "<unicode string>", line 1, column 1:
                 - '1'
