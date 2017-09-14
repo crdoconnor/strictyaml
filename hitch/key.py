@@ -90,8 +90,8 @@ class Engine(BaseEngine):
         Expect an exception.
         """
         try:
-            self.example_py_code.expect_exception(exception_type, message)\
-                                .run(self.path.state, self.python)
+            result = self.example_py_code.expect_exceptions().run(self.path.state, self.python)
+            result.exception_was_raised(exception_type, message)
         except ExpectedExceptionMessageWasDifferent as error:
             if self.settings.get("rewrite"):
                 self.current_step.update(message=error.actual_message)
