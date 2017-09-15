@@ -1,6 +1,6 @@
 from commandlib import run
 import hitchpython
-from hitchstory import StoryCollection, StorySchema, BaseEngine, exceptions
+from hitchstory import StoryCollection, StorySchema, BaseEngine, exceptions, validate
 from hitchrun import expected
 from commandlib import Command
 from strictyaml import MapPattern, Str, Map, Int, Optional, load
@@ -85,15 +85,35 @@ class Engine(BaseEngine):
                 modified_yaml_snippet=self.preconditions.get('modified_yaml_snippet'),
             )
 
+    @validate(
+        exception_type=Map({"in python 2": Str(), "in python 3": Str()}) | Str(),
+        message=Map({"in python 2": Str(), "in python 3": Str()}) | Str(),
+    )
     def raises_exception(self, exception_type=None, message=None):
         """
         Expect an exception.
         """
+        differential = False
+
+        if exception_type is not None:
+            if not isinstance(exception_type, str):
+                differential = True
+                exception_type = exception_type['in python 2']\
+                    if self.preconditions['python version'].startswith("2")\
+                    else exception_type['in python 3']
+
+        if message is not None:
+            if not isinstance(message, str):
+                differential = True
+                message = message['in python 2']\
+                    if self.preconditions['python version'].startswith("2")\
+                    else message['in python 3']
+
         try:
             result = self.example_py_code.expect_exceptions().run(self.path.state, self.python)
             result.exception_was_raised(exception_type, message)
         except ExpectedExceptionMessageWasDifferent as error:
-            if self.settings.get("rewrite"):
+            if self.settings.get("rewrite") and not differential:
                 self.current_step.update(message=error.actual_message)
             else:
                 raise

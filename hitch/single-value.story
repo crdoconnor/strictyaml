@@ -18,7 +18,6 @@ Single value - raise exception on None:
     code: load(None, Str())
   scenario:
   - Raises Exception:
-      exception type: exceptions.TypeError
       message: StrictYAML can only read a string of valid YAML.
 
 Single value - string of 1:

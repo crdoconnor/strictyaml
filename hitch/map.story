@@ -46,7 +46,6 @@ Mapping:
           load(yaml_snippet, schema_2)['keynotfound']
       scenario:
       - Raises exception:
-          exception type: exceptions.KeyError
           message: "'keynotfound'"
 
     cannot use .text:
@@ -55,9 +54,9 @@ Mapping:
           load(yaml_snippet, schema_2).text
       scenario:
       - Raises Exception:
-          exception type: exceptions.TypeError
-          message: YAML(OrderedDict([(u'\xe2', 1), ('b', 2), ('c', 3)])) is a mapping,
+          message: YAML(OrderedDict([('â', 1), ('b', 2), ('c', 3)])) is a mapping,
             has no text value.
+
     key not found in schema:
       preconditions:
         yaml_snippet: |

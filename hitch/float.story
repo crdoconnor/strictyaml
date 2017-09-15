@@ -3,9 +3,9 @@ Floats:
   description: |
     StrictYAML parses to a YAML object representing
     a decimal - e.g. YAML(1.0000000000000001)
-    
+
     To get a python float literal, use .data.
-    
+
     Parsing and validating as a Decimal is best for
     values which require precision, but float is better
     for values for which precision is not required.
@@ -23,48 +23,47 @@ Floats:
       preconditions:
         code: type(load(yaml_snippet, schema)["a"].data)
       scenario:
-        - Should be equal to: float
-    
+      - Should be equal to: float
+
     Equal to equivalent float which is different number:
       preconditions:
         code: load(yaml_snippet, schema)
       scenario:
-        - Should be equal to: '{"a": 1.0, "b": 5.4135}'
+      - Should be equal to: '{"a": 1.0, "b": 5.4135}'
 
     Cast to str:
       preconditions:
         code: str(load(yaml_snippet, schema)["a"])
       scenario:
-        - Should be equal to: |
-            "1.0"
-    
+      - Should be equal to: |
+          "1.0"
+
     Cast to float:
       preconditions:
         code: float(load(yaml_snippet, schema)["a"])
       scenario:
-        - Should be equal to: 1.0
+      - Should be equal to: 1.0
 
     Greater than:
       preconditions:
         code: load(yaml_snippet, schema)["a"] > 0
       scenario:
-        - Should be equal to: True
-        
+      - Should be equal to: 'True'
+
     Less than:
       preconditions:
         code: load(yaml_snippet, schema)["a"] < 0
       scenario:
-        - Should be equal to: False
+      - Should be equal to: 'False'
 
     Cannot cast to bool:
       preconditions:
         code: bool(load(yaml_snippet, schema)['a'])
       scenario:
-        - Raises Exception:
-            exception type: exceptions.TypeError
-            message: |-
-              Cannot cast 'YAML(1.0)' to bool.
-              Use bool(yamlobj.value) or bool(yamlobj.text) instead.
+      - Raises Exception:
+          message: |-
+            Cannot cast 'YAML(1.0)' to bool.
+            Use bool(yamlobj.value) or bool(yamlobj.text) instead.
 
 
     Cannot parse non-float:
@@ -74,11 +73,11 @@ Floats:
           b: 2
         code: load(yaml_snippet, schema)
       scenario:
-        - Raises Exception:
-            exception type: strictyaml.exceptions.YAMLValidationError
-            message: |-
-              when expecting a float
-              found non-float
-                in "<unicode string>", line 1, column 1:
-                  a: string
-                   ^ (line: 1)
+      - Raises Exception:
+          exception type: strictyaml.exceptions.YAMLValidationError
+          message: |-
+            when expecting a float
+            found non-float
+              in "<unicode string>", line 1, column 1:
+                a: string
+                 ^ (line: 1)

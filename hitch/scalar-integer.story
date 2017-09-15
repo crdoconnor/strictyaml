@@ -25,38 +25,43 @@ Scalar integer:
       scenario:
         - Should be equal to: |
             {"a": 1, "b": 5}
+
     Cast with str:
       preconditions:
         code: str(parsed["a"])
       scenario:
         - Should be equal to: |
             "1"
+
     Cast with float:
       preconditions:
         code: float(parsed["a"])
       scenario:
         - Should be equal to: 1.0
+
     Greater than:
       preconditions:
         code: parsed["a"] > 0
       scenario:
         - Should be equal to: True
+
     Less than:
       preconditions:
         code: parsed["a"] < 2
       scenario:
         - Should be equal to: True
+
     To get actual int, use .data:
       preconditions:
         code: type(load(yaml_snippet, schema)["a"].data) is int
       scenario:
         - Should be equal to: True
+
     Cannot cast to bool:
       preconditions:
         code: bool(load(yaml_snippet, schema)['a'])
       scenario:
         - Raises exception:
-            exception type: exceptions.TypeError
             message: |-
               Cannot cast 'YAML(1)' to bool.
               Use bool(yamlobj.value) or bool(yamlobj.text) instead.

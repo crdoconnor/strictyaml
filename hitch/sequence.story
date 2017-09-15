@@ -39,8 +39,13 @@ Valid Seq:
         code: load(yaml_snippet, Seq(Str())).text
       scenario:
       - Raises exception:
-          exception type: exceptions.TypeError
-          message: YAML([u'1', u'2', u'3']) is a sequence, has no text value.
+          exception type:
+            in python 2: exceptions.TypeError
+            in python 3: builtins.TypeError
+          message:
+            in python 2: YAML([u'1', u'2', u'3']) is a sequence, has no text value.
+            in python 3: YAML(['1', '2', '3']) is a sequence, has no text value.
+
 Invalid Seq - Mapping instead:
   based on: Seq validator
   preconditions:

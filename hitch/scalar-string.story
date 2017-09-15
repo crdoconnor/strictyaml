@@ -28,23 +28,25 @@ Scalar strings:
       scenario:
       - Should be equal to: |
           {"a": "1", "b": "yes", "c": u"â string", "d": "multiline string\n"}
+
     Dict lookup cast to string:
       preconditions:
         code: str(parsed["a"])
       scenario:
       - Should be equal to: |
           "1"
+
     Dict lookup cast to int:
       preconditions:
         code: int(parsed["a"])
       scenario:
       - Should be equal to: 1
+
     Dict lookup cast to bool impossible:
       preconditions:
         code: bool(parsed["a"])
       scenario:
       - Raises exception:
-          exception type: exceptions.TypeError
           message: |-
             Cannot cast 'YAML(1)' to bool.
             Use bool(yamlobj.value) or bool(yamlobj.text) instead.

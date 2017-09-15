@@ -63,7 +63,6 @@ op Boolean validation:
         code: str(load(yaml_snippet, schema)["y"])
       scenario:
       - Raises exception:
-          exception type: exceptions.TypeError
           message: |-
             Cannot cast 'YAML(False)' to str.
             Use str(yamlobj.value) or str(yamlobj.text) instead.
