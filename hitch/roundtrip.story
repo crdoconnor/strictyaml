@@ -49,9 +49,9 @@ Roundtripped YAML:
           message: |-
             when expecting an integer
             found non-integer
-              in "<unicode string>", line 1, column 1:
-                yaml: not an integer
-                 ^ (line: 1)
+              in "<unicode string>", line 7, column 1:
+                  x: not an integer
+                ^ (line: 7)
 
     Modified with float:
       preconditions:

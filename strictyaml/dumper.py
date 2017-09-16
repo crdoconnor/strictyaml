@@ -7,9 +7,12 @@ from ruamel.yaml.scalarstring import ScalarString
 from ruamel.yaml.emitter import Emitter
 from ruamel.yaml.serializer import Serializer
 from ruamel.yaml.resolver import BaseResolver
+import sys
 
-
-RoundTripRepresenter.add_representer(ScalarString, RoundTripRepresenter.represent_unicode)
+if sys.version_info[0] == 3:
+    RoundTripRepresenter.add_representer(ScalarString, RoundTripRepresenter.represent_str)
+else:
+    RoundTripRepresenter.add_representer(ScalarString, RoundTripRepresenter.represent_unicode)
 
 
 class StrictYAMLResolver(BaseResolver):

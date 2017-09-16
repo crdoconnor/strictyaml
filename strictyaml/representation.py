@@ -1,7 +1,6 @@
 from ruamel.yaml.comments import CommentedSeq, CommentedMap
 from strictyaml.exceptions import raise_type_error
 from strictyaml.dumper import StrictYAMLDumper
-from ruamel.yaml import RoundTripDumper
 from ruamel.yaml import dump
 from copy import copy, deepcopy
 from collections import OrderedDict
@@ -137,9 +136,22 @@ class YAML(object):
         return self._value[index]
 
     def __setitem__(self, index, value):
-        if not isinstance(value, YAML):
-            value = yaml_object_from_values(value)
-        new_value = self._value[index]._validator(value._chunk)
+        existing_value = self._value[index]
+
+        # First validate against chunk forked against document
+        proposed_chunk = self._chunk.fork()
+        proposed_chunk.update(index, value)
+        existing_value.validator(proposed_chunk.val(index))
+
+        # If validation succeeds, update for real
+        self._chunk.update(index, value)
+
+        new_value = YAML(
+            value=value,
+            text=unicode(value),
+            chunk=self._chunk.val(index),
+            validator=existing_value.validator,
+        )
         del self._value[index]
         self._value[YAML(index)] = new_value
 
@@ -188,6 +200,10 @@ class YAML(object):
             return item in self._value
 
     @property
+    def validator(self):
+        return self._validator
+
+    @property
     def text(self):
         if isinstance(self._value, CommentedMap):
             raise TypeError("{0} is a mapping, has no text value.".format(repr(self)))
@@ -227,35 +243,3 @@ class YAML(object):
 
     def __ne__(self, value):
         return self.data != value
-
-
-def yaml_object_from_values(value):
-    """
-    Create uncommented YAML object.
-    """
-    from strictyaml.parser import load
-    from ruamel.yaml.scalarstring import PreservedScalarString
-    from ruamel.yaml import dump
-
-    if isinstance(value, (unicode, str)):
-        if "\n" in value:
-            output = load(dump(
-                {"yaml": PreservedScalarString(value)},
-                default_flow_style=False,
-                Dumper=RoundTripDumper
-            ))['yaml']
-        else:
-            output = load(dump(
-                {"yaml": value}, default_flow_style=False, Dumper=RoundTripDumper
-            ))['yaml']
-    else:
-        output = load(dump(
-            {"yaml": value}, default_flow_style=False, Dumper=RoundTripDumper
-        ))['yaml']
-
-    if isinstance(output._chunk._document['yaml'], unicode):
-        if "\n" in output._chunk.contents:
-            output._chunk._document['yaml'] = PreservedScalarString(
-                output._chunk._document['yaml']
-            )
-    return output

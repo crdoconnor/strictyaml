@@ -5,7 +5,6 @@ from copy import deepcopy
 
 class YAMLChunk(object):
     def __init__(self, document, pointer=None, label=None):
-        self._contents = None
         self._document = document
         self._pointer = pointer if pointer is not None \
             else YAMLPointer()
@@ -14,6 +13,20 @@ class YAMLChunk(object):
     @property
     def label(self):
         return self._label
+
+    @property
+    def document(self):
+        return self._document
+
+    @property
+    def pointer(self):
+        return self._pointer
+
+    def fork(self):
+        return YAMLChunk(deepcopy(self._document), pointer=self.pointer, label=self.label)
+
+    def update(self, key, value):
+        self.pointer.get(self._document)[key] = value
 
     def index(self, index):
         return YAMLChunk(self._document, pointer=self._pointer.index(index), label=self._label)
@@ -40,12 +53,8 @@ class YAMLChunk(object):
         return self._pointer.lines_after(self._document, how_many)
 
     @property
-    def document(self):
-        return self._document
-
-    @property
     def contents(self):
-        return self._pointer.get(self._document)
+        return deepcopy(self._pointer.get(self._document))
 
 
 class YAMLPointer(object):
@@ -151,7 +160,7 @@ class YAMLPointer(object):
                 segment = segment[index]
             else:
                 segment = index
-        return deepcopy(segment)
+        return segment
 
     def __repr__(self):
         return "<YAMLPointer: {0}>".format(self._indices)
