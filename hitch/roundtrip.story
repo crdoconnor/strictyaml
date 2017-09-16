@@ -107,8 +107,8 @@ Roundtripped YAML:
 
           # Another comment
           b:
-            y: 5
             x: 2
+            y: 5
           c:
           - a: 3
           - b: 2

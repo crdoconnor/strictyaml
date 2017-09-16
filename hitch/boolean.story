@@ -61,6 +61,7 @@ op Boolean validation:
     Update boolean value:
       preconditions:
         modified_yaml_snippet: |
+          a: no
           b: true
           c: on
           d: 1
@@ -73,7 +74,6 @@ op Boolean validation:
           x: Off
           y: FALSE
           z: no
-          a: no
         setup: |
           from strictyaml import Bool, Str, MapPattern, YAMLValidationError, load
 

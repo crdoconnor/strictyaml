@@ -152,7 +152,7 @@ class YAML(object):
             chunk=self._chunk.val(index),
             validator=existing_value.validator,
         )
-        del self._value[index]
+
         self._value[YAML(index)] = new_value
 
     def __delitem__(self, index):
