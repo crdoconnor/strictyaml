@@ -272,6 +272,15 @@ def hvenvup(package, directory):
     pip("install", DIR.project.joinpath(directory).abspath()).run()
 
 
+def rerun(version="3.5.0"):
+    """
+    Rerun last example code block with specified version of python.
+    """
+    Command(DIR.gen.joinpath("py{0}".format(version), "bin", "python"))(
+        DIR.gen.joinpath("state", "examplepythoncode.py")
+    ).in_dir(DIR.gen.joinpath("state")).run()
+
+
 def rot():
     """
     Test for code rot by upgrading dependency and running tests (ruamel.yaml).
