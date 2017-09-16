@@ -58,6 +58,34 @@ op Boolean validation:
       - Should be equal to: |
           "FALSE"
 
+    Update boolean value:
+      preconditions:
+        modified_yaml_snippet: |
+          b: true
+          c: on
+          d: 1
+          e: True
+          f: Y
+
+          u: n
+          v: False
+          w: 0
+          x: Off
+          y: FALSE
+          z: no
+          a: no
+        setup: |
+          from strictyaml import Bool, Str, MapPattern, YAMLValidationError, load
+
+          schema = MapPattern(Str(), Bool())
+
+          yaml = load(yaml_snippet, schema)
+          yaml['a'] = 'no'
+        code: |
+          yaml.as_yaml()
+      scenario:
+      - Should be equal to: modified_yaml_snippet
+
     Cannot cast to string:
       preconditions:
         code: str(load(yaml_snippet, schema)["y"])

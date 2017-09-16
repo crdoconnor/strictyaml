@@ -54,8 +54,14 @@ Mapping:
           load(yaml_snippet, schema_2).text
       scenario:
       - Raises Exception:
-          message: YAML(OrderedDict([('â', 1), ('b', 2), ('c', 3)])) is a mapping,
-            has no text value.
+          exception type:
+            in python 3: builtins.TypeError
+            in python 2: exceptions.TypeError
+          message:
+            in python 3: |-
+              YAML(OrderedDict([('â', 1), ('b', 2), ('c', 3)])) is a mapping, has no text value.
+            in python 2: |-
+              YAML(OrderedDict([(u'\xe2', 1), ('b', 2), ('c', 3)])) is a mapping, has no text value.
 
     key not found in schema:
       preconditions:

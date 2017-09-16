@@ -1,8 +1,8 @@
 from ruamel.yaml.comments import CommentedSeq, CommentedMap
 from strictyaml.exceptions import raise_type_error
+from strictyaml.dumper import StrictYAMLDumper
 from ruamel.yaml import RoundTripDumper
 from ruamel.yaml import dump
-from strictyaml import utils
 from copy import copy, deepcopy
 from collections import OrderedDict
 import decimal
@@ -83,12 +83,11 @@ class YAML(object):
                 new_commented_seq[i] = item.as_marked_up()
             return new_commented_seq
         else:
-            if utils.is_integer(self._text):
-                return int(self._text)
-            elif utils.is_decimal(self._text):
-                return float(self._text)
+            from ruamel.yaml.scalarstring import ScalarString, PreservedScalarString
+            if u"\n" in self._text:
+                return PreservedScalarString(self._text)
             else:
-                return self._text
+                return ScalarString(self._text)
 
     @property
     def start_line(self):
@@ -157,7 +156,7 @@ class YAML(object):
         """
         Render the YAML node and subnodes as string.
         """
-        dumped = dump(self.as_marked_up(), Dumper=RoundTripDumper, allow_unicode=True)
+        dumped = dump(self.as_marked_up(), Dumper=StrictYAMLDumper, allow_unicode=True)
         return dumped if sys.version_info[0] == 3 else dumped.decode('utf8')
 
     def items(self):
