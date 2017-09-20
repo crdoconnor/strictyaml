@@ -1,5 +1,6 @@
 from ruamel.yaml.comments import CommentedSeq, CommentedMap
 from strictyaml.exceptions import raise_type_error
+from strictyaml.yamllocation import YAMLChunk
 from strictyaml.dumper import StrictYAMLDumper
 from ruamel.yaml import dump
 from copy import copy, deepcopy
@@ -10,6 +11,16 @@ import sys
 
 if sys.version_info[0] == 3:
     unicode = str
+
+
+def marked_up(data):
+    if isinstance(data, dict):
+        return CommentedMap([
+            (marked_up(key), marked_up(value))
+            for key, value in data.items()
+        ])
+    else:
+        return data
 
 
 class YAML(object):
@@ -27,7 +38,7 @@ class YAML(object):
             self._text = unicode(value) if text is None else text
         else:
             self._text = None
-        self._chunk = chunk
+        self._chunk = YAMLChunk(text) if chunk is None else chunk
 
     def __int__(self):
         return int(self._value)
@@ -137,23 +148,26 @@ class YAML(object):
 
     def __setitem__(self, index, value):
         existing_value = self._value[index]
+        new_value = existing_value.validator(YAMLChunk(marked_up(value)))
 
-        # First validate against chunk forked against document
+        # First validate against updated forked document
         proposed_chunk = self._chunk.fork()
-        proposed_chunk.update(index, value)
+        proposed_chunk.update(index, new_value)
         existing_value.validator(proposed_chunk.val(index))
 
         # If validation succeeds, update for real
-        self._chunk.update(index, value)
+        self._chunk.update(index, new_value)
 
-        new_value = YAML(
-            value=value,
-            text=unicode(value),
+        if new_value.is_mapping():
+            for key, value in new_value.items():
+                key._chunk._pointer = key._chunk._pointer.as_child_of(self._chunk.pointer)
+                value._chunk._pointer = value._chunk._pointer.as_child_of(self._chunk.pointer)
+
+        self._value[YAML(index)] = YAML(
+            value=new_value,
             chunk=self._chunk.val(index),
             validator=existing_value.validator,
         )
-
-        self._value[YAML(index)] = new_value
 
     def __delitem__(self, index):
         del self._value[index]
@@ -237,6 +251,9 @@ class YAML(object):
     def is_scalar(self):
         return not isinstance(self._value, CommentedSeq) \
             and not isinstance(self._value, CommentedMap)
+
+    def document(self):
+        return self._chunk.document
 
     def __eq__(self, value):
         return self.data == value

@@ -26,7 +26,12 @@ class YAMLChunk(object):
         return YAMLChunk(deepcopy(self._document), pointer=self.pointer, label=self.label)
 
     def update(self, key, value):
-        self.pointer.get(self._document)[key] = value
+        if value.is_mapping():
+            self.pointer.get(self._document)[key] = CommentedMap([
+                (key._text, value._text) for key, value in value.items()
+            ])
+        else:
+            self.pointer.get(self._document)[key] = value._text
 
     def index(self, index):
         return YAMLChunk(self._document, pointer=self._pointer.index(index), label=self._label)
@@ -74,6 +79,11 @@ class YAMLPointer(object):
     def index(self, index):
         new_location = deepcopy(self)
         new_location._indices.append(('index', index))
+        return new_location
+
+    def as_child_of(self, pointer):
+        new_location = deepcopy(pointer)
+        new_location._indices.extend(self._indices)
         return new_location
 
     def _slice_segment(self, indices, segment, include_selected):

@@ -125,10 +125,10 @@ class Int(Scalar):
         val = unicode(chunk.contents) if value is None else value
         if not utils.is_integer(val):
             raise_exception(
-                    "when expecting an integer",
-                    "found non-integer",
-                    chunk,
-                )
+                "when expecting an integer",
+                "found non-integer",
+                chunk,
+            )
         else:
             return YAML(int(val), val, chunk=chunk, validator=self)
 

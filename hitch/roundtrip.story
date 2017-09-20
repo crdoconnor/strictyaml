@@ -48,10 +48,13 @@ Roundtripped YAML:
           exception type: strictyaml.exceptions.YAMLValidationError
           message: |-
             when expecting an integer
+              in "None", line 1, column 1:
+                not an integer
+                 ^ (line: 1)
             found non-integer
-              in "<unicode string>", line 7, column 1:
-                  x: not an integer
-                ^ (line: 7)
+              in "None", line 2, column 1:
+                ...
+                ^ (line: 2)
 
     Modified with float:
       preconditions:

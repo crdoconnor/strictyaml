@@ -58,3 +58,33 @@ Nested mapping validation:
               in "<unicode string>", line 1, column 1:
                 a: '11'
                  ^ (line: 1)
+
+    Modify nested map:
+      preconditions:
+        yaml_snippet: |
+          a:
+            x: 9
+            y: 8
+          b: 2
+          c: 3
+        setup: |
+          from strictyaml import Map, Int, load
+          from collections import OrderedDict
+
+          schema = Map({"a": Map({"x": Int(), "y": Int()}), "b": Int(), "c": Int()})
+
+          yaml = load(yaml_snippet, schema)
+
+          # Non-ordered dict would also work, but would yield an indeterminate order of keys
+          yaml['a'] = OrderedDict([("x", 5), ("y", 9)])
+        code: |
+          yaml.as_yaml()
+        modified_yaml_snippet: |
+          a:
+            x: 5
+            y: 9
+          b: 2
+          c: 3
+      scenario:
+      - Should be equal to: modified_yaml_snippet
+
