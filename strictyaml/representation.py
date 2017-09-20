@@ -19,6 +19,8 @@ def marked_up(data):
             (marked_up(key), marked_up(value))
             for key, value in data.items()
         ])
+    elif isinstance(data, bool):
+        return u"yes" if data else u"no"
     else:
         return data
 

@@ -62,8 +62,8 @@ op Boolean validation:
       preconditions:
         modified_yaml_snippet: |
           a: no
-          b: true
-          c: on
+          b: no
+          c: yes
           d: 1
           e: True
           f: Y
@@ -81,6 +81,8 @@ op Boolean validation:
 
           yaml = load(yaml_snippet, schema)
           yaml['a'] = 'no'
+          yaml['b'] = False
+          yaml['c'] = True
         code: |
           yaml.as_yaml()
       scenario:
