@@ -106,6 +106,7 @@ Invalid sequence - invalid item in sequence:
           in "<unicode string>", line 1, column 1:
             - '1.1'
              ^ (line: 1)
+
 Invalid sequence - one invalid item in sequence:
   based on: Seq validator
   preconditions:
@@ -123,3 +124,34 @@ Invalid sequence - one invalid item in sequence:
           in "<unicode string>", line 3, column 1:
             - '3.4'
             ^ (line: 3)
+            
+Modify nested sequence:
+  based on: Seq validator
+  preconditions:
+    yaml_snippet: |
+      a:
+        - a
+        - b
+      b: 2
+      c: 3
+    setup: |
+      from strictyaml import Map, Int, load, Seq, Str
+      from collections import OrderedDict
+
+      schema = Map({"a": Seq(Str()), "b": Int(), "c": Int()})
+
+      yaml = load(yaml_snippet, schema)
+
+      # Non-ordered dict would also work, but would yield an indeterminate order of keys
+      yaml['a'] = ['b', 'c', 'd']
+    code: |
+      yaml.as_yaml()
+    modified_yaml_snippet: |
+      a:
+      - b
+      - c
+      - d
+      b: 2
+      c: 3
+  scenario:
+  - Should be equal to: modified_yaml_snippet

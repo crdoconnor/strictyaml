@@ -30,6 +30,10 @@ class YAMLChunk(object):
             self.pointer.get(self._document)[key] = CommentedMap([
                 (key._text, value._text) for key, value in value.items()
             ])
+        if value.is_sequence():
+            self.pointer.get(self._document)[key] = CommentedSeq([
+                item._text for item in value
+            ])
         else:
             self.pointer.get(self._document)[key] = value._text
 

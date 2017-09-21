@@ -19,6 +19,10 @@ def marked_up(data):
             (marked_up(key), marked_up(value))
             for key, value in data.items()
         ])
+    elif isinstance(data, list):
+        return CommentedSeq([
+            marked_up(item) for item in data
+        ])
     elif isinstance(data, bool):
         return u"yes" if data else u"no"
     else:
@@ -165,11 +169,20 @@ class YAML(object):
                 key._chunk._pointer = key._chunk._pointer.as_child_of(self._chunk.pointer)
                 value._chunk._pointer = value._chunk._pointer.as_child_of(self._chunk.pointer)
 
-        self._value[YAML(index)] = YAML(
-            value=new_value,
-            chunk=self._chunk.val(index),
-            validator=existing_value.validator,
-        )
+            self._value[YAML(index)] = YAML(
+                value=new_value,
+                chunk=self._chunk.val(index),
+                validator=existing_value.validator,
+            )
+        elif new_value.is_sequence():
+            for item in new_value:
+                item._chunk._pointer = item._chunk._pointer.as_child_of(self._chunk.pointer)
+            
+            self._value[YAML(index)] = YAML(
+                value=new_value,
+                chunk=self._chunk.index(index),
+                validator=existing_value.validator,
+            )
 
     def __delitem__(self, index):
         del self._value[index]
