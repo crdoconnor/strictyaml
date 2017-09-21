@@ -64,25 +64,31 @@ Nested mapping validation:
         yaml_snippet: |
           a:
             x: 9
-            y: 8
+            y:
+            - 1
+            - 2
+            - 3
           b: 2
           c: 3
         setup: |
-          from strictyaml import Map, Int, load
+          from strictyaml import Map, Int, load, Seq
           from collections import OrderedDict
 
-          schema = Map({"a": Map({"x": Int(), "y": Int()}), "b": Int(), "c": Int()})
+          schema = Map({"a": Map({"x": Int(), "y": Seq(Int())}), "b": Int(), "c": Int()})
 
           yaml = load(yaml_snippet, schema)
 
           # Non-ordered dict would also work, but would yield an indeterminate order of keys
-          yaml['a'] = OrderedDict([("x", 5), ("y", 9)])
+          yaml['a'] = OrderedDict([("x", 5), ("y", [4, 5, 6])])
         code: |
           yaml.as_yaml()
         modified_yaml_snippet: |
           a:
             x: 5
-            y: 9
+            y:
+            - 4
+            - 5
+            - 6
           b: 2
           c: 3
       scenario:
