@@ -3,7 +3,7 @@ import hitchpython
 from hitchstory import StoryCollection, StorySchema, BaseEngine, exceptions, validate
 from hitchrun import expected
 from commandlib import Command
-from strictyaml import MapPattern, Str, Map, Int, Optional, load
+from strictyaml import Str, Map, Int, Optional, load
 from pathquery import pathq
 import hitchtest
 import hitchdoc

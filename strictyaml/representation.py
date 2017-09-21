@@ -31,20 +31,47 @@ def marked_up(data):
 
 class YAML(object):
     def __init__(self, value, text=None, chunk=None, validator=None):
+        """
+        Create a renderable YAML object from data.
+        """
         if isinstance(value, YAML):
             self._value = value._value
             self._text = value._text
             self._chunk = value._chunk
             self._validator = value._validator
-            return
-
-        self._validator = validator
-        self._value = value
-        if not isinstance(value, CommentedMap) and not isinstance(value, CommentedSeq):
-            self._text = unicode(value) if text is None else text
-        else:
+        elif isinstance(value, CommentedMap):
+            self._value = value
             self._text = None
-        self._chunk = YAMLChunk(text) if chunk is None else chunk
+            self._validator = validator
+            self._chunk = chunk
+        elif isinstance(value, CommentedSeq):
+            self._value = value
+            self._text = None
+            self._validator = validator
+            self._chunk = chunk
+        elif isinstance(value, dict):
+            self._value = CommentedMap([(YAML(key), YAML(value)) for key, value in value.items()])
+            self._text = None
+            self._validator = validator
+            self._chunk = chunk
+        elif isinstance(value, list):
+            self._value = CommentedSeq([YAML(item) for item in value])
+            self._text = None
+            self._validator = validator
+            self._chunk = chunk
+        elif isinstance(value, bool):
+            self._value = value
+            if text is None:
+                self._text = u"yes" if self._value else u"no"
+            else:
+                self._text = text
+            self._validator = validator
+            self._chunk = chunk
+        else:
+            self._validator = validator
+            self._value = value
+            self._text = unicode(value) if text is None else text
+            self._chunk = YAMLChunk(text) if chunk is None else chunk
 
     def __int__(self):
         return int(self._value)
