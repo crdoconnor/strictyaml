@@ -177,24 +177,24 @@ class YAML(object):
                 key._chunk._pointer = key._chunk._pointer.as_child_of(self._chunk.pointer)
                 value._chunk._pointer = value._chunk._pointer.as_child_of(self._chunk.pointer)
 
-            self._value[YAML(index)] = YAML(
+            self._value[YAML(index) if self.is_mapping() else index] = YAML(
                 value=new_value,
-                chunk=self._chunk.val(index),
+                chunk=self._chunk.val(index) if self.is_mapping() else self._chunk.index(index),
                 validator=existing_value.validator,
             )
         elif new_value.is_sequence():
             for item in new_value:
                 item._chunk._pointer = item._chunk._pointer.as_child_of(self._chunk.pointer)
 
-            self._value[YAML(index)] = YAML(
+            self._value[YAML(index) if self.is_mapping() else index] = YAML(
                 value=new_value,
-                chunk=self._chunk.index(index),
+                chunk=self._chunk.val(index),
                 validator=existing_value.validator,
             )
         else:
             new_value._chunk._pointer = new_value._chunk._pointer.as_child_of(self._chunk.pointer)
 
-            self._value[YAML(index)] = YAML(
+            self._value[YAML(index) if self.is_mapping() else index] = YAML(
                 value=new_value,
                 chunk=self._chunk,
                 validator=existing_value.validator,

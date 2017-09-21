@@ -143,12 +143,13 @@ Modify nested sequence:
 
       # Non-ordered dict would also work, but would yield an indeterminate order of keys
       yaml['a'] = ['b', 'c', 'd']
+      yaml['a'][1] = 'x'
     code: |
       yaml.as_yaml()
     modified_yaml_snippet: |
       a:
       - b
-      - c
+      - x
       - d
       b: 2
       c: 3
