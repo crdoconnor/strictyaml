@@ -15,7 +15,7 @@ Build YAML document:
       from strictyaml import YAML
       from collections import OrderedDict
 
-      # Can also use regular dict if you don't care about order
+      # Can also use regular dict if an arbitrary ordering is ok
       yaml = YAML(OrderedDict(
           [("a", True), ("b", "hello"), ("c", [1, 2, 3])]
       ))

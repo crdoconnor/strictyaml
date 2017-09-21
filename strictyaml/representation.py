@@ -50,15 +50,18 @@ class YAML(object):
             self._validator = validator
             self._chunk = chunk
         elif isinstance(value, dict):
-            self._value = CommentedMap([(YAML(key), YAML(value)) for key, value in value.items()])
             self._text = None
             self._validator = validator
-            self._chunk = chunk
+            self._chunk = YAMLChunk(value) if chunk is None else chunk
+            self._value = CommentedMap([
+                (YAML(key, chunk=self._chunk.key(key)), YAML(value, chunk=self._chunk.val(key)))
+                for key, value in value.items()
+            ])
         elif isinstance(value, list):
             self._value = CommentedSeq([YAML(item) for item in value])
             self._text = None
             self._validator = validator
-            self._chunk = chunk
+            self._chunk = YAMLChunk(self._value) if chunk is None else chunk
         elif isinstance(value, bool):
             self._value = value
             if text is None:
@@ -66,7 +69,7 @@ class YAML(object):
             else:
                 self._text = text
             self._validator = validator
-            self._chunk = chunk
+            self._chunk = YAMLChunk(text) if chunk is None else chunk
         else:
             self._validator = validator
             self._value = value
