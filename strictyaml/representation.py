@@ -176,29 +176,17 @@ class YAML(object):
             for key, value in new_value.items():
                 key._chunk._pointer = key._chunk._pointer.as_child_of(self._chunk.pointer)
                 value._chunk._pointer = value._chunk._pointer.as_child_of(self._chunk.pointer)
-
-            self._value[YAML(index) if self.is_mapping() else index] = YAML(
-                value=new_value,
-                chunk=self._chunk.val(index) if self.is_mapping() else self._chunk.index(index),
-                validator=existing_value.validator,
-            )
         elif new_value.is_sequence():
             for item in new_value:
                 item._chunk._pointer = item._chunk._pointer.as_child_of(self._chunk.pointer)
-
-            self._value[YAML(index) if self.is_mapping() else index] = YAML(
-                value=new_value,
-                chunk=self._chunk.val(index),
-                validator=existing_value.validator,
-            )
         else:
             new_value._chunk._pointer = new_value._chunk._pointer.as_child_of(self._chunk.pointer)
 
-            self._value[YAML(index) if self.is_mapping() else index] = YAML(
-                value=new_value,
-                chunk=self._chunk,
-                validator=existing_value.validator,
-            )
+        self._value[YAML(index) if self.is_mapping() else index] = YAML(
+            value=new_value,
+            chunk=self._chunk.val(index) if self.is_mapping() else self._chunk.index(index),
+            validator=existing_value.validator,
+        )
 
     def __delitem__(self, index):
         del self._value[index]
