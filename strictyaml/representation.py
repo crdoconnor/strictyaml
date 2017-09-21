@@ -161,13 +161,17 @@ class YAML(object):
         return self._value[index]
 
     def __setitem__(self, index, value):
-        existing_value = self._value[index]
-        new_value = existing_value.validator(YAMLChunk(marked_up(value)))
+        existing_validator = self._value[index].validator
+
+        if isinstance(value, YAML):
+            new_value = existing_validator(value._chunk)
+        else:
+            new_value = existing_validator(YAMLChunk(marked_up(value)))
 
         # First validate against updated forked document
         proposed_chunk = self._chunk.fork()
         proposed_chunk.update(index, new_value)
-        existing_value.validator(proposed_chunk.val(index))
+        existing_validator(proposed_chunk.val(index))
 
         # If validation succeeds, update for real
         self._chunk.update(index, new_value)
@@ -185,7 +189,7 @@ class YAML(object):
         self._value[YAML(index) if self.is_mapping() else index] = YAML(
             value=new_value,
             chunk=self._chunk.val(index) if self.is_mapping() else self._chunk.index(index),
-            validator=existing_value.validator,
+            validator=existing_validator,
         )
 
     def __delitem__(self, index):

@@ -19,9 +19,9 @@ class Engine(BaseEngine):
     """Python engine for running tests."""
     schema = StorySchema(
         preconditions=Map({
-            Optional("files"): MapPattern(Str(), Str()),
-            Optional("variables"): MapPattern(Str(), Str()),
             Optional("yaml_snippet"): Str(),
+            Optional("yaml_snippet_1"): Str(),
+            Optional("yaml_snippet_2"): Str(),
             Optional("modified_yaml_snippet"): Str(),
             Optional("python version"): Str(),
             Optional("ruamel version"): Str(),
@@ -81,7 +81,9 @@ class Engine(BaseEngine):
         self.example_py_code = ExamplePythonCode(self.preconditions.get('code', ''))\
             .with_setup_code(self.preconditions.get('setup', ''))\
             .with_long_strings(
+                yaml_snippet_1=self.preconditions.get('yaml_snippet_1'),
                 yaml_snippet=self.preconditions.get('yaml_snippet'),
+                yaml_snippet_2=self.preconditions.get('yaml_snippet_2'),
                 modified_yaml_snippet=self.preconditions.get('modified_yaml_snippet'),
             )
 
@@ -124,7 +126,9 @@ class Engine(BaseEngine):
         """
         self.example_py_code = ExamplePythonCode(self.preconditions['setup'])\
             .with_long_strings(
+                yaml_snippet_1=self.preconditions.get('yaml_snippet_1'),
                 yaml_snippet=self.preconditions.get('yaml_snippet'),
+                yaml_snippet_2=self.preconditions.get('yaml_snippet_2'),
                 modified_yaml_snippet=self.preconditions.get('modified_yaml_snippet'),
             )\
             .is_equal(self.preconditions.get("code"), rhs)\
