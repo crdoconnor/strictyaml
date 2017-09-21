@@ -63,7 +63,7 @@ Floats:
       - Raises Exception:
           message: |-
             Cannot cast 'YAML(1.0)' to bool.
-            Use bool(yamlobj.value) or bool(yamlobj.text) instead.
+            Use bool(yamlobj.data) or bool(yamlobj.text) instead.
 
 
     Cannot parse non-float:

@@ -95,7 +95,7 @@ op Boolean validation:
       - Raises exception:
           message: |-
             Cannot cast 'YAML(False)' to str.
-            Use str(yamlobj.value) or str(yamlobj.text) instead.
+            Use str(yamlobj.data) or str(yamlobj.text) instead.
 
     Invalid string:
       preconditions:

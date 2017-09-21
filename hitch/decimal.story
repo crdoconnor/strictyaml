@@ -70,7 +70,7 @@ Decimal:
       - Raises exception:
           message: |-
             Cannot cast 'YAML(1.00000000000000000001)' to bool.
-            Use bool(yamlobj.value) or bool(yamlobj.text) instead.
+            Use bool(yamlobj.data) or bool(yamlobj.text) instead.
 
     Invalid:
       preconditions:

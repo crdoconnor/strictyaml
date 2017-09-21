@@ -58,7 +58,7 @@ class YAML(object):
             )
         else:
             raise_type_error(
-                repr(self), "str", "str(yamlobj.value) or str(yamlobj.text)"
+                repr(self), "str", "str(yamlobj.data) or str(yamlobj.text)"
             )
 
     def __unicode__(self):
@@ -66,6 +66,14 @@ class YAML(object):
 
     @property
     def data(self):
+        """
+        Returns raw data representation of the document or document segment.
+
+        Mappings are rendered as ordered dicts, sequences as lists and scalar values
+        as whatever the validator returns (int, string, etc.).
+
+        If no validators are used, scalar values are always returned as strings.
+        """
         if isinstance(self._value, CommentedMap):
             mapping = OrderedDict()
             for key, value in self._value.items():
@@ -143,7 +151,7 @@ class YAML(object):
             return self._value
         else:
             raise_type_error(
-                repr(self), "bool", "bool(yamlobj.value) or bool(yamlobj.text)"
+                repr(self), "bool", "bool(yamlobj.data) or bool(yamlobj.text)"
             )
 
     def __nonzero__(self):
@@ -177,10 +185,18 @@ class YAML(object):
         elif new_value.is_sequence():
             for item in new_value:
                 item._chunk._pointer = item._chunk._pointer.as_child_of(self._chunk.pointer)
-            
+
             self._value[YAML(index)] = YAML(
                 value=new_value,
                 chunk=self._chunk.index(index),
+                validator=existing_value.validator,
+            )
+        else:
+            new_value._chunk._pointer = new_value._chunk._pointer.as_child_of(self._chunk.pointer)
+
+            self._value[YAML(index)] = YAML(
+                value=new_value,
+                chunk=self._chunk,
                 validator=existing_value.validator,
             )
 
@@ -234,6 +250,9 @@ class YAML(object):
 
     @property
     def text(self):
+        """
+        Return string value of scalar, whatever value it was parsed as.
+        """
         if isinstance(self._value, CommentedMap):
             raise TypeError("{0} is a mapping, has no text value.".format(repr(self)))
         if isinstance(self._value, CommentedSeq):

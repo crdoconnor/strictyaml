@@ -124,7 +124,6 @@ Invalid sequence - one invalid item in sequence:
           in "<unicode string>", line 3, column 1:
             - '3.4'
             ^ (line: 3)
-            
 Modify nested sequence:
   based on: Seq validator
   preconditions:

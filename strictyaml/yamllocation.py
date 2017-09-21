@@ -4,6 +4,10 @@ from copy import deepcopy
 
 
 class YAMLChunk(object):
+    """
+    Represents a section of the document - everything from the whole document
+    all the way to one scalar value.
+    """
     def __init__(self, document, pointer=None, label=None):
         self._document = document
         self._pointer = pointer if pointer is not None \
@@ -23,19 +27,13 @@ class YAMLChunk(object):
         return self._pointer
 
     def fork(self):
+        """
+        Return a chunk to the same location in a duplicated document.
+        """
         return YAMLChunk(deepcopy(self._document), pointer=self.pointer, label=self.label)
 
     def update(self, key, value):
-        if value.is_mapping():
-            self.pointer.get(self._document)[key] = CommentedMap([
-                (key._text, value._text) for key, value in value.items()
-            ])
-        if value.is_sequence():
-            self.pointer.get(self._document)[key] = CommentedSeq([
-                item._text for item in value
-            ])
-        else:
-            self.pointer.get(self._document)[key] = value._text
+        self.pointer.get(self._document)[key] = value.as_marked_up()
 
     def index(self, index):
         return YAMLChunk(self._document, pointer=self._pointer.index(index), label=self._label)
@@ -67,6 +65,12 @@ class YAMLChunk(object):
 
 
 class YAMLPointer(object):
+    """
+    Represents a pointer to a specific location in a document.
+
+    The pointer is a list of values (key lookups on mappings), indexes (index lookup
+    on sequences) and keys (lookup for a particular key name in a mapping).
+    """
     def __init__(self):
         self._indices = []
 
