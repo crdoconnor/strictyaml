@@ -1,6 +1,7 @@
 from commandlib import run
 import hitchpython
-from hitchstory import StoryCollection, StorySchema, BaseEngine, exceptions, validate
+from hitchstory import StoryCollection, StorySchema, BaseEngine, HitchStoryException
+from hitchstory import validate, expected_exception
 from hitchrun import expected
 from commandlib import Command
 from strictyaml import Str, Map, Int, Optional, load
@@ -11,7 +12,7 @@ from hitchrun import hitch_maintenance
 from commandlib import python
 from hitchrun import DIR
 from hitchrun.decorators import ignore_ctrlc
-from hitchrunpy import ExamplePythonCode, ExpectedExceptionMessageWasDifferent
+from hitchrunpy import ExamplePythonCode, HitchRunPyException, ExpectedExceptionMessageWasDifferent
 import requests
 
 
@@ -87,6 +88,7 @@ class Engine(BaseEngine):
                 modified_yaml_snippet=self.preconditions.get('modified_yaml_snippet'),
             )
 
+    @expected_exception(HitchRunPyException)
     @validate(
         exception_type=Map({"in python 2": Str(), "in python 3": Str()}) | Str(),
         message=Map({"in python 2": Str(), "in python 3": Str()}) | Str(),
@@ -120,6 +122,7 @@ class Engine(BaseEngine):
             else:
                 raise
 
+    @expected_exception(HitchRunPyException)
     def should_be_equal_to(self, rhs):
         """
         Code should be equal to rhs
@@ -147,7 +150,7 @@ def _storybook(settings):
     return StoryCollection(pathq(DIR.key).ext("story"), Engine(DIR, settings))
 
 
-@expected(exceptions.HitchStoryException)
+@expected(HitchStoryException)
 def tdd(*words):
     """
     Run all tests
@@ -157,7 +160,7 @@ def tdd(*words):
     )
 
 
-@expected(exceptions.HitchStoryException)
+@expected(HitchStoryException)
 def testfile(filename):
     """
     Run all stories in filename 'filename'.
@@ -167,7 +170,7 @@ def testfile(filename):
     )
 
 
-@expected(exceptions.HitchStoryException)
+@expected(HitchStoryException)
 def regression():
     """
     Run regression testing - lint and then run all tests.

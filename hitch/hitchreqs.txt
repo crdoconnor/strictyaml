@@ -15,7 +15,7 @@ hitchpython==0.5.3
 hitchrun==0.2.4
 hitchrunpy==0.1.5
 hitchserve==0.5.1         # via hitchpython
-hitchstory==0.3.1
+hitchstory==0.4.0
 hitchtest==0.9.12         # via hitchpython
 humanize==0.5.1           # via hitchserve
 idna==2.5                 # via requests
@@ -35,7 +35,7 @@ peewee==2.9.2             # via hitchdoc
 pexpect==4.2.1            # via ipython
 pickleshare==0.7.4        # via ipython
 pkginfo==1.4.1            # via twine
-prettystack==0.2.7        # via hitchrun, hitchstory
+prettystack==0.3.0        # via hitchrun, hitchstory
 prompt-toolkit==1.0.14    # via jupyter-console
 psutil==5.2.2             # via hitchserve, hitchtest
 ptyprocess==0.5.1         # via pexpect
