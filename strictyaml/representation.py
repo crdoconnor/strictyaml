@@ -5,28 +5,13 @@ from strictyaml.dumper import StrictYAMLDumper
 from ruamel.yaml import dump
 from copy import copy, deepcopy
 from collections import OrderedDict
+from strictyaml.utils import ruamel_structure
 import decimal
 import sys
 
 
 if sys.version_info[0] == 3:
     unicode = str
-
-
-def marked_up(data):
-    if isinstance(data, dict):
-        return CommentedMap([
-            (marked_up(key), marked_up(value))
-            for key, value in data.items()
-        ])
-    elif isinstance(data, list):
-        return CommentedSeq([
-            marked_up(item) for item in data
-        ])
-    elif isinstance(data, bool):
-        return u"yes" if data else u"no"
-    else:
-        return unicode(data)
 
 
 class YAML(object):
@@ -175,7 +160,7 @@ class YAML(object):
         if isinstance(value, YAML):
             new_value = existing_validator(value._chunk)
         else:
-            new_value = existing_validator(YAMLChunk(marked_up(value)))
+            new_value = existing_validator(YAMLChunk(ruamel_structure(value)))
 
         # First validate against updated forked document
         proposed_chunk = self._chunk.fork()
