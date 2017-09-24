@@ -2,7 +2,7 @@
 from strictyaml.parser import load
 
 # Document builder
-from strictyaml.document import as_document
+from strictyaml.parser import as_document
 
 # YAML object
 from strictyaml.representation import YAML

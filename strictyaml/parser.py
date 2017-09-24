@@ -7,6 +7,7 @@ from strictyaml import exceptions
 from ruamel.yaml.comments import CommentedSeq, CommentedMap
 from strictyaml.any_validator import Any
 from strictyaml.yamllocation import YAMLChunk
+from strictyaml.utils import ruamel_structure
 
 from ruamel.yaml.reader import Reader
 from ruamel.yaml.scanner import RoundTripScanner
@@ -212,6 +213,17 @@ class StrictYAMLLoader(
         Composer.__init__(self, loader=self)
         StrictYAMLConstructor.__init__(self, preserve_quotes=preserve_quotes, loader=self)
         VersionedResolver.__init__(self, version, loader=self)
+
+
+def as_document(data, schema=None, label=u'<unicode string>'):
+    """
+    Translate dicts/lists and scalar (string/bool/float/int/etc.) values into a
+    YAML object which can be dumped out.
+    """
+    if schema is None:
+        schema = Any()
+
+    return schema(YAMLChunk(ruamel_structure(data), label=label))
 
 
 def load(yaml_string, schema=None, label=u"<unicode string>"):
