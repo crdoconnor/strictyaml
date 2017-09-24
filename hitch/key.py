@@ -123,6 +123,14 @@ class Engine(BaseEngine):
                 raise
 
     @expected_exception(HitchRunPyException)
+    def run_code(self):
+        self.result = self.example_py_code.run(self.path.state, self.python)
+
+    @expected_exception(HitchRunPyException)
+    def output_is(self, contents):
+        self.result.final_output_was(contents)
+
+    @expected_exception(HitchRunPyException)
     def should_be_equal_to(self, rhs):
         """
         Code should be equal to rhs

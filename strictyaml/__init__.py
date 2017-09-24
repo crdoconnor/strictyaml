@@ -1,6 +1,9 @@
 # The all important loader
 from strictyaml.parser import load
 
+# Document builder
+from strictyaml.document import as_document
+
 # YAML object
 from strictyaml.representation import YAML
 
@@ -45,6 +48,5 @@ from strictyaml.exceptions import FlowMappingDisallowed
 from strictyaml.exceptions import AnchorTokenDisallowed
 from strictyaml.exceptions import DuplicateKeysDisallowed
 from strictyaml import exceptions
-
 
 __version__ = "DEVELOPMENT_VERSION"

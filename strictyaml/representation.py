@@ -26,7 +26,7 @@ def marked_up(data):
     elif isinstance(data, bool):
         return u"yes" if data else u"no"
     else:
-        return data
+        return unicode(data)
 
 
 class YAML(object):
@@ -49,27 +49,6 @@ class YAML(object):
             self._text = None
             self._validator = validator
             self._chunk = chunk
-        elif isinstance(value, dict):
-            self._text = None
-            self._validator = validator
-            self._chunk = YAMLChunk(value) if chunk is None else chunk
-            self._value = CommentedMap([
-                (YAML(key, chunk=self._chunk.key(key)), YAML(value, chunk=self._chunk.val(key)))
-                for key, value in value.items()
-            ])
-        elif isinstance(value, list):
-            self._value = CommentedSeq([YAML(item) for item in value])
-            self._text = None
-            self._validator = validator
-            self._chunk = YAMLChunk(self._value) if chunk is None else chunk
-        elif isinstance(value, bool):
-            self._value = value
-            if text is None:
-                self._text = u"yes" if self._value else u"no"
-            else:
-                self._text = text
-            self._validator = validator
-            self._chunk = YAMLChunk(text) if chunk is None else chunk
         else:
             self._validator = validator
             self._value = value
