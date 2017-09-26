@@ -12,6 +12,8 @@ class Optional(object):
     def __init__(self, key):
         self.key = key
 
+    def __repr__(self):
+        return u'Optional("{0}")'.format(self.key)
 
 class Validator(object):
     def __or__(self, other):
@@ -82,8 +84,8 @@ class Map(Validator):
     def __repr__(self):
         return u"Map({{{0}}})".format(', '.join([
             '{0}: {1}'.format(
-                'Optional("{0}")'.format(key.key) if type(key) is Optional else '"{0}"'.format(key),
-                repr(value)
+                repr(key),
+                repr(value),
             ) for key, value in self._validator.items()
         ]))
 
