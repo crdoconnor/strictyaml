@@ -52,7 +52,7 @@ pyzmq==16.0.2             # via jupyter-client
 q==2.6
 requests-toolbelt==0.8.0  # via twine
 requests==2.17.3          # via requests-toolbelt, twine
-ruamel.yaml==0.15.15      # via strictyaml
+ruamel.yaml==0.15.34      # via strictyaml
 simex==0.3.5
 simplegeneric==0.8.1      # via ipython
 six==1.10.0               # via hitch-pip-tools, prompt-toolkit, python-dateutil, traitlets
