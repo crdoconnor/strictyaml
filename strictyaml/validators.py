@@ -15,6 +15,7 @@ class Optional(object):
     def __repr__(self):
         return u'Optional("{0}")'.format(self.key)
 
+
 class Validator(object):
     def __or__(self, other):
         return OrValidator(self, other)
