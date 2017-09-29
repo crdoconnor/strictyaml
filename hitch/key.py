@@ -19,7 +19,7 @@ import requests
 class Engine(BaseEngine):
     """Python engine for running tests."""
     schema = StorySchema(
-        preconditions=Map({
+        preconditions={
             Optional("yaml_snippet"): Str(),
             Optional("yaml_snippet_1"): Str(),
             Optional("yaml_snippet_2"): Str(),
@@ -28,11 +28,7 @@ class Engine(BaseEngine):
             Optional("ruamel version"): Str(),
             Optional("setup"): Str(),
             Optional("code"): Str(),
-        }),
-        params=Map({
-            Optional("python version"): Str(),
-            Optional("ruamel version"): Str(),
-        }),
+        },
         about={
             Optional("description"): Str(),
             Optional("importance"): Int(),
