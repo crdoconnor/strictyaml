@@ -122,7 +122,7 @@ Roundtripped YAML:
       preconditions:
         setup: |
           from strictyaml import Map, MapPattern, Str, Seq, Int, load
-
+          
           schema = Map({
               "a": Str(),
               "b": Map({"x": Int(), "y": Int()}),
@@ -132,7 +132,11 @@ Roundtripped YAML:
           to_modify = load(yaml_snippet, schema)
 
           to_modify['c'][0]['a'] = "text\nacross\nlines"
-        modified_yaml_snippet: |
+        code: |
+          print(to_modify.as_yaml().encode('utf8'))
+      scenario:
+      - Run code
+      - Output is: |-
           # Some comment
 
           a: â # value comment
@@ -147,6 +151,3 @@ Roundtripped YAML:
               across
               lines
           - b: 2
-        code: to_modify.as_yaml()
-      scenario:
-      - Should be equal to: modified_yaml_snippet
