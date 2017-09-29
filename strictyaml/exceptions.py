@@ -12,7 +12,29 @@ class StrictYAMLError(MarkedYAMLError):
 
 
 class YAMLValidationError(StrictYAMLError):
-    pass
+    def __init__(self, context, problem, chunk):
+        self.context = context
+        self.problem = problem
+        self._chunk = chunk
+        self.note = None
+
+    @property
+    def context_mark(self):
+        context_line = self._chunk.start_line() - 1
+        str_document = dump(self._chunk.document, Dumper=RoundTripDumper)
+        context_index = len(u'\n'.join(str_document.split(u'\n')[:context_line]))
+        return StringMark(
+            self._chunk.label, context_index, context_line, 0, str_document, context_index + 1
+        )
+
+    @property
+    def problem_mark(self):
+        problem_line = self._chunk.end_line() - 1
+        str_document = dump(self._chunk.document, Dumper=RoundTripDumper)
+        problem_index = len(u'\n'.join(str_document.split(u'\n')[:problem_line]))
+        return StringMark(
+            self._chunk.label, problem_index, problem_line, 0, str_document, problem_index + 1
+        )
 
 
 class DisallowedToken(StrictYAMLError):
@@ -36,6 +58,7 @@ class DuplicateKeysDisallowed(DisallowedToken):
 
 
 def raise_exception(context, problem, chunk):
+    """
     context_line = chunk.start_line() - 1
     problem_line = chunk.end_line() - 1
     str_document = dump(chunk.document, Dumper=RoundTripDumper)
@@ -52,6 +75,12 @@ def raise_exception(context, problem, chunk):
         string_mark_a,
         problem,
         string_mark_b,
+    )
+    """
+    raise YAMLValidationError(
+        context,
+        problem,
+        chunk,
     )
 
 
