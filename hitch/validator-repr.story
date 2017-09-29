@@ -15,7 +15,7 @@ Validator repr int:
       repr(sy.Map({"a": sy.Int()}))
   scenario:
   - Should be equal to: |
-      """Map({"a": Int()})"""
+      """Map({'a': Int()})"""
 
 Validator repr optional:
   based on: Validator repr
