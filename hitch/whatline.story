@@ -18,69 +18,61 @@ What line:
       c: a
 
       d: b
-      
+
     setup: |
       from strictyaml import Map, Str, YAMLValidationError, load
+      from ensure import Ensure
 
       schema = Map({"y": Str(), "a": Str(), "b": Str(), "c": Str(), "d": Str()})
-      
+
       snippet = load(yaml_snippet, schema)
 
   variations:
     Start line includes previous comment:
-      preconditions:
-        code: |
-          snippet["a"].start_line, snippet["d"].start_line
       scenario:
-        - Should be equal to: (2, 9)
+      - Run: |
+          Ensure(snippet["a"].start_line).equals(2)
+          Ensure(snippet["d"].start_line).equals(9)
 
     End line includes comment:
-      preconditions:
-        code: |
-          snippet["a"].end_line , snippet["d"].end_line
       scenario:
-        - Should be equal to: (6, 10)
-  
+      - Run: |
+          Ensure(snippet["a"].end_line).equals(6)
+          Ensure(snippet["d"].end_line).equals(10)
+
     Start line of key:
-      preconditions:
-        code: snippet.keys()[1].start_line
       scenario:
-        - Should be equal to: 2
+      - Run: |
+          Ensure(snippet.keys()[1].start_line).equals(2)
 
     Start and end line of all YAML:
-      preconditions:
-        code: snippet.start_line, snippet.end_line
       scenario:
-        - Should be equal to: (1, 10)
-        
+      - Run:
+          code: |
+            Ensure(snippet.start_line).equals(1)
+            Ensure(snippet.end_line).equals(10)
+
     Lines before:
-      preconditions:
-        code: |
-          snippet['a'].lines_before(1)
       scenario:
-        - Should be equal to: |
-            "y: p"
+      - Run: |
+          Ensure(snippet['a'].lines_before(1)).equals("y: p")
 
     Lines after:
-      preconditions:
-        code: |
-         snippet['a'].lines_after(4)
       scenario:
-        - Should be equal to: |
-            "b: y\nc: a\n\nd: b"
+      - Run: |
+          Ensure(snippet['a'].lines_after(4)).equals("b: y\nc: a\n\nd: b")
 
     Relevant lines:
-      preconditions:
-        modified_yaml_snippet: |
-          # Some comment
-          a: |
-            x
-
-          # Another comment
-        code: |
-          load(yaml_snippet, schema)['a'].lines()
       scenario:
-        - Should be equal to: modified_yaml_snippet.strip()
+      - Run:
+          code: |
+            print(load(yaml_snippet, schema)['a'].lines())
+          will output: |-
+            # Some comment
+            a: |
+              x
+
+            # Another comment
 
 Start line of YAML with list:
   based on: strictyaml
@@ -95,7 +87,9 @@ Start line of YAML with list:
         - 4
     setup: |
       from strictyaml import load
-    code: |
-      load(yaml_snippet)['a']['b'][1].start_line, load(yaml_snippet)['a']['b'][1].end_line
+      from ensure import Ensure
   scenario:
-    - Should be equal to: (4, 5)
+  - Run:
+      code: |-
+        Ensure(load(yaml_snippet)['a']['b'][1].start_line).equals(4)
+        Ensure(load(yaml_snippet)['a']['b'][1].end_line).equals(5)

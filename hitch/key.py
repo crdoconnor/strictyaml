@@ -144,7 +144,7 @@ class Engine(BaseEngine):
                 Templex(will_output).assert_match(actual_output)
             except NonMatching:
                 if self.settings.get("rewrite"):
-                    self.current_step.update(will_output=actual_output)
+                    self.current_step.update(**{"will output": actual_output})
 
         if raises is not None:
             differential = False  # Difference between python 2 and python 3 output?
