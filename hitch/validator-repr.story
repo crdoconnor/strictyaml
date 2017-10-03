@@ -8,63 +8,53 @@ Validator repr:
       from ensure import Ensure
       import strictyaml as sy
 
-Validator repr int:
-  based on: Validator repr
-  preconditions:
-    code: |
-      repr(sy.Map({"a": sy.Int()}))
-  scenario:
-  - Should be equal to: |
-      """Map({'a': Int()})"""
+  variations:
+    Int:
+      scenario:
+      - Run: |
+          Ensure(repr(sy.Map({"a": sy.Int()}))).equals("""Map({'a': Int()})""")
 
-Validator repr optional:
-  based on: Validator repr
-  preconditions:
-    code: |
-      repr(sy.Map({sy.Optional("a"): sy.Int()}))
-  scenario:
-  - Should be equal to: |
-      """Map({Optional("a"): Int()})"""
+    Optional:
+      scenario:
+      - Run:
+          code: |
+            Ensure(repr(sy.Map({sy.Optional("a"): sy.Int()}))).equals("""Map({Optional("a"): Int()})""")
 
-Validator repr seq:
-  based on: Validator repr
-  preconditions:
-    code: repr(sy.Seq(sy.Str()))
-  scenario:
-  - Should be equal to: str("Seq(Str())")
+    Sequence:
+      scenario:
+      - Run:
+          code: |
+            Ensure(repr(sy.Seq(sy.Str()))).equals("""Seq(Str())""")
 
-Validator repr empty:
-  based on: Validator repr
-  preconditions:
-    code: repr(sy.FixedSeq([sy.EmptyNone(), sy.EmptyDict(), sy.EmptyList()]))
-  scenario:
-  - Should be equal to: str("FixedSeq([EmptyNone(), EmptyDict(), EmptyList()])")
+    Empty:
+      scenario:
+      - Run:
+          code: |
+            Ensure(repr(sy.FixedSeq([sy.EmptyNone(), sy.EmptyDict(), sy.EmptyList()]))).equals(
+                """FixedSeq([EmptyNone(), EmptyDict(), EmptyList()])"""
+            )
 
-Validator repr uniqueseq decimal:
-  based on: Validator repr
-  preconditions:
-    code: repr(sy.UniqueSeq(sy.Decimal()))
-  scenario:
-  - Should be equal to: str("UniqueSeq(Decimal())")
+    UniqueSeq Decimal:
+      scenario:
+      - Run:
+          code: |
+            Ensure(repr(sy.UniqueSeq(sy.Decimal()))).equals("""UniqueSeq(Decimal())""")
 
-Validator repr mappattern bool enum:
-  based on: Validator repr
-  preconditions:
-    code: repr(sy.MapPattern(sy.Bool(), sy.Enum(["x", "y"])))
-  scenario:
-  - Should be equal to: str("MapPattern(Bool(), Enum(['x', 'y']))")
+    MapPattern Bool Enum:
+      scenario:
+      - Run:
+          code: |
+            Ensure(repr(sy.MapPattern(sy.Bool(), sy.Enum(["x", "y"])))).equals("MapPattern(Bool(), Enum(['x', 'y']))")
 
-Validator repr seq datetime any or:
-  based on: Validator repr
-  preconditions:
-    code: repr(sy.Seq(sy.Datetime() | sy.Any()))
-  scenario:
-  - Should be equal to: str("Seq(Datetime() | Any())")
+    Seq Datetime Any Or:
+      scenario:
+      - Run:
+          code: |
+            Ensure(repr(sy.Seq(sy.Datetime() | sy.Any()))).equals("""Seq(Datetime() | Any())""")
 
-Validator repr comma separated float:
-  based on: Validator repr
-  preconditions:
-    code: |
-      Ensure(repr(sy.Map({"x": sy.CommaSeparated(sy.Float())}))).equals("Map({'x': CommaSeparated(Float())})")
-  scenario:
-  - Run code
+    Comma Separated Float:
+      scenario:
+      - Run:
+          code: |
+            Ensure(repr(sy.Map({"x": sy.CommaSeparated(sy.Float())}))).equals("Map({'x': CommaSeparated(Float())})")
+
