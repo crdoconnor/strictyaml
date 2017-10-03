@@ -1,16 +1,21 @@
 Boolean validation:
   based on: strictyaml
   description: |
-    Boolean values can be parsed using a Bool
-    validator. It case-insensitively interprets
-    "yes", "true", "1", "on" as True and their
-    opposites as False.
+    Boolean values can be parsed using a Bool validator.
+    
+    It case-insensitively interprets "yes", "true", "1", "on" as "True", "y"
+    and their opposites as False.
 
-    Any values that are not one of those will
-    will cause a validation error.
+    Different values will trigger a validation error.
+    
+    When updating boolean values on a YAML object with True or False, the roundtripped
+    string version is set to "yes" and "no".
+    
+    To have your boolean values updated to a different yes/no string, update
+    with a string instead - e.g. "on" or "off".
   preconditions:
     setup: |
-      from strictyaml import Bool, Str, MapPattern, YAMLValidationError, load
+      from strictyaml import Bool, Str, MapPattern, load
       from ensure import Ensure
 
       schema = MapPattern(Str(), Bool())
@@ -48,57 +53,57 @@ Boolean validation:
 
     .text returns the text of the boolean YAML:
       scenario:
-      - Run: Ensure(load(yaml_snippet, schema)["y"].text).equals("FALSE")
+      - Run: |
+          Ensure(load(yaml_snippet, schema)["y"].text).equals("FALSE")
 
     Update boolean value:
       preconditions:
-        modified_yaml_snippet: |
-          a: no
-          b: no
-          c: yes
-          d: 1
-          e: True
-          f: Y
-
-          u: n
-          v: False
-          w: 0
-          x: Off
-          y: FALSE
-          z: no
-        setup: |
-          from strictyaml import Bool, Str, MapPattern, YAMLValidationError, load
-
-          schema = MapPattern(Str(), Bool())
-
-          yaml = load(yaml_snippet, schema)
-          yaml['a'] = 'no'
-          yaml['b'] = False
-          yaml['c'] = True
-        code: |
-          yaml.as_yaml()
+        modified_yaml_snippet:
       scenario:
-      - Should be equal to: modified_yaml_snippet
+      - Run:
+          code: |
+            yaml = load(yaml_snippet, schema)
+            yaml['a'] = 'no'
+            yaml['b'] = False
+            yaml['c'] = True
+            print(yaml.as_yaml())
+          will output: |-
+            a: no
+            b: no
+            c: yes
+            d: 1
+            e: True
+            f: Y
+
+            u: n
+            v: False
+            w: 0
+            x: Off
+            y: FALSE
+            z: no
 
     Cannot cast to string:
-      preconditions:
-        code: str(load(yaml_snippet, schema)["y"])
       scenario:
-      - Raises exception:
-          message: |-
-            Cannot cast 'YAML(False)' to str.
-            Use str(yamlobj.data) or str(yamlobj.text) instead.
+      - Run:
+          code: str(load(yaml_snippet, schema)["y"])
+          raises:
+            type:
+              in python 2: exceptions.TypeError
+              in python 3: builtins.TypeError
+            message: |-
+              Cannot cast 'YAML(False)' to str.
+              Use str(yamlobj.data) or str(yamlobj.text) instead.
 
     Invalid string:
-      preconditions:
-        yaml_snippet: 'a: yâs'
-        code: load(yaml_snippet, schema)
       scenario:
-      - Raises exception:
-          exception type: strictyaml.exceptions.YAMLValidationError
-          message: |-
-            when expecting a boolean value (one of "yes", "true", "on", "1", "y", "no", "false", "off", "0", "n")
-            found non-boolean
-              in "<unicode string>", line 1, column 1:
-                a: "y\xE2s"
-                 ^ (line: 1)
+      - Run:
+          code: |
+            load('a: yâs', schema)
+          raises:
+            type: strictyaml.exceptions.YAMLValidationError
+            message: |-
+              when expecting a boolean value (one of "yes", "true", "on", "1", "y", "no", "false", "off", "0", "n")
+              found non-boolean
+                in "<unicode string>", line 1, column 1:
+                  a: "y\xE2s"
+                   ^ (line: 1)

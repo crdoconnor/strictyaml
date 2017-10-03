@@ -123,10 +123,60 @@ class Engine(BaseEngine):
     @expected_exception(HitchRunPyException)
     def run_code(self):
         self.result = self.example_py_code.run()
-    
+
+
+    @expected_exception(NonMatching)
     @expected_exception(HitchRunPyException)
-    def run(self, code):
-        self.result = self.example_py_code.with_code(code).run()
+    @validate(
+        code=Str(),
+        will_output=Str(),
+        raises=Map({
+            Optional("type"): Map({"in python 2": Str(), "in python 3": Str()}) | Str(),
+            Optional("message"): Map({"in python 2": Str(), "in python 3": Str()}) | Str(),
+        })
+    )
+    def run(self, code, will_output=None, raises=None):
+        to_run = self.example_py_code.with_code(code)
+        result = to_run.expect_exceptions().run() if raises is not None else to_run.run()
+        
+        if will_output is not None:
+            actual_output = '\n'.join([line.rstrip() for line in result.output.split("\n")])
+            try:
+                Templex(will_output).assert_match(actual_output)
+            except NonMatching:
+                if self.settings.get("rewrite"):
+                    self.current_step.update(will_output=actual_output)
+        
+        if raises is not None:
+            differential = False  # Difference between python 2 and python 3 output?
+            exception_type = raises.get('type')
+            message = raises.get('message')
+
+            if exception_type is not None:
+                if not isinstance(exception_type, str):
+                    differential = True
+                    exception_type = exception_type['in python 2']\
+                        if self.preconditions['python version'].startswith("2")\
+                        else exception_type['in python 3']
+
+            if message is not None:
+                if not isinstance(message, str):
+                    differential = True
+                    message = message['in python 2']\
+                        if self.preconditions['python version'].startswith("2")\
+                        else message['in python 3']
+
+            try:
+                result = self.example_py_code.expect_exceptions().run()
+                result.exception_was_raised(exception_type, message)
+            except ExpectedExceptionMessageWasDifferent as error:
+                if self.settings.get("rewrite") and not differential:
+                    new_raises = raises.copy()
+                    new_raises['message'] = result.exception.message
+                    self.current_step.update(raises=new_raises)
+                else:
+                    raise
+            
 
     @expected_exception(NonMatching)
     def output_is(self, contents):
