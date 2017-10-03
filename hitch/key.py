@@ -124,7 +124,6 @@ class Engine(BaseEngine):
     def run_code(self):
         self.result = self.example_py_code.run()
 
-
     @expected_exception(NonMatching)
     @expected_exception(HitchRunPyException)
     @validate(
@@ -138,7 +137,7 @@ class Engine(BaseEngine):
     def run(self, code, will_output=None, raises=None):
         to_run = self.example_py_code.with_code(code)
         result = to_run.expect_exceptions().run() if raises is not None else to_run.run()
-        
+
         if will_output is not None:
             actual_output = '\n'.join([line.rstrip() for line in result.output.split("\n")])
             try:
@@ -146,7 +145,7 @@ class Engine(BaseEngine):
             except NonMatching:
                 if self.settings.get("rewrite"):
                     self.current_step.update(will_output=actual_output)
-        
+
         if raises is not None:
             differential = False  # Difference between python 2 and python 3 output?
             exception_type = raises.get('type')
@@ -176,7 +175,6 @@ class Engine(BaseEngine):
                     self.current_step.update(raises=new_raises)
                 else:
                     raise
-            
 
     @expected_exception(NonMatching)
     def output_is(self, contents):
@@ -234,15 +232,15 @@ def tdd2(*keywords):
 def regressfile(filename):
     """
     Run all stories in filename 'filename' in python 2 and 3.
-    
+
     Rewrite stories if appropriate.
     """
     print(
-        _storybook({"rewrite": True}).with_params(**{"python version": "2.7.10"})\
-                                      .in_filename(filename).ordered_by_name().play().report()
+        _storybook({"rewrite": True}).with_params(**{"python version": "2.7.10"})
+                                     .in_filename(filename).ordered_by_name().play().report()
     )
     print(
-        _storybook({"rewrite": True}).with_params(**{"python version": "3.5.0"})\
+        _storybook({"rewrite": True}).with_params(**{"python version": "3.5.0"})
                                      .in_filename(filename).ordered_by_name().play().report()
     )
 
