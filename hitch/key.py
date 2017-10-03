@@ -14,6 +14,7 @@ from hitchrun import DIR
 from hitchrun.decorators import ignore_ctrlc
 from hitchrunpy import ExamplePythonCode, HitchRunPyException, ExpectedExceptionMessageWasDifferent
 import requests
+from templex import Templex, NonMatching
 
 
 class Engine(BaseEngine):
@@ -75,7 +76,8 @@ class Engine(BaseEngine):
                     self.preconditions["ruamel version"]
                 )))
 
-        self.example_py_code = ExamplePythonCode(self.preconditions.get('code', ''))\
+        self.example_py_code = ExamplePythonCode(self.python, self.path.state)\
+            .with_code(self.preconditions.get('code', ''))\
             .with_setup_code(self.preconditions.get('setup', ''))\
             .with_long_strings(
                 yaml_snippet_1=self.preconditions.get('yaml_snippet_1'),
@@ -110,7 +112,7 @@ class Engine(BaseEngine):
                     else message['in python 3']
 
         try:
-            result = self.example_py_code.expect_exceptions().run(self.path.state, self.python)
+            result = self.example_py_code.expect_exceptions().run()
             result.exception_was_raised(exception_type, message)
         except ExpectedExceptionMessageWasDifferent as error:
             if self.settings.get("rewrite") and not differential:
@@ -120,26 +122,23 @@ class Engine(BaseEngine):
 
     @expected_exception(HitchRunPyException)
     def run_code(self):
-        self.result = self.example_py_code.run(self.path.state, self.python)
+        self.result = self.example_py_code.run()
 
-    @expected_exception(HitchRunPyException)
+    @expected_exception(NonMatching)
     def output_is(self, contents):
-        self.result.final_output_was(contents)
+        output = '\n'.join([line.rstrip() for line in self.result.output.split("\n")])
+        try:
+            Templex(contents).assert_match(output)
+        except NonMatching:
+            self.current_step.update(contents=output)
 
     @expected_exception(HitchRunPyException)
     def should_be_equal_to(self, rhs):
         """
         Code should be equal to rhs
         """
-        self.example_py_code = ExamplePythonCode(self.preconditions['setup'])\
-            .with_long_strings(
-                yaml_snippet_1=self.preconditions.get('yaml_snippet_1'),
-                yaml_snippet=self.preconditions.get('yaml_snippet'),
-                yaml_snippet_2=self.preconditions.get('yaml_snippet_2'),
-                modified_yaml_snippet=self.preconditions.get('modified_yaml_snippet'),
-            )\
-            .is_equal(self.preconditions.get("code"), rhs)\
-            .run(self.path.state, self.python)
+        self.example_py_code.is_equal(self.preconditions.get("code"), rhs)\
+            .run()
 
     def pause(self, message="Pause"):
         import IPython
@@ -154,14 +153,27 @@ def _storybook(settings):
     return StoryCollection(pathq(DIR.key).ext("story"), Engine(DIR, settings))
 
 
-@expected(HitchStoryException)
-def tdd(*words):
-    """
-    Run all tests
-    """
+def _tdd(python_version, keywords):
     print(
-        _storybook({"rewrite": True}).shortcut(*words).play().report()
+        _storybook({"rewrite": True}).with_params(**{"python version": python_version})
+                                     .shortcut(*keywords).play().report()
     )
+
+
+@expected(HitchStoryException)
+def tdd3(*keywords):
+    """
+    Run tests matching keywords in python 3.
+    """
+    _tdd("3.5.0", keywords)
+
+
+@expected(HitchStoryException)
+def tdd2(*keywords):
+    """
+    Run tests matching keywords in python 2.
+    """
+    _tdd("2.7.10", keywords)
 
 
 @expected(HitchStoryException)
@@ -181,7 +193,10 @@ def regression():
     """
     lint()
     print(
-        _storybook({}).ordered_by_name().play().report()
+        _storybook({}).with_params(**{"python version": "2.7.10"}).ordered_by_name().play().report()
+    )
+    print(
+        _storybook({}).with_params(**{"python version": "3.5.0"}).ordered_by_name().play().report()
     )
 
 

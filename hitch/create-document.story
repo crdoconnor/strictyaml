@@ -4,7 +4,6 @@ Build YAML document:
     YAML documents can be built from dicts and lists of
     scalar values.
   preconditions:
-    yaml_snippet: ''
     setup: |
       from ensure import Ensure
       from strictyaml import as_document
