@@ -56,9 +56,7 @@ Boolean validation:
       - Run: |
           Ensure(load(yaml_snippet, schema)["y"].text).equals("FALSE")
 
-    Update boolean value:
-      preconditions:
-        modified_yaml_snippet:
+    Update boolean values with string and bool type:
       scenario:
       - Run:
           code: |
@@ -82,7 +80,7 @@ Boolean validation:
             y: FALSE
             z: no
 
-    Cannot cast to string:
+    Cannot cast boolean to string:
       scenario:
       - Run:
           code: str(load(yaml_snippet, schema)["y"])
@@ -94,7 +92,7 @@ Boolean validation:
               Cannot cast 'YAML(False)' to str.
               Use str(yamlobj.data) or str(yamlobj.text) instead.
 
-    Invalid string:
+    Different uninterpretable values raise validation error:
       scenario:
       - Run:
           code: |
