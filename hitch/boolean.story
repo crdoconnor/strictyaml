@@ -1,4 +1,4 @@
-op Boolean validation:
+Boolean validation:
   based on: strictyaml
   description: |
     Boolean values can be parsed using a Bool
@@ -11,6 +11,7 @@ op Boolean validation:
   preconditions:
     setup: |
       from strictyaml import Bool, Str, MapPattern, YAMLValidationError, load
+      from ensure import Ensure
 
       schema = MapPattern(Str(), Bool())
 
@@ -30,33 +31,24 @@ op Boolean validation:
       z: no
   variations:
     Parse to YAML object:
-      preconditions:
-        code: load(yaml_snippet, schema)
       scenario:
-      - Should be equal to: |
-          {
+      - Run: |
+          Ensure(load(yaml_snippet, schema)).equals({
               "a": True, "b": True, "c": True, "d": True, "e": True, "f": True,
               "u": False, "v": False, "w": False, "x": False, "y": False, "z": False,
-          }
+          })
 
     YAML object should resolve to True or False:
-      preconditions:
-        code: load(yaml_snippet, schema)["w"]
       scenario:
-      - Should be equal to: 'False'
+      - Run: Ensure(load(yaml_snippet, schema)["w"]).equals(False)
 
     Using .value you can get the actual boolean value parsed:
-      preconditions:
-        code: load(yaml_snippet, schema)["a"].value is True
       scenario:
-      - Should be equal to: 'True'
+      - Run: assert load(yaml_snippet, schema)["a"].value is True
 
-    .text returns the text of the:
-      preconditions:
-        code: load(yaml_snippet, schema)["y"].text
+    .text returns the text of the boolean YAML:
       scenario:
-      - Should be equal to: |
-          "FALSE"
+      - Run: Ensure(load(yaml_snippet, schema)["y"].text).equals("FALSE")
 
     Update boolean value:
       preconditions:

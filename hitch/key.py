@@ -123,6 +123,10 @@ class Engine(BaseEngine):
     @expected_exception(HitchRunPyException)
     def run_code(self):
         self.result = self.example_py_code.run()
+    
+    @expected_exception(HitchRunPyException)
+    def run(self, code):
+        self.result = self.example_py_code.with_code(code).run()
 
     @expected_exception(NonMatching)
     def output_is(self, contents):
@@ -177,12 +181,19 @@ def tdd2(*keywords):
 
 
 @expected(HitchStoryException)
-def testfile(filename):
+def regressfile(filename):
     """
-    Run all stories in filename 'filename'.
+    Run all stories in filename 'filename' in python 2 and 3.
+    
+    Rewrite stories if appropriate.
     """
     print(
-        _storybook({"rewrite": True}).in_filename(filename).ordered_by_name().play().report()
+        _storybook({"rewrite": True}).with_params(**{"python version": "2.7.10"})\
+                                      .in_filename(filename).ordered_by_name().play().report()
+    )
+    print(
+        _storybook({"rewrite": True}).with_params(**{"python version": "3.5.0"})\
+                                     .in_filename(filename).ordered_by_name().play().report()
     )
 
 
