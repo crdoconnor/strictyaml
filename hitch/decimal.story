@@ -18,6 +18,7 @@ Decimal:
     setup: |
       from strictyaml import Map, Decimal, load
       from decimal import Decimal as Dec
+      from ensure import Ensure
 
       schema = Map({"a": Decimal(), "b": Decimal()})
 
@@ -27,41 +28,42 @@ Decimal:
   variations:
     .data to get Decimal object:
       preconditions:
-        code: type(load(yaml_snippet, schema)["a"].data) is Dec
+        code:
       scenario:
-      - Should be equal to: 'True'
+      - Run:
+          code: |
+            Ensure(type(load(yaml_snippet, schema)["a"].data) is Dec).is_true()
 
     Valid:
-      preconditions:
-        code: load(yaml_snippet, schema)
       scenario:
-      - Should be equal to: |
-          {"a": Dec('1.00000000000000000001'), "b": Dec('5.4135')}
+      - Run:
+          code: |
+            Ensure(load(yaml_snippet, schema)).equals({"a": Dec('1.00000000000000000001'), "b": Dec('5.4135')})
 
     Cast to str:
-      preconditions:
-        code: str(load(yaml_snippet, schema)['a'])
       scenario:
-      - Should be equal to: |
-          "1.00000000000000000001"
+      - Run:
+          code: |
+            Ensure(str(load(yaml_snippet, schema)['a'])).equals("1.00000000000000000001")
+
 
     Cast to float:
-      preconditions:
-        code: float(load(yaml_snippet, schema)["a"])
       scenario:
-      - Should be equal to: 1.0
+      - Run:
+          code: |
+            Ensure(float(load(yaml_snippet, schema)["a"])).equals(1.0)
 
     Greater than:
-      preconditions:
-        code: load(yaml_snippet, schema)["a"] > Dec('1.0')
       scenario:
-      - Should be equal to: 'True'
+      - Run:
+          code: |
+            Ensure(load(yaml_snippet, schema)["a"] > Dec('1.0')).is_true()
 
     Less than which would not work for float:
-      preconditions:
-        code: load(yaml_snippet, schema)["a"] < Dec('1.00000000000000000002')
       scenario:
-      - Should be equal to: 'True'
+      - Run:
+          code: |
+            Ensure(load(yaml_snippet, schema)["a"] < Dec('1.00000000000000000002')).is_true()
 
     Cannot cast to bool:
       preconditions:

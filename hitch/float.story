@@ -12,6 +12,7 @@ Floats:
   preconditions:
     setup: |
       from strictyaml import Map, Float, load
+      from ensure import Ensure
 
       schema = Map({"a": Float(), "b": Float()})
 
@@ -20,64 +21,63 @@ Floats:
       b: 5.4135
   variations:
     Use .data to get float type:
-      preconditions:
-        code: type(load(yaml_snippet, schema)["a"].data)
       scenario:
-      - Should be equal to: float
+      - Run:
+          code: |
+            Ensure(type(load(yaml_snippet, schema)["a"].data)).equals(float)
 
     Equal to equivalent float which is different number:
-      preconditions:
-        code: load(yaml_snippet, schema)
       scenario:
-      - Should be equal to: '{"a": 1.0, "b": 5.4135}'
+      - Run:
+          code: |
+            Ensure(load(yaml_snippet, schema)).equals({"a": 1.0, "b": 5.4135})
 
     Cast to str:
-      preconditions:
-        code: str(load(yaml_snippet, schema)["a"])
       scenario:
-      - Should be equal to: |
-          "1.0"
+      - Run:
+          code: |
+            Ensure(str(load(yaml_snippet, schema)["a"])).equals("1.0")
 
     Cast to float:
-      preconditions:
-        code: float(load(yaml_snippet, schema)["a"])
       scenario:
-      - Should be equal to: 1.0
+      - Run:
+          code: |
+            Ensure(float(load(yaml_snippet, schema)["a"])).equals(1.0)
 
     Greater than:
-      preconditions:
-        code: load(yaml_snippet, schema)["a"] > 0
       scenario:
-      - Should be equal to: 'True'
+      - Run:
+          code: |
+            Ensure(load(yaml_snippet, schema)["a"] > 0).is_true()
 
     Less than:
-      preconditions:
-        code: load(yaml_snippet, schema)["a"] < 0
       scenario:
-      - Should be equal to: 'False'
+      - Run:
+          code: |
+            Ensure(load(yaml_snippet, schema)["a"] < 0).is_false()
 
     Cannot cast to bool:
-      preconditions:
-        code: bool(load(yaml_snippet, schema)['a'])
       scenario:
-      - Raises Exception:
-          message: |-
-            Cannot cast 'YAML(1.0)' to bool.
-            Use bool(yamlobj.data) or bool(yamlobj.text) instead.
-
+      - Run:
+          code: bool(load(yaml_snippet, schema)['a'])
+          raises:
+            message: |-
+              Cannot cast 'YAML(1.0)' to bool.
+              Use bool(yamlobj.data) or bool(yamlobj.text) instead.
 
     Cannot parse non-float:
       preconditions:
         yaml_snippet: |
           a: string
           b: 2
-        code: load(yaml_snippet, schema)
       scenario:
-      - Raises Exception:
-          exception type: strictyaml.exceptions.YAMLValidationError
-          message: |-
-            when expecting a float
-            found non-float
-              in "<unicode string>", line 1, column 1:
-                a: string
-                 ^ (line: 1)
+      - Run:
+          code: load(yaml_snippet, schema)
+          raises:
+            type: strictyaml.exceptions.YAMLValidationError
+            message: |-
+              when expecting a float
+              found non-float
+                in "<unicode string>", line 1, column 1:
+                  a: string
+                   ^ (line: 1)

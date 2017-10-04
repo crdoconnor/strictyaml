@@ -11,47 +11,41 @@ Single value:
   preconditions:
     setup: |
       from strictyaml import Str, Int, load
+      from ensure import Ensure
+  variations:
+    Raise exception on None:
+      scenario:
+      - Run:
+          code: load(None, Str())
+          raises:
+            message: StrictYAML can only read a string of valid YAML.
 
-Single value - raise exception on None:
-  based on: Single value
-  preconditions:
-    code: load(None, Str())
-  scenario:
-  - Raises Exception:
-      message: StrictYAML can only read a string of valid YAML.
+    String of 1:
+      scenario:
+      - Run:
+          code: |
+            Ensure(load("1", Str())).equals("1")
 
-Single value - string of 1:
-  based on: Single value
-  preconditions:
-    code: load("1", Str())
-  scenario:
-  - Should be equal to: str("1")
+    Int of 1:
+      scenario:
+      - Run:
+          code: |
+            Ensure(load("1", Int())).equals(1)
 
-Single value - int of 1:
-  based on: Single value
-  preconditions:
-    code: load("1", Int())
-  scenario:
-  - Should be equal to: int(1)
+    Empty value parsed as blank string by default:
+      scenario:
+      - Run:
+          code: |
+            Ensure(load("x:")).equals({"x": ""})
 
-Single value - empty value parsed as blank string by default:
-  based on: Single value
-  preconditions:
-    code: load("x:")
-  scenario:
-  - Should be equal to: '{"x": ""}'
+    Empty document parsed as blank string by default:
+      scenario:
+      - Run:
+          code: |
+            Ensure(load("", Str())).equals("")
 
-Single value - empty document parsed as blank string by default:
-  based on: Single value
-  preconditions:
-    code: load("", Str())
-  scenario:
-  - Should be equal to: str('')
-
-Single value - null parsed as string null by default:
-  based on: Single value
-  preconditions:
-    code: |
-      load("null: null")
-  scenario:
-  - Should be equal to: '{"null": "null"}'
+    Null parsed as string null by default:
+      scenario:
+      - Run:
+          code: |
+            Ensure(load("null: null")).equals({"null": "null"})

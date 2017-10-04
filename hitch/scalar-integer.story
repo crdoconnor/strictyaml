@@ -14,57 +14,56 @@ Scalar integer:
       b: 5
     setup: |
       from strictyaml import Map, Int, load
+      from ensure import Ensure
 
       schema = Map({"a": Int(), "b": Int()})
 
       parsed = load(yaml_snippet, schema)
   variations:
     Parsed correctly:
-      preconditions:
-        code: parsed
       scenario:
-      - Should be equal to: |
-          {"a": 1, "b": 5}
+      - Run:
+          code: |
+            Ensure(parsed).equals({"a": 1, "b": 5})
 
     Cast with str:
-      preconditions:
-        code: str(parsed["a"])
       scenario:
-      - Should be equal to: |
-          "1"
+      - Run:
+          code: |
+            Ensure(str(parsed["a"])).equals("1")
 
     Cast with float:
-      preconditions:
-        code: float(parsed["a"])
       scenario:
-      - Should be equal to: 1.0
+      - Run:
+          code: |
+            Ensure(float(parsed["a"])).equals(1.0)
 
     Greater than:
-      preconditions:
-        code: parsed["a"] > 0
       scenario:
-      - Should be equal to: 'True'
+      - Run:
+          code: |
+            Ensure(parsed["a"] > 0).equals(True)
 
     Less than:
-      preconditions:
-        code: parsed["a"] < 2
       scenario:
-      - Should be equal to: 'True'
+      - Run:
+          code: |
+            Ensure(parsed["a"] < 2).equals(True)
 
     To get actual int, use .data:
-      preconditions:
-        code: type(load(yaml_snippet, schema)["a"].data) is int
       scenario:
-      - Should be equal to: 'True'
+      - Run:
+          code: |
+            Ensure(type(load(yaml_snippet, schema)["a"].data) is int).equals(True)
 
     Cannot cast to bool:
-      preconditions:
-        code: bool(load(yaml_snippet, schema)['a'])
       scenario:
-      - Raises exception:
-          message: |-
-            Cannot cast 'YAML(1)' to bool.
-            Use bool(yamlobj.data) or bool(yamlobj.text) instead.
+      - Run:
+          code: bool(load(yaml_snippet, schema)['a'])
+          raises:
+            message: |-
+              Cannot cast 'YAML(1)' to bool.
+              Use bool(yamlobj.data) or bool(yamlobj.text) instead.
 
 
 Invalid scalar integer:

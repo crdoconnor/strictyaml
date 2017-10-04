@@ -14,6 +14,7 @@ Mapping:
     setup: |
       from collections import OrderedDict
       from strictyaml import Map, Int, load
+      from ensure import Ensure
 
       schema = Map({"a": Int(), "b": Int(), "c": Int()})
 
@@ -27,18 +28,16 @@ Mapping:
     one key mapping:
       preconditions:
         yaml_snippet: 'x: 1'
-        code: |
-          load(yaml_snippet, Map({"x": Int()})).data
       scenario:
-      - Should be equal to: |
-          OrderedDict([('x', 1)])
+      - Run:
+          code: |
+            Ensure(load(yaml_snippet, Map({"x": Int()})).data).equals(OrderedDict([('x', 1)]))
 
     key value:
-      preconditions:
-        code: |
-          load(yaml_snippet, schema_2)[u'â']
       scenario:
-      - Should be equal to: 1
+      - Run:
+          code: |
+            Ensure(load(yaml_snippet, schema_2)[u'â']).equals(1)
 
     get item key not found:
       preconditions:
@@ -58,11 +57,10 @@ Mapping:
             in python 3: builtins.TypeError
             in python 2: exceptions.TypeError
           message:
-            in python 3: |-
-              YAML(OrderedDict([('â', 1), ('b', 2), ('c', 3)])) is a mapping, has no text value.
-            in python 2: |-
-              YAML(OrderedDict([(u'\xe2', 1), ('b', 2), ('c', 3)])) is a mapping, has no text value.
-
+            in python 3: YAML(OrderedDict([('â', 1), ('b', 2), ('c', 3)])) is a mapping,
+              has no text value.
+            in python 2: YAML(OrderedDict([(u'\xe2', 1), ('b', 2), ('c', 3)])) is
+              a mapping, has no text value.
     key not found in schema:
       preconditions:
         yaml_snippet: |
@@ -137,4 +135,4 @@ Mapping:
                 a: '1'
                  ^ (line: 1)
 
-    
+

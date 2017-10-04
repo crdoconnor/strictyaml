@@ -6,6 +6,7 @@ Email and URL validators:
   preconditions:
     setup: |
       from strictyaml import Email, Url, Map, load
+      from ensure import Ensure
 
       schema = Map({"a": Email(), "b": Url()})
     code: |
@@ -17,8 +18,9 @@ Email and URL validators:
           a: billg@microsoft.com
           b: http://www.google.com/
       scenario:
-      - Should be equal to: |
-          {"a": "billg@microsoft.com", "b": "http://www.google.com/"}
+      - Run:
+          code: |
+            Ensure(load(yaml_snippet, schema)).equals({"a": "billg@microsoft.com", "b": "http://www.google.com/"})         
 
     Invalid:
       preconditions:

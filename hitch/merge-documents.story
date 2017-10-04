@@ -20,20 +20,6 @@ Merge YAML documents:
 
       # y is now 9
       y: 9
-    modified_yaml_snippet: |
-      # Some comment
-
-      a: â # value comment
-
-      # Another comment
-      b:
-        x: 8
-
-      # y is now 9
-        y: 9
-      c:
-      - a: 1
-      - b: 2
     setup: |
       from strictyaml import Map, MapPattern, Str, Seq, Int, load
 
@@ -49,6 +35,20 @@ Merge YAML documents:
       yaml_2 = load(yaml_snippet_2, schema_2)
 
       yaml_1['b'] = yaml_2
-    code: yaml_1.as_yaml()
   scenario:
-  - Should be equal to: modified_yaml_snippet
+  - Run:
+      code: print(yaml_1.as_yaml())
+      will output: |-
+        # Some comment
+
+        a: â # value comment
+
+        # Another comment
+        b:
+          x: 8
+
+        # y is now 9
+          y: 9
+        c:
+        - a: 1
+        - b: 2

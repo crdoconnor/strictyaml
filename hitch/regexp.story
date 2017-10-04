@@ -7,9 +7,10 @@ Regex strings:
   preconditions:
     setup: |
       from strictyaml import Regex, Map, load
+      from ensure import Ensure
 
       schema = Map({"a": Regex(u"[1-4]"), "b": Regex(u"[5-9]")})
-    code: load(yaml_snippet, schema)
+    code:
   variations:
     Parsed correctly:
       preconditions:
@@ -17,19 +18,23 @@ Regex strings:
           a: 1
           b: 5
       scenario:
-      - Should be equal to: |
-          {"a": "1", "b": "5"}
+      - Run:
+          code: |
+            Ensure(load(yaml_snippet, schema)).equals({"a": "1", "b": "5"})
+
     Non-matching:
       preconditions:
         yaml_snippet: |
           a: 5
           b: 5
       scenario:
-      - Raises exception:
-          exception type: strictyaml.exceptions.YAMLValidationError
-          message: |-
-            when expecting string matching [1-4]
-            found non-matching string
-              in "<unicode string>", line 1, column 1:
-                a: '5'
-                 ^ (line: 1)
+      - Run:
+          code: load(yaml_snippet, schema)
+          raises:
+            type: strictyaml.exceptions.YAMLValidationError
+            message: |-
+              when expecting string matching [1-4]
+              found non-matching string
+                in "<unicode string>", line 1, column 1:
+                  a: '5'
+                   ^ (line: 1)

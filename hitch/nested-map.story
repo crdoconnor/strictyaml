@@ -7,6 +7,7 @@ Nested mapping validation:
   preconditions:
     setup: |
       from strictyaml import Map, Int, load
+      from ensure import Ensure
 
       schema = Map({"a": Map({"x": Int(), "y": Int()}), "b": Int(), "c": Int()})
   variations:
@@ -18,10 +19,12 @@ Nested mapping validation:
             y: 8
           b: 2
           c: 3
-        code: load(yaml_snippet, schema)
+        code:
       scenario:
-      - Should be equal to: |
-          {"a": {"x": 9, "y": 8}, "b": 2, "c": 3}
+      - Run:
+          code: |
+            Ensure(load(yaml_snippet, schema)).equals({"a": {"x": 9, "y": 8}, "b": 2, "c": 3})
+
 
     Invalid nested mapping:
       preconditions:
@@ -31,16 +34,18 @@ Nested mapping validation:
             z: 8
           b: 2
           d: 3
-        code: load(yaml_snippet, schema)
+        code:
       scenario:
-      - Raises exception:
-          exception type: strictyaml.exceptions.YAMLValidationError
-          message: |-
-            while parsing a mapping
-            unexpected key not in schema 'z'
-              in "<unicode string>", line 3, column 1:
-                  z: '8'
-                ^ (line: 3)
+      - Run:
+          code: load(yaml_snippet, schema)
+          raises:
+            type: strictyaml.exceptions.YAMLValidationError
+            message: |-
+              while parsing a mapping
+              unexpected key not in schema 'z'
+                in "<unicode string>", line 3, column 1:
+                    z: '8'
+                  ^ (line: 3)
 
     No nested mapping where expected:
       preconditions:
@@ -50,15 +55,16 @@ Nested mapping validation:
           d: 3
         code: load(yaml_snippet, schema)
       scenario:
-      - Raises exception:
-          exception type: strictyaml.exceptions.YAMLValidationError
-          message: |-
-            when expecting a mapping
-            found non-mapping
-              in "<unicode string>", line 1, column 1:
-                a: '11'
-                 ^ (line: 1)
-
+      - Run:
+          code: load(yaml_snippet, schema)
+          raises:
+            type: strictyaml.exceptions.YAMLValidationError
+            message: |-
+              when expecting a mapping
+              found non-mapping
+                in "<unicode string>", line 1, column 1:
+                  a: '11'
+                   ^ (line: 1)
     Modify nested map:
       preconditions:
         yaml_snippet: |
@@ -80,17 +86,16 @@ Nested mapping validation:
 
           # Non-ordered dict would also work, but would yield an indeterminate order of keys
           yaml['a'] = OrderedDict([("x", 5), ("y", [4, 5, 6])])
-        code: |
-          yaml.as_yaml()
-        modified_yaml_snippet: |
-          a:
-            x: 5
-            y:
-            - 4
-            - 5
-            - 6
-          b: 2
-          c: 3
       scenario:
-      - Should be equal to: modified_yaml_snippet
+      - Run:
+          code: print(yaml.as_yaml())
+          will output: |-
+            a:
+              x: 5
+              y:
+              - 4
+              - 5
+              - 6
+            b: 2
+            c: 3
 

@@ -11,6 +11,7 @@ Scalar strings:
   preconditions:
     setup: |
       from strictyaml import Str, Map, load
+      from ensure import Ensure
 
       schema = Map({"a": Str(), "b": Str(), "c": Str(), "d": Str()})
 
@@ -23,43 +24,30 @@ Scalar strings:
         multiline string
   variations:
     Parses correctly:
-      preconditions:
-        code: parsed
       scenario:
-      - Should be equal to: |
-          {"a": "1", "b": "yes", "c": u"â string", "d": "multiline string\n"}
+      - Run:
+          code: |
+            Ensure(parsed).equals(
+                {"a": "1", "b": "yes", "c": u"â string", "d": "multiline string\n"}
+            )
 
     Dict lookup cast to string:
-      preconditions:
-        code: str(parsed["a"])
       scenario:
-      - Should be equal to: |
-          "1"
+      - Run:
+          code: Ensure(str(parsed["a"])).equals("1")
 
     Dict lookup cast to int:
-      preconditions:
-        code: int(parsed["a"])
       scenario:
-      - Should be equal to: 1
+      - Run:
+          code: |
+            Ensure(int(parsed["a"])).equals(1)
 
     Dict lookup cast to bool impossible:
-      preconditions:
-        code: bool(parsed["a"])
       scenario:
-      - Raises exception:
-          message: |-
-            Cannot cast 'YAML(1)' to bool.
-            Use bool(yamlobj.data) or bool(yamlobj.text) instead.
-
-
-
-#- Returns True: ' == '
-
-#- Returns True: str(load(yaml_snippet, schema)["a"]) == "1"
-
-#- Returns True: int(load(yaml_snippet, schema)["a"]) == 1
-
-#- Raises Exception:
-#command: bool(load(yaml_snippet, schema)["a"])
-#exception: Cannot cast
+      - Run:
+          code: bool(parsed["a"])
+          raises:
+            message: |-
+              Cannot cast 'YAML(1)' to bool.
+              Use bool(yamlobj.data) or bool(yamlobj.text) instead.
 

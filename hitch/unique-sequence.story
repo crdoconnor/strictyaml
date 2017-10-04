@@ -9,59 +9,54 @@ Unique sequences:
       - B
       - C
     setup: |
-      from strictyaml import UniqueSeq, Str, YAMLValidationError, load
+      from strictyaml import UniqueSeq, Str, load
+      from ensure import Ensure
 
       schema = UniqueSeq(Str())
+  variations:
+    Valid:
+      scenario:
+      - Run:
+          code: |
+            Ensure(load(yaml_snippet, schema)).equals(["A", "B", "C", ])
 
-
-Unique sequence valid:
-  based on: Unique sequences
-  preconditions:
-    code: load(yaml_snippet, schema)
-  scenario:
-  - Should be equal to: ' ["A", "B", "C", ]'
-
-Unique sequence invalid:
-  based on: Unique sequences
-  preconditions:
-    yaml_snippet: |
-      - A
-      - B
-      - B
-    code: |
-      load(yaml_snippet, schema)
-  scenario:
-  - Raises Exception:
-      exception type: strictyaml.exceptions.YAMLValidationError
-      message: |-
-        while parsing a sequence
-          in "<unicode string>", line 1, column 1:
-            - A
-             ^ (line: 1)
-        duplicate found
-          in "<unicode string>", line 3, column 1:
-            - B
-            ^ (line: 3)
-
-Unique sequence all invalid:
-  based on: Unique sequences
-  preconditions:
-    yaml_snippet: |
-      - 3
-      - 3
-      - 3
-    code: |
-      load(yaml_snippet, schema)
-  scenario:
-  - Raises Exception:
-      exception type: strictyaml.exceptions.YAMLValidationError
-      message: |-
-        while parsing a sequence
-          in "<unicode string>", line 1, column 1:
-            - '3'
-             ^ (line: 1)
-        duplicate found
-          in "<unicode string>", line 3, column 1:
-            - '3'
-            ^ (line: 3)
-
+    One dupe:
+      preconditions:
+        yaml_snippet: |
+          - A
+          - B
+          - B
+      scenario:
+      - Run:
+          code: load(yaml_snippet, schema)
+          raises:
+            type: strictyaml.exceptions.YAMLValidationError
+            message: |-
+              while parsing a sequence
+                in "<unicode string>", line 1, column 1:
+                  - A
+                   ^ (line: 1)
+              duplicate found
+                in "<unicode string>", line 3, column 1:
+                  - B
+                  ^ (line: 3)
+    All dupes:
+      preconditions:
+        yaml_snippet: |
+          - 3
+          - 3
+          - 3
+      scenario:
+      - Run:
+          code: load(yaml_snippet, schema)
+          raises:
+            type: strictyaml.exceptions.YAMLValidationError
+            message: |-
+              while parsing a sequence
+                in "<unicode string>", line 1, column 1:
+                  - '3'
+                   ^ (line: 1)
+              duplicate found
+                in "<unicode string>", line 3, column 1:
+                  - '3'
+                  ^ (line: 3)

@@ -16,6 +16,7 @@ Non-schema validation:
   preconditions:
     setup: |
       from strictyaml import Any, MapPattern, load
+      from ensure import Ensure
     yaml_snippet: |
       a:
         x: 9
@@ -24,19 +25,19 @@ Non-schema validation:
       c: 3
   variations:
     Parse without validator:
-      preconditions:
-        code: load(yaml_snippet)
       scenario:
-        - Should be equal to: '{"a": {"x": "9", "y": "8"}, "b": "2", "c": "3"}'
-        
+      - Run:
+          code: |
+            Ensure(load(yaml_snippet)).equals({"a": {"x": "9", "y": "8"}, "b": "2", "c": "3"})
+
     Parse with any validator - equivalent:
-      preconditions:
-        code: load(yaml_snippet, Any())
       scenario:
-        - Should be equal to: '{"a": {"x": "9", "y": "8"}, "b": "2", "c": "3"}'
-        
+      - Run:
+          code: |
+            Ensure(load(yaml_snippet, Any())).equals({"a": {"x": "9", "y": "8"}, "b": "2", "c": "3"})
+
     Fix higher levels of schema:
-      preconditions:
-        code: load(yaml_snippet, MapPattern(Any(), Any()))
       scenario:
-        - Should be equal to: '{"a": {"x": "9", "y": "8"}, "b": "2", "c": "3"}'
+      - Run:
+          code: |
+            Ensure(load(yaml_snippet, MapPattern(Any(), Any()))).equals({"a": {"x": "9", "y": "8"}, "b": "2", "c": "3"})

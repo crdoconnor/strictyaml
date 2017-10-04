@@ -6,6 +6,7 @@ Fixed length sequences (FixedSeq):
   preconditions:
     setup: |
       from strictyaml import FixedSeq, Str, Int, Float, YAMLValidationError, load
+      from ensure import Ensure
 
       schema = FixedSeq([Int(), Str(), Float()])
     code: |
@@ -18,7 +19,9 @@ Fixed length sequences (FixedSeq):
           - a
           - 2.5
       scenario:
-      - Should be equal to: '[1, "a", 2.5, ]'
+      - Run:
+          code: |
+            Ensure(load(yaml_snippet, schema)).equals([1, "a", 2.5, ])
 
     Invalid list 1:
       preconditions:

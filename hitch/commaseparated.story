@@ -9,6 +9,7 @@ Comma separated:
   preconditions:
     setup: |
       from strictyaml import CommaSeparated, Int, Str, Map, load
+      from ensure import Ensure
 
       int_schema = Map({"a": CommaSeparated(Int())})
 
@@ -18,34 +19,33 @@ Comma separated:
       preconditions:
         yaml_snippet: |
           a: 1, 2, 3
-        code: |
-          load(yaml_snippet, int_schema)
       scenario:
-      - Should be equal to: |
-          {"a": [1, 2, 3]}
+      - Run:
+          code: |
+            Ensure(load(yaml_snippet, int_schema)).equals({"a": [1, 2, 3]})
+
 
     Parse as string:
       preconditions:
         yaml_snippet: |
           a: 1, 2, 3
-        code: |
-          load(yaml_snippet, str_schema)
       scenario:
-      - Should be equal to: |
-          {"a": ["1", "2", "3"]}
+      - Run:
+          code: |
+            Ensure(load(yaml_snippet, str_schema)).equals({"a": ["1", "2", "3"]})
 
     Invalid int comma separated sequence:
       preconditions:
         yaml_snippet: |
           a: 1, x, 3
-        code: |
-          load(yaml_snippet, int_schema)
       scenario:
-      - Raises Exception:
-          exception type: strictyaml.exceptions.YAMLValidationError
-          message: |-
-            when expecting an integer
-            found non-integer
-              in "<unicode string>", line 1, column 1:
-                a: 1, x, 3
-                 ^ (line: 1)
+      - Run:
+          code: load(yaml_snippet, int_schema)
+          raises:
+            type: strictyaml.exceptions.YAMLValidationError
+            message: |-
+              when expecting an integer
+              found non-integer
+                in "<unicode string>", line 1, column 1:
+                  a: 1, x, 3
+                   ^ (line: 1)

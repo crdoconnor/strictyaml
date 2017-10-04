@@ -184,14 +184,6 @@ class Engine(BaseEngine):
         except NonMatching:
             self.current_step.update(contents=output)
 
-    @expected_exception(HitchRunPyException)
-    def should_be_equal_to(self, rhs):
-        """
-        Code should be equal to rhs
-        """
-        self.example_py_code.is_equal(self.preconditions.get("code"), rhs)\
-            .run()
-
     def pause(self, message="Pause"):
         import IPython
         IPython.embed()

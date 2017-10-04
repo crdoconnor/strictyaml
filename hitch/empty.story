@@ -9,48 +9,58 @@ Empty key validation:
     or [] (empty list).
   preconditions:
     setup: |
-      from strictyaml import Map, Enum, EmptyNone, EmptyDict, EmptyList, load
+      from strictyaml import Map, Str, Enum, EmptyNone, EmptyDict, EmptyList, load
+      from ensure import Ensure
+    yaml_snippet: 'a:'
   variations:
-    EmptyNone no empty value:
-      preconditions:
-        code: |
-          load(yaml_snippet, Map({"a": Enum(["A", "B",]) | EmptyNone()}))
-        yaml_snippet: 'a: A'
-      scenario:
-      - Should be equal to: '{"a": "A"}'
     EmptyNone with empty value:
-      preconditions:
-        code: |
-          load(yaml_snippet, Map({"a": Enum(["A", "B",]) | EmptyNone()}))
-        yaml_snippet: 'a:'
       scenario:
-      - Should be equal to: '{"a": None}'
+      - Run:
+          code: |
+            Ensure(load(yaml_snippet, Map({"a": EmptyNone() | Enum(["A", "B",])}))).equals({"a": None})
 
     EmptyDict:
-      preconditions:
-        code: |
-          load(yaml_snippet, Map({"a": Enum(["A", "B",]) | EmptyDict()}))
-        yaml_snippet: 'a:'
       scenario:
-      - Should be equal to: '{"a": {}}'
+      - Run:
+          code: |
+            Ensure(load(yaml_snippet, Map({"a": EmptyDict() | Enum(["A", "B",])}))).equals({"a": {}})
+
     EmptyList:
-      preconditions:
-        code: |
-          load(yaml_snippet, Map({"a": Enum(["A", "B",]) | EmptyList()}))
-        yaml_snippet: 'a:'
       scenario:
-      - Should be equal to: '{"a": []}'
+      - Run:
+          code: |
+            Ensure(load(yaml_snippet, Map({"a": EmptyList() | Enum(["A", "B",])}))).equals({"a": []})
+
+    EmptyNone no empty value:
+      preconditions:
+        yaml_snippet: 'a: A'
+      scenario:
+      - Run:
+          code: |
+            Ensure(load(yaml_snippet, Map({"a": EmptyNone() | Enum(["A", "B",])}))).equals({"a": "A"})
+
+    Beware combining EmptyNone with Strings:
+      scenario:
+      - Run:
+          code: |
+            Ensure(load(yaml_snippet, Map({"a": Str() | EmptyNone()}))).equals({"a": ""})
+      - Run:
+          code: |
+            Ensure(load(yaml_snippet, Map({"a": EmptyNone() | Str()}))).equals({"a": None})
+
     Non-empty value:
       preconditions:
-        code: |
-          load(yaml_snippet, Map({"a": Enum(["A", "B",]) | EmptyNone()}))
+        code:
         yaml_snippet: 'a: C'
       scenario:
-      - Raises exception:
-          exception type: strictyaml.exceptions.YAMLValidationError
-          message: |-
-            when expecting an empty value
-            found non-empty value
-              in "<unicode string>", line 1, column 1:
-                a: C
-                 ^ (line: 1)
+      - Run:
+          code: |
+            load(yaml_snippet, Map({"a": Enum(["A", "B",]) | EmptyNone()}))
+          raises:
+            type: strictyaml.exceptions.YAMLValidationError
+            message: |-
+              when expecting an empty value
+              found non-empty value
+                in "<unicode string>", line 1, column 1:
+                  a: C
+                   ^ (line: 1)

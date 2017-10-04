@@ -10,6 +10,7 @@ Or validation:
   preconditions:
     setup: |
       from strictyaml import Map, Bool, Int, YAMLValidationError, load
+      from ensure import Ensure
 
       schema = Map({"a": Bool() | Int()})
     code: load(yaml_snippet, schema)
@@ -18,19 +19,26 @@ Or validation:
       preconditions:
         yaml_snippet: 'a: yes'
       scenario:
-      - Should be equal to: '{"a": True}'
+      - Run:
+          code: |
+            Ensure(load(yaml_snippet, schema)).equals({"a": True})
 
     Boolean first choice false:
       preconditions:
         yaml_snippet: 'a: no'
       scenario:
-      - Should be equal to: '{"a": False}'
+      - Run:
+          code: |
+            Ensure(load(yaml_snippet, schema)).equals({"a": False})
 
     Int second choice:
       preconditions:
         yaml_snippet: 'a: 5'
       scenario:
-      - Should be equal to: '{"a" : 5}'
+      - Run:
+          code: |
+            Ensure(load(yaml_snippet, schema)).equals({"a": 5})
+
     Invalid not bool or int:
       preconditions:
         yaml_snippet: 'a: A'

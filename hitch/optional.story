@@ -7,9 +7,10 @@ Optional validation:
   preconditions:
     setup: |
       from strictyaml import Map, Int, Str, Bool, Optional, load
+      from ensure import Ensure
 
       schema = Map({"a": Int(), Optional("b"): Bool(), })
-    code: load(yaml_snippet, schema)
+    code:
   variations:
     Valid example 1:
       preconditions:
@@ -17,7 +18,9 @@ Optional validation:
           a: 1
           b: yes
       scenario:
-      - Should be equal to: '{"a": 1, "b": True}'
+      - Run:
+          code: |
+            Ensure(load(yaml_snippet, schema)).equals({"a": 1, "b": True})
 
     Valid example 2:
       preconditions:
@@ -25,13 +28,17 @@ Optional validation:
           a: 1
           b: no
       scenario:
-      - Should be equal to: '{"a": 1, "b": False}'
+      - Run:
+          code: |
+            Ensure(load(yaml_snippet, schema)).equals({"a": 1, "b": False})
 
     Valid example missing key:
       preconditions:
         yaml_snippet: 'a: 1'
       scenario:
-      - Should be equal to: '{"a": 1}'
+      - Run:
+          code: |
+            Ensure(load(yaml_snippet, schema)).equals({"a": 1})
 
     Invalid 1:
       preconditions:
@@ -39,14 +46,17 @@ Optional validation:
           a: 1
           b: 2
       scenario:
-      - Raises exception:
-          exception type: strictyaml.exceptions.YAMLValidationError
-          message: |-
-            when expecting a boolean value (one of "yes", "true", "on", "1", "y", "no", "false", "off", "0", "n")
-            found non-boolean
-              in "<unicode string>", line 2, column 1:
-                b: '2'
-                ^ (line: 2)
+      - Run:
+          code: load(yaml_snippet, schema)
+          raises:
+            type: strictyaml.exceptions.YAMLValidationError
+            message: |-
+              when expecting a boolean value (one of "yes", "true", "on", "1", "y", "no", "false", "off", "0", "n")
+              found non-boolean
+                in "<unicode string>", line 2, column 1:
+                  b: '2'
+                  ^ (line: 2)
+
     Invalid 2:
       preconditions:
         yaml_snippet: |
@@ -54,14 +64,16 @@ Optional validation:
           b: yes
           c: 3
       scenario:
-      - Raises exception:
-          exception type: strictyaml.exceptions.YAMLValidationError
-          message: |-
-            while parsing a mapping
-            unexpected key not in schema 'c'
-              in "<unicode string>", line 3, column 1:
-                c: '3'
-                ^ (line: 3)
+      - Run:
+          code: load(yaml_snippet, schema)
+          raises:
+            type: strictyaml.exceptions.YAMLValidationError
+            message: |-
+              while parsing a mapping
+              unexpected key not in schema 'c'
+                in "<unicode string>", line 3, column 1:
+                  c: '3'
+                  ^ (line: 3)
 
 
 Nested optional validation:
@@ -69,15 +81,18 @@ Nested optional validation:
   preconditions:
     setup: |
       from strictyaml import Map, Int, Str, Bool, Optional, load
+      from ensure import Ensure
 
       schema = Map({"a": Int(), Optional("b"): Map({Optional("x"): Str(), Optional("y"): Str()})})
-    code: load(yaml_snippet, schema)
   variations:
     Valid 1:
       preconditions:
         yaml_snippet: 'a: 1'
       scenario:
-      - Should be equal to: '{"a": 1}'
+      - Run:
+          code: |
+            Ensure(load(yaml_snippet, schema)).equals({"a": 1})
+
     Valid 2:
       preconditions:
         yaml_snippet: |
@@ -86,4 +101,8 @@ Nested optional validation:
             x: y
             y: z
       scenario:
-      - Should be equal to: '{"a": 1, "b": {"x": "y", "y": "z"}}'
+      - Run:
+          code: |
+            Ensure(load(yaml_snippet, schema)).equals(
+                {"a": 1, "b": {"x": "y", "y": "z"}}
+            )

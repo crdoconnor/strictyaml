@@ -8,6 +8,7 @@ Datetime:
       from strictyaml import Map, Datetime, YAMLValidationError, load
       from datetime import datetime
       from dateutil.tz.tz import tzutc
+      from ensure import Ensure
 
       schema = Map({
           "date": Datetime(),
@@ -20,24 +21,25 @@ Datetime:
       datetime1: 2016-10-22T14:23:12+00:00
       datetime2: 2016-10-22T14:23:12Z
       datetime3: 20161022T142312Z
-    code: load(yaml_snippet, schema)
   variations:
     Valid:
       scenario:
-      - Should be equal to: |
-          {
+      - Run:
+          code: |
+            Ensure(load(yaml_snippet, schema)).equals({
               "date": datetime(2016, 10, 22, 0, 0),
               "datetime1": datetime(2016, 10, 22, 14, 23, 12, tzinfo=tzutc()),
               "datetime2": datetime(2016, 10, 22, 14, 23, 12, tzinfo=tzutc()),
               "datetime3": datetime(2016, 10, 22, 14, 23, 12, tzinfo=tzutc()),
-          }
+            })
 
     .text:
       preconditions:
-        code: load(yaml_snippet, schema)["date"].text
+        code:
       scenario:
-      - Should be equal to: |
-          "2016-10-22"
+      - Run:
+          code: |
+            Ensure(load(yaml_snippet, schema)["date"].text).equals("2016-10-22")
 
     Non datetime:
       preconditions:
@@ -47,12 +49,14 @@ Datetime:
           datetime2: b
           datetime3: c
       scenario:
-      - Raises exception:
-          exception type: strictyaml.exceptions.YAMLValidationError
-          message: |-
-            when expecting a datetime
-            found non-datetime
-              in "<unicode string>", line 2, column 1:
-                datetime1: "\xE2"
-                ^ (line: 2)
+      - Run:
+          code: load(yaml_snippet, schema)
+          raises:
+            type: strictyaml.exceptions.YAMLValidationError
+            message: |-
+              when expecting a datetime
+              found non-datetime
+                in "<unicode string>", line 2, column 1:
+                  datetime1: "\xE2"
+                  ^ (line: 2)
 
