@@ -2,15 +2,15 @@ Boolean validation:
   based on: strictyaml
   description: |
     Boolean values can be parsed using a Bool validator.
-    
+
     It case-insensitively interprets "yes", "true", "1", "on" as "True", "y"
     and their opposites as False.
 
     Different values will trigger a validation error.
-    
+
     When updating boolean values on a YAML object with True or False, the roundtripped
     string version is set to "yes" and "no".
-    
+
     To have your boolean values updated to a different yes/no string, update
     with a string instead - e.g. "on" or "off".
   preconditions:
@@ -37,24 +37,30 @@ Boolean validation:
   variations:
     Parse to YAML object:
       scenario:
-      - Run: |
-          Ensure(load(yaml_snippet, schema)).equals({
-              "a": True, "b": True, "c": True, "d": True, "e": True, "f": True,
-              "u": False, "v": False, "w": False, "x": False, "y": False, "z": False,
-          })
+      - Run:
+          code: |
+            Ensure(load(yaml_snippet, schema)).equals({
+                "a": True, "b": True, "c": True, "d": True, "e": True, "f": True,
+                "u": False, "v": False, "w": False, "x": False, "y": False, "z": False,
+            })
 
     YAML object should resolve to True or False:
       scenario:
-      - Run: Ensure(load(yaml_snippet, schema)["w"]).equals(False)
+      - Run:
+          code: |
+            Ensure(load(yaml_snippet, schema)["w"]).equals(False)
 
     Using .value you can get the actual boolean value parsed:
       scenario:
-      - Run: assert load(yaml_snippet, schema)["a"].value is True
+      - Run:
+          code: |
+            assert load(yaml_snippet, schema)["a"].value is True
 
     .text returns the text of the boolean YAML:
       scenario:
-      - Run: |
-          Ensure(load(yaml_snippet, schema)["y"].text).equals("FALSE")
+      - Run:
+          code: |
+            Ensure(load(yaml_snippet, schema)["y"].text).equals("FALSE")
 
     Update boolean values with string and bool type:
       scenario:
