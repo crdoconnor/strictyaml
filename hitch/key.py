@@ -51,7 +51,7 @@ class Engine(BaseEngine):
         if self.path.state.exists():
             self.path.state.rmtree(ignore_errors=True)
         self.path.state.mkdir()
-        
+
         self.path.profile = self.path.gen.joinpath("profile")
         if not self.path.profile.exists():
             self.path.profile.mkdir()
@@ -140,7 +140,7 @@ class Engine(BaseEngine):
     )
     def run(self, code, will_output=None, raises=None):
         to_run = self.example_py_code.with_code(code)
-        
+
         if self.settings.get("cprofile"):
             to_run = to_run.with_cprofile(
                 self.path.profile.joinpath("{0}.dat".format(self.story.slug))
