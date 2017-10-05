@@ -33,7 +33,9 @@ Roundtripped YAML:
   variations:
     Commented:
       scenario:
-      - Run: Ensure(load(yaml_snippet, schema).as_yaml()).equals(yaml_snippet)
+      - Run:
+          code: |
+            Ensure(load(yaml_snippet, schema).as_yaml()).equals(yaml_snippet)
 
     Modified with invalid variable:
       scenario:
