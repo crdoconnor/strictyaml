@@ -87,25 +87,29 @@ class YAML(object):
         with comments. This can be fed directly into a ruamel.yaml
         dumper.
         """
-        if isinstance(self._value, CommentedMap):
-            new_commented_map = deepcopy(self._value)
+        def mark_up(original, modified):
+            if original.is_mapping():
+                new_commented_map = modified._value
 
-            for key, value in self._value.items():
-                del new_commented_map[key._value]
-                new_commented_map[key._value] = value.as_marked_up()
-            return new_commented_map
-        elif isinstance(self._value, CommentedSeq):
-            new_commented_seq = deepcopy(self._value)
+                for key, value in original._value.items():
+                    modified_value = new_commented_map[key._value]
+                    del new_commented_map[key._value]
+                    new_commented_map[key._value] = mark_up(value, modified_value)
+                return new_commented_map
+            elif original.is_sequence():
+                new_commented_seq = modified._value
 
-            for i, item in enumerate(self._value):
-                new_commented_seq[i] = item.as_marked_up()
-            return new_commented_seq
-        else:
-            from ruamel.yaml.scalarstring import ScalarString, PreservedScalarString
-            if u"\n" in self._text:
-                return PreservedScalarString(self._text)
+                for i, item in enumerate(original._value):
+                    new_commented_seq[i] = mark_up(item, modified[i])
+                return new_commented_seq
             else:
-                return ScalarString(self._text)
+                from ruamel.yaml.scalarstring import ScalarString, PreservedScalarString
+                if u"\n" in original._text:
+                    return PreservedScalarString(original._text)
+                else:
+                    return ScalarString(original._text)
+
+        return mark_up(self, deepcopy(self))
 
     @property
     def start_line(self):
