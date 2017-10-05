@@ -51,6 +51,10 @@ class Engine(BaseEngine):
         if self.path.state.exists():
             self.path.state.rmtree(ignore_errors=True)
         self.path.state.mkdir()
+        
+        self.path.profile = self.path.gen.joinpath("profile")
+        if not self.path.profile.exists():
+            self.path.profile.mkdir()
 
         self.python_package = hitchpython.PythonPackage(
             self.preconditions['python version']
@@ -136,6 +140,12 @@ class Engine(BaseEngine):
     )
     def run(self, code, will_output=None, raises=None):
         to_run = self.example_py_code.with_code(code)
+        
+        if self.settings.get("cprofile"):
+            to_run = to_run.with_cprofile(
+                self.path.profile.joinpath("{0}.dat".format(self.story.slug))
+            )
+
         result = to_run.expect_exceptions().run() if raises is not None else to_run.run()
 
         if will_output is not None:
@@ -191,6 +201,11 @@ class Engine(BaseEngine):
     def on_success(self):
         if self.settings.get("rewrite"):
             self.new_story.save()
+        if self.settings.get("cprofile"):
+            self.python(
+                self.path.key.joinpath("printstats.py"),
+                self.path.profile.joinpath("{0}.dat".format(self.story.slug))
+            ).run()
 
 
 def _storybook(settings):
@@ -199,8 +214,11 @@ def _storybook(settings):
 
 def _tdd(python_version, keywords):
     print(
-        _storybook({"rewrite": True}).with_params(**{"python version": python_version})
-                                     .shortcut(*keywords).play().report()
+        _storybook({
+            "rewrite": True,
+            "cprofile": True,
+        }).with_params(**{"python version": python_version})
+          .shortcut(*keywords).play().report()
     )
 
 
