@@ -61,6 +61,9 @@ class YAMLChunk(object):
 
     @property
     def contents(self):
+        return self._pointer.get(self._document)
+
+    def contentcopy(self):
         return deepcopy(self._pointer.get(self._document))
 
 

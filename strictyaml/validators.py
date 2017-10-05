@@ -45,7 +45,7 @@ class MapPattern(Validator):
         self._value_validator = value_validator
 
     def validate(self, chunk):
-        return_snippet = chunk.contents
+        return_snippet = chunk.contentcopy()
 
         if not isinstance(return_snippet, CommentedMap):
             raise_exception(
@@ -91,7 +91,7 @@ class Map(Validator):
         ]))
 
     def validate(self, chunk):
-        return_snippet = chunk.contents
+        return_snippet = chunk.contentcopy()
 
         if type(chunk.contents) != CommentedMap:
             raise_exception(
@@ -136,7 +136,7 @@ class Seq(Validator):
         return "Seq({0})".format(repr(self._validator))
 
     def validate(self, chunk):
-        return_snippet = chunk.contents
+        return_snippet = chunk.contentcopy()
 
         if not isinstance(return_snippet, CommentedSeq):
             raise_exception(
@@ -159,7 +159,7 @@ class FixedSeq(Validator):
         return "FixedSeq({0})".format(repr(self._validators))
 
     def validate(self, chunk):
-        return_snippet = chunk.contents
+        return_snippet = chunk.contentcopy()
 
         if not isinstance(return_snippet, CommentedSeq):
             raise_exception(
@@ -189,7 +189,7 @@ class UniqueSeq(Validator):
         return "UniqueSeq({0})".format(repr(self._validator))
 
     def validate(self, chunk):
-        return_snippet = chunk.contents
+        return_snippet = chunk.contentcopy()
 
         if type(chunk.contents) != CommentedSeq:
             raise_exception(
