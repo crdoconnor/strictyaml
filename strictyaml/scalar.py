@@ -1,7 +1,6 @@
 from ruamel.yaml.comments import CommentedSeq, CommentedMap
 from strictyaml.exceptions import raise_exception
 from strictyaml.validators import Validator
-from strictyaml.representation import YAML
 from strictyaml import constants
 from strictyaml import utils
 import dateutil.parser
@@ -47,7 +46,7 @@ class Enum(Scalar):
                 chunk,
             )
         else:
-            return YAML(val, chunk=chunk, validator=self)
+            return val
 
     def __repr__(self):
         return u"Enum({0})".format(repr(self._restricted_to))
@@ -57,7 +56,7 @@ class CommaSeparated(Scalar):
     def __init__(self, item_validator):
         self._item_validator = item_validator
 
-    def validate_scalar(self, chunk):    
+    def validate_scalar(self, chunk):
         return [
             self._item_validator.validate_scalar(chunk.textslice(positions[0], positions[1]))
             for positions in utils.comma_separated_positions(chunk.contents)
@@ -115,7 +114,7 @@ class Int(Scalar):
                 chunk,
             )
         else:
-            return YAML(int(val), val, chunk=chunk, validator=self)
+            return int(val)
 
     def __repr__(self):
         return u"Int()"
@@ -168,7 +167,7 @@ class Decimal(Scalar):
                 chunk,
             )
         else:
-            return YAML(decimal.Decimal(val), val, chunk=chunk, validator=self)
+            return decimal.Decimal(val)
 
     def __repr__(self):
         return u"Decimal()"

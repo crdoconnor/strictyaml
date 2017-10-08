@@ -43,9 +43,13 @@ class YAMLChunk(object):
 
     def key(self, name):
         return YAMLChunk(self._document, pointer=self._pointer.key(name), label=self._label)
-    
+
     def textslice(self, start, end):
-        return YAMLChunk(self._document, pointer=self._pointer.textslice(start, end), label=self._label)
+        return YAMLChunk(
+            self._document,
+            pointer=self._pointer.textslice(start, end),
+            label=self._label
+        )
 
     def start_line(self):
         return self._pointer.start_line(self._document)
@@ -94,7 +98,7 @@ class YAMLPointer(object):
         new_location = deepcopy(self)
         new_location._indices.append(('index', index))
         return new_location
-      
+
     def textslice(self, start, end):
         new_location = deepcopy(self)
         new_location._indices.append(('textslice', (start, end)))

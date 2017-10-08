@@ -10,10 +10,10 @@ if sys.version_info[0] == 3:
 def is_integer(value):
     """
     Is a string a string of an integer?
-    
+
     >>> is_integer("4")
     True
-    
+
     >>> is_integer("3.4")
     False
     """
@@ -23,13 +23,13 @@ def is_integer(value):
 def is_decimal(value):
     """
     Is a string a decimal?
-    
+
     >>> is_decimal("4")
     True
-    
+
     >>> is_decimal("3.5")
     True
-    
+
     >>> is_decimal("blah")
     False
     """
@@ -39,9 +39,9 @@ def is_decimal(value):
 def comma_separated_positions(text):
     """
     Start and end positions of comma separated text items.
-    
+
     Commas and trailing spaces should not be included.
-    
+
     >>> comma_separated_positions("ABC, 2,3")
     [(0, 3), (5, 6), (7, 8)]
     """
@@ -50,10 +50,10 @@ def comma_separated_positions(text):
     end = 0
     for item in text.split(","):
         space_increment = 1 if item[0] == " " else 0
-        start += space_increment
+        start += space_increment  # Is there a space after the comma to ignore? ", "
         end += len(item.lstrip()) + space_increment
         chunks.append((start, end))
-        start += len(item.lstrip()) + 1 # Plus comma
+        start += len(item.lstrip()) + 1  # Plus comma
         end = start
     return chunks
 
