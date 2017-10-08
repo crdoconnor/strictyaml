@@ -32,6 +32,11 @@ Seq validator:
             assert load(yaml_snippet, Seq(Str())).is_sequence()
 
     .text is nonsensical:
+      preconditions:
+        yaml_snippet: |
+          - â
+          - 2
+          - 3
       scenario:
       - Run:
           code: load(yaml_snippet, Seq(Str())).text
@@ -40,8 +45,8 @@ Seq validator:
               in python 2: exceptions.TypeError
               in python 3: builtins.TypeError
             message:
-              in python 2: YAML([u'1', u'2', u'3']) is a sequence, has no text value.
-              in python 3: YAML(['1', '2', '3']) is a sequence, has no text value.
+              in python 2: YAML([u'\xe2', '2', '3']) is a sequence, has no text value.
+              in python 3: YAML(['â', '2', '3']) is a sequence, has no text value.
 
     Invalid mapping instead:
       preconditions:

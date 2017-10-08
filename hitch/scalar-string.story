@@ -1,4 +1,4 @@
-Scalar strings:
+Scalar str:
   based on: strictyaml
   description: |
     StrictYAML parses to a YAML object, not

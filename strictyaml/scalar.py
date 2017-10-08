@@ -29,7 +29,7 @@ class Scalar(Validator):
                 chunk,
             )
         else:
-            return self.validate_scalar(chunk, value=None)
+            return self.validate_scalar(chunk)
 
 
 class Enum(Scalar):
@@ -38,8 +38,8 @@ class Enum(Scalar):
             assert type(element) is str
         self._restricted_to = restricted_to
 
-    def validate_scalar(self, chunk, value):
-        val = unicode(chunk.contents) if value is None else value
+    def validate_scalar(self, chunk):
+        val = chunk.contents
         if val not in self._restricted_to:
             raise_exception(
                 "when expecting one of: {0}".format(", ".join(self._restricted_to)),
@@ -57,7 +57,7 @@ class CommaSeparated(Scalar):
     def __init__(self, item_validator):
         self._item_validator = item_validator
 
-    def validate_scalar(self, chunk, value):    
+    def validate_scalar(self, chunk):    
         return [
             self._item_validator.validate_scalar(chunk.textslice(positions[0], positions[1]))
             for positions in utils.comma_separated_positions(chunk.contents)
@@ -75,19 +75,14 @@ class Regex(Scalar):
         self._regex = regular_expression
         self._matching_message = "when expecting string matching {0}".format(self._regex)
 
-    def validate_scalar(self, chunk, value=None):
+    def validate_scalar(self, chunk):
         if re.compile(self._regex).match(chunk.contents) is None:
             raise_exception(
                 self._matching_message,
                 "found non-matching string",
                 chunk,
             )
-        return YAML(
-            unicode(chunk.contents) if value is None else value,
-            text=chunk.contents,
-            chunk=chunk,
-            validator=self,
-        )
+        return chunk.contents
 
 
 class Email(Regex):
@@ -103,21 +98,16 @@ class Url(Regex):
 
 
 class Str(Scalar):
-    def validate_scalar(self, chunk, value=None):
-        return YAML(
-            unicode(chunk.contents) if value is None else value,
-            text=chunk.contents,
-            chunk=chunk,
-            validator=self,
-        )
+    def validate_scalar(self, chunk):
+        return chunk.contents
 
     def __repr__(self):
         return u"Str()"
 
 
 class Int(Scalar):
-    def validate_scalar(self, chunk, value=None):
-        val = unicode(chunk.contents) if value is None else value
+    def validate_scalar(self, chunk):
+        val = chunk.contents
         if not utils.is_integer(val):
             raise_exception(
                 "when expecting an integer",
@@ -132,8 +122,8 @@ class Int(Scalar):
 
 
 class Bool(Scalar):
-    def validate_scalar(self, chunk, value=None):
-        val = unicode(chunk.contents) if value is None else value
+    def validate_scalar(self, chunk):
+        val = chunk.contents
         if unicode(val).lower() not in constants.BOOL_VALUES:
             raise_exception(
                 """when expecting a boolean value (one of "{0}")""".format(
@@ -144,17 +134,17 @@ class Bool(Scalar):
             )
         else:
             if val.lower() in constants.TRUE_VALUES:
-                return YAML(True, val, chunk=chunk, validator=self)
+                return True
             else:
-                return YAML(False, val, chunk=chunk, validator=self)
+                return False
 
     def __repr__(self):
         return u"Bool()"
 
 
 class Float(Scalar):
-    def validate_scalar(self, chunk, value=None):
-        val = unicode(chunk.contents) if value is None else value
+    def validate_scalar(self, chunk):
+        val = chunk.contents
         if not utils.is_decimal(val):
             raise_exception(
                 "when expecting a float",
@@ -162,15 +152,15 @@ class Float(Scalar):
                 chunk,
             )
         else:
-            return YAML(float(val), val, chunk=chunk, validator=self)
+            return float(val)
 
     def __repr__(self):
         return u"Float()"
 
 
 class Decimal(Scalar):
-    def validate_scalar(self, chunk, value=None):
-        val = unicode(chunk.contents) if value is None else value
+    def validate_scalar(self, chunk):
+        val = chunk.contents
         if not utils.is_decimal(val):
             raise_exception(
                 "when expecting a decimal",
@@ -185,16 +175,9 @@ class Decimal(Scalar):
 
 
 class Datetime(Scalar):
-    def validate_scalar(self, chunk, value=None):
-        val = unicode(chunk.contents) if value is None else value
-
+    def validate_scalar(self, chunk):
         try:
-            return YAML(
-                dateutil.parser.parse(val),
-                val,
-                chunk=chunk,
-                validator=self
-            )
+            return dateutil.parser.parse(chunk.contents)
         except ValueError:
             raise_exception(
                 "when expecting a datetime",
@@ -207,8 +190,8 @@ class Datetime(Scalar):
 
 
 class EmptyNone(Scalar):
-    def validate_scalar(self, chunk, value):
-        val = unicode(chunk.contents) if value is None else value
+    def validate_scalar(self, chunk):
+        val = chunk.contents
         if val != "":
             raise_exception(
                 "when expecting an empty value",
@@ -219,7 +202,7 @@ class EmptyNone(Scalar):
             return self.empty(chunk)
 
     def empty(self, chunk):
-        return YAML(None, '', chunk=chunk, validator=self)
+        return None
 
     def __repr__(self):
         return u"EmptyNone()"
@@ -227,7 +210,7 @@ class EmptyNone(Scalar):
 
 class EmptyDict(EmptyNone):
     def empty(self, chunk):
-        return YAML({}, '', chunk=chunk, validator=self)
+        return {}
 
     def __repr__(self):
         return u"EmptyDict()"
@@ -235,7 +218,7 @@ class EmptyDict(EmptyNone):
 
 class EmptyList(EmptyNone):
     def empty(self, chunk):
-        return YAML([], '', chunk=chunk, validator=self)
+        return []
 
     def __repr__(self):
         return u"EmptyList()"

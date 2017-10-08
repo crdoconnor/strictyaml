@@ -44,7 +44,7 @@ class YAML(object):
         return int(self._value)
 
     def __str__(self):
-        if type(self._value) in (unicode, int, float, decimal.Decimal):
+        if type(self._value) in (unicode, str, int, float, decimal.Decimal):
             return unicode(self._value)
         elif isinstance(self._value, CommentedMap) or isinstance(self._value, CommentedSeq):
             raise TypeError(
