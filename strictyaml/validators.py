@@ -21,7 +21,12 @@ class Validator(object):
         return OrValidator(self, other)
 
     def __call__(self, chunk):
-        return self.validate(chunk)
+        return YAML(
+            self.validate(chunk),
+            text=chunk.contents if isinstance(chunk.contents, (unicode, str)) else None,
+            chunk=chunk,
+            validator=self
+        )
 
 
 class OrValidator(Validator):
@@ -64,7 +69,7 @@ class MapPattern(Validator):
                     chunk.val(key)
                 )
 
-        return YAML(return_snippet, chunk=chunk, validator=self)
+        return return_snippet
 
     def __repr__(self):
         return u"MapPattern({0}, {1})".format(
@@ -125,7 +130,7 @@ class Map(Validator):
                     chunk,
                 )
 
-        return YAML(return_snippet, chunk=chunk, validator=self)
+        return return_snippet
 
 
 class Seq(Validator):
@@ -148,7 +153,7 @@ class Seq(Validator):
             for i, item in enumerate(chunk.contents):
                 return_snippet[i] = self._validator(chunk.index(i))
 
-        return YAML(return_snippet, chunk=chunk, validator=self)
+        return return_snippet
 
 
 class FixedSeq(Validator):
@@ -178,7 +183,7 @@ class FixedSeq(Validator):
                 item, validator = item_and_val
                 return_snippet[i] = validator(chunk.index(i))
 
-        return YAML(return_snippet, chunk=chunk, validator=self)
+        return return_snippet
 
 
 class UniqueSeq(Validator):
@@ -211,4 +216,4 @@ class UniqueSeq(Validator):
                     existing_items.add(item)
                     return_snippet[i] = self._validator(chunk.index(i))
 
-        return YAML(return_snippet, chunk=chunk, validator=self)
+        return return_snippet

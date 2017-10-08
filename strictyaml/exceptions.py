@@ -58,25 +58,6 @@ class DuplicateKeysDisallowed(DisallowedToken):
 
 
 def raise_exception(context, problem, chunk):
-    """
-    context_line = chunk.start_line() - 1
-    problem_line = chunk.end_line() - 1
-    str_document = dump(chunk.document, Dumper=RoundTripDumper)
-    context_index = len(u'\n'.join(str_document.split(u'\n')[:context_line]))
-    problem_index = len(u'\n'.join(str_document.split(u'\n')[:problem_line]))
-    string_mark_a = StringMark(
-        chunk.label, context_index, context_line, 0, str_document, context_index + 1
-    )
-    string_mark_b = StringMark(
-        chunk.label, problem_index, problem_line, 0, str_document, problem_index + 1
-    )
-    raise YAMLValidationError(
-        context,
-        string_mark_a,
-        problem,
-        string_mark_b,
-    )
-    """
     raise YAMLValidationError(
         context,
         problem,

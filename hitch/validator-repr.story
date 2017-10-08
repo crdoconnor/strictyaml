@@ -11,8 +11,9 @@ Validator repr:
   variations:
     Int:
       scenario:
-      - Run: |
-          Ensure(repr(sy.Map({"a": sy.Int()}))).equals("""Map({'a': Int()})""")
+      - Run:
+          code: |
+            Ensure(repr(sy.Map({"a": sy.Int()}))).equals("""Map({'a': Int()})""")
 
     Optional:
       scenario:

@@ -57,16 +57,11 @@ class CommaSeparated(Scalar):
     def __init__(self, item_validator):
         self._item_validator = item_validator
 
-    def validate_scalar(self, chunk, value):
-        val = unicode(chunk.contents) if value is None else value
-        return YAML(
-            [
-                YAML(self._item_validator.validate_scalar(chunk, value=item.lstrip()))
-                for item in val.split(",")
-            ],
-            chunk=chunk,
-            validator=self,
-        )
+    def validate_scalar(self, chunk, value):    
+        return [
+            self._item_validator.validate_scalar(chunk.textslice(positions[0], positions[1]))
+            for positions in utils.comma_separated_positions(chunk.contents)
+        ]
 
     def __repr__(self):
         return "CommaSeparated({0})".format(self._item_validator)

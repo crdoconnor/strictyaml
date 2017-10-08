@@ -24,7 +24,6 @@ Comma separated:
           code: |
             Ensure(load(yaml_snippet, int_schema)).equals({"a": [1, 2, 3]})
 
-
     Parse as string:
       preconditions:
         yaml_snippet: |
@@ -45,6 +44,9 @@ Comma separated:
             type: strictyaml.exceptions.YAMLValidationError
             message: |-
               when expecting an integer
+                in "<unicode string>", line 2, column 1:
+                  
+                  ^ (line: 2)
               found non-integer
                 in "<unicode string>", line 1, column 1:
                   a: 1, x, 3

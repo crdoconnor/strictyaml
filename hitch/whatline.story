@@ -30,20 +30,23 @@ What line:
   variations:
     Start line includes previous comment:
       scenario:
-      - Run: |
-          Ensure(snippet["a"].start_line).equals(2)
-          Ensure(snippet["d"].start_line).equals(9)
+      - Run:
+          code: |
+            Ensure(snippet["a"].start_line).equals(2)
+            Ensure(snippet["d"].start_line).equals(9)
 
     End line includes comment:
       scenario:
-      - Run: |
-          Ensure(snippet["a"].end_line).equals(6)
-          Ensure(snippet["d"].end_line).equals(10)
+      - Run:
+          code: |
+            Ensure(snippet["a"].end_line).equals(6)
+            Ensure(snippet["d"].end_line).equals(10)
 
     Start line of key:
       scenario:
-      - Run: |
-          Ensure(snippet.keys()[1].start_line).equals(2)
+      - Run:
+          code: |
+            Ensure(snippet.keys()[1].start_line).equals(2)
 
     Start and end line of all YAML:
       scenario:
@@ -54,13 +57,15 @@ What line:
 
     Lines before:
       scenario:
-      - Run: |
-          Ensure(snippet['a'].lines_before(1)).equals("y: p")
+      - Run:
+          code: |
+            Ensure(snippet['a'].lines_before(1)).equals("y: p")
 
     Lines after:
       scenario:
-      - Run: |
-          Ensure(snippet['a'].lines_after(4)).equals("b: y\nc: a\n\nd: b")
+      - Run:
+          code: |
+            Ensure(snippet['a'].lines_after(4)).equals("b: y\nc: a\n\nd: b")
 
     Relevant lines:
       scenario:

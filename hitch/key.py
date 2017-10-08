@@ -1,4 +1,4 @@
-from commandlib import run
+from commandlib import run, CommandError
 import hitchpython
 from hitchstory import StoryCollection, StorySchema, BaseEngine, HitchStoryException
 from hitchstory import validate, expected_exception
@@ -246,8 +246,9 @@ def regressfile(filename):
     Rewrite stories if appropriate.
     """
     print(
-        _storybook({"rewrite": True}).with_params(**{"python version": "2.7.10"})
-                                     .in_filename(filename).ordered_by_name().play().report()
+        _storybook({"rewrite": True}).in_filename(filename)
+                                     .with_params(**{"python version": "2.7.10"})
+                                     .ordered_by_name().play().report()
     )
     print(
         _storybook({"rewrite": True}).with_params(**{"python version": "3.5.0"})
@@ -260,7 +261,7 @@ def regression():
     """
     Run regression testing - lint and then run all tests.
     """
-    lint()
+    #lint()
     print(
         _storybook({}).with_params(**{"python version": "2.7.10"}).ordered_by_name().play().report()
     )
@@ -348,6 +349,13 @@ def docgen():
             "rst",
             docpath.joinpath("{0}.rst".format(story.slug))
         )
+
+
+@expected(CommandError)
+def doctest(version="3.5.0"):
+    Command(DIR.gen.joinpath("py{0}".format(version), "bin", "python"))(
+        "-m", "doctest", "-v", DIR.project.joinpath("strictyaml", "utils.py")
+    ).in_dir(DIR.project.joinpath("strictyaml")).run()
 
 
 @ignore_ctrlc

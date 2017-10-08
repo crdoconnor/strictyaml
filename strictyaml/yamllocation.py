@@ -43,6 +43,9 @@ class YAMLChunk(object):
 
     def key(self, name):
         return YAMLChunk(self._document, pointer=self._pointer.key(name), label=self._label)
+    
+    def textslice(self, start, end):
+        return YAMLChunk(self._document, pointer=self._pointer.textslice(start, end), label=self._label)
 
     def start_line(self):
         return self._pointer.start_line(self._document)
@@ -91,6 +94,11 @@ class YAMLPointer(object):
         new_location = deepcopy(self)
         new_location._indices.append(('index', index))
         return new_location
+      
+    def textslice(self, start, end):
+        new_location = deepcopy(self)
+        new_location._indices.append(('textslice', (start, end)))
+        return new_location
 
     def as_child_of(self, pointer):
         new_location = deepcopy(pointer)
@@ -107,7 +115,7 @@ class YAMLPointer(object):
                 index = indices[0][1]
                 start_popping = False
 
-                if type(segment) == CommentedMap:
+                if isinstance(segment, CommentedMap):
                     for key in segment.keys():
                         if start_popping:
                             slicedpart.pop(key)
@@ -115,7 +123,7 @@ class YAMLPointer(object):
                         if index == key:
                             start_popping = True
 
-                            if type(segment[index]) in (CommentedSeq, CommentedMap, ):
+                            if isinstance(segment[index], (CommentedSeq, CommentedMap)):
                                 slicedpart[index] = self._slice_segment(
                                     indices[1:],
                                     segment[index],
@@ -125,7 +133,7 @@ class YAMLPointer(object):
                             if not include_selected and len(indices) == 1:
                                 slicedpart.pop(key)
 
-                if type(segment) == CommentedSeq:
+                if isinstance(segment, CommentedSeq):
                     for i, value in enumerate(segment):
                         if start_popping:
                             del slicedpart[-1]
@@ -133,7 +141,7 @@ class YAMLPointer(object):
                         if i == index:
                             start_popping = True
 
-                            if type(segment[index]) in (CommentedSeq, CommentedMap, ):
+                            if isinstance(segment[index], (CommentedSeq, CommentedMap)):
                                 slicedpart[index] = self._slice_segment(
                                     indices[1:],
                                     segment[index],
@@ -179,6 +187,8 @@ class YAMLPointer(object):
                 segment = segment[index]
             elif index_type == "index":
                 segment = segment[index]
+            elif index_type == "textslice":
+                segment = segment[index[0]:index[1]]
             else:
                 segment = index
         return segment
