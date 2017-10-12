@@ -9,3 +9,4 @@ __pycache__
 *.kate-swp
 hitch/hitchdir
 hitch/gen
+temp/
