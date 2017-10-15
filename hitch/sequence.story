@@ -142,7 +142,6 @@ Modify nested sequence:
 
       yaml = load(yaml_snippet, schema)
 
-      # Non-ordered dict would also work, but would yield an indeterminate order of keys
       yaml['a'] = ['b', 'c', 'd']
       yaml['a'][1] = 'x'
   scenario:
