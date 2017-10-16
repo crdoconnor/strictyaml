@@ -115,11 +115,9 @@ class Map(Validator):
                     )
 
                 found_keys.add(key)
-                validator = self._validator_dict[key]
+                parsed = self._validator_dict[key](chunk.val(key))
                 del return_snippet[key]
-                return_snippet[
-                    YAML(key, chunk=chunk.key(key), validator=validator)
-                ] = validator(chunk.val(key))
+                return_snippet[YAML(key, chunk=chunk.key(key))] = parsed
 
             if not set(self._required_keys).issubset(found_keys):
                 raise_exception(
