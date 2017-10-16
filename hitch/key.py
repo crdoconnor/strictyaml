@@ -262,9 +262,12 @@ def regression():
     Run regression testing - lint and then run all tests.
     """
     #lint()
+    # HACK: Start using hitchbuildpy to get around this.
+    Command("touch", DIR.project.joinpath("strictyaml", "representation.py").abspath()).run()
     print(
         _storybook({}).with_params(**{"python version": "2.7.10"}).ordered_by_name().play().report()
     )
+    Command("touch", DIR.project.joinpath("strictyaml", "representation.py").abspath()).run()
     print(
         _storybook({}).with_params(**{"python version": "3.5.0"}).ordered_by_name().play().report()
     )
