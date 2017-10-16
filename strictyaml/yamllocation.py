@@ -34,22 +34,26 @@ class YAMLChunk(object):
 
     def update(self, key, value):
         self.pointer.get(self._document)[key] = value.as_marked_up()
-
-    def index(self, index):
-        return YAMLChunk(self._document, pointer=self._pointer.index(index), label=self._label)
-
-    def val(self, index):
-        return YAMLChunk(self._document, pointer=self._pointer.val(index), label=self._label)
-
-    def key(self, name):
-        return YAMLChunk(self._document, pointer=self._pointer.key(name), label=self._label)
-
-    def textslice(self, start, end):
+    
+    
+    def _select(self, pointer):
         return YAMLChunk(
             self._document,
-            pointer=self._pointer.textslice(start, end),
+            pointer=pointer,
             label=self._label
         )
+
+    def index(self, index):
+        return self._select(self._pointer.index(index))
+
+    def val(self, index):
+        return self._select(self._pointer.val(index))
+
+    def key(self, name):
+        return self._select(self._pointer.key(name))
+
+    def textslice(self, start, end):
+        return self._select(self._pointer.textslice(start, end))
 
     def start_line(self):
         return self._pointer.start_line(self._document)
