@@ -155,6 +155,8 @@ class Engine(BaseEngine):
             except NonMatching:
                 if self.settings.get("rewrite"):
                     self.current_step.update(**{"will output": actual_output})
+                else:
+                    raise
 
         if raises is not None:
             differential = False  # Difference between python 2 and python 3 output?
@@ -246,12 +248,12 @@ def regressfile(filename):
     Rewrite stories if appropriate.
     """
     print(
-        _storybook({"rewrite": True}).in_filename(filename)
+        _storybook({"rewrite": False}).in_filename(filename)
                                      .with_params(**{"python version": "2.7.10"})
                                      .ordered_by_name().play().report()
     )
     print(
-        _storybook({"rewrite": True}).with_params(**{"python version": "3.5.0"})
+        _storybook({"rewrite": False}).with_params(**{"python version": "3.5.0"})
                                      .in_filename(filename).ordered_by_name().play().report()
     )
 
