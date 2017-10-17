@@ -4,7 +4,7 @@ from hitchstory import StoryCollection, StorySchema, BaseEngine, HitchStoryExcep
 from hitchstory import validate, expected_exception
 from hitchrun import expected
 from commandlib import Command
-from strictyaml import Str, Map, Int, Optional, load
+from strictyaml import Str, Map, Int, Bool, Optional, load
 from pathquery import pathq
 import hitchtest
 import hitchdoc
@@ -194,7 +194,11 @@ class Engine(BaseEngine):
         try:
             Templex(contents).assert_match(output)
         except NonMatching:
-            self.current_step.update(contents=output)
+            if self.settings.get("rewrite"):
+                self.current_step.update(contents=output)
+            else:
+                raise
+            
 
     def pause(self, message="Pause"):
         import IPython
@@ -214,30 +218,42 @@ def _storybook(settings):
     return StoryCollection(pathq(DIR.key).ext("story"), Engine(DIR, settings))
 
 
-def _tdd(python_version, keywords):
-    print(
-        _storybook({
-            "rewrite": True,
-            "cprofile": True,
-        }).with_params(**{"python version": python_version})
-          .shortcut(*keywords).play().report()
+def _personal_settings():
+    settings_file = DIR.key.joinpath("personalsettings.yml")
+    
+    if not settings_file.exists():
+        settings_file.write_text((
+            "engine:\n"
+            "  rewrite: no\n"
+            "  cprofile: no\n"
+            "params:\n"
+            "  python version: 3.5.0\n"
+        ))
+    return load(
+        settings_file.bytes().decode('utf8'),
+        Map({
+            "engine": Map({
+                "rewrite": Bool(),
+                "cprofile": Bool(),
+            }),
+            "params": Map({
+                "python version": Str(),
+            }),
+        })
     )
 
 
 @expected(HitchStoryException)
-def tdd3(*keywords):
+def tdd(*keywords):
     """
-    Run tests matching keywords in python 3.
+    Run tests matching keywords.
     """
-    _tdd("3.5.0", keywords)
-
-
-@expected(HitchStoryException)
-def tdd2(*keywords):
-    """
-    Run tests matching keywords in python 2.
-    """
-    _tdd("2.7.10", keywords)
+    settings = _personal_settings().data
+    print(
+        _storybook(settings['engine'])
+          .with_params(**{"python version": settings['params']['python version']})
+          .shortcut(*keywords).play().report()
+    )
 
 
 @expected(HitchStoryException)
