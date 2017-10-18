@@ -32,10 +32,21 @@ class YAMLChunk(object):
         """
         return YAMLChunk(deepcopy(self._document), pointer=self.pointer, label=self.label)
 
-    def update(self, key, value):
-        self.pointer.get(self._document)[key] = value.as_marked_up()
-    
-    
+    def make_child_of(self, chunk):
+        """
+        Used when inserting a chunk of YAML into another chunk.
+        """
+        contents = self.contents
+        if isinstance(contents, CommentedMap):
+            for key, value in self.contents.items():
+                self.key(key).pointer.make_child_of(chunk.pointer)
+                self.val(key).make_child_of(chunk)
+        elif isinstance(contents, CommentedSeq):
+            for index, item in enumerate(self.contents):
+                self.index(index).make_child_of(chunk)
+        else:
+            self.pointer.make_child_of(chunk.pointer)
+
     def _select(self, pointer):
         return YAMLChunk(
             self._document,
@@ -108,10 +119,9 @@ class YAMLPointer(object):
         new_location._indices.append(('textslice', (start, end)))
         return new_location
 
-    def as_child_of(self, pointer):
-        new_location = deepcopy(pointer)
-        new_location._indices.extend(self._indices)
-        return new_location
+    def make_child_of(self, pointer):
+        new_indices = deepcopy(pointer._indices)
+        new_indices.extend(self._indices)
 
     def _slice_segment(self, indices, segment, include_selected):
         slicedpart = deepcopy(segment)

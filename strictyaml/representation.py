@@ -1,4 +1,5 @@
 from ruamel.yaml.comments import CommentedSeq, CommentedMap
+from ruamel.yaml.scalarstring import PreservedScalarString
 from strictyaml.exceptions import raise_type_error
 from strictyaml.yamllocation import YAMLChunk
 from strictyaml.dumper import StrictYAMLDumper
@@ -87,29 +88,30 @@ class YAML(object):
         with comments. This can be fed directly into a ruamel.yaml
         dumper.
         """
-        def mark_up(original, modified):
-            if isinstance(original, CommentedMap):
-                new_commented_map = modified
+        #def mark_up(original, modified):
+            #if isinstance(original, CommentedMap):
+                #new_commented_map = modified
 
-                for key, value in original.items():
-                    modified_value = new_commented_map[key]
-                    del new_commented_map[key]
-                    new_commented_map[key] = mark_up(value, modified_value)
-                return new_commented_map
-            elif isinstance(original, CommentedSeq):
-                new_commented_seq = modified
+                #for key, value in original.items():
+                    #modified_value = new_commented_map[key]
+                    #del new_commented_map[key]
+                    #new_commented_map[key] = mark_up(value, modified_value)
+                #return new_commented_map
+            #elif isinstance(original, CommentedSeq):
+                #new_commented_seq = modified
 
-                for i, item in enumerate(original):
-                    new_commented_seq[i] = mark_up(item, modified[i])
-                return new_commented_seq
-            else:
-                from ruamel.yaml.scalarstring import ScalarString, PreservedScalarString
-                if u"\n" in original:
-                    return PreservedScalarString(original)
-                else:
-                    return ScalarString(original)
+                #for i, item in enumerate(original):
+                    #new_commented_seq[i] = mark_up(item, modified[i])
+                #return new_commented_seq
+            #else:
+                #from ruamel.yaml.scalarstring import ScalarString, PreservedScalarString
+                #if u"\n" in original:
+                    #return PreservedScalarString(original)
+                #else:
+                    #return ScalarString(original)
 
-        return mark_up(self._chunk.contents, self._chunk.contentcopy())
+        #return mark_up(self._chunk.contents, self._chunk.contentcopy())
+        return self._chunk.contents
 
     @property
     def start_line(self):
@@ -166,29 +168,29 @@ class YAML(object):
         else:
             new_value = existing_validator(YAMLChunk(ruamel_structure(value)))
 
-        # First validate against updated forked document
+        # First validate against forked document
         proposed_chunk = self._chunk.fork()
-        proposed_chunk.update(index, new_value)
-        existing_validator(proposed_chunk.val(index))
+        proposed_chunk.contents[index] = new_value.as_marked_up()
+        
+        if self.is_mapping():
+            updated_value = existing_validator(proposed_chunk.val(index))
+            updated_value._chunk.make_child_of(self._chunk.val(index))
+        else:
+            updated_value = existing_validator(proposed_chunk.index(index))
+            updated_value._chunk.make_child_of(self._chunk.index(index))
 
         # If validation succeeds, update for real
-        self._chunk.update(index, new_value)
+        marked_up = new_value.as_marked_up()
+        
+        # So that the nicer x: | style of text is used instead of
+        # x: "text\nacross\nlines"
+        if isinstance(marked_up, (str, unicode)):
+            if u"\n" in marked_up:
+                marked_up = PreservedScalarString(marked_up)
+                
+        self._chunk.contents[index] = marked_up
+        self._value[YAML(index) if self.is_mapping() else index] = new_value
 
-        if new_value.is_mapping():
-            for key, value in new_value.items():
-                key._chunk._pointer = key._chunk._pointer.as_child_of(self._chunk.pointer)
-                value._chunk._pointer = value._chunk._pointer.as_child_of(self._chunk.pointer)
-        elif new_value.is_sequence():
-            for item in new_value:
-                item._chunk._pointer = item._chunk._pointer.as_child_of(self._chunk.pointer)
-        else:
-            new_value._chunk._pointer = new_value._chunk._pointer.as_child_of(self._chunk.pointer)
-
-        self._value[YAML(index) if self.is_mapping() else index] = YAML(
-            value=new_value,
-            chunk=self._chunk.val(index) if self.is_mapping() else self._chunk.index(index),
-            validator=existing_validator,
-        )
 
     def __delitem__(self, index):
         del self._value[index]

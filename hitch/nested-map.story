@@ -86,12 +86,13 @@ Nested mapping validation:
 
           # Non-ordered dict would also work, but would yield an indeterminate order of keys
           yaml['a'] = OrderedDict([("x", 5), ("y", [4, 5, 6])])
+          yaml['a']['x'] = 99
       scenario:
       - Run:
           code: print(yaml.as_yaml())
           will output: |-
             a:
-              x: 5
+              x: 99
               y:
               - 4
               - 5
