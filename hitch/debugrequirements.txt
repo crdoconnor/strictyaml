@@ -6,3 +6,4 @@ q
 ipykernel
 sure
 ensure
+slugify

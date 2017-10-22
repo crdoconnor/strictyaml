@@ -8,7 +8,6 @@ from strictyaml.parser import as_document
 from strictyaml.representation import YAML
 
 # Validators
-from strictyaml.validators import Optional
 from strictyaml.validators import Validator
 from strictyaml.validators import OrValidator
 from strictyaml.any_validator import Any
@@ -27,11 +26,12 @@ from strictyaml.scalar import CommaSeparated
 from strictyaml.scalar import EmptyNone
 from strictyaml.scalar import EmptyDict
 from strictyaml.scalar import EmptyList
-from strictyaml.validators import Map
-from strictyaml.validators import MapPattern
-from strictyaml.validators import Seq
-from strictyaml.validators import UniqueSeq
-from strictyaml.validators import FixedSeq
+from strictyaml.compound import Optional
+from strictyaml.compound import Map
+from strictyaml.compound import MapPattern
+from strictyaml.compound import Seq
+from strictyaml.compound import UniqueSeq
+from strictyaml.compound import FixedSeq
 
 # Base exception from ruamel.yaml (all exceptions inherit from this)
 from ruamel.yaml import YAMLError

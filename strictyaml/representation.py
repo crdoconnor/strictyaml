@@ -72,10 +72,7 @@ class YAML(object):
         if isinstance(self._value, CommentedMap):
             mapping = OrderedDict()
             for key, value in self._value.items():
-                if type(key) in (str, unicode):
-                    mapping[key] = value.data
-                else:
-                    mapping[key.data] = value.data
+                mapping[key.data] = value.data
             return mapping
         elif isinstance(self._value, CommentedSeq):
             return [item.data for item in self._value]
