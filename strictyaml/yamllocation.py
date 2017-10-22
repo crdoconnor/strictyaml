@@ -8,11 +8,12 @@ class YAMLChunk(object):
     Represents a section of the document - everything from the whole document
     all the way to one scalar value.
     """
-    def __init__(self, document, pointer=None, label=None):
+    def __init__(self, document, pointer=None, label=None, strictparsed=None):
         self._document = document
         self._pointer = pointer if pointer is not None \
             else YAMLPointer()
         self._label = label
+        self._strictparsed = deepcopy(document) if strictparsed is None else strictparsed
 
     @property
     def label(self):
@@ -51,7 +52,8 @@ class YAMLChunk(object):
         return YAMLChunk(
             self._document,
             pointer=pointer,
-            label=self._label
+            label=self._label,
+            strictparsed=self._strictparsed
         )
 
     def index(self, index):
@@ -87,6 +89,9 @@ class YAMLChunk(object):
 
     def contentcopy(self):
         return deepcopy(self._pointer.get(self._document))
+    
+    def strictparsed(self):
+        return self._pointer.get(self._strictparsed)
 
 
 class YAMLPointer(object):

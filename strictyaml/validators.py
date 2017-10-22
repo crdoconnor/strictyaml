@@ -50,7 +50,7 @@ class MapPattern(Validator):
         self._value_validator = value_validator
 
     def validate(self, chunk):
-        return_snippet = chunk.contentcopy()
+        return_snippet = chunk.strictparsed()
 
         if not isinstance(return_snippet, CommentedMap):
             raise_exception(
@@ -62,12 +62,8 @@ class MapPattern(Validator):
             for key, value in chunk.contents.items():
                 valid_key = self._key_validator(chunk.key(key))
                 valid_val = self._value_validator(chunk.val(key))
-                return_snippet[valid_key] = valid_val
-
                 del return_snippet[valid_key]
-                return_snippet[valid_key] = self._value_validator(
-                    chunk.val(key)
-                )
+                return_snippet[valid_key] = valid_val
 
         return return_snippet
 
@@ -96,7 +92,7 @@ class Map(Validator):
         ]))
 
     def validate(self, chunk):
-        return_snippet = chunk.contentcopy()
+        return_snippet = chunk.strictparsed()
 
         if type(chunk.contents) != CommentedMap:
             raise_exception(
@@ -139,9 +135,9 @@ class Seq(Validator):
         return "Seq({0})".format(repr(self._validator))
 
     def validate(self, chunk):
-        return_snippet = chunk.contentcopy()
+        return_snippet = chunk.strictparsed()
 
-        if not isinstance(return_snippet, CommentedSeq):
+        if not isinstance(chunk.contents, CommentedSeq):
             raise_exception(
                 "when expecting a sequence",
                 "found non-sequence",
@@ -162,9 +158,9 @@ class FixedSeq(Validator):
         return "FixedSeq({0})".format(repr(self._validators))
 
     def validate(self, chunk):
-        return_snippet = chunk.contentcopy()
+        return_snippet = chunk.strictparsed()
 
-        if not isinstance(return_snippet, CommentedSeq):
+        if not isinstance(chunk.contents, CommentedSeq):
             raise_exception(
                 "when expecting a sequence of {0} elements".format(len(self._validators)),
                 "found non-sequence",
@@ -192,7 +188,7 @@ class UniqueSeq(Validator):
         return "UniqueSeq({0})".format(repr(self._validator))
 
     def validate(self, chunk):
-        return_snippet = chunk.contentcopy()
+        return_snippet = chunk.strictparsed()
 
         if type(chunk.contents) != CommentedSeq:
             raise_exception(

@@ -171,6 +171,7 @@ class YAML(object):
         # First validate against forked document
         proposed_chunk = self._chunk.fork()
         proposed_chunk.contents[index] = new_value.as_marked_up()
+        proposed_chunk.strictparsed()[index] = deepcopy(new_value.as_marked_up())
         
         if self.is_mapping():
             updated_value = existing_validator(proposed_chunk.val(index))
