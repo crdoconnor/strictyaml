@@ -30,6 +30,8 @@ class YAMLChunk(object):
     def fork(self):
         """
         Return a chunk to the same location in a duplicated document.
+        
+        Used when modifying a YAML chunk so that the modification can be validated before changing it.
         """
         return YAMLChunk(deepcopy(self._document), pointer=self.pointer, label=self.label)
 
@@ -57,15 +59,27 @@ class YAMLChunk(object):
         )
 
     def index(self, index):
+        """
+        Return a chunk in a sequence referenced by index.
+        """
         return self._select(self._pointer.index(index))
 
-    def val(self, index):
-        return self._select(self._pointer.val(index))
+    def val(self, key):
+        """
+        Return a chunk referencing a value in a mapping with the key 'key'.
+        """
+        return self._select(self._pointer.val(key))
 
     def key(self, name):
+        """
+        Return a chunk referencing a key in a mapping with the name 'key'.
+        """
         return self._select(self._pointer.key(name))
 
     def textslice(self, start, end):
+        """
+        Return a chunk referencing a slice of a scalar text value.
+        """
         return self._select(self._pointer.textslice(start, end))
 
     def start_line(self):

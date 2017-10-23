@@ -12,10 +12,10 @@ Map with key validator:
       
       # This example uses slugify from the "python-slugify" package
       from slugify import slugify
-      
+
       class Slug(Scalar):
           def validate_scalar(self, chunk):
-              return slugify(chunk.contents)
+              return slugify(unicode(chunk.contents))
           
           def __repr__(self):
               return u"Slug()"
