@@ -32,14 +32,14 @@ class Scalar(Validator):
 
 
 class Enum(Scalar):
-    def __init__(self, restricted_to):
-        for element in restricted_to:
-            assert type(element) is str
+    def __init__(self, restricted_to, item_validator=None):
+        self._item_validator = Str() if item_validator is None else item_validator
+        assert isinstance(self._item_validator, Scalar)
         self._restricted_to = restricted_to
 
     def validate_scalar(self, chunk):
-        val = chunk.contents
-        if val not in self._restricted_to:
+        val = self._item_validator(chunk)
+        if val._value not in self._restricted_to:
             raise_exception(
                 "when expecting one of: {0}".format(", ".join(self._restricted_to)),
                 "found '{0}'".format(val),
