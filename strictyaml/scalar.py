@@ -1,5 +1,4 @@
 from ruamel.yaml.comments import CommentedSeq, CommentedMap
-from strictyaml.exceptions import raise_exception
 from strictyaml.validators import Validator
 from strictyaml import constants
 from strictyaml import utils
@@ -19,16 +18,8 @@ class Scalar(Validator):
         return "a {0}".format(self.__class__.__name__.lower())
 
     def validate(self, chunk):
-        val = chunk.contents
-
-        if type(val) == CommentedSeq or type(val) == CommentedMap:
-            raise_exception(
-                "when expecting a {0}".format(self.__class__.__name__.lower()),
-                "found mapping/sequence",
-                chunk,
-            )
-        else:
-            return self.validate_scalar(chunk)
+        chunk.expect_scalar(self.rule_description)
+        return self.validate_scalar(chunk)
 
 
 class Enum(Scalar):
@@ -40,10 +31,9 @@ class Enum(Scalar):
     def validate_scalar(self, chunk):
         val = self._item_validator(chunk)
         if val._value not in self._restricted_to:
-            raise_exception(
+            chunk.expecting_but_found(
                 "when expecting one of: {0}".format(", ".join(self._restricted_to)),
                 "found '{0}'".format(val),
-                chunk,
             )
         else:
             return val
@@ -76,10 +66,9 @@ class Regex(Scalar):
 
     def validate_scalar(self, chunk):
         if re.compile(self._regex).match(chunk.contents) is None:
-            raise_exception(
+            chunk.expecting_but_found(
                 self._matching_message,
                 "found non-matching string",
-                chunk,
             )
         return chunk.contents
 
@@ -100,36 +89,28 @@ class Str(Scalar):
     def validate_scalar(self, chunk):
         return chunk.contents
 
-    def __repr__(self):
-        return u"Str()"
-
 
 class Int(Scalar):
     def validate_scalar(self, chunk):
         val = chunk.contents
         if not utils.is_integer(val):
-            raise_exception(
+            chunk.expecting_but_found(
                 "when expecting an integer",
                 "found non-integer",
-                chunk,
             )
         else:
             return int(val)
-
-    def __repr__(self):
-        return u"Int()"
 
 
 class Bool(Scalar):
     def validate_scalar(self, chunk):
         val = chunk.contents
         if unicode(val).lower() not in constants.BOOL_VALUES:
-            raise_exception(
+            chunk.expecting_but_found(
                 """when expecting a boolean value (one of "{0}")""".format(
                     '", "'.join(constants.BOOL_VALUES)
                 ),
                 "found non-boolean",
-                chunk,
             )
         else:
             if val.lower() in constants.TRUE_VALUES:
@@ -137,40 +118,29 @@ class Bool(Scalar):
             else:
                 return False
 
-    def __repr__(self):
-        return u"Bool()"
-
 
 class Float(Scalar):
     def validate_scalar(self, chunk):
         val = chunk.contents
         if not utils.is_decimal(val):
-            raise_exception(
+            chunk.expecting_but_found(
                 "when expecting a float",
                 "found non-float",
-                chunk,
             )
         else:
             return float(val)
-
-    def __repr__(self):
-        return u"Float()"
 
 
 class Decimal(Scalar):
     def validate_scalar(self, chunk):
         val = chunk.contents
         if not utils.is_decimal(val):
-            raise_exception(
+            chunk.expecting_but_found(
                 "when expecting a decimal",
                 "found non-decimal",
-                chunk,
             )
         else:
             return decimal.Decimal(val)
-
-    def __repr__(self):
-        return u"Decimal()"
 
 
 class Datetime(Scalar):
@@ -178,24 +148,19 @@ class Datetime(Scalar):
         try:
             return dateutil.parser.parse(chunk.contents)
         except ValueError:
-            raise_exception(
+            chunk.expecting_but_found(
                 "when expecting a datetime",
                 "found non-datetime",
-                chunk,
             )
-
-    def __repr__(self):
-        return u"Datetime()"
 
 
 class EmptyNone(Scalar):
     def validate_scalar(self, chunk):
         val = chunk.contents
         if val != "":
-            raise_exception(
+            chunk.expecting_but_found(
                 "when expecting an empty value",
                 "found non-empty value",
-                chunk,
             )
         else:
             return self.empty(chunk)
@@ -203,21 +168,12 @@ class EmptyNone(Scalar):
     def empty(self, chunk):
         return None
 
-    def __repr__(self):
-        return u"EmptyNone()"
-
 
 class EmptyDict(EmptyNone):
     def empty(self, chunk):
         return {}
 
-    def __repr__(self):
-        return u"EmptyDict()"
-
 
 class EmptyList(EmptyNone):
     def empty(self, chunk):
         return []
-
-    def __repr__(self):
-        return u"EmptyList()"

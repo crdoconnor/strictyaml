@@ -1,5 +1,6 @@
 from ruamel.yaml.comments import CommentedSeq, CommentedMap
 from ruamel.yaml import dump, RoundTripDumper
+from strictyaml.exceptions import YAMLValidationError
 from copy import deepcopy
 
 
@@ -14,6 +15,22 @@ class YAMLChunk(object):
             else YAMLPointer()
         self._label = label
         self._strictparsed = deepcopy(document) if strictparsed is None else strictparsed
+    
+    
+    def expecting_but_found(self, expecting, found=None):
+        raise YAMLValidationError(expecting, found, self)
+
+    def expect_sequence(self, expecting="when expecting a sequence"):
+        if not isinstance(self.contents, CommentedSeq):
+            self.expecting_but_found(expecting, "found non-sequence")
+    
+    def expect_mapping(self):
+        if not isinstance(self.contents, CommentedMap):
+            self.expecting_but_found("when expecting a mapping", "found non-mapping")
+    
+    def expect_scalar(self, what):
+        if isinstance(self.contents, CommentedMap) or isinstance(self.contents, CommentedSeq):
+            self.expecting_but_found("when expecting {0}".format(what), "found mapping/sequence")
 
     @property
     def label(self):

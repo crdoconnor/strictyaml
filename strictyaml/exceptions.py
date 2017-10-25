@@ -57,14 +57,6 @@ class DuplicateKeysDisallowed(DisallowedToken):
     MESSAGE = "Duplicate keys not allowed"
 
 
-def raise_exception(context, problem, chunk):
-    raise YAMLValidationError(
-        context,
-        problem,
-        chunk,
-    )
-
-
 def raise_type_error(yaml_object, to_type, alternatives):
     raise TypeError((
         "Cannot cast {0} to {1}.\n"

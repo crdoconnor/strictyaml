@@ -1,5 +1,4 @@
 from ruamel.yaml.comments import CommentedSeq, CommentedMap
-from strictyaml.exceptions import raise_exception
 from strictyaml.validators import Validator
 from strictyaml.scalar import Str
 import sys
@@ -22,20 +21,14 @@ class MapPattern(Validator):
         self._value_validator = value_validator
 
     def validate(self, chunk):
+        chunk.expect_mapping()
         return_snippet = chunk.strictparsed()
 
-        if not isinstance(return_snippet, CommentedMap):
-            raise_exception(
-                "when expecting a mapping",
-                "found non-mapping",
-                chunk,
-            )
-        else:
-            for key, value in chunk.contents.items():
-                valid_key = self._key_validator(chunk.key(key))
-                valid_val = self._value_validator(chunk.val(key))
-                del return_snippet[valid_key]
-                return_snippet[valid_key] = valid_val
+        for key, value in chunk.contents.items():
+            valid_key = self._key_validator(chunk.key(key))
+            valid_val = self._value_validator(chunk.val(key))
+            del return_snippet[valid_key]
+            return_snippet[valid_key] = valid_val
 
         return return_snippet
 
@@ -65,38 +58,30 @@ class Map(Validator):
         ]))
 
     def validate(self, chunk):
+        chunk.expect_mapping()
         return_snippet = chunk.strictparsed()
 
-        if type(chunk.contents) != CommentedMap:
-            raise_exception(
-                "when expecting a mapping",
-                "found non-mapping",
-                chunk,
-            )
-        else:
-            found_keys = set()
-            for key, value in chunk.contents.items():
-                yaml_key = self._key_validator(chunk.key(key))
-                if yaml_key._value not in self._validator_dict.keys():
-                    raise_exception(
-                        u"while parsing a mapping",
-                        u"unexpected key not in schema '{0}'".format(unicode(key)),
-                        chunk.key(key)
-                    )
-
-                found_keys.add(yaml_key)
-                parsed = self._validator_dict[yaml_key](chunk.val(key))
-                del return_snippet[key]
-                return_snippet[yaml_key] = parsed
-
-            if not set(self._required_keys).issubset(found_keys):
-                raise_exception(
+        found_keys = set()
+        for key, value in chunk.contents.items():
+            yaml_key = self._key_validator(chunk.key(key))
+            if yaml_key._value not in self._validator_dict.keys():
+                chunk.key(key).expecting_but_found(
                     u"while parsing a mapping",
-                    u"required key(s) '{0}' not found".format(
-                        "', '".join(sorted(list(set(self._required_keys).difference(found_keys))))
-                    ),
-                    chunk,
+                    u"unexpected key not in schema '{0}'".format(unicode(key))
                 )
+
+            found_keys.add(yaml_key)
+            parsed = self._validator_dict[yaml_key](chunk.val(key))
+            del return_snippet[key]
+            return_snippet[yaml_key] = parsed
+
+        if not set(self._required_keys).issubset(found_keys):
+            chunk.expecting_but_found(
+                u"while parsing a mapping",
+                u"required key(s) '{0}' not found".format(
+                    "', '".join(sorted(list(set(self._required_keys).difference(found_keys))))
+                )
+            )
 
         return return_snippet
 
@@ -109,17 +94,11 @@ class Seq(Validator):
         return "Seq({0})".format(repr(self._validator))
 
     def validate(self, chunk):
+        chunk.expect_sequence()
         return_snippet = chunk.strictparsed()
 
-        if not isinstance(chunk.contents, CommentedSeq):
-            raise_exception(
-                "when expecting a sequence",
-                "found non-sequence",
-                chunk,
-            )
-        else:
-            for i, item in enumerate(chunk.contents):
-                return_snippet[i] = self._validator(chunk.index(i))
+        for i, item in enumerate(chunk.contents):
+            return_snippet[i] = self._validator(chunk.index(i))
 
         return return_snippet
 
@@ -132,24 +111,19 @@ class FixedSeq(Validator):
         return "FixedSeq({0})".format(repr(self._validators))
 
     def validate(self, chunk):
+        chunk.expect_sequence(
+            "when expecting a sequence of {0} elements".format(len(self._validators))
+        )
         return_snippet = chunk.strictparsed()
 
-        if not isinstance(chunk.contents, CommentedSeq):
-            raise_exception(
+        if len(self._validators) != len(chunk.contents):
+            chunk.expecting_but_found(
                 "when expecting a sequence of {0} elements".format(len(self._validators)),
-                "found non-sequence",
-                chunk,
+                "found a sequence of {0} elements".format(len(chunk.contents)),
             )
-        else:
-            if len(self._validators) != len(chunk.contents):
-                raise_exception(
-                    "when expecting a sequence of {0} elements".format(len(self._validators)),
-                    "found a sequence of {0} elements".format(len(chunk.contents)),
-                    chunk,
-                )
-            for i, item_and_val in enumerate(zip(chunk.contents, self._validators)):
-                item, validator = item_and_val
-                return_snippet[i] = validator(chunk.index(i))
+        for i, item_and_val in enumerate(zip(chunk.contents, self._validators)):
+            item, validator = item_and_val
+            return_snippet[i] = validator(chunk.index(i))
 
         return return_snippet
 
@@ -162,26 +136,21 @@ class UniqueSeq(Validator):
         return "UniqueSeq({0})".format(repr(self._validator))
 
     def validate(self, chunk):
+        chunk.expect_sequence(
+            "when expecting a unique sequence"
+        )
         return_snippet = chunk.strictparsed()
 
-        if type(chunk.contents) != CommentedSeq:
-            raise_exception(
-                "when expecting a unique sequence",
-                "found non-sequence",
-                chunk,
-            )
-        else:
-            existing_items = set()
+        existing_items = set()
 
-            for i, item in enumerate(chunk.contents):
-                if item in existing_items:
-                    raise_exception(
-                        "while parsing a sequence",
-                        "duplicate found",
-                        chunk
-                    )
-                else:
-                    existing_items.add(item)
-                    return_snippet[i] = self._validator(chunk.index(i))
+        for i, item in enumerate(chunk.contents):
+            if item in existing_items:
+                chunk.expecting_but_found(
+                    "while parsing a sequence",
+                    "duplicate found"
+                )
+            else:
+                existing_items.add(item)
+                return_snippet[i] = self._validator(chunk.index(i))
 
         return return_snippet
