@@ -1,4 +1,3 @@
-from ruamel.yaml.comments import CommentedSeq, CommentedMap
 from strictyaml.validators import Validator
 from strictyaml.scalar import Str
 import sys
@@ -60,10 +59,10 @@ class Map(Validator):
                     u"while parsing a mapping",
                     u"unexpected key not in schema '{0}'".format(unicode(key))
                 )
-            
+
             found_keys.add(yaml_key)
             chunk.process_key_val(yaml_key, self._validator_dict[yaml_key](chunk.val(key)))
-        
+
         if not set(self._required_keys).issubset(found_keys):
             chunk.while_parsing_found(
                 u"a mapping",
@@ -120,7 +119,7 @@ class UniqueSeq(Validator):
 
     def validate(self, chunk):
         existing_items = set()
-        
+
         for item in chunk.expect_sequence("when expecting a unique sequence"):
             if item.contents in existing_items:
                 chunk.while_parsing_found("a sequence", "duplicate found")

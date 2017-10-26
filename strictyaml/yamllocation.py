@@ -19,11 +19,11 @@ class YAMLChunk(object):
     def keys(self):
         self.expect_mapping()
         return [key for key in self.contents.keys()]
-    
+
     def sequence(self):
         self.expect_sequence()
         return range(len(self.contents))
-    
+
     def process_key_val(self, new_key, new_val):
         strictparsed = self.strictparsed()
         del strictparsed[new_key.text]
@@ -31,7 +31,7 @@ class YAMLChunk(object):
 
     def expecting_but_found(self, expecting, found=None):
         raise YAMLValidationError(expecting, found, self)
-    
+
     def while_parsing_found(self, what, found=None):
         raise YAMLValidationError("while parsing {0}".format(what), found, self)
 
@@ -39,7 +39,7 @@ class YAMLChunk(object):
         if not isinstance(self.contents, CommentedSeq):
             self.expecting_but_found(expecting, "found non-sequence")
         return [self.index(i) for i in range(len(self.contents))]
-    
+
     def process(self, new_item):
         strictparsed = self.pointer.parent().get(self._strictparsed)
         key_or_index = self.pointer._indices[-1][1]
@@ -56,7 +56,7 @@ class YAMLChunk(object):
         if not isinstance(self.contents, CommentedMap):
             self.expecting_but_found("when expecting a mapping", "found non-mapping")
         return [(self.key(key), self.val(key)) for key in self.contents.keys()]
-    
+
     def expect_scalar(self, what):
         if isinstance(self.contents, CommentedMap) or isinstance(self.contents, CommentedSeq):
             self.expecting_but_found("when expecting {0}".format(what), "found mapping/sequence")
@@ -76,8 +76,9 @@ class YAMLChunk(object):
     def fork(self):
         """
         Return a chunk to the same location in a duplicated document.
-        
-        Used when modifying a YAML chunk so that the modification can be validated before changing it.
+
+        Used when modifying a YAML chunk so that the modification can be validated
+        before changing it.
         """
         return YAMLChunk(deepcopy(self._document), pointer=self.pointer, label=self.label)
 
@@ -149,7 +150,7 @@ class YAMLChunk(object):
 
     def contentcopy(self):
         return deepcopy(self._pointer.get(self._document))
-    
+
     def strictparsed(self):
         return self._pointer.get(self._strictparsed)
 
@@ -168,7 +169,7 @@ class YAMLPointer(object):
         new_location = deepcopy(self)
         new_location._indices.append(('val', index))
         return new_location
-    
+
     def is_val(self):
         return self._indices[-1][0] == 'val'
 
@@ -176,7 +177,7 @@ class YAMLPointer(object):
         new_location = deepcopy(self)
         new_location._indices.append(('key', name))
         return new_location
-      
+
     def is_key(self):
         return self._indices[-1][0] == 'key'
 
@@ -192,10 +193,10 @@ class YAMLPointer(object):
         new_location = deepcopy(self)
         new_location._indices.append(('textslice', (start, end)))
         return new_location
-      
+
     def is_textslice(self):
         return self._indices[-1][0] == 'textslice'
-    
+
     def parent(self):
         new_location = deepcopy(self)
         new_location._indices = new_location._indices[:-1]

@@ -17,7 +17,7 @@ class Validator(object):
             chunk=chunk,
             validator=self
         )
-    
+
     def __repr__(self):
         return u"{0}()".format(self.__class__.__name__)
 

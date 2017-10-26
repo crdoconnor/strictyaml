@@ -85,29 +85,6 @@ class YAML(object):
         with comments. This can be fed directly into a ruamel.yaml
         dumper.
         """
-        #def mark_up(original, modified):
-            #if isinstance(original, CommentedMap):
-                #new_commented_map = modified
-
-                #for key, value in original.items():
-                    #modified_value = new_commented_map[key]
-                    #del new_commented_map[key]
-                    #new_commented_map[key] = mark_up(value, modified_value)
-                #return new_commented_map
-            #elif isinstance(original, CommentedSeq):
-                #new_commented_seq = modified
-
-                #for i, item in enumerate(original):
-                    #new_commented_seq[i] = mark_up(item, modified[i])
-                #return new_commented_seq
-            #else:
-                #from ruamel.yaml.scalarstring import ScalarString, PreservedScalarString
-                #if u"\n" in original:
-                    #return PreservedScalarString(original)
-                #else:
-                    #return ScalarString(original)
-
-        #return mark_up(self._chunk.contents, self._chunk.contentcopy())
         return self._chunk.contents
 
     @property
@@ -169,7 +146,7 @@ class YAML(object):
         proposed_chunk = self._chunk.fork()
         proposed_chunk.contents[index] = new_value.as_marked_up()
         proposed_chunk.strictparsed()[index] = deepcopy(new_value.as_marked_up())
-        
+
         if self.is_mapping():
             updated_value = existing_validator(proposed_chunk.val(index))
             updated_value._chunk.make_child_of(self._chunk.val(index))
@@ -179,16 +156,15 @@ class YAML(object):
 
         # If validation succeeds, update for real
         marked_up = new_value.as_marked_up()
-        
+
         # So that the nicer x: | style of text is used instead of
         # x: "text\nacross\nlines"
         if isinstance(marked_up, (str, unicode)):
             if u"\n" in marked_up:
                 marked_up = PreservedScalarString(marked_up)
-                
+
         self._chunk.contents[index] = marked_up
         self._value[YAML(index) if self.is_mapping() else index] = new_value
-
 
     def __delitem__(self, index):
         del self._value[index]

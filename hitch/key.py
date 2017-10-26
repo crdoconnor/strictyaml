@@ -198,7 +198,6 @@ class Engine(BaseEngine):
                 self.current_step.update(contents=output)
             else:
                 raise
-            
 
     def pause(self, message="Pause"):
         import IPython
@@ -220,7 +219,7 @@ def _storybook(settings):
 
 def _personal_settings():
     settings_file = DIR.key.joinpath("personalsettings.yml")
-    
+
     if not settings_file.exists():
         settings_file.write_text((
             "engine:\n"
@@ -251,8 +250,8 @@ def tdd(*keywords):
     settings = _personal_settings().data
     print(
         _storybook(settings['engine'])
-          .with_params(**{"python version": settings['params']['python version']})
-          .shortcut(*keywords).play().report()
+        .with_params(**{"python version": settings['params']['python version']})
+        .shortcut(*keywords).play().report()
     )
 
 
@@ -265,12 +264,12 @@ def regressfile(filename):
     """
     print(
         _storybook({"rewrite": False}).in_filename(filename)
-                                     .with_params(**{"python version": "2.7.10"})
-                                     .ordered_by_name().play().report()
+                                      .with_params(**{"python version": "2.7.10"})
+                                      .ordered_by_name().play().report()
     )
     print(
         _storybook({"rewrite": False}).with_params(**{"python version": "3.5.0"})
-                                     .in_filename(filename).ordered_by_name().play().report()
+                                      .in_filename(filename).ordered_by_name().play().report()
     )
 
 
@@ -279,7 +278,7 @@ def regression():
     """
     Run regression testing - lint and then run all tests.
     """
-    #lint()
+    lint()
     # HACK: Start using hitchbuildpy to get around this.
     Command("touch", DIR.project.joinpath("strictyaml", "representation.py").abspath()).run()
     print(

@@ -1,4 +1,3 @@
-from ruamel.yaml.comments import CommentedSeq, CommentedMap
 from strictyaml.validators import Validator
 from strictyaml import constants
 from strictyaml import utils
