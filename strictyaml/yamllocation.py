@@ -31,14 +31,31 @@ class YAMLChunk(object):
 
     def expecting_but_found(self, expecting, found=None):
         raise YAMLValidationError(expecting, found, self)
+    
+    def while_parsing_found(self, what, found=None):
+        raise YAMLValidationError("while parsing {0}".format(what), found, self)
 
     def expect_sequence(self, expecting="when expecting a sequence"):
         if not isinstance(self.contents, CommentedSeq):
             self.expecting_but_found(expecting, "found non-sequence")
+        return [self.index(i) for i in range(len(self.contents))]
     
+    def process(self, new_item):
+        strictparsed = self.pointer.parent().get(self._strictparsed)
+        key_or_index = self.pointer._indices[-1][1]
+        if self.pointer.is_index():
+            strictparsed[key_or_index] = new_item
+        elif self.pointer.is_key():
+            existing_val = strictparsed[key_or_index]
+            del strictparsed[key_or_index]
+            strictparsed[new_item] = existing_val
+        elif self.pointer.is_val():
+            strictparsed[key_or_index] = new_item
+
     def expect_mapping(self):
         if not isinstance(self.contents, CommentedMap):
             self.expecting_but_found("when expecting a mapping", "found non-mapping")
+        return [(self.key(key), self.val(key)) for key in self.contents.keys()]
     
     def expect_scalar(self, what):
         if isinstance(self.contents, CommentedMap) or isinstance(self.contents, CommentedSeq):
@@ -151,20 +168,37 @@ class YAMLPointer(object):
         new_location = deepcopy(self)
         new_location._indices.append(('val', index))
         return new_location
+    
+    def is_val(self):
+        return self._indices[-1][0] == 'val'
 
     def key(self, name):
         new_location = deepcopy(self)
         new_location._indices.append(('key', name))
         return new_location
+      
+    def is_key(self):
+        return self._indices[-1][0] == 'key'
 
     def index(self, index):
         new_location = deepcopy(self)
         new_location._indices.append(('index', index))
         return new_location
 
+    def is_index(self):
+        return self._indices[-1][0] == 'index'
+
     def textslice(self, start, end):
         new_location = deepcopy(self)
         new_location._indices.append(('textslice', (start, end)))
+        return new_location
+      
+    def is_textslice(self):
+        return self._indices[-1][0] == 'textslice'
+    
+    def parent(self):
+        new_location = deepcopy(self)
+        new_location._indices = new_location._indices[:-1]
         return new_location
 
     def make_child_of(self, pointer):

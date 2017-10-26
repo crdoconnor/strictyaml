@@ -21,11 +21,9 @@ class MapPattern(Validator):
         self._value_validator = value_validator
 
     def validate(self, chunk):
-        for key in chunk.keys():
-            chunk.process_key_val(
-                self._key_validator(chunk.key(key)),
-                self._value_validator(chunk.val(key)),
-            )
+        for key, value in chunk.expect_mapping():
+            key.process(self._key_validator(key))
+            value.process(self._value_validator(value))
         return chunk.strictparsed()
 
     def __repr__(self):
@@ -67,8 +65,8 @@ class Map(Validator):
             chunk.process_key_val(yaml_key, self._validator_dict[yaml_key](chunk.val(key)))
         
         if not set(self._required_keys).issubset(found_keys):
-            chunk.expecting_but_found(
-                u"while parsing a mapping",
+            chunk.while_parsing_found(
+                u"a mapping",
                 u"required key(s) '{0}' not found".format(
                     "', '".join(sorted(list(set(self._required_keys).difference(found_keys))))
                 )
@@ -84,13 +82,9 @@ class Seq(Validator):
         return "Seq({0})".format(repr(self._validator))
 
     def validate(self, chunk):
-        chunk.expect_sequence()
-        return_snippet = chunk.strictparsed()
-
-        for i, item in enumerate(chunk.contents):
-            return_snippet[i] = self._validator(chunk.index(i))
-
-        return return_snippet
+        for item in chunk.expect_sequence():
+            item.process(self._validator(item))
+        return chunk.strictparsed()
 
 
 class FixedSeq(Validator):
@@ -101,21 +95,20 @@ class FixedSeq(Validator):
         return "FixedSeq({0})".format(repr(self._validators))
 
     def validate(self, chunk):
-        chunk.expect_sequence(
+        sequence = chunk.expect_sequence(
             "when expecting a sequence of {0} elements".format(len(self._validators))
         )
-        return_snippet = chunk.strictparsed()
 
-        if len(self._validators) != len(chunk.contents):
+        if len(self._validators) != len(sequence):
             chunk.expecting_but_found(
                 "when expecting a sequence of {0} elements".format(len(self._validators)),
                 "found a sequence of {0} elements".format(len(chunk.contents)),
             )
-        for i, item_and_val in enumerate(zip(chunk.contents, self._validators)):
-            item, validator = item_and_val
-            return_snippet[i] = validator(chunk.index(i))
 
-        return return_snippet
+        for item, validator in zip(sequence, self._validators):
+            item.process(validator(item))
+
+        return chunk.strictparsed()
 
 
 class UniqueSeq(Validator):
@@ -126,21 +119,12 @@ class UniqueSeq(Validator):
         return "UniqueSeq({0})".format(repr(self._validator))
 
     def validate(self, chunk):
-        chunk.expect_sequence(
-            "when expecting a unique sequence"
-        )
-        return_snippet = chunk.strictparsed()
-
         existing_items = set()
-
-        for i, item in enumerate(chunk.contents):
-            if item in existing_items:
-                chunk.expecting_but_found(
-                    "while parsing a sequence",
-                    "duplicate found"
-                )
+        
+        for item in chunk.expect_sequence("when expecting a unique sequence"):
+            if item.contents in existing_items:
+                chunk.while_parsing_found("a sequence", "duplicate found")
             else:
-                existing_items.add(item)
-                return_snippet[i] = self._validator(chunk.index(i))
-
-        return return_snippet
+                existing_items.add(item.contents)
+                item.process(self._validator(item))
+        return chunk.strictparsed()
