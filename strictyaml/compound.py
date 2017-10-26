@@ -21,16 +21,12 @@ class MapPattern(Validator):
         self._value_validator = value_validator
 
     def validate(self, chunk):
-        chunk.expect_mapping()
-        return_snippet = chunk.strictparsed()
-
-        for key, value in chunk.contents.items():
-            valid_key = self._key_validator(chunk.key(key))
-            valid_val = self._value_validator(chunk.val(key))
-            del return_snippet[valid_key]
-            return_snippet[valid_key] = valid_val
-
-        return return_snippet
+        for key in chunk.keys():
+            chunk.process_key_val(
+                self._key_validator(chunk.key(key)),
+                self._value_validator(chunk.val(key)),
+            )
+        return chunk.strictparsed()
 
     def __repr__(self):
         return u"MapPattern({0}, {1})".format(
@@ -58,23 +54,18 @@ class Map(Validator):
         ]))
 
     def validate(self, chunk):
-        chunk.expect_mapping()
-        return_snippet = chunk.strictparsed()
-
         found_keys = set()
-        for key, value in chunk.contents.items():
+        for key in chunk.keys():
             yaml_key = self._key_validator(chunk.key(key))
             if yaml_key._value not in self._validator_dict.keys():
                 chunk.key(key).expecting_but_found(
                     u"while parsing a mapping",
                     u"unexpected key not in schema '{0}'".format(unicode(key))
                 )
-
+            
             found_keys.add(yaml_key)
-            parsed = self._validator_dict[yaml_key](chunk.val(key))
-            del return_snippet[key]
-            return_snippet[yaml_key] = parsed
-
+            chunk.process_key_val(yaml_key, self._validator_dict[yaml_key](chunk.val(key)))
+        
         if not set(self._required_keys).issubset(found_keys):
             chunk.expecting_but_found(
                 u"while parsing a mapping",
@@ -82,8 +73,7 @@ class Map(Validator):
                     "', '".join(sorted(list(set(self._required_keys).difference(found_keys))))
                 )
             )
-
-        return return_snippet
+        return chunk.strictparsed()
 
 
 class Seq(Validator):
