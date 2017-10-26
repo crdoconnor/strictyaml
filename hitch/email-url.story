@@ -9,10 +9,8 @@ Email and URL validators:
       from ensure import Ensure
 
       schema = Map({"a": Email(), "b": Url()})
-    code: |
-      load(yaml_snippet, schema)
   variations:
-    Valid:
+    Valid 1:
       preconditions:
         yaml_snippet: |
           a: billg@microsoft.com
@@ -20,7 +18,7 @@ Email and URL validators:
       scenario:
       - Run:
           code: |
-            Ensure(load(yaml_snippet, schema)).equals({"a": "billg@microsoft.com", "b": "http://www.google.com/"})         
+            Ensure(load(yaml_snippet, schema)).equals({"a": "billg@microsoft.com", "b": "http://www.google.com/"})
 
     Invalid:
       preconditions:
@@ -28,11 +26,13 @@ Email and URL validators:
           a: notanemail
           b: notaurl
       scenario:
-      - Raises exception:
-          exception type: strictyaml.exceptions.YAMLValidationError
-          message: |-
-            when expecting an email address
-            found non-matching string
-              in "<unicode string>", line 1, column 1:
-                a: notanemail
-                 ^ (line: 1)
+      - Run:
+          code: load(yaml_snippet, schema)
+          raises:
+            type: strictyaml.exceptions.YAMLValidationError
+            message: |-
+              when expecting an email address
+              found non-matching string
+                in "<unicode string>", line 1, column 1:
+                  a: notanemail
+                   ^ (line: 1)

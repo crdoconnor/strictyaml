@@ -11,17 +11,18 @@ Handle exceptions:
       b:
         - 1
         - 2
-    code: |
-      load(yaml_snippet, Map({"a": Int(), "b": Map({"x": Int(), "y": Int()})}), label="myfilename")
   scenario:
-  - Raises exception:
-      exception type: strictyaml.exceptions.YAMLValidationError
-      message: |-
-        when expecting a mapping
-          in "myfilename", line 2, column 1:
-            b:
-            ^ (line: 2)
-        found non-mapping
-          in "myfilename", line 4, column 1:
-            - '2'
-            ^ (line: 4)
+  - Run:
+      code: |
+        load(yaml_snippet, Map({"a": Int(), "b": Map({"x": Int(), "y": Int()})}), label="myfilename")
+      raises:
+        type: strictyaml.exceptions.YAMLValidationError
+        message: |-
+          when expecting a mapping
+            in "myfilename", line 2, column 1:
+              b:
+              ^ (line: 2)
+          found non-mapping
+            in "myfilename", line 4, column 1:
+              - '2'
+              ^ (line: 4)

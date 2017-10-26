@@ -15,21 +15,18 @@ Build YAML document:
       ))
   variations:
     Then dump:
-      preconditions:
-        code: print(yaml.as_yaml())
       scenario:
-      - Run code
-      - Output is: |-
-          a: yes
-          b: hello
-          c:
-          - 1
-          - 2
-          - 3
+      - Run:
+          code: print(yaml.as_yaml())
+          will output: |-
+            a: yes
+            b: hello
+            c:
+            - 1
+            - 2
+            - 3
 
     Start line:
-      preconditions:
-        code: |
-          Ensure(yaml.start_line).equals(1)
       scenario:
-      - Run code
+      - Run: |
+          Ensure(yaml.start_line).equals(1)

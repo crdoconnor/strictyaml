@@ -124,10 +124,6 @@ class Engine(BaseEngine):
             else:
                 raise
 
-    @expected_exception(HitchRunPyException)
-    def run_code(self):
-        self.result = self.example_py_code.run()
-
     @expected_exception(NonMatching)
     @expected_exception(HitchRunPyException)
     @validate(
@@ -187,17 +183,6 @@ class Engine(BaseEngine):
                     self.current_step.update(raises=new_raises)
                 else:
                     raise
-
-    @expected_exception(NonMatching)
-    def output_is(self, contents):
-        output = '\n'.join([line.rstrip() for line in self.result.output.split("\n")])
-        try:
-            Templex(contents).assert_match(output)
-        except NonMatching:
-            if self.settings.get("rewrite"):
-                self.current_step.update(contents=output)
-            else:
-                raise
 
     def pause(self, message="Pause"):
         import IPython
@@ -278,7 +263,6 @@ def regression():
     """
     Run regression testing - lint and then run all tests.
     """
-    lint()
     # HACK: Start using hitchbuildpy to get around this.
     Command("touch", DIR.project.joinpath("strictyaml", "representation.py").abspath()).run()
     print(
@@ -288,6 +272,7 @@ def regression():
     print(
         _storybook({}).with_params(**{"python version": "3.5.0"}).ordered_by_name().play().report()
     )
+    lint()
 
 
 def lint():
