@@ -64,11 +64,11 @@ Seq validator:
                 in "<unicode string>", line 1, column 1:
                   a: '1'
                    ^ (line: 1)
-              found non-sequence
+              found a mapping
                 in "<unicode string>", line 3, column 1:
                   c: '3'
                   ^ (line: 3)
-    Invalid nested mapping instead:
+    Invalid nested structure instead:
       preconditions:
         yaml_snippet: |
           - 2
@@ -86,11 +86,10 @@ Seq validator:
                 in "<unicode string>", line 3, column 1:
                   - a:
                   ^ (line: 3)
-              found mapping/sequence
+              found a mapping
                 in "<unicode string>", line 5, column 1:
                     - '2'
                   ^ (line: 5)
-
     Invalid item in sequence:
       preconditions:
         yaml_snippet: |

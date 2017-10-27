@@ -48,7 +48,7 @@ Enum (enum validation):
             type: strictyaml.exceptions.YAMLValidationError
             message: |-
               when expecting one of: A, B, C
-              found 'D'
+              found an arbitrary string
                 in "<unicode string>", line 1, column 1:
                   a: D
                    ^ (line: 1)
@@ -62,7 +62,7 @@ Enum (enum validation):
             type: strictyaml.exceptions.YAMLValidationError
             message: |-
               when expecting one of: A, B, C
-              found ''
+              found a blank string
                 in "<unicode string>", line 1, column 1:
                   a: ''
                    ^ (line: 1)

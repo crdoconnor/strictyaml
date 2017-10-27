@@ -7,13 +7,13 @@ Map with key validator:
   preconditions:
     setup: |
       from collections import OrderedDict
-      from strictyaml import Map, Str, load, Scalar
+      from strictyaml import Map, Str, load, ScalarValidator
       from ensure import Ensure
       
       # This example uses slugify from the "python-slugify" package
       from slugify import slugify
 
-      class Slug(Scalar):
+      class Slug(ScalarValidator):
           def validate_scalar(self, chunk):
               return slugify(unicode(chunk.contents))
           

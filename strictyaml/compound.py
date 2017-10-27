@@ -1,4 +1,5 @@
 from strictyaml.validators import Validator
+from strictyaml.scalar import ScalarValidator
 from strictyaml.scalar import Str
 import sys
 
@@ -17,6 +18,7 @@ class Optional(object):
 class MapPattern(Validator):
     def __init__(self, key_validator, value_validator):
         self._key_validator = key_validator
+        assert isinstance(self._key_validator, ScalarValidator), "key validator must be scalar"
         self._value_validator = value_validator
 
     def validate(self, chunk):
@@ -34,6 +36,7 @@ class Map(Validator):
     def __init__(self, validator, key_validator=None):
         self._validator = validator
         self._key_validator = Str() if key_validator is None else key_validator
+        assert isinstance(self._key_validator, ScalarValidator), "key validator must be scalar"
 
         self._validator_dict = {
             key.key if isinstance(key, Optional) else key: value for key, value in validator.items()
@@ -91,6 +94,8 @@ class Seq(Validator):
 class FixedSeq(Validator):
     def __init__(self, validators):
         self._validators = validators
+        for item in validators:
+            assert isinstance(item, ScalarValidator), "all FixedSeq validators must be scalar"
 
     def __repr__(self):
         return "FixedSeq({0})".format(repr(self._validators))
@@ -113,6 +118,7 @@ class FixedSeq(Validator):
 class UniqueSeq(Validator):
     def __init__(self, validator):
         self._validator = validator
+        assert isinstance(self._validator, ScalarValidator), "UniqueSeq validator must be scalar"
 
     def __repr__(self):
         return "UniqueSeq({0})".format(repr(self._validator))

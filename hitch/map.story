@@ -94,7 +94,7 @@ Mapping:
               in "<unicode string>", line 1, column 1:
                 - '1'
                  ^ (line: 1)
-            found non-mapping
+            found a sequence
               in "<unicode string>", line 3, column 1:
                 - '3'
                 ^ (line: 3)

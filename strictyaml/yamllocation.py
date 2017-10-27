@@ -1,6 +1,7 @@
 from ruamel.yaml.comments import CommentedSeq, CommentedMap
 from ruamel.yaml import dump, RoundTripDumper
 from strictyaml.exceptions import YAMLValidationError
+from strictyaml import utils
 from copy import deepcopy
 
 
@@ -17,15 +18,14 @@ class YAMLChunk(object):
         self._strictparsed = deepcopy(document) if strictparsed is None else strictparsed
 
     def expecting_but_found(self, expecting, found=None):
-        raise YAMLValidationError(expecting, found, self)
+        raise YAMLValidationError(
+            expecting,
+            found if found is not None else "found {0}".format(self.found()),
+            self
+        )
 
     def while_parsing_found(self, what, found=None):
-        raise YAMLValidationError("while parsing {0}".format(what), found, self)
-
-    def expect_sequence(self, expecting="when expecting a sequence"):
-        if not isinstance(self.contents, CommentedSeq):
-            self.expecting_but_found(expecting, "found non-sequence")
-        return [self.index(i) for i in range(len(self.contents))]
+        self.expecting_but_found("while parsing {0}".format(what), found=found)
 
     def process(self, new_item):
         strictparsed = self.pointer.parent().get(self._strictparsed)
@@ -39,14 +39,39 @@ class YAMLChunk(object):
         elif self.pointer.is_val():
             strictparsed[key_or_index] = new_item
 
+    def found(self):
+        if isinstance(self.contents, CommentedSeq):
+            return u"a sequence"
+        elif isinstance(self.contents, CommentedMap):
+            return u"a mapping"
+        elif self.contents == u'':
+            return u"a blank string"
+        elif utils.is_integer(self.contents):
+            return u"an arbitrary integer"
+        elif utils.is_decimal(self.contents):
+            return u"an arbitrary number"
+        else:
+            return u"an arbitrary string"
+
+    def expect_sequence(self, expecting="when expecting a sequence"):
+        if not isinstance(self.contents, CommentedSeq):
+            self.expecting_but_found(expecting, "found {0}".format(self.found()))
+        return [self.index(i) for i in range(len(self.contents))]
+
     def expect_mapping(self):
         if not isinstance(self.contents, CommentedMap):
-            self.expecting_but_found("when expecting a mapping", "found non-mapping")
+            self.expecting_but_found(
+                "when expecting a mapping",
+                "found {0}".format(self.found())
+            )
         return [(self.key(key), self.val(key)) for key in self.contents.keys()]
 
     def expect_scalar(self, what):
-        if isinstance(self.contents, CommentedMap) or isinstance(self.contents, CommentedSeq):
-            self.expecting_but_found("when expecting {0}".format(what), "found mapping/sequence")
+        if isinstance(self.contents, (CommentedMap, CommentedSeq)):
+            self.expecting_but_found(
+                "when expecting {0}".format(what),
+                "found {0}".format(self.found()),
+            )
 
     @property
     def label(self):

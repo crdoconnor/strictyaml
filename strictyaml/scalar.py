@@ -12,7 +12,7 @@ if sys.version_info[0] == 3:
     unicode = str
 
 
-class Scalar(Validator):
+class ScalarValidator(Validator):
     @property
     def rule_description(self):
         return "a {0}".format(self.__class__.__name__.lower())
@@ -27,10 +27,10 @@ class Scalar(Validator):
         )
 
 
-class Enum(Scalar):
+class Enum(ScalarValidator):
     def __init__(self, restricted_to, item_validator=None):
         self._item_validator = Str() if item_validator is None else item_validator
-        assert isinstance(self._item_validator, Scalar)
+        assert isinstance(self._item_validator, ScalarValidator), "item validator must be scalar too"
         self._restricted_to = restricted_to
 
     def validate_scalar(self, chunk):
@@ -38,7 +38,6 @@ class Enum(Scalar):
         if val.scalar not in self._restricted_to:
             chunk.expecting_but_found(
                 "when expecting one of: {0}".format(", ".join(self._restricted_to)),
-                "found '{0}'".format(val),
             )
         else:
             return val
@@ -47,9 +46,10 @@ class Enum(Scalar):
         return u"Enum({0})".format(repr(self._restricted_to))
 
 
-class CommaSeparated(Scalar):
+class CommaSeparated(ScalarValidator):
     def __init__(self, item_validator):
         self._item_validator = item_validator
+        assert isinstance(self._item_validator, ScalarValidator), "item validator must be scalar too"
 
     def validate_scalar(self, chunk):
         return [
@@ -61,7 +61,7 @@ class CommaSeparated(Scalar):
         return "CommaSeparated({0})".format(self._item_validator)
 
 
-class Regex(Scalar):
+class Regex(ScalarValidator):
     def __init__(self, regular_expression):
         """
         Give regular expression, e.g. u'[0-9]'
@@ -90,12 +90,12 @@ class Url(Regex):
         self._matching_message = "when expecting a url"
 
 
-class Str(Scalar):
+class Str(ScalarValidator):
     def validate_scalar(self, chunk):
         return chunk.contents
 
 
-class Int(Scalar):
+class Int(ScalarValidator):
     def validate_scalar(self, chunk):
         val = chunk.contents
         if not utils.is_integer(val):
@@ -107,7 +107,7 @@ class Int(Scalar):
             return int(val)
 
 
-class Bool(Scalar):
+class Bool(ScalarValidator):
     def validate_scalar(self, chunk):
         val = chunk.contents
         if unicode(val).lower() not in constants.BOOL_VALUES:
@@ -124,7 +124,7 @@ class Bool(Scalar):
                 return False
 
 
-class Float(Scalar):
+class Float(ScalarValidator):
     def validate_scalar(self, chunk):
         val = chunk.contents
         if not utils.is_decimal(val):
@@ -136,7 +136,7 @@ class Float(Scalar):
             return float(val)
 
 
-class Decimal(Scalar):
+class Decimal(ScalarValidator):
     def validate_scalar(self, chunk):
         val = chunk.contents
         if not utils.is_decimal(val):
@@ -148,7 +148,7 @@ class Decimal(Scalar):
             return decimal.Decimal(val)
 
 
-class Datetime(Scalar):
+class Datetime(ScalarValidator):
     def validate_scalar(self, chunk):
         try:
             return dateutil.parser.parse(chunk.contents)
@@ -159,7 +159,7 @@ class Datetime(Scalar):
             )
 
 
-class EmptyNone(Scalar):
+class EmptyNone(ScalarValidator):
     def validate_scalar(self, chunk):
         val = chunk.contents
         if val != "":

@@ -61,7 +61,7 @@ Nested mapping validation:
             type: strictyaml.exceptions.YAMLValidationError
             message: |-
               when expecting a mapping
-              found non-mapping
+              found an arbitrary integer
                 in "<unicode string>", line 1, column 1:
                   a: '11'
                    ^ (line: 1)

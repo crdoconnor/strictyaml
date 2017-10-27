@@ -22,7 +22,7 @@ Handle exceptions:
             in "myfilename", line 2, column 1:
               b:
               ^ (line: 2)
-          found non-mapping
+          found a sequence
             in "myfilename", line 4, column 1:
               - '2'
               ^ (line: 4)

@@ -15,7 +15,7 @@ Non-schema validation:
     The Any validator can be used inside fixed structures as well.
   preconditions:
     setup: |
-      from strictyaml import Any, MapPattern, load
+      from strictyaml import Str, Any, MapPattern, load
       from ensure import Ensure
     yaml_snippet: |
       a:
@@ -40,4 +40,4 @@ Non-schema validation:
       scenario:
       - Run:
           code: |
-            Ensure(load(yaml_snippet, MapPattern(Any(), Any()))).equals({"a": {"x": "9", "y": "8"}, "b": "2", "c": "3"})
+            Ensure(load(yaml_snippet, MapPattern(Str(), Any()))).equals({"a": {"x": "9", "y": "8"}, "b": "2", "c": "3"})

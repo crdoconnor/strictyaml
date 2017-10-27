@@ -11,7 +11,7 @@ from strictyaml.representation import YAML
 from strictyaml.validators import Validator
 from strictyaml.validators import OrValidator
 from strictyaml.any_validator import Any
-from strictyaml.scalar import Scalar
+from strictyaml.scalar import ScalarValidator
 from strictyaml.scalar import Enum
 from strictyaml.scalar import Regex
 from strictyaml.scalar import Email
