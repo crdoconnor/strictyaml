@@ -18,8 +18,11 @@ class Optional(object):
 class MapPattern(Validator):
     def __init__(self, key_validator, value_validator):
         self._key_validator = key_validator
-        assert isinstance(self._key_validator, ScalarValidator), "key validator must be scalar"
         self._value_validator = value_validator
+        assert isinstance(self._key_validator, ScalarValidator), \
+            "key_validator must be ScalarValidator"
+        assert isinstance(self._value_validator, Validator), \
+            "value_validator must be Validator"
 
     def validate(self, chunk):
         for key, value in chunk.expect_mapping():
@@ -36,7 +39,8 @@ class Map(Validator):
     def __init__(self, validator, key_validator=None):
         self._validator = validator
         self._key_validator = Str() if key_validator is None else key_validator
-        assert isinstance(self._key_validator, ScalarValidator), "key validator must be scalar"
+        assert isinstance(self._key_validator, ScalarValidator), \
+            "key validator must be ScalarValidator"
 
         self._validator_dict = {
             key.key if isinstance(key, Optional) else key: value for key, value in validator.items()
@@ -95,7 +99,8 @@ class FixedSeq(Validator):
     def __init__(self, validators):
         self._validators = validators
         for item in validators:
-            assert isinstance(item, ScalarValidator), "all FixedSeq validators must be scalar"
+            assert isinstance(item, Validator),\
+                "all FixedSeq validators must be Validators"
 
     def __repr__(self):
         return "FixedSeq({0})".format(repr(self._validators))
@@ -118,7 +123,8 @@ class FixedSeq(Validator):
 class UniqueSeq(Validator):
     def __init__(self, validator):
         self._validator = validator
-        assert isinstance(self._validator, ScalarValidator), "UniqueSeq validator must be scalar"
+        assert isinstance(self._validator, ScalarValidator), \
+            "UniqueSeq validator must be ScalarValidator"
 
     def __repr__(self):
         return "UniqueSeq({0})".format(repr(self._validator))

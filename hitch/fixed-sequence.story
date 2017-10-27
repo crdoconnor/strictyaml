@@ -5,10 +5,10 @@ Fixed length sequences (FixedSeq):
     of different (or the same) types.
   preconditions:
     setup: |
-      from strictyaml import FixedSeq, Str, Int, Float, YAMLValidationError, load
+      from strictyaml import FixedSeq, Str, Map, Int, Float, YAMLValidationError, load
       from ensure import Ensure
 
-      schema = FixedSeq([Int(), Str(), Float()])
+      schema = FixedSeq([Int(), Map({"x": Str()}), Float()])
     code: |
       load(yaml_snippet, schema)
   variations:
@@ -16,12 +16,12 @@ Fixed length sequences (FixedSeq):
       preconditions:
         yaml_snippet: |
           - 1
-          - a
+          - x: 5
           - 2.5
       scenario:
       - Run:
           code: |
-            Ensure(load(yaml_snippet, schema)).equals([1, "a", 2.5, ])
+            Ensure(load(yaml_snippet, schema)).equals([1, {"x": "5"}, 2.5, ])
 
     Invalid list 1:
       preconditions:
@@ -54,14 +54,11 @@ Fixed length sequences (FixedSeq):
       - Raises exception:
           exception type: strictyaml.exceptions.YAMLValidationError
           message: |-
-            when expecting a float
-              in "<unicode string>", line 3, column 1:
-                - a:
-                ^ (line: 3)
-            found a mapping
-              in "<unicode string>", line 5, column 1:
-                  - '2'
-                ^ (line: 5)
+            when expecting a mapping
+            found arbitrary text
+              in "<unicode string>", line 2, column 1:
+                - a
+                ^ (line: 2)
 
     Invalid list 3:
       preconditions:

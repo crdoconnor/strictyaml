@@ -25,7 +25,7 @@ class ScalarValidator(Validator):
             chunk=chunk,
             validator=self,
         )
-    
+
     def validate_scalar(self, chunk):
         raise NotImplementedError("validate_scalar(self, chunk) must be implemented")
 
