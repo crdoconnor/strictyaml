@@ -52,11 +52,10 @@ Optional validation:
             type: strictyaml.exceptions.YAMLValidationError
             message: |-
               when expecting a boolean value (one of "yes", "true", "on", "1", "y", "no", "false", "off", "0", "n")
-              found non-boolean
+              found an arbitrary integer
                 in "<unicode string>", line 2, column 1:
                   b: '2'
                   ^ (line: 2)
-
     Invalid 2:
       preconditions:
         yaml_snippet: |

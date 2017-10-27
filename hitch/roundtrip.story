@@ -52,11 +52,10 @@ Roundtripped YAML:
                 in "None", line 1, column 1:
                   not an integer
                    ^ (line: 1)
-              found non-integer
+              found arbitrary text
                 in "None", line 2, column 1:
                   ...
                   ^ (line: 2)
-
     Modified with float:
       scenario:
       - run:

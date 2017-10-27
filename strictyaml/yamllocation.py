@@ -51,7 +51,7 @@ class YAMLChunk(object):
         elif utils.is_decimal(self.contents):
             return u"an arbitrary number"
         else:
-            return u"an arbitrary string"
+            return u"arbitrary text"
 
     def expect_sequence(self, expecting="when expecting a sequence"):
         if not isinstance(self.contents, CommentedSeq):

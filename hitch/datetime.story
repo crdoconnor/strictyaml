@@ -55,8 +55,7 @@ Datetime:
             type: strictyaml.exceptions.YAMLValidationError
             message: |-
               when expecting a datetime
-              found non-datetime
+              found arbitrary text
                 in "<unicode string>", line 2, column 1:
                   datetime1: "\xE2"
                   ^ (line: 2)
-

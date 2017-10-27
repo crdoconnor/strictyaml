@@ -85,7 +85,7 @@ Decimal:
           exception type: strictyaml.exceptions.YAMLValidationError
           message: |-
             when expecting a decimal
-            found non-decimal
+            found arbitrary text
               in "<unicode string>", line 1, column 1:
                 a: string
                  ^ (line: 1)

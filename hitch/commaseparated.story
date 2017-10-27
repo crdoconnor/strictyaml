@@ -47,7 +47,7 @@ Comma separated:
                 in "<unicode string>", line 2, column 1:
                   
                   ^ (line: 2)
-              found non-integer
+              found arbitrary text
                 in "<unicode string>", line 1, column 1:
                   a: 1, x, 3
                    ^ (line: 1)

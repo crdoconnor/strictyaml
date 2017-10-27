@@ -54,7 +54,7 @@ Map Pattern:
             type: strictyaml.exceptions.YAMLValidationError
             message: |-
               when expecting an integer
-              found non-integer
+              found arbitrary text
                 in "<unicode string>", line 1, column 1:
                   b: b
                    ^ (line: 1)
@@ -70,7 +70,7 @@ Map Pattern:
             type: strictyaml.exceptions.YAMLValidationError
             message: |-
               when expecting an integer
-              found non-integer
+              found arbitrary text
                 in "<unicode string>", line 1, column 1:
                   a: a
                    ^ (line: 1)
@@ -87,7 +87,7 @@ Map Pattern:
             type: strictyaml.exceptions.YAMLValidationError
             message: |-
               when expecting an integer
-              found non-integer
+              found arbitrary text
                 in "<unicode string>", line 2, column 1:
                   b: "y\xE2s"
                   ^ (line: 2)

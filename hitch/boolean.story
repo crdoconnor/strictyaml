@@ -107,7 +107,7 @@ Boolean validation:
             type: strictyaml.exceptions.YAMLValidationError
             message: |-
               when expecting a boolean value (one of "yes", "true", "on", "1", "y", "no", "false", "off", "0", "n")
-              found non-boolean
+              found arbitrary text
                 in "<unicode string>", line 1, column 1:
                   a: "y\xE2s"
                    ^ (line: 1)

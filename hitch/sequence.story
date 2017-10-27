@@ -102,7 +102,7 @@ Seq validator:
             type: strictyaml.exceptions.YAMLValidationError
             message: |-
               when expecting an integer
-              found non-integer
+              found an arbitrary number
                 in "<unicode string>", line 1, column 1:
                   - '1.1'
                    ^ (line: 1)
@@ -119,11 +119,10 @@ Seq validator:
             type: strictyaml.exceptions.YAMLValidationError
             message: |-
               when expecting an integer
-              found non-integer
+              found an arbitrary number
                 in "<unicode string>", line 3, column 1:
                   - '3.4'
                   ^ (line: 3)
-
 Modify nested sequence:
   based on: strictyaml
   preconditions:

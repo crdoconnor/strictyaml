@@ -58,9 +58,9 @@ A YAMLError will be raised if there are syntactic problems, violations of your s
 .. code-block:: python
 
    >>> try:
-   >>>     person = load(yaml_str, schema)
-   >>> except YAMLError as error:
-   >>>     print(error)
+   ...     person = load(yaml_str, schema)
+   ... except YAMLError as error:
+   ...     print(error)
 
    while parsing a mapping
      in "<unicode string>", line 1, column 1:

@@ -64,7 +64,7 @@ Empty key validation:
             type: strictyaml.exceptions.YAMLValidationError
             message: |-
               when expecting an empty value
-              found non-empty value
+              found arbitrary text
                 in "<unicode string>", line 1, column 1:
                   a: C
                    ^ (line: 1)

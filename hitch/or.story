@@ -47,7 +47,7 @@ Or validation:
           exception type: strictyaml.exceptions.YAMLValidationError
           message: |-
             when expecting an integer
-            found non-integer
+            found arbitrary text
               in "<unicode string>", line 1, column 1:
                 a: A
                  ^ (line: 1)

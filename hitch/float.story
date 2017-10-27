@@ -77,7 +77,7 @@ Floats:
             type: strictyaml.exceptions.YAMLValidationError
             message: |-
               when expecting a float
-              found non-float
+              found arbitrary text
                 in "<unicode string>", line 1, column 1:
                   a: string
                    ^ (line: 1)

@@ -25,6 +25,9 @@ class ScalarValidator(Validator):
             chunk=chunk,
             validator=self,
         )
+    
+    def validate_scalar(self, chunk):
+        raise NotImplementedError("validate_scalar(self, chunk) must be implemented")
 
 
 class Enum(ScalarValidator):
@@ -103,7 +106,6 @@ class Int(ScalarValidator):
         if not utils.is_integer(val):
             chunk.expecting_but_found(
                 "when expecting an integer",
-                "found non-integer",
             )
         else:
             return int(val)
@@ -117,7 +119,6 @@ class Bool(ScalarValidator):
                 """when expecting a boolean value (one of "{0}")""".format(
                     '", "'.join(constants.BOOL_VALUES)
                 ),
-                "found non-boolean",
             )
         else:
             if val.lower() in constants.TRUE_VALUES:
@@ -132,7 +133,6 @@ class Float(ScalarValidator):
         if not utils.is_decimal(val):
             chunk.expecting_but_found(
                 "when expecting a float",
-                "found non-float",
             )
         else:
             return float(val)
@@ -144,7 +144,6 @@ class Decimal(ScalarValidator):
         if not utils.is_decimal(val):
             chunk.expecting_but_found(
                 "when expecting a decimal",
-                "found non-decimal",
             )
         else:
             return decimal.Decimal(val)
@@ -157,7 +156,6 @@ class Datetime(ScalarValidator):
         except ValueError:
             chunk.expecting_but_found(
                 "when expecting a datetime",
-                "found non-datetime",
             )
 
 
@@ -167,7 +165,6 @@ class EmptyNone(ScalarValidator):
         if val != "":
             chunk.expecting_but_found(
                 "when expecting an empty value",
-                "found non-empty value",
             )
         else:
             return self.empty(chunk)
