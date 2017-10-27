@@ -23,7 +23,6 @@ class MapPattern(Validator):
         for key, value in chunk.expect_mapping():
             key.process(self._key_validator(key))
             value.process(self._value_validator(value))
-        return chunk.strictparsed()
 
     def __repr__(self):
         return u"MapPattern({0}, {1})".format(
@@ -57,15 +56,15 @@ class Map(Validator):
         for key, value in items:
             yaml_key = self._key_validator(key)
 
-            if yaml_key._value not in self._validator_dict.keys():
+            if yaml_key.scalar not in self._validator_dict.keys():
                 key.expecting_but_found(
                     u"while parsing a mapping",
-                    u"unexpected key not in schema '{0}'".format(unicode(yaml_key._value))
+                    u"unexpected key not in schema '{0}'".format(unicode(yaml_key.scalar))
                 )
 
-            value.process(self._validator_dict[yaml_key._value](value))
+            value.process(self._validator_dict[yaml_key.scalar](value))
             key.process(yaml_key)
-            found_keys.add(yaml_key._value)
+            found_keys.add(yaml_key.scalar)
 
         if not set(self._required_keys).issubset(found_keys):
             chunk.while_parsing_found(
@@ -74,8 +73,6 @@ class Map(Validator):
                     "', '".join(sorted(list(set(self._required_keys).difference(found_keys))))
                 )
             )
-
-        return chunk.strictparsed()
 
 
 class Seq(Validator):
@@ -112,8 +109,6 @@ class FixedSeq(Validator):
         for item, validator in zip(sequence, self._validators):
             item.process(validator(item))
 
-        return chunk.strictparsed()
-
 
 class UniqueSeq(Validator):
     def __init__(self, validator):
@@ -131,4 +126,3 @@ class UniqueSeq(Validator):
             else:
                 existing_items.add(item.contents)
                 item.process(self._validator(item))
-        return chunk.strictparsed()

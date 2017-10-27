@@ -1,4 +1,5 @@
 from strictyaml.validators import Validator
+from strictyaml.representation import YAML
 from strictyaml import constants
 from strictyaml import utils
 import dateutil.parser
@@ -16,9 +17,14 @@ class Scalar(Validator):
     def rule_description(self):
         return "a {0}".format(self.__class__.__name__.lower())
 
-    def validate(self, chunk):
+    def __call__(self, chunk):
         chunk.expect_scalar(self.rule_description)
-        return self.validate_scalar(chunk)
+        return YAML(
+            self.validate_scalar(chunk),
+            text=chunk.contents if isinstance(chunk.contents, (unicode, str)) else None,
+            chunk=chunk,
+            validator=self,
+        )
 
 
 class Enum(Scalar):
@@ -29,7 +35,7 @@ class Enum(Scalar):
 
     def validate_scalar(self, chunk):
         val = self._item_validator(chunk)
-        if val._value not in self._restricted_to:
+        if val.scalar not in self._restricted_to:
             chunk.expecting_but_found(
                 "when expecting one of: {0}".format(", ".join(self._restricted_to)),
                 "found '{0}'".format(val),

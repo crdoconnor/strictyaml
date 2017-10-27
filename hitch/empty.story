@@ -39,11 +39,15 @@ Empty key validation:
           code: |
             Ensure(load(yaml_snippet, Map({"a": EmptyNone() | Enum(["A", "B",])}))).equals({"a": "A"})
 
-    Beware combining EmptyNone with Strings:
+    Combine Str with EmptyNone and Str is evaluated first:
       scenario:
       - Run:
           code: |
             Ensure(load(yaml_snippet, Map({"a": Str() | EmptyNone()}))).equals({"a": ""})
+
+
+    Combine EmptyNone with Str and Str is evaluated last:
+      scenario:
       - Run:
           code: |
             Ensure(load(yaml_snippet, Map({"a": EmptyNone() | Str()}))).equals({"a": None})

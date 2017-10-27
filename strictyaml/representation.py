@@ -252,6 +252,12 @@ class YAML(object):
         return not isinstance(self._value, CommentedSeq) \
             and not isinstance(self._value, CommentedMap)
 
+    @property
+    def scalar(self):
+        if isinstance(self._value, (CommentedMap, CommentedSeq)):
+            raise TypeError("{0} has no scalar value.".format(repr(self)))
+        return self._value
+
     def document(self):
         return self._chunk.document
 

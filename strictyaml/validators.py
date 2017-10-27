@@ -11,11 +11,12 @@ class Validator(object):
         return OrValidator(self, other)
 
     def __call__(self, chunk):
+        self.validate(chunk)
         return YAML(
-            self.validate(chunk),
+            chunk.strictparsed(),
             text=chunk.contents if isinstance(chunk.contents, (unicode, str)) else None,
             chunk=chunk,
-            validator=self
+            validator=self,
         )
 
     def __repr__(self):
@@ -27,10 +28,10 @@ class OrValidator(Validator):
         self._validator_a = validator_a
         self._validator_b = validator_b
 
-    def validate(self, chunk):
+    def __call__(self, chunk):
         try:
             return self._validator_a(chunk)
-        except YAMLValidationError:
+        except YAMLValidationError as error:
             return self._validator_b(chunk)
 
     def __repr__(self):
