@@ -273,6 +273,8 @@ def regression():
         _storybook({}).with_params(**{"python version": "3.5.0"}).ordered_by_name().play().report()
     )
     lint()
+    doctest()
+    doctest(version="2.7.10")
 
 
 def lint():
