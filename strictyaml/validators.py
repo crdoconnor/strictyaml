@@ -26,7 +26,7 @@ class Validator(object):
 class OrValidator(Validator):
     def __init__(self, validator_a, validator_b):
         assert isinstance(validator_a, Validator), "validator_a must be a Validator"
-        assert isinstance(validator_b, Validator), "validator_a must be a Validator"
+        assert isinstance(validator_b, Validator), "validator_b must be a Validator"
         self._validator_a = validator_a
         self._validator_b = validator_b
 
