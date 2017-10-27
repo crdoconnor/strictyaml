@@ -28,5 +28,6 @@ Build YAML document:
 
     Start line:
       scenario:
-      - Run: |
-          Ensure(yaml.start_line).equals(1)
+      - Run:
+          code: |
+            Ensure(yaml.start_line).equals(1)

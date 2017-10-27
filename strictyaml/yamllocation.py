@@ -16,19 +16,6 @@ class YAMLChunk(object):
         self._label = label
         self._strictparsed = deepcopy(document) if strictparsed is None else strictparsed
 
-    def keys(self):
-        self.expect_mapping()
-        return [key for key in self.contents.keys()]
-
-    def sequence(self):
-        self.expect_sequence()
-        return range(len(self.contents))
-
-    def process_key_val(self, new_key, new_val):
-        strictparsed = self.strictparsed()
-        del strictparsed[new_key.text]
-        strictparsed[new_key] = new_val
-
     def expecting_but_found(self, expecting, found=None):
         raise YAMLValidationError(expecting, found, self)
 
