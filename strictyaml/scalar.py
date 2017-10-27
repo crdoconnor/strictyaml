@@ -21,7 +21,7 @@ class Scalar(Validator):
         chunk.expect_scalar(self.rule_description)
         return YAML(
             self.validate_scalar(chunk),
-            text=chunk.contents if isinstance(chunk.contents, (unicode, str)) else None,
+            text=chunk.contents,
             chunk=chunk,
             validator=self,
         )

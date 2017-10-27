@@ -14,7 +14,7 @@ class Validator(object):
         self.validate(chunk)
         return YAML(
             chunk.strictparsed(),
-            text=chunk.contents if isinstance(chunk.contents, (unicode, str)) else None,
+            text=None,
             chunk=chunk,
             validator=self,
         )
