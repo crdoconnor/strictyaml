@@ -30,7 +30,8 @@ class ScalarValidator(Validator):
 class Enum(ScalarValidator):
     def __init__(self, restricted_to, item_validator=None):
         self._item_validator = Str() if item_validator is None else item_validator
-        assert isinstance(self._item_validator, ScalarValidator), "item validator must be scalar too"
+        assert isinstance(self._item_validator, ScalarValidator), \
+            "item validator must be scalar too"
         self._restricted_to = restricted_to
 
     def validate_scalar(self, chunk):
@@ -49,7 +50,8 @@ class Enum(ScalarValidator):
 class CommaSeparated(ScalarValidator):
     def __init__(self, item_validator):
         self._item_validator = item_validator
-        assert isinstance(self._item_validator, ScalarValidator), "item validator must be scalar too"
+        assert isinstance(self._item_validator, ScalarValidator), \
+            "item validator must be scalar too"
 
     def validate_scalar(self, chunk):
         return [
