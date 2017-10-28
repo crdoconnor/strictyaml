@@ -39,10 +39,19 @@ class YAMLChunk(object):
         elif self.pointer.is_val():
             strictparsed[key_or_index] = new_item
 
+    def is_sequence(self):
+        return isinstance(self.contents, CommentedSeq)
+
+    def is_mapping(self):
+        return isinstance(self.contents, CommentedMap)
+
+    def is_scalar(self):
+        return not isinstance(self.contents, (CommentedMap, CommentedSeq))
+
     def found(self):
-        if isinstance(self.contents, CommentedSeq):
+        if self.is_sequence():
             return u"a sequence"
-        elif isinstance(self.contents, CommentedMap):
+        elif self.is_mapping():
             return u"a mapping"
         elif self.contents == u'':
             return u"a blank string"
@@ -54,12 +63,12 @@ class YAMLChunk(object):
             return u"arbitrary text"
 
     def expect_sequence(self, expecting="when expecting a sequence"):
-        if not isinstance(self.contents, CommentedSeq):
+        if not self.is_sequence():
             self.expecting_but_found(expecting, "found {0}".format(self.found()))
         return [self.index(i) for i in range(len(self.contents))]
 
     def expect_mapping(self):
-        if not isinstance(self.contents, CommentedMap):
+        if not self.is_mapping():
             self.expecting_but_found(
                 "when expecting a mapping",
                 "found {0}".format(self.found())
@@ -67,7 +76,7 @@ class YAMLChunk(object):
         return [(self.key(key), self.val(key)) for key in self.contents.keys()]
 
     def expect_scalar(self, what):
-        if isinstance(self.contents, (CommentedMap, CommentedSeq)):
+        if not self.is_scalar():
             self.expecting_but_found(
                 "when expecting {0}".format(what),
                 "found {0}".format(self.found()),
@@ -98,12 +107,11 @@ class YAMLChunk(object):
         """
         Used when inserting a chunk of YAML into another chunk.
         """
-        contents = self.contents
-        if isinstance(contents, CommentedMap):
+        if self.is_mapping():
             for key, value in self.contents.items():
                 self.key(key).pointer.make_child_of(chunk.pointer)
                 self.val(key).make_child_of(chunk)
-        elif isinstance(contents, CommentedSeq):
+        elif self.is_sequence():
             for index, item in enumerate(self.contents):
                 self.index(index).make_child_of(chunk)
         else:

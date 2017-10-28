@@ -92,7 +92,6 @@ class Seq(Validator):
     def validate(self, chunk):
         for item in chunk.expect_sequence():
             item.process(self._validator(item))
-        return chunk.strictparsed()
 
 
 class FixedSeq(Validator):
