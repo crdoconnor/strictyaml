@@ -19,6 +19,3 @@ class Any(Validator):
     """
     def validate(self, chunk):
         return schema_from_data(chunk.contents)(chunk)
-
-    def __repr__(self):
-        return u"Any()"

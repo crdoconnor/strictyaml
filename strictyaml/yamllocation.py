@@ -31,13 +31,27 @@ class YAMLChunk(object):
         strictparsed = self.pointer.parent().get(self._strictparsed)
         key_or_index = self.pointer._indices[-1][1]
         if self.pointer.is_index():
-            strictparsed[key_or_index] = new_item
+            if hasattr(strictparsed, '_value'):
+                strictparsed._value[key_or_index] = new_item
+            else:
+                strictparsed[key_or_index] = new_item
         elif self.pointer.is_key():
-            existing_val = strictparsed[key_or_index]
-            del strictparsed[key_or_index]
-            strictparsed[new_item] = existing_val
+            if hasattr(strictparsed, '_value'):
+                existing_val = strictparsed._value[key_or_index]
+                del strictparsed._value[key_or_index]
+                strictparsed._value[new_item] = existing_val
+            else:
+                existing_val = strictparsed[key_or_index]
+                del strictparsed[key_or_index]
+                strictparsed[new_item] = existing_val
         elif self.pointer.is_val():
-            strictparsed[key_or_index] = new_item
+            if hasattr(strictparsed, '_value'):
+                strictparsed._value[key_or_index] = new_item
+            else:
+                strictparsed[key_or_index] = new_item
+    
+    def validate(self, schema):
+        schema(self)
 
     def is_sequence(self):
         return isinstance(self.contents, CommentedSeq)
