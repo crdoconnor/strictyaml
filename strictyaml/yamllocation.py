@@ -49,7 +49,7 @@ class YAMLChunk(object):
                 strictparsed._value[key_or_index] = new_item
             else:
                 strictparsed[key_or_index] = new_item
-    
+
     def validate(self, schema):
         schema(self)
 

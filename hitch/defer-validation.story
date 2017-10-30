@@ -8,7 +8,7 @@ Deferred validation:
     of the document validation depends upon another.
   preconditions:
     setup: |
-      from strictyaml import Str, Int, Map, Seq, Defer, Any, load
+      from strictyaml import Str, Int, Map, Seq, Any, load
       from ensure import Ensure
 
       overall_schema = Map({"capitals": Any(), "countries": Seq(Str())})

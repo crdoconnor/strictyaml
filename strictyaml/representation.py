@@ -58,7 +58,7 @@ class YAML(object):
 
     def __unicode__(self):
         return self.__str__()
-  
+
     def revalidate(self, schema):
         schema(self._chunk)
 
