@@ -1,4 +1,4 @@
-Deferred validation:
+Revalidation:
   based on: strictyaml
   description: |
     When parsing a YAML document you may wish to validate part of the
@@ -31,7 +31,7 @@ Deferred validation:
 
             Ensure(parsed.data['capitals']['UK']).equals(1)
 
-    Parse error on revalidation:
+    Parse error:
       preconditions:
         yaml_snippet: |
           capitals:
