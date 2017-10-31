@@ -22,14 +22,23 @@ Revalidation:
         - Germany
         - UK
   variations:
-    Parse correctly:
+    Reparse mapping:
       scenario:
       - Run:
           code: |
             Ensure(parsed.data['capitals']['UK']).equals("1")
             parsed['capitals'].revalidate(Map({capital: Int() for capital in parsed.data['countries']}))
-
             Ensure(parsed.data['capitals']['UK']).equals(1)
+
+    Reparse scalar:
+      scenario:
+      - Run:
+          code: |
+            Ensure(parsed.data['capitals']['UK']).equals("1")
+            parsed['capitals']['UK'].revalidate(Int())
+            
+            Ensure(parsed.data['capitals']['UK']).equals(1)
+            Ensure(parsed['capitals']['UK'].data).is_an(int)
 
     Parse error:
       preconditions:

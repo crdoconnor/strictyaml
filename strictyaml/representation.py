@@ -60,7 +60,10 @@ class YAML(object):
         return self.__str__()
 
     def revalidate(self, schema):
-        schema(self._chunk)
+        if self.is_scalar():
+            self._value = schema(self._chunk)._value
+        else:
+            schema(self._chunk)
 
     @property
     def data(self):
