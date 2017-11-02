@@ -25,17 +25,19 @@ Simple example:
   name: Ford Prefect
   age: 42
   possessions:
-    - Towel
+  - Towel
 
 Default parse result:
 
 .. code-block:: python
 
    >>> strictyaml.load(yaml_str)
-   YAML({'possessions': ['Towel'], 'age': '42', 'name': 'Ford Prefect'})
+   YAML(OrderedDict([('name', 'Ford Prefect'), ('age', '42'), ('possessions', ['Towel'])]))
 
-   >>> strictyaml.load(yaml_str).data
-   {"name": "Ford Prefect", "age": "42", "possessions": ["Towel", ]}   # All data is str, list or dict
+   >>> strictyaml.load(yaml_str).data    # All data is string, list or OrderedDict
+   OrderedDict([('name', 'Ford Prefect'),
+             ('age', '42'),
+             ('possessions', ['Towel'])])
 
 Using a schema:
 
@@ -45,15 +47,16 @@ Using a schema:
    >>> schema = Map({"name": Str(), "age": Int(), "possessions": Seq(Str())})
    >>> person = load(yaml_str, schema)
    >>> person.data == {"name": "Ford Prefect", "age": 42, "possessions": ["Towel", ]}     # 42 is now an int
+   True
 
 A YAMLError will be raised if there are syntactic problems, violations of your schema or use of disallowed YAML features:
 
 
 .. code-block:: yaml
 
-  # All about the character
-  name: Ford Prefect
-  age: 42
+   # All about the character
+   name: Ford Prefect
+   age: 42
 
 .. code-block:: python
 
@@ -82,7 +85,7 @@ If parsed correctly you can modify values and write out the YAML with comments p
    name: Ford Prefect
    age: 43
    possessions:
-     - Towel
+   - Towel
 
 As well as look up line numbers:
 
