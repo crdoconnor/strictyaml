@@ -16,16 +16,40 @@ class Optional(object):
 
 
 class MapPattern(Validator):
-    def __init__(self, key_validator, value_validator):
+    def __init__(self, key_validator, value_validator, minimum_keys=None, maximum_keys=None):
         self._key_validator = key_validator
         self._value_validator = value_validator
+        self._maximum_keys = maximum_keys
+        self._minimum_keys = minimum_keys
         assert isinstance(self._key_validator, ScalarValidator), \
             "key_validator must be ScalarValidator"
         assert isinstance(self._value_validator, Validator), \
             "value_validator must be Validator"
+        assert isinstance(maximum_keys, (type(None), int)), \
+            "maximum_keys must be an integer"
+        assert isinstance(minimum_keys, (type(None), int)), \
+            "maximum_keys must be an integer"
 
     def validate(self, chunk):
-        for key, value in chunk.expect_mapping():
+        items = chunk.expect_mapping()
+
+        if self._maximum_keys is not None and len(items) > self._maximum_keys:
+            chunk.expecting_but_found(
+                u"while parsing a mapping",
+                u"expected a maximum of {0} key{1}, found {2}.".format(
+                    self._maximum_keys, u"s" if self._maximum_keys > 1 else u"", len(items)
+                )
+            )
+
+        if self._minimum_keys is not None and len(items) < self._minimum_keys:
+            chunk.expecting_but_found(
+                u"while parsing a mapping",
+                u"expected a minimum of {0} key{1}, found {2}.".format(
+                    self._minimum_keys, u"s" if self._minimum_keys > 1 else u"", len(items)
+                )
+            )
+
+        for key, value in items:
             key.process(self._key_validator(key))
             value.process(self._value_validator(value))
 

@@ -74,6 +74,43 @@ Map Pattern:
                 in "<unicode string>", line 1, column 1:
                   a: a
                    ^ (line: 1)
+
+    More than the maximum number of keys:
+      preconditions:
+        yaml_snippet: |
+          â: 1
+          b: 2
+      scenario:
+      - Run:
+          code: load(yaml_snippet, MapPattern(Str(), Int(), maximum_keys=1))
+          raises:
+            type: strictyaml.exceptions.YAMLValidationError
+            message: |-
+              while parsing a mapping
+                in "<unicode string>", line 1, column 1:
+                  "\xE2": '1'
+                   ^ (line: 1)
+              expected a maximum of 1 key, found 2.
+                in "<unicode string>", line 2, column 1:
+                  b: '2'
+                  ^ (line: 2)
+
+    Fewer than the minimum number of keys:
+      preconditions:
+        yaml_snippet: |
+          â: 1
+      scenario:
+      - Run:
+          code: load(yaml_snippet, MapPattern(Str(), Int(), minimum_keys=2))
+          raises:
+            type: strictyaml.exceptions.YAMLValidationError
+            message: |-
+              while parsing a mapping
+              expected a minimum of 2 keys, found 1.
+                in "<unicode string>", line 1, column 1:
+                  "\xE2": '1'
+                   ^ (line: 1)
+
     Invalid with non-ascii:
       preconditions:
         yaml_snippet: |
