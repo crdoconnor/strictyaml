@@ -20,7 +20,7 @@ from templex import Templex, NonMatching
 class Engine(BaseEngine):
     """Python engine for running tests."""
     schema = StorySchema(
-        preconditions={
+        given={
             Optional("yaml_snippet"): Str(),
             Optional("yaml_snippet_1"): Str(),
             Optional("yaml_snippet_2"): Str(),
@@ -57,7 +57,7 @@ class Engine(BaseEngine):
             self.path.profile.mkdir()
 
         self.python_package = hitchpython.PythonPackage(
-            self.preconditions['python version']
+            self.given['python version']
         )
         self.python_package.build()
 
@@ -77,17 +77,17 @@ class Engine(BaseEngine):
                 run(self.pip("uninstall", "strictyaml", "-y").ignore_errors())
                 run(self.pip("install", ".").in_dir(self.path.project))
                 run(self.pip("install", "ruamel.yaml=={0}".format(
-                    self.preconditions["ruamel version"]
+                    self.given["ruamel version"]
                 )))
 
         self.example_py_code = ExamplePythonCode(self.python, self.path.state)\
-            .with_code(self.preconditions.get('code', ''))\
-            .with_setup_code(self.preconditions.get('setup', ''))\
+            .with_code(self.given.get('code', ''))\
+            .with_setup_code(self.given.get('setup', ''))\
             .with_long_strings(
-                yaml_snippet_1=self.preconditions.get('yaml_snippet_1'),
-                yaml_snippet=self.preconditions.get('yaml_snippet'),
-                yaml_snippet_2=self.preconditions.get('yaml_snippet_2'),
-                modified_yaml_snippet=self.preconditions.get('modified_yaml_snippet'),
+                yaml_snippet_1=self.given.get('yaml_snippet_1'),
+                yaml_snippet=self.given.get('yaml_snippet'),
+                yaml_snippet_2=self.given.get('yaml_snippet_2'),
+                modified_yaml_snippet=self.given.get('modified_yaml_snippet'),
             )
 
     @expected_exception(HitchRunPyException)
@@ -105,14 +105,14 @@ class Engine(BaseEngine):
             if not isinstance(exception_type, str):
                 differential = True
                 exception_type = exception_type['in python 2']\
-                    if self.preconditions['python version'].startswith("2")\
+                    if self.given['python version'].startswith("2")\
                     else exception_type['in python 3']
 
         if message is not None:
             if not isinstance(message, str):
                 differential = True
                 message = message['in python 2']\
-                    if self.preconditions['python version'].startswith("2")\
+                    if self.given['python version'].startswith("2")\
                     else message['in python 3']
 
         try:
@@ -163,14 +163,14 @@ class Engine(BaseEngine):
                 if not isinstance(exception_type, str):
                     differential = True
                     exception_type = exception_type['in python 2']\
-                        if self.preconditions['python version'].startswith("2")\
+                        if self.given['python version'].startswith("2")\
                         else exception_type['in python 3']
 
             if message is not None:
                 if not isinstance(message, str):
                     differential = True
                     message = message['in python 2']\
-                        if self.preconditions['python version'].startswith("2")\
+                        if self.given['python version'].startswith("2")\
                         else message['in python 3']
 
             try:

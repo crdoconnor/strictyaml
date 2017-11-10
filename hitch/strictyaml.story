@@ -1,7 +1,7 @@
 strictyaml:
-  preconditions:
+  given:
     python version: (( python version ))
     ruamel version: (( ruamel version ))
-  default:
+  with:
     python version: 2.7.10
     ruamel version: 0.15.34

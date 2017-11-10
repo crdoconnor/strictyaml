@@ -9,7 +9,7 @@ Duplicate keys:
 
     In order to avoid all possible confusion, StrictYAML will simply refuse to parse this and will only accept associative
     arrays where all of the keys are unique. It will throw a DuplicateKeysDisallowed exception.
-  preconditions:
+  given:
     setup: |
       from strictyaml import load, DuplicateKeysDisallowed
     yaml_snippet: |
@@ -18,7 +18,7 @@ Duplicate keys:
     code: load(yaml_snippet)
   variations:
     Nameless exception:
-      scenario:
+      steps:
       - Raises exception:
           exception type: strictyaml.exceptions.DuplicateKeysDisallowed
           message: |-
@@ -33,10 +33,10 @@ Duplicate keys:
 
 
     Named exception:
-      preconditions:
+      given:
         code: |
           load(yaml_snippet, label="mylabel")
-      scenario:
+      steps:
       - Raises exception:
           exception type: strictyaml.exceptions.DuplicateKeysDisallowed
           message: |-

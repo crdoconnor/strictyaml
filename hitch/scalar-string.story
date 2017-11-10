@@ -8,7 +8,7 @@ Scalar str:
     This is what that can object can do - in most
     cases if parsed as a string, it will behave in
     the same way.
-  preconditions:
+  given:
     setup: |
       from strictyaml import Str, Map, load
       from ensure import Ensure
@@ -24,7 +24,7 @@ Scalar str:
         multiline string
   variations:
     Parses correctly:
-      scenario:
+      steps:
       - Run:
           code: |
             Ensure(parsed).equals(
@@ -32,18 +32,18 @@ Scalar str:
             )
 
     Dict lookup cast to string:
-      scenario:
+      steps:
       - Run:
           code: Ensure(str(parsed["a"])).equals("1")
 
     Dict lookup cast to int:
-      scenario:
+      steps:
       - Run:
           code: |
             Ensure(int(parsed["a"])).equals(1)
 
     Dict lookup cast to bool impossible:
-      scenario:
+      steps:
       - Run:
           code: bool(parsed["a"])
           raises:

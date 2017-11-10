@@ -2,7 +2,7 @@ Merge YAML documents:
   based on: strictyaml
   description: |
     Loaded YAML can be combined and dumped with the comments intact.
-  preconditions:
+  given:
     yaml_snippet_1: |
       # Some comment
 
@@ -35,7 +35,7 @@ Merge YAML documents:
       yaml_2 = load(yaml_snippet_2, schema_2)
 
       yaml_1['b'] = yaml_2
-  scenario:
+  steps:
   - Run:
       code: print(yaml_1.as_yaml())
       will output: |-

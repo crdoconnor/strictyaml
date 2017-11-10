@@ -3,7 +3,7 @@ Unique sequences:
   description: |
     UniqueSeq validates sequences which contain no duplicate
     values.
-  preconditions:
+  given:
     yaml_snippet: |
       - A
       - B
@@ -15,18 +15,18 @@ Unique sequences:
       schema = UniqueSeq(Str())
   variations:
     Valid:
-      scenario:
+      steps:
       - Run:
           code: |
             Ensure(load(yaml_snippet, schema)).equals(["A", "B", "C", ])
 
     One dupe:
-      preconditions:
+      given:
         yaml_snippet: |
           - A
           - B
           - B
-      scenario:
+      steps:
       - Run:
           code: load(yaml_snippet, schema)
           raises:
@@ -41,12 +41,12 @@ Unique sequences:
                   - B
                   ^ (line: 3)
     All dupes:
-      preconditions:
+      given:
         yaml_snippet: |
           - 3
           - 3
           - 3
-      scenario:
+      steps:
       - Run:
           code: load(yaml_snippet, schema)
           raises:

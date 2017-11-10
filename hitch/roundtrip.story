@@ -8,7 +8,7 @@ Roundtripped YAML:
     underlying StrictYAML, while the data parsed should
     be precisely the same, the exact syntax (newlines, comment
     locations, etc.) may not be identical.
-  preconditions:
+  given:
     yaml_snippet: |
       # Some comment
 
@@ -32,13 +32,13 @@ Roundtripped YAML:
       })
   variations:
     Commented:
-      scenario:
+      steps:
       - Run:
           code: |
             Ensure(load(yaml_snippet, schema).as_yaml()).equals(yaml_snippet)
 
     Modified with invalid variable:
-      scenario:
+      steps:
       - Run:
           code: |
             to_modify = load(yaml_snippet, schema)
@@ -57,7 +57,7 @@ Roundtripped YAML:
                   ...
                   ^ (line: 2)
     Modified with float:
-      scenario:
+      steps:
       - run:
           code: |
             to_modify = load(yaml_snippet, schema)
@@ -78,7 +78,7 @@ Roundtripped YAML:
 
 
     Modified with one variable:
-      scenario:
+      steps:
       - run:
           code: |
             to_modify = load(yaml_snippet, schema)
@@ -99,7 +99,7 @@ Roundtripped YAML:
             - b: 2
 
     Text across lines:
-      scenario:
+      steps:
       - run:
           code: |
             to_modify = load(yaml_snippet, schema)

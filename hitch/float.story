@@ -9,7 +9,7 @@ Floats:
     Parsing and validating as a Decimal is best for
     values which require precision, but float is better
     for values for which precision is not required.
-  preconditions:
+  given:
     setup: |
       from strictyaml import Map, Float, load
       from ensure import Ensure
@@ -21,43 +21,43 @@ Floats:
       b: 5.4135
   variations:
     Use .data to get float type:
-      scenario:
+      steps:
       - Run:
           code: |
             Ensure(type(load(yaml_snippet, schema)["a"].data)).equals(float)
 
     Equal to equivalent float which is different number:
-      scenario:
+      steps:
       - Run:
           code: |
             Ensure(load(yaml_snippet, schema)).equals({"a": 1.0, "b": 5.4135})
 
     Cast to str:
-      scenario:
+      steps:
       - Run:
           code: |
             Ensure(str(load(yaml_snippet, schema)["a"])).equals("1.0")
 
     Cast to float:
-      scenario:
+      steps:
       - Run:
           code: |
             Ensure(float(load(yaml_snippet, schema)["a"])).equals(1.0)
 
     Greater than:
-      scenario:
+      steps:
       - Run:
           code: |
             Ensure(load(yaml_snippet, schema)["a"] > 0).is_true()
 
     Less than:
-      scenario:
+      steps:
       - Run:
           code: |
             Ensure(load(yaml_snippet, schema)["a"] < 0).is_false()
 
     Cannot cast to bool:
-      scenario:
+      steps:
       - Run:
           code: bool(load(yaml_snippet, schema)['a'])
           raises:
@@ -66,11 +66,11 @@ Floats:
               Use bool(yamlobj.data) or bool(yamlobj.text) instead.
 
     Cannot parse non-float:
-      preconditions:
+      given:
         yaml_snippet: |
           a: string
           b: 2
-      scenario:
+      steps:
       - Run:
           code: load(yaml_snippet, schema)
           raises:

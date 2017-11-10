@@ -4,7 +4,7 @@ Map with key validator:
   description: |
     A typical mapping except that the key values are determined
     by the value provided by the validator.
-  preconditions:
+  given:
     setup: |
       from collections import OrderedDict
       from strictyaml import Map, Str, load, ScalarValidator
@@ -25,7 +25,7 @@ Map with key validator:
       Name: United Kingdom
       country-code: GB
       DIAL CODE: +44
-  scenario:
+  steps:
   - Run:
       code: |
         Ensure(load(yaml_snippet, schema).data).equals(

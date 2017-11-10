@@ -15,7 +15,7 @@ hitchpython==0.5.3
 hitchrun==0.2.4
 hitchrunpy==0.3.0
 hitchserve==0.5.1         # via hitchpython
-hitchstory==0.5.0
+hitchstory==0.6.1
 hitchtest==0.9.12         # via hitchpython
 humanize==0.5.1           # via hitchserve
 icommandlib==0.1.1
@@ -58,7 +58,7 @@ ruamel.yaml==0.15.34      # via strictyaml
 simex==0.3.5
 simplegeneric==0.8.1      # via ipython
 six==1.10.0               # via hitch-pip-tools, prompt-toolkit, python-dateutil, traitlets
-strictyaml==0.7.3         # via hitchdoc, hitchstory
+strictyaml==0.10.0        # via hitchdoc, hitchstory
 tblib==1.3.2              # via hitchserve
 templex==0.1.1
 tornado==4.5.1            # via ipykernel

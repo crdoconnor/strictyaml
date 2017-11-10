@@ -3,7 +3,7 @@ Fixed length sequences (FixedSeq):
   description: |
     Sequences of fixed length can be validated with a series
     of different (or the same) types.
-  preconditions:
+  given:
     setup: |
       from strictyaml import FixedSeq, Str, Map, Int, Float, YAMLValidationError, load
       from ensure import Ensure
@@ -13,23 +13,23 @@ Fixed length sequences (FixedSeq):
       load(yaml_snippet, schema)
   variations:
     Equivalent list:
-      preconditions:
+      given:
         yaml_snippet: |
           - 1
           - x: 5
           - 2.5
-      scenario:
+      steps:
       - Run:
           code: |
             Ensure(load(yaml_snippet, schema)).equals([1, {"x": "5"}, 2.5, ])
 
     Invalid list 1:
-      preconditions:
+      given:
         yaml_snippet: |
           a: 1
           b: 2
           c: 3
-      scenario:
+      steps:
       - Raises exception:
           exception type: strictyaml.exceptions.YAMLValidationError
           message: |-
@@ -43,14 +43,14 @@ Fixed length sequences (FixedSeq):
                 ^ (line: 3)
 
     Invalid list 2:
-      preconditions:
+      given:
         yaml_snippet: |
           - 2
           - a
           - a:
             - 1
             - 2
-      scenario:
+      steps:
       - Raises exception:
           exception type: strictyaml.exceptions.YAMLValidationError
           message: |-
@@ -61,11 +61,11 @@ Fixed length sequences (FixedSeq):
                 ^ (line: 2)
 
     Invalid list 3:
-      preconditions:
+      given:
         yaml_snippet: |
           - 1
           - a
-      scenario:
+      steps:
       - Raises exception:
           exception type: strictyaml.exceptions.YAMLValidationError
           message: |-

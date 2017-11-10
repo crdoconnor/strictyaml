@@ -13,7 +13,7 @@ Non-schema validation:
     structure, we recommend that you 'lock it down' with a schema.
 
     The Any validator can be used inside fixed structures as well.
-  preconditions:
+  given:
     setup: |
       from strictyaml import Str, Any, MapPattern, load
       from ensure import Ensure
@@ -25,19 +25,19 @@ Non-schema validation:
       c: 3
   variations:
     Parse without validator:
-      scenario:
+      steps:
       - Run:
           code: |
             Ensure(load(yaml_snippet)).equals({"a": {"x": "9", "y": "8"}, "b": "2", "c": "3"})
 
     Parse with any validator - equivalent:
-      scenario:
+      steps:
       - Run:
           code: |
             Ensure(load(yaml_snippet, Any())).equals({"a": {"x": "9", "y": "8"}, "b": "2", "c": "3"})
 
     Fix higher levels of schema:
-      scenario:
+      steps:
       - Run:
           code: |
             Ensure(load(yaml_snippet, MapPattern(Str(), Any()))).equals({"a": {"x": "9", "y": "8"}, "b": "2", "c": "3"})

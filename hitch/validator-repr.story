@@ -3,32 +3,32 @@ Validator repr:
   description: |
     When repr(x) is called on validators it should print an
     executable representation of the object.
-  preconditions:
+  given:
     setup: |
       from ensure import Ensure
       import strictyaml as sy
 
   variations:
     Int:
-      scenario:
+      steps:
       - Run:
           code: |
             Ensure(repr(sy.Map({"a": sy.Int()}))).equals("""Map({'a': Int()})""")
 
     Optional:
-      scenario:
+      steps:
       - Run:
           code: |
             Ensure(repr(sy.Map({sy.Optional("a"): sy.Int()}))).equals("""Map({Optional("a"): Int()})""")
 
     Sequence:
-      scenario:
+      steps:
       - Run:
           code: |
             Ensure(repr(sy.Seq(sy.Str()))).equals("""Seq(Str())""")
 
     Empty:
-      scenario:
+      steps:
       - Run:
           code: |
             Ensure(repr(sy.FixedSeq([sy.EmptyNone(), sy.EmptyDict(), sy.EmptyList()]))).equals(
@@ -36,25 +36,25 @@ Validator repr:
             )
 
     UniqueSeq Decimal:
-      scenario:
+      steps:
       - Run:
           code: |
             Ensure(repr(sy.UniqueSeq(sy.Decimal()))).equals("""UniqueSeq(Decimal())""")
 
     MapPattern Bool Enum:
-      scenario:
+      steps:
       - Run:
           code: |
             Ensure(repr(sy.MapPattern(sy.Bool(), sy.Enum(["x", "y"])))).equals("MapPattern(Bool(), Enum(['x', 'y']))")
 
     Seq Datetime Any Or:
-      scenario:
+      steps:
       - Run:
           code: |
             Ensure(repr(sy.Seq(sy.Datetime() | sy.Any()))).equals("""Seq(Datetime() | Any())""")
 
     Comma Separated Float:
-      scenario:
+      steps:
       - Run:
           code: |
             Ensure(repr(sy.Map({"x": sy.CommaSeparated(sy.Float())}))).equals("Map({'x': CommaSeparated(Float())})")

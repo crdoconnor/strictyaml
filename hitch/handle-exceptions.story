@@ -3,7 +3,7 @@ Handle exceptions:
   description: |
     When raising exceptions, you can add a label that will replace
     <unicode string> with whatever you want.
-  preconditions:
+  given:
     setup: |
       from strictyaml import Map, Int, load, YAMLValidationError
     yaml_snippet: |
@@ -11,7 +11,7 @@ Handle exceptions:
       b:
         - 1
         - 2
-  scenario:
+  steps:
   - Run:
       code: |
         load(yaml_snippet, Map({"a": Int(), "b": Map({"x": Int(), "y": Int()})}), label="myfilename")

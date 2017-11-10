@@ -10,7 +10,7 @@ Mapping:
 
     Note: for mappings where you don't know the exact names of
     the keys in advance but you do know the type, use MapPattern.
-  preconditions:
+  given:
     setup: |
       from collections import OrderedDict
       from strictyaml import Map, Int, load
@@ -26,32 +26,32 @@ Mapping:
 
   variations:
     one key mapping:
-      preconditions:
+      given:
         yaml_snippet: 'x: 1'
-      scenario:
+      steps:
       - Run:
           code: |
             Ensure(load(yaml_snippet, Map({"x": Int()})).data).equals(OrderedDict([('x', 1)]))
 
     key value:
-      scenario:
+      steps:
       - Run:
           code: |
             Ensure(load(yaml_snippet, schema_2)[u'â']).equals(1)
 
     get item key not found:
-      preconditions:
+      given:
         code: |
           load(yaml_snippet, schema_2)['keynotfound']
-      scenario:
+      steps:
       - Raises exception:
           message: "'keynotfound'"
 
     cannot use .text:
-      preconditions:
+      given:
         code: |
           load(yaml_snippet, schema_2).text
-      scenario:
+      steps:
       - Raises Exception:
           exception type:
             in python 3: builtins.TypeError
@@ -62,14 +62,14 @@ Mapping:
             in python 2: YAML(OrderedDict([(u'\xe2', 1), ('b', 2), ('c', 3)])) is
               a mapping, has no text value.
     key not found in schema:
-      preconditions:
+      given:
         yaml_snippet: |
           a: 1
           b: 2
           â: 3
         code: |
           load(yaml_snippet, schema)
-      scenario:
+      steps:
       - Raises Exception:
           exception type: strictyaml.exceptions.YAMLValidationError
           message: |-
@@ -80,13 +80,13 @@ Mapping:
                 ^ (line: 3)
 
     sequence not expected:
-      preconditions:
+      given:
         yaml_snippet: |
           - 1
           - 2
           - 3
         code: load(yaml_snippet, schema)
-      scenario:
+      steps:
       - Raises Exception:
           exception type: strictyaml.exceptions.YAMLValidationError
           message: |-
@@ -100,7 +100,7 @@ Mapping:
                 ^ (line: 3)
 
     unexpected key:
-      preconditions:
+      given:
         yaml_snippet: |
           a: 1
           b: 2
@@ -108,7 +108,7 @@ Mapping:
           d: 4
         code: |
           load(yaml_snippet, schema)
-      scenario:
+      steps:
       - Raises exception:
           exception type: strictyaml.exceptions.YAMLValidationError
           message: |-
@@ -120,12 +120,12 @@ Mapping:
 
 
     required key not found:
-      preconditions:
+      given:
         yaml_snippet: |
           a: 1
         code: |
           load(yaml_snippet, schema)
-      scenario:
+      steps:
       - Raises exception:
           exception type: strictyaml.exceptions.YAMLValidationError
           message: |-

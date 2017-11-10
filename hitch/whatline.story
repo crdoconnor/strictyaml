@@ -5,7 +5,7 @@ What line:
     Line numbers, the text of an item and text of surrounding lines
     can be grabbed from returned YAML objects - using .start_line,
     .end_line, lines(), lines_before(x) and lines_after(x).
-  preconditions:
+  given:
     yaml_snippet: |
       y: p
       # Some comment
@@ -29,46 +29,46 @@ What line:
 
   variations:
     Start line includes previous comment:
-      scenario:
+      steps:
       - Run:
           code: |
             Ensure(snippet["a"].start_line).equals(2)
             Ensure(snippet["d"].start_line).equals(9)
 
     End line includes comment:
-      scenario:
+      steps:
       - Run:
           code: |
             Ensure(snippet["a"].end_line).equals(6)
             Ensure(snippet["d"].end_line).equals(10)
 
     Start line of key:
-      scenario:
+      steps:
       - Run:
           code: |
             Ensure(snippet.keys()[1].start_line).equals(2)
 
     Start and end line of all YAML:
-      scenario:
+      steps:
       - Run:
           code: |
             Ensure(snippet.start_line).equals(1)
             Ensure(snippet.end_line).equals(10)
 
     Lines before:
-      scenario:
+      steps:
       - Run:
           code: |
             Ensure(snippet['a'].lines_before(1)).equals("y: p")
 
     Lines after:
-      scenario:
+      steps:
       - Run:
           code: |
             Ensure(snippet['a'].lines_after(4)).equals("b: y\nc: a\n\nd: b")
 
     Relevant lines:
-      scenario:
+      steps:
       - Run:
           code: |
             print(load(yaml_snippet, schema)['a'].lines())
@@ -81,7 +81,7 @@ What line:
 
 Start line of YAML with list:
   based on: strictyaml
-  preconditions:
+  given:
     yaml_snippet: |
       a:
         b:
@@ -93,7 +93,7 @@ Start line of YAML with list:
     setup: |
       from strictyaml import load
       from ensure import Ensure
-  scenario:
+  steps:
   - Run:
       code: |-
         Ensure(load(yaml_snippet)['a']['b'][1].start_line).equals(4)

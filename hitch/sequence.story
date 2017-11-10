@@ -10,7 +10,7 @@ Seq validator:
 
     See also UniqueSeq and FixedSeq for other types of sequence
     validation.
-  preconditions:
+  given:
     yaml_snippet: |
       - 1
       - 2
@@ -20,24 +20,24 @@ Seq validator:
       from ensure import Ensure
   variations:
     Valid Parsed:
-      scenario:
+      steps:
       - Run:
           code: |
             Ensure(load(yaml_snippet, Seq(Str()))).equals(["1", "2", "3", ])
 
     Is sequence:
-      scenario:
+      steps:
       - Run:
           code: |
             assert load(yaml_snippet, Seq(Str())).is_sequence()
 
     .text is nonsensical:
-      preconditions:
+      given:
         yaml_snippet: |
           - â
           - 2
           - 3
-      scenario:
+      steps:
       - Run:
           code: load(yaml_snippet, Seq(Str())).text
           raises:
@@ -49,12 +49,12 @@ Seq validator:
               in python 3: YAML(['â', '2', '3']) is a sequence, has no text value.
 
     Invalid mapping instead:
-      preconditions:
+      given:
         yaml_snippet: |
           a: 1
           b: 2
           c: 3
-      scenario:
+      steps:
       - Run:
           code: load(yaml_snippet, Seq(Str()))
           raises:
@@ -69,14 +69,14 @@ Seq validator:
                   c: '3'
                   ^ (line: 3)
     Invalid nested structure instead:
-      preconditions:
+      given:
         yaml_snippet: |
           - 2
           - 3
           - a:
             - 1
             - 2
-      scenario:
+      steps:
       - Run:
           code: load(yaml_snippet, Seq(Str()))
           raises:
@@ -91,11 +91,11 @@ Seq validator:
                     - '2'
                   ^ (line: 5)
     Invalid item in sequence:
-      preconditions:
+      given:
         yaml_snippet: |
           - 1.1
           - 1.2
-      scenario:
+      steps:
       - Run:
           code: load(yaml_snippet, Seq(Int()))
           raises:
@@ -107,12 +107,12 @@ Seq validator:
                   - '1.1'
                    ^ (line: 1)
     One invalid item in sequence:
-      preconditions:
+      given:
         yaml_snippet: |
           - 1
           - 2
           - 3.4
-      scenario:
+      steps:
       - Run:
           code: load(yaml_snippet, Seq(Int()))
           raises:
@@ -125,7 +125,7 @@ Seq validator:
                   ^ (line: 3)
 Modify nested sequence:
   based on: strictyaml
-  preconditions:
+  given:
     yaml_snippet: |
       a:
         - a
@@ -142,7 +142,7 @@ Modify nested sequence:
 
       yaml['a'] = ['b', 'c', 'd']
       yaml['a'][1] = 'x'
-  scenario:
+  steps:
   - Run:
       code: print(yaml.as_yaml())
       will output: |-

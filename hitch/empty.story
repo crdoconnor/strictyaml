@@ -7,56 +7,56 @@ Empty key validation:
     Using StrictYAML you can accept this as a valid value and
     have it parsed to one of three things - None, {} (empty dict),
     or [] (empty list).
-  preconditions:
+  given:
     setup: |
       from strictyaml import Map, Str, Enum, EmptyNone, EmptyDict, EmptyList, load
       from ensure import Ensure
     yaml_snippet: 'a:'
   variations:
     EmptyNone with empty value:
-      scenario:
+      steps:
       - Run:
           code: |
             Ensure(load(yaml_snippet, Map({"a": EmptyNone() | Enum(["A", "B",])}))).equals({"a": None})
 
     EmptyDict:
-      scenario:
+      steps:
       - Run:
           code: |
             Ensure(load(yaml_snippet, Map({"a": EmptyDict() | Enum(["A", "B",])}))).equals({"a": {}})
 
     EmptyList:
-      scenario:
+      steps:
       - Run:
           code: |
             Ensure(load(yaml_snippet, Map({"a": EmptyList() | Enum(["A", "B",])}))).equals({"a": []})
 
     EmptyNone no empty value:
-      preconditions:
+      given:
         yaml_snippet: 'a: A'
-      scenario:
+      steps:
       - Run:
           code: |
             Ensure(load(yaml_snippet, Map({"a": EmptyNone() | Enum(["A", "B",])}))).equals({"a": "A"})
 
     Combine Str with EmptyNone and Str is evaluated first:
-      scenario:
+      steps:
       - Run:
           code: |
             Ensure(load(yaml_snippet, Map({"a": Str() | EmptyNone()}))).equals({"a": ""})
 
 
     Combine EmptyNone with Str and Str is evaluated last:
-      scenario:
+      steps:
       - Run:
           code: |
             Ensure(load(yaml_snippet, Map({"a": EmptyNone() | Str()}))).equals({"a": None})
 
     Non-empty value:
-      preconditions:
+      given:
         code:
         yaml_snippet: 'a: C'
-      scenario:
+      steps:
       - Run:
           code: |
             load(yaml_snippet, Map({"a": Enum(["A", "B",]) | EmptyNone()}))

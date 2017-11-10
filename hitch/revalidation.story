@@ -6,7 +6,7 @@ Revalidation:
 
     This may be required for several reasons, including that one part
     of the document validation depends upon another.
-  preconditions:
+  given:
     setup: |
       from strictyaml import Str, Int, Map, Seq, Any, load
       from ensure import Ensure
@@ -23,7 +23,7 @@ Revalidation:
         - UK
   variations:
     Reparse mapping:
-      scenario:
+      steps:
       - Run:
           code: |
             Ensure(parsed.data['capitals']['UK']).equals("1")
@@ -31,7 +31,7 @@ Revalidation:
             Ensure(parsed.data['capitals']['UK']).equals(1)
 
     Reparse scalar:
-      scenario:
+      steps:
       - Run:
           code: |
             Ensure(parsed.data['capitals']['UK']).equals("1")
@@ -41,7 +41,7 @@ Revalidation:
             Ensure(parsed['capitals']['UK'].data).is_an(int)
 
     Parse error:
-      preconditions:
+      given:
         yaml_snippet: |
           capitals:
             UK: 1
@@ -50,7 +50,7 @@ Revalidation:
           countries:
             - Germany
             - UK
-      scenario:
+      steps:
       - Run:
           code: |
             parsed['capitals'].revalidate(Map({capital: Int() for capital in parsed.data['countries']}))

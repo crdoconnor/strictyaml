@@ -13,7 +13,7 @@ Disallowed YAML:
     or ComposerError.
 
     Every error inherits from YAMLError.
-  preconditions:
+  given:
     setup: |
       from strictyaml import Map, Int, Any, load
       from strictyaml import TagTokenDisallowed, FlowMappingDisallowed, AnchorTokenDisallowed
@@ -23,13 +23,13 @@ Disallowed YAML:
       load(yaml_snippet, schema, label="disallowed")
   variations:
     Tag tokens:
-      preconditions:
+      given:
         yaml_snippet: |
           x:
             a: !!str yes
             b: !!str 3.5
             c: !!str yes
-      scenario:
+      steps:
       - Raises exception:
           exception type: strictyaml.exceptions.TagTokenDisallowed
           message: |-
@@ -43,10 +43,10 @@ Disallowed YAML:
                      ^ (line: 2)
 
     Flow style sequence:
-      preconditions:
+      given:
         yaml_snippet: |
           [a, b]: [x, y]
-      scenario:
+      steps:
       - Raises exception:
           exception type: strictyaml.exceptions.FlowMappingDisallowed
           message: |-
@@ -62,10 +62,10 @@ Disallowed YAML:
     Flow style mapping:
       description: |
         To use literally, surround with quotes, e.g. x: '{ a: 1, b: 2, c: 3 }'
-      preconditions:
+      given:
         yaml_snippet: |
           x: { a: 1, b: 2, c: 3 }
-      scenario:
+      steps:
       - Raises exception:
           exception type: strictyaml.exceptions.FlowMappingDisallowed
           message: |-
@@ -81,13 +81,13 @@ Disallowed YAML:
     Node anchors and references:
       description: |
         To use literally, surround with quotes, e.g. x: '{ a: 1, b: 2, c: 3 }'
-      preconditions:
+      given:
         yaml_snippet: |
           x: 
             a: &node1 3.5
             b: 1
             c: *node1
-      scenario:
+      steps:
       - Raises exception:
           exception type: strictyaml.exceptions.AnchorTokenDisallowed
           message: |-
@@ -104,11 +104,11 @@ Disallowed YAML:
     Syntactically invalid YAML:
       description: |
         To use literally, surround with quotes, e.g. x: '{ a: 1, b: 2, c: 3 }'
-      preconditions:
+      given:
         yaml_snippet: |
           - invalid
           string
-      scenario:
+      steps:
       - Raises exception:
           exception type: ruamel.yaml.scanner.ScannerError
           message: |-

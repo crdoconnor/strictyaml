@@ -7,7 +7,7 @@ Or validation:
     parse the second. If the second does not parse correctly,
     it raises an exception.
   based on: strictyaml
-  preconditions:
+  given:
     setup: |
       from strictyaml import Map, Bool, Int, YAMLValidationError, load
       from ensure import Ensure
@@ -16,33 +16,33 @@ Or validation:
     code: load(yaml_snippet, schema)
   variations:
     Boolean first choice true:
-      preconditions:
+      given:
         yaml_snippet: 'a: yes'
-      scenario:
+      steps:
       - Run:
           code: |
             Ensure(load(yaml_snippet, schema)).equals({"a": True})
 
     Boolean first choice false:
-      preconditions:
+      given:
         yaml_snippet: 'a: no'
-      scenario:
+      steps:
       - Run:
           code: |
             Ensure(load(yaml_snippet, schema)).equals({"a": False})
 
     Int second choice:
-      preconditions:
+      given:
         yaml_snippet: 'a: 5'
-      scenario:
+      steps:
       - Run:
           code: |
             Ensure(load(yaml_snippet, schema)).equals({"a": 5})
 
     Invalid not bool or int:
-      preconditions:
+      given:
         yaml_snippet: 'a: A'
-      scenario:
+      steps:
       - Raises exception:
           exception type: strictyaml.exceptions.YAMLValidationError
           message: |-

@@ -6,7 +6,7 @@ Comma separated:
 
     Note that the space following the commas is stripped by
     default when parsed.
-  preconditions:
+  given:
     setup: |
       from strictyaml import CommaSeparated, Int, Str, Map, load
       from ensure import Ensure
@@ -16,28 +16,28 @@ Comma separated:
       str_schema = Map({"a": CommaSeparated(Str())})
   variations:
     Parse as int:
-      preconditions:
+      given:
         yaml_snippet: |
           a: 1, 2, 3
-      scenario:
+      steps:
       - Run:
           code: |
             Ensure(load(yaml_snippet, int_schema)).equals({"a": [1, 2, 3]})
 
     Parse as string:
-      preconditions:
+      given:
         yaml_snippet: |
           a: 1, 2, 3
-      scenario:
+      steps:
       - Run:
           code: |
             Ensure(load(yaml_snippet, str_schema)).equals({"a": ["1", "2", "3"]})
 
     Invalid int comma separated sequence:
-      preconditions:
+      given:
         yaml_snippet: |
           a: 1, x, 3
-      scenario:
+      steps:
       - Run:
           code: load(yaml_snippet, int_schema)
           raises:

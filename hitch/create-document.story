@@ -3,7 +3,7 @@ Build YAML document:
   description: |
     YAML documents can be built from dicts and lists of
     scalar values.
-  preconditions:
+  given:
     setup: |
       from ensure import Ensure
       from strictyaml import as_document
@@ -15,7 +15,7 @@ Build YAML document:
       ))
   variations:
     Then dump:
-      scenario:
+      steps:
       - Run:
           code: print(yaml.as_yaml())
           will output: |-
@@ -27,7 +27,7 @@ Build YAML document:
             - 3
 
     Start line:
-      scenario:
+      steps:
       - Run:
           code: |
             Ensure(yaml.start_line).equals(1)

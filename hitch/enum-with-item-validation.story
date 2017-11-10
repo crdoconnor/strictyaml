@@ -5,7 +5,7 @@ Enum with item validation:
     
     Your enums can be a transformed string or something other than a string
     if you use an item validator.
-  preconditions:
+  given:
     setup: |
       from strictyaml import Map, Enum, Int, MapPattern, YAMLValidationError, load
       from ensure import Ensure
@@ -14,9 +14,9 @@ Enum with item validation:
     code:
   variations:
     Parse correctly:
-      preconditions:
+      given:
         yaml_snippet: 'a: 1'
-      scenario:
+      steps:
       - Run:
           code: |
             Ensure(load(yaml_snippet, schema)).equals({"a": 1})

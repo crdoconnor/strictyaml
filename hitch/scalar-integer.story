@@ -8,7 +8,7 @@ Scalar integer:
     This is what that can object can do - in many
     cases if parsed as a integer, it will behave in
     the same way.
-  preconditions:
+  given:
     yaml_snippet: |
       a: 1
       b: 5
@@ -21,43 +21,43 @@ Scalar integer:
       parsed = load(yaml_snippet, schema)
   variations:
     Parsed correctly:
-      scenario:
+      steps:
       - Run:
           code: |
             Ensure(parsed).equals({"a": 1, "b": 5})
 
     Cast with str:
-      scenario:
+      steps:
       - Run:
           code: |
             Ensure(str(parsed["a"])).equals("1")
 
     Cast with float:
-      scenario:
+      steps:
       - Run:
           code: |
             Ensure(float(parsed["a"])).equals(1.0)
 
     Greater than:
-      scenario:
+      steps:
       - Run:
           code: |
             Ensure(parsed["a"] > 0).equals(True)
 
     Less than:
-      scenario:
+      steps:
       - Run:
           code: |
             Ensure(parsed["a"] < 2).equals(True)
 
     To get actual int, use .data:
-      scenario:
+      steps:
       - Run:
           code: |
             Ensure(type(load(yaml_snippet, schema)["a"].data) is int).equals(True)
 
     Cannot cast to bool:
-      scenario:
+      steps:
       - Run:
           code: bool(load(yaml_snippet, schema)['a'])
           raises:
@@ -68,7 +68,7 @@ Scalar integer:
 
 Invalid scalar integer:
   based on: strictyaml
-  preconditions:
+  given:
     yaml_snippet: |
       a: string
       b: 2
@@ -78,7 +78,7 @@ Invalid scalar integer:
       schema = Map({"a": Int(), "b": Int()})
     code: |
       load(yaml_snippet, schema)
-  scenario:
+  steps:
   - Raises exception:
       exception type: strictyaml.exceptions.YAMLValidationError
       message: |-

@@ -4,7 +4,7 @@ Nested mapping validation:
   description: |
     Mappings can be nested within one another, which
     will be parsed as a dict within a dict.
-  preconditions:
+  given:
     setup: |
       from strictyaml import Map, Int, load
       from ensure import Ensure
@@ -12,7 +12,7 @@ Nested mapping validation:
       schema = Map({"a": Map({"x": Int(), "y": Int()}), "b": Int(), "c": Int()})
   variations:
     Valid nested mapping:
-      preconditions:
+      given:
         yaml_snippet: |
           a:
             x: 9
@@ -20,14 +20,14 @@ Nested mapping validation:
           b: 2
           c: 3
         code:
-      scenario:
+      steps:
       - Run:
           code: |
             Ensure(load(yaml_snippet, schema)).equals({"a": {"x": 9, "y": 8}, "b": 2, "c": 3})
 
 
     Invalid nested mapping:
-      preconditions:
+      given:
         yaml_snippet: |
           a:
             x: 9
@@ -35,7 +35,7 @@ Nested mapping validation:
           b: 2
           d: 3
         code:
-      scenario:
+      steps:
       - Run:
           code: load(yaml_snippet, schema)
           raises:
@@ -48,13 +48,13 @@ Nested mapping validation:
                   ^ (line: 3)
 
     No nested mapping where expected:
-      preconditions:
+      given:
         yaml_snippet: |
           a: 11
           b: 2
           d: 3
         code: load(yaml_snippet, schema)
-      scenario:
+      steps:
       - Run:
           code: load(yaml_snippet, schema)
           raises:
@@ -66,7 +66,7 @@ Nested mapping validation:
                   a: '11'
                    ^ (line: 1)
     Modify nested map:
-      preconditions:
+      given:
         yaml_snippet: |
           a:
             x: 9
@@ -87,7 +87,7 @@ Nested mapping validation:
           # Non-ordered dict would also work, but would yield an indeterminate order of keys
           yaml['a'] = OrderedDict([("x", 5), ("y", [4, 5, 6])])
           yaml['a']['x'] = 99
-      scenario:
+      steps:
       - Run:
           code: print(yaml.as_yaml())
           will output: |-

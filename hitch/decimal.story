@@ -14,7 +14,7 @@ Decimal:
 
     Parsing and validating as a Decimal is best for
     values which require precision, like prices.
-  preconditions:
+  given:
     setup: |
       from strictyaml import Map, Decimal, load
       from decimal import Decimal as Dec
@@ -27,60 +27,60 @@ Decimal:
       b: 5.4135
   variations:
     .data to get Decimal object:
-      preconditions:
+      given:
         code:
-      scenario:
+      steps:
       - Run:
           code: |
             Ensure(type(load(yaml_snippet, schema)["a"].data) is Dec).is_true()
 
     Valid:
-      scenario:
+      steps:
       - Run:
           code: |
             Ensure(load(yaml_snippet, schema)).equals({"a": Dec('1.00000000000000000001'), "b": Dec('5.4135')})
 
     Cast to str:
-      scenario:
+      steps:
       - Run:
           code: |
             Ensure(str(load(yaml_snippet, schema)['a'])).equals("1.00000000000000000001")
 
 
     Cast to float:
-      scenario:
+      steps:
       - Run:
           code: |
             Ensure(float(load(yaml_snippet, schema)["a"])).equals(1.0)
 
     Greater than:
-      scenario:
+      steps:
       - Run:
           code: |
             Ensure(load(yaml_snippet, schema)["a"] > Dec('1.0')).is_true()
 
     Less than which would not work for float:
-      scenario:
+      steps:
       - Run:
           code: |
             Ensure(load(yaml_snippet, schema)["a"] < Dec('1.00000000000000000002')).is_true()
 
     Cannot cast to bool:
-      preconditions:
+      given:
         code: bool(load(yaml_snippet, schema)['a'])
-      scenario:
+      steps:
       - Raises exception:
           message: |-
             Cannot cast 'YAML(1.00000000000000000001)' to bool.
             Use bool(yamlobj.data) or bool(yamlobj.text) instead.
 
     Invalid:
-      preconditions:
+      given:
         yaml_snippet: |
           a: string
           b: 2
         code: load(yaml_snippet, schema)
-      scenario:
+      steps:
       - Raises exception:
           exception type: strictyaml.exceptions.YAMLValidationError
           message: |-

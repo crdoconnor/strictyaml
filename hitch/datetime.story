@@ -3,7 +3,7 @@ Datetime:
   description: |
     Datetime validator parses using the python-dateutil library and
     returns a python datetime object.
-  preconditions:
+  given:
     setup: |
       from strictyaml import Map, Datetime, YAMLValidationError, load
       from datetime import datetime
@@ -23,7 +23,7 @@ Datetime:
       datetime3: 20161022T142312Z
   variations:
     Valid:
-      scenario:
+      steps:
       - Run:
           code: |
             Ensure(load(yaml_snippet, schema)).equals({
@@ -34,21 +34,21 @@ Datetime:
             })
 
     .text:
-      preconditions:
+      given:
         code:
-      scenario:
+      steps:
       - Run:
           code: |
             Ensure(load(yaml_snippet, schema)["date"].text).equals("2016-10-22")
 
     Non datetime:
-      preconditions:
+      given:
         yaml_snippet: |
           date: 1
           datetime1: â
           datetime2: b
           datetime3: c
-      scenario:
+      steps:
       - Run:
           code: load(yaml_snippet, schema)
           raises:

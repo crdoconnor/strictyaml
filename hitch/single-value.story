@@ -8,44 +8,44 @@ Single value:
     Where standard YAML implicitly converts certain strings
     to other types, StrictYAML will only parse to strings
     unless otherwise directed.
-  preconditions:
+  given:
     setup: |
       from strictyaml import Str, Int, load
       from ensure import Ensure
   variations:
     Raise exception on None:
-      scenario:
+      steps:
       - Run:
           code: load(None, Str())
           raises:
             message: StrictYAML can only read a string of valid YAML.
 
     String of 1:
-      scenario:
+      steps:
       - Run:
           code: |
             Ensure(load("1", Str())).equals("1")
 
     Int of 1:
-      scenario:
+      steps:
       - Run:
           code: |
             Ensure(load("1", Int())).equals(1)
 
     Empty value parsed as blank string by default:
-      scenario:
+      steps:
       - Run:
           code: |
             Ensure(load("x:")).equals({"x": ""})
 
     Empty document parsed as blank string by default:
-      scenario:
+      steps:
       - Run:
           code: |
             Ensure(load("", Str())).equals("")
 
     Null parsed as string null by default:
-      scenario:
+      steps:
       - Run:
           code: |
             Ensure(load("null: null")).equals({"null": "null"})

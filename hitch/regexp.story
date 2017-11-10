@@ -4,7 +4,7 @@ Regex strings:
     StrictYAML can validate regular expressions and return a
     string. If the regular expression does not match, an
     exception is raised.
-  preconditions:
+  given:
     setup: |
       from strictyaml import Regex, Map, load
       from ensure import Ensure
@@ -13,21 +13,21 @@ Regex strings:
     code:
   variations:
     Parsed correctly:
-      preconditions:
+      given:
         yaml_snippet: |
           a: 1
           b: 5
-      scenario:
+      steps:
       - Run:
           code: |
             Ensure(load(yaml_snippet, schema)).equals({"a": "1", "b": "5"})
 
     Non-matching:
-      preconditions:
+      given:
         yaml_snippet: |
           a: 5
           b: 5
-      scenario:
+      steps:
       - Run:
           code: load(yaml_snippet, schema)
           raises:

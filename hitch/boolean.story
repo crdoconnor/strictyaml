@@ -13,7 +13,7 @@ Boolean validation:
 
     To have your boolean values updated to a different yes/no string, update
     with a string instead - e.g. "on" or "off".
-  preconditions:
+  given:
     setup: |
       from strictyaml import Bool, Str, MapPattern, load
       from ensure import Ensure
@@ -36,7 +36,7 @@ Boolean validation:
       z: no
   variations:
     Parse to YAML object:
-      scenario:
+      steps:
       - Run:
           code: |
             Ensure(load(yaml_snippet, schema)).equals({
@@ -45,25 +45,25 @@ Boolean validation:
             })
 
     YAML object should resolve to True or False:
-      scenario:
+      steps:
       - Run:
           code: |
             Ensure(load(yaml_snippet, schema)["w"]).equals(False)
 
     Using .value you can get the actual boolean value parsed:
-      scenario:
+      steps:
       - Run:
           code: |
             assert load(yaml_snippet, schema)["a"].value is True
 
     .text returns the text of the boolean YAML:
-      scenario:
+      steps:
       - Run:
           code: |
             Ensure(load(yaml_snippet, schema)["y"].text).equals("FALSE")
 
     Update boolean values with string and bool type:
-      scenario:
+      steps:
       - Run:
           code: |
             yaml = load(yaml_snippet, schema)
@@ -87,7 +87,7 @@ Boolean validation:
             z: no
 
     Cannot cast boolean to string:
-      scenario:
+      steps:
       - Run:
           code: str(load(yaml_snippet, schema)["y"])
           raises:
@@ -99,7 +99,7 @@ Boolean validation:
               Use str(yamlobj.data) or str(yamlobj.text) instead.
 
     Different uninterpretable values raise validation error:
-      scenario:
+      steps:
       - Run:
           code: |
             load('a: yâs', schema)

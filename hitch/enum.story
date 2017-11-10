@@ -6,7 +6,7 @@ Enum (enum validation):
 
     It will throw an exception if any strings not
     in the list are found.
-  preconditions:
+  given:
     setup: |
       from strictyaml import Map, Enum, MapPattern, YAMLValidationError, load
       from ensure import Ensure
@@ -15,33 +15,33 @@ Enum (enum validation):
     code:
   variations:
     Valid A:
-      preconditions:
+      given:
         yaml_snippet: 'a: A'
-      scenario:
+      steps:
       - Run:
           code: |
             Ensure(load(yaml_snippet, schema)).equals({"a": "A"})
 
     Valid B:
-      preconditions:
+      given:
         yaml_snippet: 'a: B'
-      scenario:
+      steps:
       - Run:
           code: |
             Ensure(load(yaml_snippet, schema)).equals({"a": "B"})
 
     Valid C:
-      preconditions:
+      given:
         yaml_snippet: 'a: C'
-      scenario:
+      steps:
       - Run:
           code: |
             Ensure(load(yaml_snippet, schema)).equals({"a": "C"})
 
     Invalid not in enum:
-      preconditions:
+      given:
         yaml_snippet: 'a: D'
-      scenario:
+      steps:
       - Run:
           code: load(yaml_snippet, schema)
           raises:
@@ -53,9 +53,9 @@ Enum (enum validation):
                   a: D
                    ^ (line: 1)
     Invalid blank string:
-      preconditions:
+      given:
         yaml_snippet: 'a:'
-      scenario:
+      steps:
       - Run:
           code: load(yaml_snippet, schema)
           raises:

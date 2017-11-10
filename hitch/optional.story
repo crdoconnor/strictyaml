@@ -4,7 +4,7 @@ Optional validation:
     Not every key in a YAML mapping will be required. If
     you use the "Optional('key')" validator with YAML,
     you can signal that a key/value pair is not required.
-  preconditions:
+  given:
     setup: |
       from strictyaml import Map, Int, Str, Bool, Optional, load
       from ensure import Ensure
@@ -13,39 +13,39 @@ Optional validation:
     code:
   variations:
     Valid example 1:
-      preconditions:
+      given:
         yaml_snippet: |
           a: 1
           b: yes
-      scenario:
+      steps:
       - Run:
           code: |
             Ensure(load(yaml_snippet, schema)).equals({"a": 1, "b": True})
 
     Valid example 2:
-      preconditions:
+      given:
         yaml_snippet: |
           a: 1
           b: no
-      scenario:
+      steps:
       - Run:
           code: |
             Ensure(load(yaml_snippet, schema)).equals({"a": 1, "b": False})
 
     Valid example missing key:
-      preconditions:
+      given:
         yaml_snippet: 'a: 1'
-      scenario:
+      steps:
       - Run:
           code: |
             Ensure(load(yaml_snippet, schema)).equals({"a": 1})
 
     Invalid 1:
-      preconditions:
+      given:
         yaml_snippet: |
           a: 1
           b: 2
-      scenario:
+      steps:
       - Run:
           code: load(yaml_snippet, schema)
           raises:
@@ -57,12 +57,12 @@ Optional validation:
                   b: '2'
                   ^ (line: 2)
     Invalid 2:
-      preconditions:
+      given:
         yaml_snippet: |
           a: 1
           b: yes
           c: 3
-      scenario:
+      steps:
       - Run:
           code: load(yaml_snippet, schema)
           raises:
@@ -77,7 +77,7 @@ Optional validation:
 
 Nested optional validation:
   based on: strictyaml
-  preconditions:
+  given:
     setup: |
       from strictyaml import Map, Int, Str, Bool, Optional, load
       from ensure import Ensure
@@ -85,21 +85,21 @@ Nested optional validation:
       schema = Map({"a": Int(), Optional("b"): Map({Optional("x"): Str(), Optional("y"): Str()})})
   variations:
     Valid 1:
-      preconditions:
+      given:
         yaml_snippet: 'a: 1'
-      scenario:
+      steps:
       - Run:
           code: |
             Ensure(load(yaml_snippet, schema)).equals({"a": 1})
 
     Valid 2:
-      preconditions:
+      given:
         yaml_snippet: |
           a: 1
           b:
             x: y
             y: z
-      scenario:
+      steps:
       - Run:
           code: |
             Ensure(load(yaml_snippet, schema)).equals(

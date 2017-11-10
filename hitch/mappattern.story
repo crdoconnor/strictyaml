@@ -7,7 +7,7 @@ Map Pattern:
 
     When you wish to specify the exact key name, use the
     'Map' validator instead.
-  preconditions:
+  given:
     setup: |
       from strictyaml import MapPattern, Int, Str, YAMLValidationError, load
       from ensure import Ensure
@@ -16,38 +16,38 @@ Map Pattern:
 
   variations:
     Equivalence 1:
-      preconditions:
+      given:
         yaml_snippet: |
           â: 1
           b: 2
-      scenario:
+      steps:
       - Run:
           code: |
             Ensure(load(yaml_snippet, schema)).equals({u"â": 1, "b": 2})
     Equivalence 2:
-      preconditions:
+      given:
         yaml_snippet: |
           a: 1
           c: 3
-      scenario:
+      steps:
       - Run:
           code: |
             Ensure(load(yaml_snippet, schema)).equals({"a": 1, "c": 3})
     Equivalence 3:
-      preconditions:
+      given:
         yaml_snippet: |
           a: 1
-      scenario:
+      steps:
       - Run:
           code: |
             Ensure(load(yaml_snippet, schema)).equals({"a": 1, })
 
 
     Invalid 1:
-      preconditions:
+      given:
         yaml_snippet: |
           b: b
-      scenario:
+      steps:
       - Run:
           code: load(yaml_snippet, schema)
           raises:
@@ -59,11 +59,11 @@ Map Pattern:
                   b: b
                    ^ (line: 1)
     Invalid 2:
-      preconditions:
+      given:
         yaml_snippet: |
           a: a
           b: 2
-      scenario:
+      steps:
       - Run:
           code: load(yaml_snippet, schema)
           raises:
@@ -76,11 +76,11 @@ Map Pattern:
                    ^ (line: 1)
 
     More than the maximum number of keys:
-      preconditions:
+      given:
         yaml_snippet: |
           â: 1
           b: 2
-      scenario:
+      steps:
       - Run:
           code: load(yaml_snippet, MapPattern(Str(), Int(), maximum_keys=1))
           raises:
@@ -96,10 +96,10 @@ Map Pattern:
                   ^ (line: 2)
 
     Fewer than the minimum number of keys:
-      preconditions:
+      given:
         yaml_snippet: |
           â: 1
-      scenario:
+      steps:
       - Run:
           code: load(yaml_snippet, MapPattern(Str(), Int(), minimum_keys=2))
           raises:
@@ -112,12 +112,12 @@ Map Pattern:
                    ^ (line: 1)
 
     Invalid with non-ascii:
-      preconditions:
+      given:
         yaml_snippet: |
           a: 1
           b: yâs
           c: 3
-      scenario:
+      steps:
       - Run:
           code: load(yaml_snippet, schema)
           raises:
