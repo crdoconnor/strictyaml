@@ -1,5 +1,6 @@
 Boolean validation:
   based on: strictyaml
+  docs: scalar/boolean
   description: |
     Boolean values can be parsed using a Bool validator.
 
@@ -50,11 +51,11 @@ Boolean validation:
           code: |
             Ensure(load(yaml_snippet, schema)["w"]).equals(False)
 
-    Using .value you can get the actual boolean value parsed:
+    Using .data you can get the actual boolean value parsed:
       steps:
       - Run:
           code: |
-            assert load(yaml_snippet, schema)["a"].value is True
+            assert load(yaml_snippet, schema)["a"].data is True
 
     .text returns the text of the boolean YAML:
       steps:

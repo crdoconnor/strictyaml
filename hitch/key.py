@@ -30,9 +30,10 @@ class Engine(BaseEngine):
             Optional("setup"): Str(),
             Optional("code"): Str(),
         },
-        about={
+        info={
             Optional("description"): Str(),
             Optional("importance"): Int(),
+            Optional("docs"): Str(),
         },
     )
 
@@ -236,6 +237,7 @@ def tdd(*keywords):
     print(
         _storybook(settings['engine'])
         .with_params(**{"python version": settings['params']['python version']})
+        .only_uninherited()
         .shortcut(*keywords).play().report()
     )
 
@@ -265,12 +267,13 @@ def regression():
     """
     # HACK: Start using hitchbuildpy to get around this.
     Command("touch", DIR.project.joinpath("strictyaml", "representation.py").abspath()).run()
+    storybook = _storybook({}).only_uninherited()
     print(
-        _storybook({}).with_params(**{"python version": "2.7.10"}).ordered_by_name().play().report()
+        storybook.with_params(**{"python version": "2.7.10"}).ordered_by_name().play().report()
     )
     Command("touch", DIR.project.joinpath("strictyaml", "representation.py").abspath()).run()
     print(
-        _storybook({}).with_params(**{"python version": "3.5.0"}).ordered_by_name().play().report()
+        storybook.with_params(**{"python version": "3.5.0"}).ordered_by_name().play().report()
     )
     lint()
     doctest()
@@ -341,21 +344,29 @@ def docgen():
     """
     Generate documentation.
     """
-    docpath = DIR.project.joinpath("docs")
+    from jinja2.environment import Environment
+    from jinja2 import DictLoader
+    from strictyaml import load
 
-    if not docpath.exists():
-        docpath.mkdir()
+    docs = DIR.gen.joinpath("docs")
+    if docs.exists():
+        docs.rmtree()
+        docs.mkdir()
 
-    documentation = hitchdoc.Documentation(
-        DIR.gen.joinpath('storydb.sqlite'),
-        'doctemplates.yml'
+    stories = _storybook({}).non_variations().ordered_by_name()
+    env = Environment()
+    env.loader = DictLoader(
+        load((DIR.key/"doctemplates.yml").bytes().decode('utf8')).data
     )
 
-    for story in documentation.stories:
-        story.write(
-            "rst",
-            docpath.joinpath("{0}.rst".format(story.slug))
-        )
+    for story in stories:
+        if story.info['docs']:
+            doc = docs.joinpath("{0}.rst".format(story.info['docs']))
+            if not doc.dirname().exists():
+                doc.dirname().makedirs()
+            doc.write_text(env.get_template("document").render(
+                story=story,
+            ))
 
 
 @expected(CommandError)

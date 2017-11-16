@@ -10,12 +10,12 @@ Priorities:
 
 * Readability of YAML.
 * Ease of use of API.
-* Secure by default.
-* Strict validation of markup and straightforward type casting.
-* Clear, readable exceptions with line numbers.
+* Secure by default, strict validation of markup and straightforward type casting.
+* Clear, readable exceptions with code snippets and line numbers.
 * Acting as a near-drop in replacement for pyyaml, ruamel.yaml or poyo.
 * Ability to read in (commented) YAML and write it out again with comments preserved.
 * Letting you worry about more interesting things than parsing or writing config files.
+* *Not* speed, currently, although if writing optimized C is your thing, please help.
 
 Simple example:
 

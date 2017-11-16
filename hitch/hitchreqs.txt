@@ -15,7 +15,7 @@ hitchpython==0.5.3
 hitchrun==0.2.4
 hitchrunpy==0.3.0
 hitchserve==0.5.1         # via hitchpython
-hitchstory==0.6.1
+hitchstory==0.6.2
 hitchtest==0.9.12         # via hitchpython
 humanize==0.5.1           # via hitchserve
 icommandlib==0.1.1
