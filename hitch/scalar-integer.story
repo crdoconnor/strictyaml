@@ -22,39 +22,28 @@ Scalar integer:
   variations:
     Parsed correctly:
       steps:
-      - Run:
-          code: |
-            Ensure(parsed).equals({"a": 1, "b": 5})
+      - Run: |
+          Ensure(parsed).equals({"a": 1, "b": 5})
 
     Cast with str:
       steps:
-      - Run:
-          code: |
-            Ensure(str(parsed["a"])).equals("1")
+      - Run: Ensure(str(parsed["a"])).equals("1")
 
     Cast with float:
       steps:
-      - Run:
-          code: |
-            Ensure(float(parsed["a"])).equals(1.0)
+      - Run: Ensure(float(parsed["a"])).equals(1.0)
 
     Greater than:
       steps:
-      - Run:
-          code: |
-            Ensure(parsed["a"] > 0).equals(True)
+      - Run: Ensure(parsed["a"] > 0).equals(True)
 
     Less than:
       steps:
-      - Run:
-          code: |
-            Ensure(parsed["a"] < 2).equals(True)
+      - Run: Ensure(parsed["a"] < 2).equals(True)
 
     To get actual int, use .data:
       steps:
-      - Run:
-          code: |
-            Ensure(type(load(yaml_snippet, schema)["a"].data) is int).equals(True)
+      - Run: Ensure(type(load(yaml_snippet, schema)["a"].data) is int).equals(True)
 
     Cannot cast to bool:
       steps:
@@ -76,14 +65,14 @@ Invalid scalar integer:
       from strictyaml import Map, Int, load
 
       schema = Map({"a": Int(), "b": Int()})
-    code: |
-      load(yaml_snippet, schema)
   steps:
-  - Raises exception:
-      exception type: strictyaml.exceptions.YAMLValidationError
-      message: |-
-        when expecting an integer
-        found arbitrary text
-          in "<unicode string>", line 1, column 1:
-            a: string
-             ^ (line: 1)
+  - Run:
+      code: load(yaml_snippet, schema)
+      raises:
+        type: strictyaml.exceptions.YAMLValidationError
+        message: |-
+          when expecting an integer
+          found arbitrary text
+            in "<unicode string>", line 1, column 1:
+              a: string
+               ^ (line: 1)

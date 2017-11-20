@@ -9,8 +9,6 @@ Fixed length sequences (FixedSeq):
       from ensure import Ensure
 
       schema = FixedSeq([Int(), Map({"x": Str()}), Float()])
-    code: |
-      load(yaml_snippet, schema)
   variations:
     Equivalent list:
       given:
@@ -30,17 +28,19 @@ Fixed length sequences (FixedSeq):
           b: 2
           c: 3
       steps:
-      - Raises exception:
-          exception type: strictyaml.exceptions.YAMLValidationError
-          message: |-
-            when expecting a sequence of 3 elements
-              in "<unicode string>", line 1, column 1:
-                a: '1'
-                 ^ (line: 1)
-            found a mapping
-              in "<unicode string>", line 3, column 1:
-                c: '3'
-                ^ (line: 3)
+      - Run:
+          code: load(yaml_snippet, schema)
+          raises:
+            type: strictyaml.exceptions.YAMLValidationError
+            message: |-
+              when expecting a sequence of 3 elements
+                in "<unicode string>", line 1, column 1:
+                  a: '1'
+                   ^ (line: 1)
+              found a mapping
+                in "<unicode string>", line 3, column 1:
+                  c: '3'
+                  ^ (line: 3)
 
     Invalid list 2:
       given:
@@ -51,14 +51,16 @@ Fixed length sequences (FixedSeq):
             - 1
             - 2
       steps:
-      - Raises exception:
-          exception type: strictyaml.exceptions.YAMLValidationError
-          message: |-
-            when expecting a mapping
-            found arbitrary text
-              in "<unicode string>", line 2, column 1:
-                - a
-                ^ (line: 2)
+      - Run:
+          code: load(yaml_snippet, schema)
+          raises:
+            type: strictyaml.exceptions.YAMLValidationError
+            message: |-
+              when expecting a mapping
+              found arbitrary text
+                in "<unicode string>", line 2, column 1:
+                  - a
+                  ^ (line: 2)
 
     Invalid list 3:
       given:
@@ -66,14 +68,16 @@ Fixed length sequences (FixedSeq):
           - 1
           - a
       steps:
-      - Raises exception:
-          exception type: strictyaml.exceptions.YAMLValidationError
-          message: |-
-            when expecting a sequence of 3 elements
-              in "<unicode string>", line 1, column 1:
-                - '1'
-                 ^ (line: 1)
-            found a sequence of 2 elements
-              in "<unicode string>", line 2, column 1:
-                - a
-                ^ (line: 2)
+      - Run:
+          code: load(yaml_snippet, schema)
+          raises:
+            type: strictyaml.exceptions.YAMLValidationError
+            message: |-
+              when expecting a sequence of 3 elements
+                in "<unicode string>", line 1, column 1:
+                  - '1'
+                   ^ (line: 1)
+              found a sequence of 2 elements
+                in "<unicode string>", line 2, column 1:
+                  - a
+                  ^ (line: 2)

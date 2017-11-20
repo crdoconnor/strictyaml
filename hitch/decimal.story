@@ -30,62 +30,56 @@ Decimal:
       given:
         code:
       steps:
-      - Run:
-          code: |
-            Ensure(type(load(yaml_snippet, schema)["a"].data) is Dec).is_true()
+      - Run: Ensure(type(load(yaml_snippet, schema)["a"].data) is Dec).is_true()
 
     Valid:
       steps:
-      - Run:
-          code: |
-            Ensure(load(yaml_snippet, schema)).equals({"a": Dec('1.00000000000000000001'), "b": Dec('5.4135')})
+      - Run: |
+          Ensure(load(yaml_snippet, schema)).equals({"a": Dec('1.00000000000000000001'), "b": Dec('5.4135')})
 
     Cast to str:
       steps:
       - Run:
-          code: |
-            Ensure(str(load(yaml_snippet, schema)['a'])).equals("1.00000000000000000001")
+          Ensure(str(load(yaml_snippet, schema)['a'])).equals("1.00000000000000000001")
 
 
     Cast to float:
       steps:
       - Run:
-          code: |
-            Ensure(float(load(yaml_snippet, schema)["a"])).equals(1.0)
+          Ensure(float(load(yaml_snippet, schema)["a"])).equals(1.0)
 
     Greater than:
       steps:
       - Run:
-          code: |
-            Ensure(load(yaml_snippet, schema)["a"] > Dec('1.0')).is_true()
+          Ensure(load(yaml_snippet, schema)["a"] > Dec('1.0')).is_true()
 
     Less than which would not work for float:
       steps:
       - Run:
-          code: |
-            Ensure(load(yaml_snippet, schema)["a"] < Dec('1.00000000000000000002')).is_true()
+          Ensure(load(yaml_snippet, schema)["a"] < Dec('1.00000000000000000002')).is_true()
 
     Cannot cast to bool:
-      given:
-        code: bool(load(yaml_snippet, schema)['a'])
       steps:
-      - Raises exception:
-          message: |-
-            Cannot cast 'YAML(1.00000000000000000001)' to bool.
-            Use bool(yamlobj.data) or bool(yamlobj.text) instead.
+      - Run: 
+          code: bool(load(yaml_snippet, schema)['a'])
+          raises:
+            message: |-
+              Cannot cast 'YAML(1.00000000000000000001)' to bool.
+              Use bool(yamlobj.data) or bool(yamlobj.text) instead.
 
     Invalid:
       given:
         yaml_snippet: |
           a: string
           b: 2
-        code: load(yaml_snippet, schema)
       steps:
-      - Raises exception:
-          exception type: strictyaml.exceptions.YAMLValidationError
-          message: |-
-            when expecting a decimal
-            found arbitrary text
-              in "<unicode string>", line 1, column 1:
-                a: string
-                 ^ (line: 1)
+      - Run:
+          code: load(yaml_snippet, schema)
+          raises:
+            type: strictyaml.exceptions.YAMLValidationError
+            message: |-
+              when expecting a decimal
+              found arbitrary text
+                in "<unicode string>", line 1, column 1:
+                  a: string
+                   ^ (line: 1)

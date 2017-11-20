@@ -7,7 +7,6 @@ from commandlib import Command
 from strictyaml import Str, Map, Int, Bool, Optional, load
 from pathquery import pathq
 import hitchtest
-import hitchdoc
 from hitchrun import hitch_maintenance
 from commandlib import python
 from hitchrun import DIR
@@ -43,11 +42,6 @@ class Engine(BaseEngine):
 
     def set_up(self):
         """Set up your applications and the test environment."""
-        self.doc = hitchdoc.Recorder(
-            hitchdoc.HitchStory(self),
-            self.path.gen.joinpath('storydb.sqlite'),
-        )
-
         self.path.state = self.path.gen.joinpath("state")
         if self.path.state.exists():
             self.path.state.rmtree(ignore_errors=True)
@@ -90,40 +84,6 @@ class Engine(BaseEngine):
                 yaml_snippet_2=self.given.get('yaml_snippet_2'),
                 modified_yaml_snippet=self.given.get('modified_yaml_snippet'),
             )
-
-    @expected_exception(HitchRunPyException)
-    @validate(
-        exception_type=Map({"in python 2": Str(), "in python 3": Str()}) | Str(),
-        message=Map({"in python 2": Str(), "in python 3": Str()}) | Str(),
-    )
-    def raises_exception(self, exception_type=None, message=None):
-        """
-        Expect an exception.
-        """
-        differential = False
-
-        if exception_type is not None:
-            if not isinstance(exception_type, str):
-                differential = True
-                exception_type = exception_type['in python 2']\
-                    if self.given['python version'].startswith("2")\
-                    else exception_type['in python 3']
-
-        if message is not None:
-            if not isinstance(message, str):
-                differential = True
-                message = message['in python 2']\
-                    if self.given['python version'].startswith("2")\
-                    else message['in python 3']
-
-        try:
-            result = self.example_py_code.expect_exceptions().run()
-            result.exception_was_raised(exception_type, message)
-        except ExpectedExceptionMessageWasDifferent as error:
-            if self.settings.get("rewrite") and not differential:
-                self.current_step.update(message=error.actual_message)
-            else:
-                raise
 
     @expected_exception(NonMatching)
     @expected_exception(HitchRunPyException)
@@ -343,22 +303,6 @@ def deploy(version):
 def docgen():
     """
     Generate documentation.
-    """
-    from jinja2.environment import Environment
-    from jinja2 import DictLoader
-    from strictyaml import load
-
-    docs = DIR.gen.joinpath("docs")
-    if docs.exists():
-        docs.rmtree()
-        docs.mkdir()
-
-    stories = _storybook({}).non_variations().ordered_by_name()
-    env = Environment()
-    env.loader = DictLoader(
-        load((DIR.key/"doctemplates.yml").bytes().decode('utf8')).data
-    )
-
     for story in stories:
         if story.info['docs']:
             doc = docs.joinpath("{0}.rst".format(story.info['docs']))
@@ -367,6 +311,7 @@ def docgen():
             doc.write_text(env.get_template("document").render(
                 story=story,
             ))
+    """
 
 
 @expected(CommandError)

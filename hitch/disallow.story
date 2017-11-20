@@ -19,8 +19,6 @@ Disallowed YAML:
       from strictyaml import TagTokenDisallowed, FlowMappingDisallowed, AnchorTokenDisallowed
 
       schema = Map({"x": Map({"a": Any(), "b": Any(), "c": Any()})})
-    code: |
-      load(yaml_snippet, schema, label="disallowed")
   variations:
     Tag tokens:
       given:
@@ -30,34 +28,38 @@ Disallowed YAML:
             b: !!str 3.5
             c: !!str yes
       steps:
-      - Raises exception:
-          exception type: strictyaml.exceptions.TagTokenDisallowed
-          message: |-
-            While scanning
-              in "disallowed", line 2, column 11:
-                  a: !!str yes
-                          ^ (line: 2)
-            Found disallowed tag tokens (do not specify types in markup)
-              in "disallowed", line 2, column 6:
-                  a: !!str yes
-                     ^ (line: 2)
+      - Run:
+          code: load(yaml_snippet, schema, label="disallowed")
+          raises:
+            type: strictyaml.exceptions.TagTokenDisallowed
+            message: |-
+              While scanning
+                in "disallowed", line 2, column 11:
+                    a: !!str yes
+                            ^ (line: 2)
+              Found disallowed tag tokens (do not specify types in markup)
+                in "disallowed", line 2, column 6:
+                    a: !!str yes
+                       ^ (line: 2)
 
     Flow style sequence:
       given:
         yaml_snippet: |
           [a, b]: [x, y]
       steps:
-      - Raises exception:
-          exception type: strictyaml.exceptions.FlowMappingDisallowed
-          message: |-
-            While scanning
-              in "disallowed", line 1, column 1:
-                [a, b]: [x, y]
-                ^ (line: 1)
-            Found ugly disallowed JSONesque flow mapping (surround with ' and ' to make text appear literally)
-              in "disallowed", line 1, column 2:
-                [a, b]: [x, y]
-                 ^ (line: 1)
+      - Run:
+          code: load(yaml_snippet, schema, label="disallowed")
+          raises:
+            type: strictyaml.exceptions.FlowMappingDisallowed
+            message: |-
+              While scanning
+                in "disallowed", line 1, column 1:
+                  [a, b]: [x, y]
+                  ^ (line: 1)
+              Found ugly disallowed JSONesque flow mapping (surround with ' and ' to make text appear literally)
+                in "disallowed", line 1, column 2:
+                  [a, b]: [x, y]
+                   ^ (line: 1)
 
     Flow style mapping:
       description: |
@@ -66,17 +68,19 @@ Disallowed YAML:
         yaml_snippet: |
           x: { a: 1, b: 2, c: 3 }
       steps:
-      - Raises exception:
-          exception type: strictyaml.exceptions.FlowMappingDisallowed
-          message: |-
-            While scanning
-              in "disallowed", line 1, column 4:
-                x: { a: 1, b: 2, c: 3 }
-                   ^ (line: 1)
-            Found ugly disallowed JSONesque flow mapping (surround with ' and ' to make text appear literally)
-              in "disallowed", line 1, column 5:
-                x: { a: 1, b: 2, c: 3 }
-                    ^ (line: 1)
+      - Run:
+          code: load(yaml_snippet, schema, label="disallowed")
+          raises:
+            type: strictyaml.exceptions.FlowMappingDisallowed
+            message: |-
+              While scanning
+                in "disallowed", line 1, column 4:
+                  x: { a: 1, b: 2, c: 3 }
+                     ^ (line: 1)
+              Found ugly disallowed JSONesque flow mapping (surround with ' and ' to make text appear literally)
+                in "disallowed", line 1, column 5:
+                  x: { a: 1, b: 2, c: 3 }
+                      ^ (line: 1)
 
     Node anchors and references:
       description: |
@@ -88,17 +92,19 @@ Disallowed YAML:
             b: 1
             c: *node1
       steps:
-      - Raises exception:
-          exception type: strictyaml.exceptions.AnchorTokenDisallowed
-          message: |-
-            While scanning
-              in "disallowed", line 2, column 6:
-                  a: &node1 3.5
-                     ^ (line: 2)
-            Found confusing disallowed anchor token (surround with ' and ' to make text appear literally)
-              in "disallowed", line 2, column 12:
-                  a: &node1 3.5
-                           ^ (line: 2)
+      - Run:
+          code: load(yaml_snippet, schema, label="disallowed")
+          raises:
+            type: strictyaml.exceptions.AnchorTokenDisallowed
+            message: |-
+              While scanning
+                in "disallowed", line 2, column 6:
+                    a: &node1 3.5
+                       ^ (line: 2)
+              Found confusing disallowed anchor token (surround with ' and ' to make text appear literally)
+                in "disallowed", line 2, column 12:
+                    a: &node1 3.5
+                             ^ (line: 2)
 
 
     Syntactically invalid YAML:
@@ -109,15 +115,17 @@ Disallowed YAML:
           - invalid
           string
       steps:
-      - Raises exception:
-          exception type: ruamel.yaml.scanner.ScannerError
-          message: |-
-            while scanning a simple key
-              in "disallowed", line 2, column 1:
-                string
-                ^ (line: 2)
-            could not find expected ':'
-              in "disallowed", line 3, column 1:
-                
-                ^ (line: 3)
+      - Run:
+          code: load(yaml_snippet, schema, label="disallowed")
+          raises:
+            type: ruamel.yaml.scanner.ScannerError
+            message: |-
+              while scanning a simple key
+                in "disallowed", line 2, column 1:
+                  string
+                  ^ (line: 2)
+              could not find expected ':'
+                in "disallowed", line 3, column 1:
+                  
+                  ^ (line: 3)
 

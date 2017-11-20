@@ -43,11 +43,13 @@ Or validation:
       given:
         yaml_snippet: 'a: A'
       steps:
-      - Raises exception:
-          exception type: strictyaml.exceptions.YAMLValidationError
-          message: |-
-            when expecting an integer
-            found arbitrary text
-              in "<unicode string>", line 1, column 1:
-                a: A
-                 ^ (line: 1)
+      - Run:
+          code: load(yaml_snippet, schema)
+          raises:
+            type: strictyaml.exceptions.YAMLValidationError
+            message: |-
+              when expecting an integer
+              found arbitrary text
+                in "<unicode string>", line 1, column 1:
+                  a: A
+                   ^ (line: 1)
