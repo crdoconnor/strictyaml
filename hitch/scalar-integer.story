@@ -1,4 +1,5 @@
 Scalar integer:
+  docs: scalar/integer
   based on: strictyaml
   description: |
     StrictYAML parses to a YAML object, not

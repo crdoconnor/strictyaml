@@ -1,4 +1,5 @@
 Decimal:
+  docs: scalar/decimal
   based on: strictyaml
   description: |
     StrictYAML parses to a YAML object representing

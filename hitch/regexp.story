@@ -1,4 +1,5 @@
 Regex strings:
+  docs: scalar/regular-expressions
   based on: strictyaml
   description: |
     StrictYAML can validate regular expressions and return a

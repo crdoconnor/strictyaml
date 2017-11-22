@@ -1,4 +1,5 @@
 Email and URL validators:
+  docs: scalar/email-and-url
   based on: strictyaml
   description: |
     StrictYAML can validate emails (using a simplified regex) and

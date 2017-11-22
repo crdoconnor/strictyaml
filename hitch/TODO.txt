@@ -1,6 +1,5 @@
 Reorganize doc generation so that scalar validators, non-scalar validators are treated separately.
 Handle updating YAML objects with new data.
-Version YAML docs with readthedocs.
 Move explanatory docs to readthedocs with links from FAQ, README.rst, etc.
 Add section on jsonschema + yaml
 Add section on kwalify + yaml

@@ -1,6 +1,6 @@
 What line:
   based on: strictyaml
-  importance: 2
+  docs: what-line
   description: |
     Line numbers, the text of an item and text of surrounding lines
     can be grabbed from returned YAML objects - using .start_line,
@@ -28,46 +28,46 @@ What line:
       snippet = load(yaml_snippet, schema)
 
   variations:
-    Start line includes previous comment:
+    If there is preceding comment for an item the start line includes it:
       steps:
       - Run:
           code: |
             Ensure(snippet["a"].start_line).equals(2)
             Ensure(snippet["d"].start_line).equals(9)
 
-    End line includes comment:
+    If there is a trailing comment the end line includes it:
       steps:
       - Run:
           code: |
             Ensure(snippet["a"].end_line).equals(6)
             Ensure(snippet["d"].end_line).equals(10)
 
-    Start line of key:
+    You can grab the start line of a key:
       steps:
       - Run:
           code: |
             Ensure(snippet.keys()[1].start_line).equals(2)
 
-    Start and end line of all YAML:
+    Start line and end line of whole snippet:
       steps:
       - Run:
           code: |
             Ensure(snippet.start_line).equals(1)
             Ensure(snippet.end_line).equals(10)
 
-    Lines before:
+    Grabbing a line before an item:
       steps:
       - Run:
           code: |
             Ensure(snippet['a'].lines_before(1)).equals("y: p")
 
-    Lines after:
+    Grabbing a line after an item:
       steps:
       - Run:
           code: |
             Ensure(snippet['a'].lines_after(4)).equals("b: y\nc: a\n\nd: b")
 
-    Relevant lines:
+    Grabbing the lines of an item including comments before and after:
       steps:
       - Run:
           code: |

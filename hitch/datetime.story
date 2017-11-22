@@ -1,4 +1,5 @@
 Datetime:
+  docs: scalar/datetime
   based on: strictyaml
   description: |
     Datetime validator parses using the python-dateutil library and

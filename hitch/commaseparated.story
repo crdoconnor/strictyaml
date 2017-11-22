@@ -1,4 +1,5 @@
 Comma separated:
+  docs: scalar/comma-separated
   based on: strictyaml
   description: |
     Comma-separated values can be validated and parsed

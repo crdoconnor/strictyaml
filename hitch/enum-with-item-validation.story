@@ -1,4 +1,5 @@
 Enum with item validation:
+  docs: compound/map-pattern
   based on: strictyaml
   description: |
     See also: enum validation.

@@ -1,4 +1,5 @@
-Map:
+Mapping representation:
+  docs: compound/mapping-yaml-object
   based on: strictyaml
   description: |
     When a YAML document with mappings is parsed, it is not parsed

@@ -1,6 +1,6 @@
 Mapping:
+  docs: compound/mapping
   based on: strictyaml
-  importance: 3
   description: |
     Mappings of one value to another are represented by : in YAML
     and parsed as python dicts.

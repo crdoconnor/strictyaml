@@ -1,4 +1,5 @@
 Empty key validation:
+  docs: scalar/empty
   based on: strictyaml
   description: |
     Sometimes you may wish to not specify a value or specify

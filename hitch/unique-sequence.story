@@ -1,4 +1,5 @@
-Unique sequences:
+Sequences of Unique Items:
+  docs: compound/sequences-of-unique-items
   based on: strictyaml
   description: |
     UniqueSeq validates sequences which contain no duplicate

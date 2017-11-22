@@ -1,4 +1,5 @@
 Map Pattern:
+  docs: compound/map-pattern
   based on: strictyaml
   description: |
     When you do not wish to let the user define the key

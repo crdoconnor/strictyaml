@@ -1,4 +1,5 @@
 Roundtripped YAML:
+  docs: roundtripping
   based on: strictyaml
   description: |
     Loaded YAML can be modified and dumped out again with

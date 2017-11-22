@@ -1,4 +1,5 @@
 Floats:
+  docs: scalar/float
   based on: strictyaml
   description: |
     StrictYAML parses to a YAML object representing

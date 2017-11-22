@@ -1,4 +1,5 @@
 Optional validation:
+  docs: compound/optional-keys
   based on: strictyaml
   description: |
     Not every key in a YAML mapping will be required. If

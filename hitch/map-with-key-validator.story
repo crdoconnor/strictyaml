@@ -1,6 +1,6 @@
-Map with key validator:
+Map with slug key validator:
+  docs: compound/mapping-with-slug-keys
   based on: strictyaml
-  importance: 3
   description: |
     A typical mapping except that the key values are determined
     by the value provided by the validator.

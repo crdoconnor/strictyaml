@@ -1,4 +1,5 @@
 Seq validator:
+  docs: compound/sequences
   based on: strictyaml
   importance: 5
   description: |
@@ -123,6 +124,7 @@ Seq validator:
                 in "<unicode string>", line 3, column 1:
                   - '3.4'
                   ^ (line: 3)
+
 Modify nested sequence:
   based on: strictyaml
   given:

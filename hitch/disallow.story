@@ -1,4 +1,5 @@
 Disallowed YAML:
+  docs: restrictions/disallowed-yaml
   based on: strictyaml
   description: |
     StrictYAML parses an opinionated subset of the YAML

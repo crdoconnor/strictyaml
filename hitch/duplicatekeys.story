@@ -1,4 +1,5 @@
 Duplicate keys:
+  docs: restrictions/duplicate-keys
   based on: strictyaml
   description: |
     Duplicate keys are allowed in regular YAML - as parsed by pyyaml, ruamel.yaml and poyo:

@@ -1,38 +1,49 @@
-document: |
+story: |
   {{ story.name }}
   {{ "-" * story.name|length }}
 
   {{ story.info['description'] }}
   
-  Example yaml_snippet:
+  {% if 'yaml_snippet' in story.given %}Example yaml_snippet:
   
   .. code-block:: yaml
+
+      {{ story.given['yaml_snippet']|indent(4) }}
+  {% endif %}
   
-      {{ story.preconditions['yaml_snippet']|indent(4) }}
+  {% if 'setup' in story.given %}.. code-block:: python
   
-  .. code-block:: python
-  
-      {{ story.preconditions['setup']|indent(4) }}
+      {{ story.given['setup']|indent(4) }}
+  {% endif %}
 
   {% for variation in story.variations %}
   
   {{ variation.child_name }}
   {{ "-" * variation.child_name|length }}
   
-  .. code-block:: python
-  
-      {{ variation.steps[0].arguments.yaml['code'].data|indent(4) }}
-      
-  {% if 'will output' in variation.steps[0].arguments.yaml %}
-  .. code-block:: yaml
-
-      {{ variation.steps[0].arguments.yaml['will output'].data|indent(4) }}
-  {% endif %}
-  {% if 'raises' in variation.steps[0].arguments.yaml %}
-  {{ variation.steps[0].arguments.yaml['raises']['message'].data }}
-  {% endif %}
+  {{ variation.steps[0].documentation() }}
   {% endfor %}
 
   Page automatically generated from executable user story:
     https://github.com/crdoconnor/strictyaml/blob/master/hitch/{{ story.filename.basename() }}
 
+run: |
+  .. code-block:: python
+  
+      {{ step['code']|indent(4) }}
+      {% if 'will_output' in step %}
+  .. code-block:: yaml
+      {{ step['will_output']|indent(4) }}
+      {% endif %}
+      {% if 'raises' in step %}
+  .. code-block::
+      {% if 'in python 3' in step['raises']['type'] -%}
+      {{ step['raises']['type']['in python 3'] }}:
+      {%- else %}{{ step['raises']['type'] }}:{% endif -%}
+      {%- if 'in python 3' in step['raises']['message'] -%}
+        {{ step['raises']['message']['in python 3']|indent(6)  }}:
+      {% else %}
+        {{ step['raises']['message']|indent(6) }}
+      {% endif %}
+      {% endif %}
+    

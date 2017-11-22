@@ -303,15 +303,16 @@ def deploy(version):
 def docgen():
     """
     Generate documentation.
-    for story in stories:
+    """
+    docs = DIR.gen.joinpath("docs")
+    for story in _storybook({}).with_templates(
+        load(DIR.key.joinpath("doctemplates.yml").bytes().decode('utf8')).data
+    ).ordered_by_name():
         if story.info['docs']:
             doc = docs.joinpath("{0}.rst".format(story.info['docs']))
             if not doc.dirname().exists():
                 doc.dirname().makedirs()
-            doc.write_text(env.get_template("document").render(
-                story=story,
-            ))
-    """
+            doc.write_text(story.documentation())
 
 
 @expected(CommandError)

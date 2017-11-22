@@ -1,4 +1,5 @@
 Fixed length sequences (FixedSeq):
+  docs: compound/fixed-length-sequences
   based on: strictyaml
   description: |
     Sequences of fixed length can be validated with a series
