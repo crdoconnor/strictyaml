@@ -1,5 +1,5 @@
 Non-schema validation:
-  docs: without-a-schema
+  docs: howto/without-a-schema
   based on: strictyaml
   description: |
     When using strictyaml you do not have to specify a schema. If

@@ -1,5 +1,5 @@
 Labeling exceptions:
-  docs: labeling-exceptions
+  docs: howto/label-exceptions
   based on: strictyaml
   description: |
     When raising exceptions, you can add a label that will replace

@@ -1,5 +1,5 @@
 Merge YAML documents:
-  docs: merging-yaml-documents
+  docs: howto/merge-yaml-documents
   based on: strictyaml
   description: |
     Loaded YAML can be combined and dumped with the comments intact.

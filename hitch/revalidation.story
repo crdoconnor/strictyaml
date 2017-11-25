@@ -1,5 +1,5 @@
 Revalidation:
-  docs: revalidation
+  docs: howto/revalidation
   based on: strictyaml
   description: |
     When parsing a YAML document you may wish to validate part of the

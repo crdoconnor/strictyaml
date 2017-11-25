@@ -162,6 +162,9 @@ class Engine(BaseEngine):
 def _storybook(settings):
     return StoryCollection(pathq(DIR.key).ext("story"), Engine(DIR, settings))
 
+def _current_version():
+    return DIR.project.joinpath("VERSION").bytes().decode('utf8').rstrip()
+
 
 def _personal_settings():
     settings_file = DIR.key.joinpath("personalsettings.yml")
@@ -305,11 +308,18 @@ def docgen():
     Generate documentation.
     """
     docs = DIR.gen.joinpath("docs")
+    if docs.exists():
+        docs.rmtree()
+        
+    # Copy in non-generated docs
+    DIR.project.joinpath("docs").copytree(docs)
+
+    using = docs.joinpath("using", _current_version())
     for story in _storybook({}).with_templates(
         load(DIR.key.joinpath("doctemplates.yml").bytes().decode('utf8')).data
     ).ordered_by_name():
         if story.info['docs']:
-            doc = docs.joinpath("{0}.rst".format(story.info['docs']))
+            doc = using.joinpath("{0}.rst".format(story.info['docs']))
             if not doc.dirname().exists():
                 doc.dirname().makedirs()
             doc.write_text(story.documentation())

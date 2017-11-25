@@ -1,6 +1,6 @@
 What line:
   based on: strictyaml
-  docs: what-line
+  docs: howto/what-line
   description: |
     Line numbers, the text of an item and text of surrounding lines
     can be grabbed from returned YAML objects - using .start_line,
