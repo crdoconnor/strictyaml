@@ -27,7 +27,7 @@ What features does StrictYAML remove?
 | `Flow style`_            | .. code-block:: yaml  | .. code-block:: python                | .. code-block:: python             |
 |                          |                       |                                       |                                    |
 |                          |      x: 1             |      load(yaml) == \                  |     raises FlowStyleDisallowed     |
-|                          |      b: {c: 3, d: 4}  |      {'x': {'a': 1}, 'y': {'a': 1}}   |                                    |
+|                          |      b: {c: 3, d: 4}  |      {'x': 1, 'b': {'c': 3, 'd': 4}}  |                                    |
 +--------------------------+-----------------------+---------------------------------------+------------------------------------+
 | `Duplicate keys`_        | .. code-block:: yaml  | .. code-block:: python                | .. code-block:: python             |
 |                          |                       |                                       |                                    |
