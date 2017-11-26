@@ -206,7 +206,7 @@ In JSON when being used as a REST API, syntax typing is often an *advantage* - i
 
 StrictYAML assumes all values are strings unless the schema explicitly indicates otherwise (e.g. Map(Int(), Int())).
 
-StrictYAML does require not quotation marks for strings that are implicitly converted to other types (e.g. yes or 1.5), but it does require quotation marks for strings that are syntactically confusing (e.g. "{ text in curly brackets }")
+StrictYAML does not require quotation marks for strings that are implicitly converted to other types (e.g. yes or 1.5), but it does require quotation marks for strings that are syntactically confusing (e.g. "{ text in curly brackets }")
 
 Regular YAML has explicit `syntax typing <https://github.com/crdoconnor/strictyaml/blob/master/FAQ.rst#whats-wrong-with-syntax-typing-in-a-readable-configuration-language>`_
 to explicitly declare strings, although it's confusing as hell to know when it's required and when it is not. For example::
