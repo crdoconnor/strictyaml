@@ -1,5 +1,6 @@
 Enum (enum validation):
   docs: scalar/enum
+  based on: strictyaml
   description: |
     StrictYAML allows you to ensure that a scalar
     value can only be one of a set number of items.

@@ -15,6 +15,7 @@ from hitchrunpy import ExamplePythonCode, HitchRunPyException, ExpectedException
 import requests
 from templex import Templex, NonMatching
 
+#yaml_snippet, Item(Str(), default, parameterized
 
 class Engine(BaseEngine):
     """Python engine for running tests."""
@@ -161,6 +162,7 @@ class Engine(BaseEngine):
 
 def _storybook(settings):
     return StoryCollection(pathq(DIR.key).ext("story"), Engine(DIR, settings))
+
 
 def _current_version():
     return DIR.project.joinpath("VERSION").bytes().decode('utf8').rstrip()
@@ -310,7 +312,7 @@ def docgen():
     docs = DIR.gen.joinpath("docs")
     if docs.exists():
         docs.rmtree()
-        
+
     # Copy in non-generated docs
     DIR.project.joinpath("docs").copytree(docs)
 

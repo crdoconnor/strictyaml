@@ -130,3 +130,21 @@ Disallowed YAML:
                   
                   ^ (line: 3)
 
+    Mixed space indentation:
+      description: |
+        You must use consistent spacing
+      given:
+        yaml_snippet: |
+          item:
+            two space indent: 2
+          item two:
+              four space indent: 2
+      steps:
+      - Run:
+          code: load(yaml_snippet, label="disallowed")
+          raises:
+            type: strictyaml.exceptions.InconsistentIndentationDisallowed
+            message: "While parsing\n  in \"disallowed\", line 4, column 5:\n    \
+              \    four space indent: 2\n        ^ (line: 4)\nFound mapping with indentation\
+              \ inconsistent with previous mapping\n  in \"disallowed\", line 5, column\
+              \ 1:\n    \n    ^ (line: 5)"

@@ -5,6 +5,7 @@ Parsing code for strictyaml.
 from ruamel import yaml as ruamelyaml
 from strictyaml import exceptions
 from ruamel.yaml.comments import CommentedSeq, CommentedMap
+
 from strictyaml.any_validator import Any
 from strictyaml.yamllocation import YAMLChunk
 from strictyaml.utils import ruamel_structure
@@ -36,6 +37,7 @@ class StrictYAMLConstructor(RoundTripConstructor):
                     "expected a mapping node, but found %s" % node.id,
                     node.start_mark)
             merge_map = self.flatten_mapping(node)
+
             # mapping = {}
             if node.comment:
                 maptyp._yaml_add_comment(node.comment[:2])
@@ -94,6 +96,23 @@ class StrictYAMLConstructor(RoundTripConstructor):
             # of collections.OrderedDict (as they have no __contains__
             if merge_map:
                 maptyp.add_yaml_merge(merge_map)
+
+            previous_indentation = None
+
+            for node in [
+                nodegroup[1] for nodegroup in node.value
+                if isinstance(nodegroup[1], ruamelyaml.nodes.MappingNode)
+            ]:
+                if previous_indentation is None:
+                    previous_indentation = node.start_mark.column
+                if node.start_mark.column != previous_indentation:
+                    raise exceptions.InconsistentIndentationDisallowed(
+                        "While parsing",
+                        node.start_mark,
+                        "Found mapping with indentation "
+                        "inconsistent with previous mapping",
+                        node.end_mark,
+                    )
 
 
 StrictYAMLConstructor.add_constructor(
