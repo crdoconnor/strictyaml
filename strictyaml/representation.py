@@ -154,8 +154,8 @@ class YAML(object):
         proposed_chunk.strictparsed()[index] = deepcopy(new_value.as_marked_up())
 
         if self.is_mapping():
-            updated_value = existing_validator(proposed_chunk.val(index))
-            updated_value._chunk.make_child_of(self._chunk.val(index))
+            updated_value = existing_validator(proposed_chunk.val(index, index))
+            updated_value._chunk.make_child_of(self._chunk.val(index, index))
         else:
             updated_value = existing_validator(proposed_chunk.index(index))
             updated_value._chunk.make_child_of(self._chunk.index(index))

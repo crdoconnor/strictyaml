@@ -3,6 +3,10 @@ from ruamel.yaml import dump, RoundTripDumper
 from strictyaml.exceptions import YAMLValidationError
 from strictyaml import utils
 from copy import deepcopy
+import sys
+
+if sys.version_info[0] == 3:
+    unicode = str
 
 
 class YAMLChunk(object):
@@ -28,27 +32,30 @@ class YAMLChunk(object):
         self.expecting_but_found("while parsing {0}".format(what), found=found)
 
     def process(self, new_item):
-        strictparsed = self.pointer.parent().get(self._strictparsed)
-        key_or_index = self.pointer._indices[-1][1]
+        strictparsed = self.pointer.parent().get(self._strictparsed, strictdoc=True)
+
         if self.pointer.is_index():
+            index = self.pointer._indices[-1][1]
             if hasattr(strictparsed, '_value'):
-                strictparsed._value[key_or_index] = new_item
+                strictparsed._value[index] = new_item
             else:
-                strictparsed[key_or_index] = new_item
+                strictparsed[index] = new_item
         elif self.pointer.is_key():
+            key = self.pointer._indices[-1][1][0]
             if hasattr(strictparsed, '_value'):
-                existing_val = strictparsed._value[key_or_index]
-                del strictparsed._value[key_or_index]
+                existing_val = strictparsed._value[key]
+                del strictparsed._value[key]
                 strictparsed._value[new_item] = existing_val
             else:
-                existing_val = strictparsed[key_or_index]
-                del strictparsed[key_or_index]
+                existing_val = strictparsed[key]
+                del strictparsed[key]
                 strictparsed[new_item] = existing_val
         elif self.pointer.is_val():
+            key = self.pointer._indices[-1][1][0]
             if hasattr(strictparsed, '_value'):
-                strictparsed._value[key_or_index] = new_item
+                strictparsed._value[key] = new_item
             else:
-                strictparsed[key_or_index] = new_item
+                strictparsed[key] = new_item
 
     def validate(self, schema):
         schema(self)
@@ -87,7 +94,14 @@ class YAMLChunk(object):
                 "when expecting a mapping",
                 "found {0}".format(self.found())
             )
-        return [(self.key(key), self.val(key)) for key in self.contents.keys()]
+        return [
+            (
+                self.key(regular_key, unicode(validated_key)),
+                self.val(regular_key, unicode(validated_key)),
+            )
+            for (regular_key, validated_key) in
+            zip(self.contents.keys(), self.strictparsed().keys())
+        ]
 
     def expect_scalar(self, what):
         if not self.is_scalar():
@@ -123,8 +137,8 @@ class YAMLChunk(object):
         """
         if self.is_mapping():
             for key, value in self.contents.items():
-                self.key(key).pointer.make_child_of(chunk.pointer)
-                self.val(key).make_child_of(chunk)
+                self.key(key, key).pointer.make_child_of(chunk.pointer)
+                self.val(key, key).make_child_of(chunk)
         elif self.is_sequence():
             for index, item in enumerate(self.contents):
                 self.index(index).make_child_of(chunk)
@@ -145,17 +159,17 @@ class YAMLChunk(object):
         """
         return self._select(self._pointer.index(index))
 
-    def val(self, key):
+    def val(self, key, strictkey=None):
         """
         Return a chunk referencing a value in a mapping with the key 'key'.
         """
-        return self._select(self._pointer.val(key))
+        return self._select(self._pointer.val(key, strictkey))
 
-    def key(self, name):
+    def key(self, key, strictkey=None):
         """
         Return a chunk referencing a key in a mapping with the name 'key'.
         """
-        return self._select(self._pointer.key(name))
+        return self._select(self._pointer.key(key, strictkey))
 
     def textslice(self, start, end):
         """
@@ -186,7 +200,7 @@ class YAMLChunk(object):
         return deepcopy(self._pointer.get(self._document))
 
     def strictparsed(self):
-        return self._pointer.get(self._strictparsed)
+        return self._pointer.get(self._strictparsed, strictdoc=True)
 
 
 class YAMLPointer(object):
@@ -199,17 +213,21 @@ class YAMLPointer(object):
     def __init__(self):
         self._indices = []
 
-    def val(self, index):
+    def val(self, regularkey, strictkey):
+        assert isinstance(regularkey, (str, unicode)), type(regularkey)
+        assert isinstance(strictkey, (str, unicode)), type(strictkey)
         new_location = deepcopy(self)
-        new_location._indices.append(('val', index))
+        new_location._indices.append(('val', (regularkey, strictkey)))
         return new_location
 
     def is_val(self):
         return self._indices[-1][0] == 'val'
 
-    def key(self, name):
+    def key(self, regularkey, strictkey):
+        assert isinstance(regularkey, (str, unicode)), type(regularkey)
+        assert isinstance(strictkey, (str, unicode)), type(strictkey)
         new_location = deepcopy(self)
-        new_location._indices.append(('key', name))
+        new_location._indices.append(('key', (regularkey, strictkey)))
         return new_location
 
     def is_key(self):
@@ -247,7 +265,10 @@ class YAMLPointer(object):
             slicedpart = None
         else:
             if len(indices) > 0:
-                index = indices[0][1]
+                if indices[0][0] in ("val", "key"):
+                    index = indices[0][1][0]
+                else:
+                    index = indices[0][1]
                 start_popping = False
 
                 if isinstance(segment, CommentedMap):
@@ -315,17 +336,19 @@ class YAMLPointer(object):
             self.end_line(document):self.end_line(document) + how_many
         ])
 
-    def get(self, document):
+    def get(self, document, strictdoc=False):
         segment = document
         for index_type, index in self._indices:
             if index_type == "val":
-                segment = segment[index]
+                segment = segment[index[1] if strictdoc else index[0]]
             elif index_type == "index":
                 segment = segment[index]
             elif index_type == "textslice":
                 segment = segment[index[0]:index[1]]
+            elif index_type == "key":
+                segment = index[0] if strictdoc else index[1]
             else:
-                segment = index
+                raise RuntimeError("Invalid state")
         return segment
 
     def __repr__(self):

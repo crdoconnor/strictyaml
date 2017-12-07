@@ -15,10 +15,10 @@ from hitchrunpy import ExamplePythonCode, HitchRunPyException, ExpectedException
 import requests
 from templex import Templex, NonMatching
 
-#yaml_snippet, Item(Str(), default, parameterized
 
 class Engine(BaseEngine):
     """Python engine for running tests."""
+
     schema = StorySchema(
         given={
             Optional("yaml_snippet"): Str(),

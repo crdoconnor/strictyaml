@@ -7,7 +7,7 @@ Map with slug key validator:
   given:
     setup: |
       from collections import OrderedDict
-      from strictyaml import Map, Str, load, ScalarValidator
+      from strictyaml import Map, Str, Seq, load, ScalarValidator
       from ensure import Ensure
       
       # This example uses slugify from the "python-slugify" package
@@ -20,14 +20,34 @@ Map with slug key validator:
           def __repr__(self):
               return u"Slug()"
 
-      schema = Map({"name": Str(), "country-code": Str(), "dial-code": Str()}, key_validator=Slug())
+      schema = Map({
+          "name": Str(),
+          "country-code": Str(),
+          "dial-code": Str(),
+          "official-languages": Seq(Str())
+      }, key_validator=Slug())
     yaml_snippet: |
       Name: United Kingdom
       country-code: GB
       DIAL CODE: +44
+      official languages:
+      - English
+      - Welsh
   steps:
-  - Run:
-      code: |
-        Ensure(load(yaml_snippet, schema).data).equals(
-            {"name": "United Kingdom", "country-code": "GB", "dial-code": "+44"}
-        )
+  - Run: |
+      Ensure(load(yaml_snippet, schema).data).equals(
+          {
+              "name": "United Kingdom",
+              "country-code": "GB",
+              "dial-code": "+44",
+              "official-languages": ["English", "Welsh"],
+          }
+      )
+
+
+Slug key validator revalidation bug:
+  based on: Map with slug key validator
+  steps:
+  - Run: |
+      yaml = load(yaml_snippet, schema)
+      yaml.revalidate(schema)
