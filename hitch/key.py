@@ -34,6 +34,7 @@ class Engine(BaseEngine):
             Optional("description"): Str(),
             Optional("importance"): Int(),
             Optional("docs"): Str(),
+            Optional("fails on python 2"): Bool(),
         },
     )
 
@@ -79,6 +80,7 @@ class Engine(BaseEngine):
         self.example_py_code = ExamplePythonCode(self.python, self.path.state)\
             .with_code(self.given.get('code', ''))\
             .with_setup_code(self.given.get('setup', ''))\
+            .with_terminal_size(160, 100)\
             .with_long_strings(
                 yaml_snippet_1=self.given.get('yaml_snippet_1'),
                 yaml_snippet=self.given.get('yaml_snippet'),
@@ -90,7 +92,7 @@ class Engine(BaseEngine):
     @expected_exception(HitchRunPyException)
     @validate(
         code=Str(),
-        will_output=Str(),
+        will_output=Map({"in python 2": Str(), "in python 3": Str()}) | Str(),
         raises=Map({
             Optional("type"): Map({"in python 2": Str(), "in python 3": Str()}) | Str(),
             Optional("message"): Map({"in python 2": Str(), "in python 3": Str()}) | Str(),
@@ -217,6 +219,7 @@ def regressfile(filename):
     print(
         _storybook({"rewrite": False}).in_filename(filename)
                                       .with_params(**{"python version": "2.7.10"})
+                                      .filter(lambda story: not story.info['fails on python 2'])
                                       .ordered_by_name().play().report()
     )
     print(
@@ -234,7 +237,9 @@ def regression():
     Command("touch", DIR.project.joinpath("strictyaml", "representation.py").abspath()).run()
     storybook = _storybook({}).only_uninherited()
     print(
-        storybook.with_params(**{"python version": "2.7.10"}).ordered_by_name().play().report()
+        storybook.with_params(**{"python version": "2.7.10"})
+                 .filter(lambda story: not story.info['fails on python 2'])
+                 .ordered_by_name().play().report()
     )
     Command("touch", DIR.project.joinpath("strictyaml", "representation.py").abspath()).run()
     print(
