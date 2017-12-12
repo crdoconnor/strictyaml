@@ -2,10 +2,11 @@
 
 vars:
   title: StrictYAML
+  url: http://hitchdev.com/strictyaml
   intro: |
     StrictYAML is a `type-safe <https://en.wikipedia.org/wiki/Type_safety>`_ YAML parser
     that parses a
-    `restricted subset <https://github.com/crdoconnor/strictyaml/blob/master/FAQ.rst#what-features-does-strictyaml-remove>`_
+    `restricted subset <https://hitchdev.com/strictyaml/features-removed>`_
     of the YAML specificaton.
 
     Priorities:
@@ -24,15 +25,43 @@ template: |
   
   {{ intro }}
   
-  Simple example:
-  quickstart.given['
+  {{ quickstart_without_schema }}
   
-  {% for story in quickstart %}
-  {{ story.title }}
+  {{ quickstart_with_schema }}
   
-  {{ story.stuff }}
+  Install It
+  ----------
+
+  .. code-block:: sh
+
+    $ pip install strictyaml
+  
+  
+  Why not X instead?
+  ------------------
+  
+  {% for link in why_not -%}
+  * `{{ link['name'] }} <{{ url }}/why-not/{{ link['slug'] }}>`_
   {% endfor %}
   
-  {% for link in doclinks %}
-  {{ link }}
+  
+  Why?
+  ----
+  
+  {% for link in why -%}
+  * `{{ link['name'] }} <{{ url }}/why/{{ link['slug'] }}>`_
   {% endfor %}
+  
+  Breaking changes
+  ----------------
+
+  0.5: Data is now parsed by default as a YAML object instead of directly to dict/list. To get dict/list and ordinary values as before, get yaml_object.data.
+
+  Contributors
+  ------------
+
+  * @gvx
+  * @AlexandreDecan
+  * @lots0logs
+  * @tobbez
+

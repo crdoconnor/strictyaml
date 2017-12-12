@@ -1,6 +1,7 @@
 Quickstart without schema:
   based on: strictyaml
   given:
+    repr last line: yes
     yaml_snippet: |
       # All about the character
       name: Ford Prefect
@@ -15,7 +16,7 @@ Quickstart without schema:
       steps:
       - Run:
           code: |
-            print(repr(load(yaml_snippet)))
+            load(yaml_snippet)
           will output: |-
             YAML(OrderedDict([('name', 'Ford Prefect'), ('age', '42'), ('possessions', ['Towel'])]))
 
@@ -24,7 +25,7 @@ Quickstart without schema:
       steps:
       - Run:
           code: |
-            print(repr(load(yaml_snippet).data))
+            load(yaml_snippet).data
           will output: |-
             OrderedDict([('name', 'Ford Prefect'), ('age', '42'), ('possessions', ['Towel'])])
     
@@ -43,13 +44,15 @@ Quickstart with schema:
       schema = Map({"name": Str(), "age": Int(), "possessions": Seq(Str())})
   variations:
     Using a schema:
+      given:
+        repr last line: yes
       steps:
       - Run:
           code: |
             person = load(yaml_snippet, schema)
             
             # 42 is now an int
-            print(person.data == {"name": "Ford Prefect", "age": 42, "possessions": ["Towel", ]})
+            person.data == {"name": "Ford Prefect", "age": 42, "possessions": ["Towel", ]}
           will output: True
 
     A YAMLError will be raised if there are syntactic problems, violations of your schema or use of disallowed YAML features:

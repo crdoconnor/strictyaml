@@ -27,6 +27,7 @@ class Engine(BaseEngine):
             Optional("modified_yaml_snippet"): Str(),
             Optional("python version"): Str(),
             Optional("ruamel version"): Str(),
+            Optional("repr last line"): Bool(),
             Optional("setup"): Str(),
             Optional("code"): Str(),
         },
@@ -99,6 +100,12 @@ class Engine(BaseEngine):
         })
     )
     def run(self, code, will_output=None, raises=None):
+        if self.given.get('repr last line', False):
+            code = '{0}\nprint(repr({1}))'.format(
+                '\n'.join(code.strip().split('\n')[:-1]),
+                code.strip().split('\n')[-1]
+            )
+            #import IPython ; IPython.embed()
         to_run = self.example_py_code.with_code(code)
 
         if self.settings.get("cprofile"):
@@ -330,6 +337,49 @@ def docgen():
             if not doc.dirname().exists():
                 doc.dirname().makedirs()
             doc.write_text(story.documentation())
+
+
+def readmegen():
+    """
+    Regenerate README.
+    """
+    readme_generator = load(
+        DIR.key.joinpath("readme.generator").bytes().decode('utf8')
+    ).data
+    from jinja2.environment import Environment
+    from jinja2 import DictLoader
+
+    env = Environment()
+    env.loader = DictLoader({"README": readme_generator['template']})
+    readme_vars = readme_generator['vars']
+    
+    readme_vars['quickstart_without_schema'] = _storybook({}).with_templates(
+        load(DIR.key.joinpath("doctemplates.yml").bytes().decode('utf8')).data
+    ).named("Quickstart without schema").documentation(template="readme")
+    
+    readme_vars['quickstart_with_schema'] = _storybook({}).with_templates(
+        load(DIR.key.joinpath("doctemplates.yml").bytes().decode('utf8')).data
+    ).named("Quickstart with schema").documentation(template="readme")
+    
+    
+    def list_dir(directory):
+        pages = []
+        
+        for slug in [
+            x.namebase for x in DIR.project.joinpath("docs", directory).listdir()
+            if x.namebase != "index"
+        ]:
+            pages.append({
+              'name': DIR.project.joinpath("docs", directory, "{0}.rst".format(slug))\
+                                .text().split('\n')[0],
+              'slug': slug,
+            })
+
+        return pages
+        
+    readme_vars['why'] = list_dir("why")
+    readme_vars['why_not'] = list_dir("why-not")
+    print(env.get_template("README").render(**readme_vars))
 
 
 @expected(CommandError)
