@@ -1,26 +1,16 @@
-Reorganize doc generation so that scalar validators, non-scalar validators are treated separately.
-Handle updating YAML objects with new data.
-Move explanatory docs to readthedocs with links from FAQ, README.rst, etc.
-Add section on jsonschema + yaml
-Add section on kwalify + yaml
-Add section on schema + yaml
+- Add why not section on jsonschema and yaml/ruamel.yaml
 
-* Something like MapPattern, but with just one key.
+- Add why not section on kwalify and ruamel.yaml
 
-validate validator objects.
+- Add why not section on schema and yaml/ruamel.yaml
 
-https://stackoverflow.com/questions/26434053/cargo-toml-for-lib
+- Add reference to https://stackoverflow.com/questions/26434053/cargo-toml-for-lib for TOML
 
-for why not TOML
+- Possibly add scalar types:
+  - AbsoluteUrl(), RelativeUrl(), UNIXPath(), Domain()
+  - CaseInsensitiveEnum
+  - PositiveInt
+  - Base64
+  - Templex
 
-Add scalar types
-
-* AbsoluteUrl(), RelativeUrl(), UNIXPath(), Domain()
-* CaseInsensitiveEnum
-* PositiveInt
-* Base64
-* Templex
-
-Add kwalify parsing.
-
-Refactor so that custom scalar validators can be written.
+- Refactor so that custom scalar validators can be written.
