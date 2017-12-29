@@ -15,7 +15,11 @@ class Optional(object):
         return u'Optional("{0}")'.format(self.key)
 
 
-class MapPattern(Validator):
+class MapValidator(Validator):
+    pass
+
+
+class MapPattern(MapValidator):
     def __init__(self, key_validator, value_validator, minimum_keys=None, maximum_keys=None):
         self._key_validator = key_validator
         self._value_validator = value_validator
@@ -59,7 +63,7 @@ class MapPattern(Validator):
         )
 
 
-class Map(Validator):
+class Map(MapValidator):
     def __init__(self, validator, key_validator=None):
         self._validator = validator
         self._key_validator = Str() if key_validator is None else key_validator
@@ -106,7 +110,11 @@ class Map(Validator):
             )
 
 
-class Seq(Validator):
+class SeqValidator(Validator):
+    pass
+
+
+class Seq(SeqValidator):
     def __init__(self, validator):
         self._validator = validator
 
@@ -118,7 +126,7 @@ class Seq(Validator):
             item.process(self._validator(item))
 
 
-class FixedSeq(Validator):
+class FixedSeq(SeqValidator):
     def __init__(self, validators):
         self._validators = validators
         for item in validators:
@@ -143,7 +151,7 @@ class FixedSeq(Validator):
             item.process(validator(item))
 
 
-class UniqueSeq(Validator):
+class UniqueSeq(SeqValidator):
     def __init__(self, validator):
         self._validator = validator
         assert isinstance(self._validator, ScalarValidator), \
