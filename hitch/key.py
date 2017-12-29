@@ -99,13 +99,12 @@ class Engine(BaseEngine):
             Optional("message"): Map({"in python 2": Str(), "in python 3": Str()}) | Str(),
         })
     )
-    def run(self, code, will_output=None, raises=None):
+    def run(self, code, will_output=None, yaml_output=True, raises=None):
         if self.given.get('repr last line', False):
             code = '{0}\nprint(repr({1}))'.format(
                 '\n'.join(code.strip().split('\n')[:-1]),
                 code.strip().split('\n')[-1]
             )
-            #import IPython ; IPython.embed()
         to_run = self.example_py_code.with_code(code)
 
         if self.settings.get("cprofile"):
@@ -321,11 +320,13 @@ def docgen():
     """
     Generate documentation.
     """
+    readmegen()
     docs = DIR.gen.joinpath("docs")
     if docs.exists():
         docs.rmtree()
 
     # Copy in non-generated docs
+    DIR.gen.joinpath("README.rst").copy(DIR.project.joinpath("docs", "index.rst"))
     DIR.project.joinpath("docs").copytree(docs)
 
     using = docs.joinpath("using", _current_version())
@@ -337,6 +338,7 @@ def docgen():
             if not doc.dirname().exists():
                 doc.dirname().makedirs()
             doc.write_text(story.documentation())
+    
 
 
 def readmegen():
@@ -353,13 +355,9 @@ def readmegen():
     env.loader = DictLoader({"README": readme_generator['template']})
     readme_vars = readme_generator['vars']
     
-    readme_vars['quickstart_without_schema'] = _storybook({}).with_templates(
+    readme_vars['quickstart'] = _storybook({}).with_templates(
         load(DIR.key.joinpath("doctemplates.yml").bytes().decode('utf8')).data
-    ).named("Quickstart without schema").documentation(template="readme")
-    
-    readme_vars['quickstart_with_schema'] = _storybook({}).with_templates(
-        load(DIR.key.joinpath("doctemplates.yml").bytes().decode('utf8')).data
-    ).named("Quickstart with schema").documentation(template="readme")
+    ).in_filename(DIR.key/"quickstart.story").non_variations().ordered_by_file()
     
     
     def list_dir(directory):
@@ -379,7 +377,7 @@ def readmegen():
         
     readme_vars['why'] = list_dir("why")
     readme_vars['why_not'] = list_dir("why-not")
-    print(env.get_template("README").render(**readme_vars))
+    DIR.gen.joinpath("README.rst").write_text(env.get_template("README").render(**readme_vars))
 
 
 @expected(CommandError)

@@ -1,4 +1,4 @@
-Quickstart without schema:
+Simple example: 
   based on: strictyaml
   given:
     repr last line: yes
@@ -30,7 +30,7 @@ Quickstart without schema:
             OrderedDict([('name', 'Ford Prefect'), ('age', '42'), ('possessions', ['Towel'])])
     
 Quickstart with schema:
-  based on: strictyaml
+  based on: simple example
   given:
     yaml_snippet: |
       # All about the character
@@ -55,30 +55,37 @@ Quickstart with schema:
             person.data == {"name": "Ford Prefect", "age": 42, "possessions": ["Towel", ]}
           will output: True
 
-    A YAMLError will be raised if there are syntactic problems, violations of your schema or use of disallowed YAML features:
-      given:
-        yaml_snippet: |
-          # All about the character
-          name: Ford Prefect
-          age: 42
-      steps:
-      - Run:
-          code: |
-             try:
-                 person = load(yaml_snippet, schema)
-             except YAMLError as error:
-                 print(error)
-          will output: |-
-            while parsing a mapping
-              in "<unicode string>", line 1, column 1:
-                # All about the character
-                 ^ (line: 1)
-            required key(s) 'possessions' not found
-              in "<unicode string>", line 3, column 1:
-                age: '42'
-                ^ (line: 3)
+A YAMLError will be raised if there are syntactic problems, violations of your schema or use of disallowed YAML features:
+  based on: quickstart with schema
+  given:
+    repr last line: no
+    yaml_snippet: |
+      # All about the character
+      name: Ford Prefect
+      age: 42
+  steps:
+  - Run:
+      code: |
+          try:
+              person = load(yaml_snippet, schema)
+          except YAMLError as error:
+              print(error)
+      will output: |-
+        while parsing a mapping
+          in "<unicode string>", line 1, column 1:
+            # All about the character
+             ^ (line: 1)
+        required key(s) 'possessions' not found
+          in "<unicode string>", line 3, column 1:
+            age: '42'
+            ^ (line: 3)
 
-    If parsed correctly you can modify values and write out the YAML with comments preserved:
+If parsed correctly:
+  based on: Quickstart with schema
+  given:
+    repr last line: no
+  variations:
+    You can modify values and write out the YAML with comments preserved:
       steps:
       - Run:
           code: |
