@@ -12,7 +12,8 @@ extensions, etc. become the problem of some other module - ideally
 one more focused on handling those kinds of issues.
 
 If you want a quick and easy one liner way to get text from a file,
-I recommend installing and using .text() on path.py:
+I recommend that you pip install path.py and and use .text() on the
+Path object:
 
 .. code-block:: python
 
@@ -21,3 +22,4 @@ I recommend installing and using .text() on path.py:
     >>> parsed_data = load(Path("myfile.yaml").text()).data
     >>> print(parsed_data)
     [ parsed yaml ]
+
