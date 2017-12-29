@@ -11,15 +11,20 @@ if sys.version_info[0] == 3:
 
 class YAMLChunk(object):
     """
-    Represents a section of the document - everything from the whole document
-    all the way to one scalar value.
+    Represents a section of the document with references to the ruamel
+    parsed document and the strictparsed document.
+
+    Most operations done by validators on the document are done using this object.
+
+    Before validation the strictparsed document will be identical to the
+    ruamelparsed document. After it will contain CommentedMaps, CommentedSeqs
+    and YAML objects.
     """
-    def __init__(self, document, pointer=None, label=None, strictparsed=None):
-        self._document = document
-        self._pointer = pointer if pointer is not None \
-            else YAMLPointer()
+    def __init__(self, ruamelparsed, pointer=None, label=None, strictparsed=None):
+        self._ruamelparsed = ruamelparsed
+        self._strictparsed = deepcopy(ruamelparsed) if strictparsed is None else strictparsed
+        self._pointer = pointer if pointer is not None else YAMLPointer()
         self._label = label
-        self._strictparsed = deepcopy(document) if strictparsed is None else strictparsed
 
     def expecting_but_found(self, expecting, found=None):
         raise YAMLValidationError(
@@ -33,29 +38,18 @@ class YAMLChunk(object):
 
     def process(self, new_item):
         strictparsed = self.pointer.parent().get(self._strictparsed, strictdoc=True)
+        current_parsed = strictparsed._value if hasattr(strictparsed, '_value') \
+            else strictparsed
 
         if self.pointer.is_index():
-            index = self.pointer._indices[-1][1]
-            if hasattr(strictparsed, '_value'):
-                strictparsed._value[index] = new_item
-            else:
-                strictparsed[index] = new_item
-        elif self.pointer.is_key():
-            key = self.pointer._indices[-1][1][0]
-            if hasattr(strictparsed, '_value'):
-                existing_val = strictparsed._value[key]
-                del strictparsed._value[key]
-                strictparsed._value[new_item] = existing_val
-            else:
-                existing_val = strictparsed[key]
-                del strictparsed[key]
-                strictparsed[new_item] = existing_val
+            current_parsed[self.pointer.last_index] = new_item
         elif self.pointer.is_val():
-            key = self.pointer._indices[-1][1][0]
-            if hasattr(strictparsed, '_value'):
-                strictparsed._value[key] = new_item
-            else:
-                strictparsed[key] = new_item
+            current_parsed[self.pointer.last_regularkey] = new_item
+        elif self.pointer.is_key():
+            key = self.pointer.last_regularkey
+            existing_val = current_parsed[key]
+            del current_parsed[key]
+            current_parsed[new_item] = existing_val
 
     def validate(self, schema):
         schema(self)
@@ -116,7 +110,7 @@ class YAMLChunk(object):
 
     @property
     def document(self):
-        return self._document
+        return self._ruamelparsed
 
     @property
     def pointer(self):
@@ -124,12 +118,12 @@ class YAMLChunk(object):
 
     def fork(self):
         """
-        Return a chunk to the same location in a duplicated document.
+        Return a chunk referring to the same location in a duplicated document.
 
         Used when modifying a YAML chunk so that the modification can be validated
         before changing it.
         """
-        return YAMLChunk(deepcopy(self._document), pointer=self.pointer, label=self.label)
+        return YAMLChunk(deepcopy(self._ruamelparsed), pointer=self.pointer, label=self.label)
 
     def make_child_of(self, chunk):
         """
@@ -147,7 +141,7 @@ class YAMLChunk(object):
 
     def _select(self, pointer):
         return YAMLChunk(
-            self._document,
+            self._ruamelparsed,
             pointer=pointer,
             label=self._label,
             strictparsed=self._strictparsed
@@ -178,26 +172,26 @@ class YAMLChunk(object):
         return self._select(self._pointer.textslice(start, end))
 
     def start_line(self):
-        return self._pointer.start_line(self._document)
+        return self._pointer.start_line(self._ruamelparsed)
 
     def end_line(self):
-        return self._pointer.end_line(self._document)
+        return self._pointer.end_line(self._ruamelparsed)
 
     def lines(self):
-        return self._pointer.lines(self._document)
+        return self._pointer.lines(self._ruamelparsed)
 
     def lines_before(self, how_many):
-        return self._pointer.lines_before(self._document, how_many)
+        return self._pointer.lines_before(self._ruamelparsed, how_many)
 
     def lines_after(self, how_many):
-        return self._pointer.lines_after(self._document, how_many)
+        return self._pointer.lines_after(self._ruamelparsed, how_many)
 
     @property
     def contents(self):
-        return self._pointer.get(self._document)
+        return self._pointer.get(self._ruamelparsed)
 
     def contentcopy(self):
-        return deepcopy(self._pointer.get(self._document))
+        return deepcopy(self._pointer.get(self._ruamelparsed))
 
     def strictparsed(self):
         return self._pointer.get(self._strictparsed, strictdoc=True)
@@ -212,6 +206,26 @@ class YAMLPointer(object):
     """
     def __init__(self):
         self._indices = []
+
+    @property
+    def last_index(self):
+        assert self.is_index()
+        return self._indices[-1][1]
+
+    @property
+    def last_val(self):
+        assert self.is_val()
+        return self._indices[-1][1]
+
+    @property
+    def last_strictkey(self):
+        assert self.is_key() or self.is_val()
+        return self._indices[-1][1][1]
+
+    @property
+    def last_regularkey(self):
+        assert self.is_key() or self.is_val()
+        return self._indices[-1][1][0]
 
     def val(self, regularkey, strictkey):
         assert isinstance(regularkey, (str, unicode)), type(regularkey)
