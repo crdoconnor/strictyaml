@@ -16,6 +16,14 @@ if sys.version_info[0] == 3:
 
 
 class YAML(object):
+    """
+    A YAML object represents a block of YAML which can be:
+
+    * Used to extract parsed data from the YAML (.data).
+    * Used to render to a string of YAML, with comments (.as_yaml()).
+    * Revalidated with a stricter schema (.revalidate(schema)).
+    """
+
     def __init__(self, value, text=None, chunk=None, validator=None):
         """
         Create a renderable YAML object from data.

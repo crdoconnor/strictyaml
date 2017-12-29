@@ -51,9 +51,6 @@ class YAMLChunk(object):
             del current_parsed[key]
             current_parsed[new_item] = existing_val
 
-    def validate(self, schema):
-        schema(self)
-
     def is_sequence(self):
         return isinstance(self.contents, CommentedSeq)
 
@@ -128,7 +125,7 @@ class YAMLChunk(object):
     def make_child_of(self, chunk):
         """
         Link one YAML chunk to another.
-        
+
         Used when inserting a chunk of YAML into another chunk.
         """
         if self.is_mapping():

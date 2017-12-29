@@ -10,10 +10,10 @@ if sys.version_info[0] == 3:
 
 class YAMLPointer(object):
     """
-    Represents a pointer to a specific location in a document.
+    A sequence of indexes/keys that look up a specific chunk of a YAML document.
 
-    The pointer is a list of values (key lookups on mappings), indexes (index lookup
-    on sequences) and keys (lookup for a particular key name in a mapping).
+    A YAML pointer can point to a key, value, item in a sequence or part of a string
+    in a value or item.
     """
     def __init__(self):
         self._indices = []
