@@ -1,3 +1,7 @@
+- PATCH BUGFIX: Fixed roundtripping of YAML ON maps with key validators.
+
+- Build out documentation pipeline on hitchdev.com/strictyaml.
+
 - Add why not section on jsonschema and yaml/ruamel.yaml
 
 - Add why not section on kwalify and ruamel.yaml
@@ -6,11 +10,8 @@
 
 - Add reference to https://stackoverflow.com/questions/26434053/cargo-toml-for-lib for TOML
 
-- Possibly add scalar types:
-  - AbsoluteUrl(), RelativeUrl(), UNIXPath(), Domain()
-  - CaseInsensitiveEnum
-  - PositiveInt
-  - Base64
-  - Templex
+- Add scalar types AbsoluteUrl(), RelativeUrl(), Domain()
+
+- Consider adding scalar types PositiveInt and Base64.
 
 - Refactor so that custom scalar validators can be written.
