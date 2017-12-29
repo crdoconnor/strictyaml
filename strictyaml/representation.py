@@ -264,8 +264,8 @@ class YAML(object):
             raise TypeError("{0} has no scalar value.".format(repr(self)))
         return self._value
 
-    def document(self):
-        return self._chunk.document
+    def whole_document(self):
+        return self._chunk.whole_document
 
     def __eq__(self, value):
         return self.data == value

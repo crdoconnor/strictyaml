@@ -109,7 +109,7 @@ class YAMLChunk(object):
         return self._label
 
     @property
-    def document(self):
+    def whole_document(self):
         return self._ruamelparsed
 
     @property
@@ -127,6 +127,8 @@ class YAMLChunk(object):
 
     def make_child_of(self, chunk):
         """
+        Link one YAML chunk to another.
+        
         Used when inserting a chunk of YAML into another chunk.
         """
         if self.is_mapping():
@@ -140,6 +142,9 @@ class YAMLChunk(object):
             self.pointer.make_child_of(chunk.pointer)
 
     def _select(self, pointer):
+        """
+        Get a YAMLChunk referenced by a pointer.
+        """
         return YAMLChunk(
             self._ruamelparsed,
             pointer=pointer,
@@ -189,9 +194,6 @@ class YAMLChunk(object):
     @property
     def contents(self):
         return self._pointer.get(self._ruamelparsed)
-
-    def contentcopy(self):
-        return deepcopy(self._pointer.get(self._ruamelparsed))
 
     def strictparsed(self):
         return self._pointer.get(self._strictparsed, strictdoc=True)
