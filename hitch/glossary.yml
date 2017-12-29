@@ -1,0 +1,11 @@
+ruamelparsed: The output of ruamel.yaml roundtrip parser.
+
+strictparsed: Processed ruamelparsed.
+
+map: undefined
+
+seq: undefined
+
+regularkey: undefined
+
+strictkey: undefined
