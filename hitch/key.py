@@ -338,7 +338,6 @@ def docgen():
             if not doc.dirname().exists():
                 doc.dirname().makedirs()
             doc.write_text(story.documentation())
-    
 
 
 def readmegen():
@@ -354,27 +353,26 @@ def readmegen():
     env = Environment()
     env.loader = DictLoader({"README": readme_generator['template']})
     readme_vars = readme_generator['vars']
-    
+
     readme_vars['quickstart'] = _storybook({}).with_templates(
         load(DIR.key.joinpath("doctemplates.yml").bytes().decode('utf8')).data
     ).in_filename(DIR.key/"quickstart.story").non_variations().ordered_by_file()
-    
-    
+
     def list_dir(directory):
         pages = []
-        
+
         for slug in [
             x.namebase for x in DIR.project.joinpath("docs", directory).listdir()
             if x.namebase != "index"
         ]:
             pages.append({
-              'name': DIR.project.joinpath("docs", directory, "{0}.rst".format(slug))\
-                                .text().split('\n')[0],
+              'name': DIR.project.joinpath("docs", directory, "{0}.rst".format(slug))
+                                 .text().split('\n')[0],
               'slug': slug,
             })
 
         return pages
-        
+
     readme_vars['why'] = list_dir("why")
     readme_vars['why_not'] = list_dir("why-not")
     DIR.gen.joinpath("README.rst").write_text(env.get_template("README").render(**readme_vars))
