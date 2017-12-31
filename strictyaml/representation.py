@@ -142,20 +142,24 @@ class YAML(object):
                 repr(self), "bool", "bool(yamlobj.data) or bool(yamlobj.text)"
             )
 
-    def __nonzero__(self):
-        return self.__bool__()
-
-    def __getitem__(self, index):
-        return self._value[index]
-
-    def __setitem__(self, index, value):
+    def _prepostindices(self, index):
         from strictyaml.compound import MapValidator
         if isinstance(self.validator, MapValidator):
             strictindex = self.validator.key_validator(YAMLChunk(index)).data
             preindex = self._chunk.key_association[strictindex]
         else:
             preindex = strictindex = index
+        return preindex, strictindex
 
+    def __nonzero__(self):
+        return self.__bool__()
+
+    def __getitem__(self, index):
+        preindex, strictindex = self._prepostindices(index)
+        return self._value[strictindex]
+
+    def __setitem__(self, index, value):
+        preindex, strictindex = self._prepostindices(index)
         existing_validator = self._value[strictindex].validator
 
         if isinstance(value, YAML):
@@ -188,7 +192,9 @@ class YAML(object):
         self._value[YAML(preindex) if self.is_mapping() else preindex] = new_value
 
     def __delitem__(self, index):
-        del self._value[index]
+        preindex, strictindex = self._prepostindices(index)
+        del self._value[strictindex]
+        del self._chunk.contents[preindex]
 
     def __hash__(self):
         return hash(self._value)

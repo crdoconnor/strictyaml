@@ -50,7 +50,7 @@ Slug key validator revalidation bug:
       yaml.revalidate(schema)
 
 
-Roundtripping maps with slug key validator:
+Slug key validation getitem setitem and delitem:
   description: |
     You can set properties on slug key validated by
     using a key that turns into the same slug as the text
@@ -61,16 +61,39 @@ Roundtripping maps with slug key validator:
     
     Therefore treated as the same key.
   based on: Map with slug key validator
-  steps:
-  - Run:
-      code: |
-        yaml = load(yaml_snippet, schema)
-        yaml['dial code'] = '+48'
-        print(yaml.as_yaml())
-      will output: |-
-        Name: United Kingdom
-        country-code: GB
-        DIAL CODE: +48
-        official languages:
-        - English
-        - Welsh
+  variations:
+    Getting:
+      steps:
+      - Run:
+          code: |
+            yaml = load(yaml_snippet, schema)
+            Ensure(yaml['dial code']).equals("+44")
+
+    Setting:
+      steps:
+      - Run:
+          code: |
+            yaml = load(yaml_snippet, schema)
+            yaml['dial code'] = '+48'
+            print(yaml.as_yaml())
+          will output: |-
+            Name: United Kingdom
+            country-code: GB
+            DIAL CODE: +48
+            official languages:
+            - English
+            - Welsh
+
+    Deleting:
+      steps:
+      - Run:
+          code: |
+            yaml = load(yaml_snippet, schema)
+            del yaml['dial code']
+            print(yaml.as_yaml())
+          will output: |-
+            Name: United Kingdom
+            country-code: GB
+            official languages:
+            - English
+            - Welsh
