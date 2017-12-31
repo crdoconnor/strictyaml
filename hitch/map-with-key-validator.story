@@ -16,9 +16,6 @@ Map with slug key validator:
       class Slug(ScalarValidator):
           def validate_scalar(self, chunk):
               return slugify(unicode(chunk.contents))
-          
-          def __repr__(self):
-              return u"Slug()"
 
       schema = Map({
           "name": Str(),
@@ -51,3 +48,29 @@ Slug key validator revalidation bug:
   - Run: |
       yaml = load(yaml_snippet, schema)
       yaml.revalidate(schema)
+
+
+Roundtripping maps with slug key validator:
+  description: |
+    You can set properties on slug key validated by
+    using a key that turns into the same slug as the text
+    key. E.g.
+    
+    DIAL CODE -> dial-code
+    dial code -> dial-code
+    
+    Therefore treated as the same key.
+  based on: Map with slug key validator
+  steps:
+  - Run:
+      code: |
+        yaml = load(yaml_snippet, schema)
+        yaml['dial code'] = '+48'
+        print(yaml.as_yaml())
+      will output: |-
+        Name: United Kingdom
+        country-code: GB
+        DIAL CODE: +48
+        official languages:
+        - English
+        - Welsh

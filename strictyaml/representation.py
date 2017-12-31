@@ -149,7 +149,14 @@ class YAML(object):
         return self._value[index]
 
     def __setitem__(self, index, value):
-        existing_validator = self._value[index].validator
+        from strictyaml.compound import MapValidator
+        if isinstance(self.validator, MapValidator):
+            strictindex = self.validator.key_validator(YAMLChunk(index)).data
+            preindex = self._chunk.key_association[strictindex]
+        else:
+            preindex = strictindex = index
+
+        existing_validator = self._value[strictindex].validator
 
         if isinstance(value, YAML):
             new_value = existing_validator(value._chunk)
@@ -158,15 +165,15 @@ class YAML(object):
 
         # First validate against forked document
         proposed_chunk = self._chunk.fork()
-        proposed_chunk.contents[index] = new_value.as_marked_up()
-        proposed_chunk.strictparsed()[index] = deepcopy(new_value.as_marked_up())
+        proposed_chunk.contents[preindex] = new_value.as_marked_up()
+        proposed_chunk.strictparsed()[strictindex] = deepcopy(new_value.as_marked_up())
 
         if self.is_mapping():
-            updated_value = existing_validator(proposed_chunk.val(index, index))
-            updated_value._chunk.make_child_of(self._chunk.val(index, index))
+            updated_value = existing_validator(proposed_chunk.val(preindex, strictindex))
+            updated_value._chunk.make_child_of(self._chunk.val(preindex, strictindex))
         else:
-            updated_value = existing_validator(proposed_chunk.index(index))
-            updated_value._chunk.make_child_of(self._chunk.index(index))
+            updated_value = existing_validator(proposed_chunk.index(preindex))
+            updated_value._chunk.make_child_of(self._chunk.index(preindex))
 
         # If validation succeeds, update for real
         marked_up = new_value.as_marked_up()
@@ -177,8 +184,8 @@ class YAML(object):
             if u"\n" in marked_up:
                 marked_up = PreservedScalarString(marked_up)
 
-        self._chunk.contents[index] = marked_up
-        self._value[YAML(index) if self.is_mapping() else index] = new_value
+        self._chunk.contents[preindex] = marked_up
+        self._value[YAML(preindex) if self.is_mapping() else preindex] = new_value
 
     def __delitem__(self, index):
         del self._value[index]

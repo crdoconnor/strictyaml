@@ -34,6 +34,10 @@ class MapPattern(MapValidator):
         assert isinstance(minimum_keys, (type(None), int)), \
             "maximum_keys must be an integer"
 
+    @property
+    def key_validator(self):
+        return self._key_validator
+
     def validate(self, chunk):
         items = chunk.expect_mapping()
 
@@ -54,8 +58,10 @@ class MapPattern(MapValidator):
             )
 
         for key, value in items:
-            key.process(self._key_validator(key))
+            yaml_key = self._key_validator(key)
+            key.process(yaml_key)
             value.process(self._value_validator(value))
+            chunk.add_key_association(key.contents, yaml_key.data)
 
     def __repr__(self):
         return u"MapPattern({0}, {1})".format(
@@ -75,6 +81,10 @@ class Map(MapValidator):
         }
 
         self._required_keys = [key for key in validator.keys() if not isinstance(key, Optional)]
+
+    @property
+    def key_validator(self):
+        return self._key_validator
 
     def __repr__(self):
         return u"Map({{{0}}})".format(', '.join([
@@ -99,6 +109,7 @@ class Map(MapValidator):
 
             value.process(self._validator_dict[yaml_key.scalar](value))
             key.process(yaml_key)
+            chunk.add_key_association(key.contents, yaml_key.data)
             found_keys.add(yaml_key.scalar)
 
         if not set(self._required_keys).issubset(found_keys):

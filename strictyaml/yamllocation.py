@@ -25,6 +25,7 @@ class YAMLChunk(object):
         self._strictparsed = deepcopy(ruamelparsed) if strictparsed is None else strictparsed
         self._pointer = pointer if pointer is not None else YAMLPointer()
         self._label = label
+        self._key_association = {}
 
     def expecting_but_found(self, expecting, found=None):
         raise YAMLValidationError(
@@ -121,6 +122,13 @@ class YAMLChunk(object):
         before changing it.
         """
         return YAMLChunk(deepcopy(self._ruamelparsed), pointer=self.pointer, label=self.label)
+
+    def add_key_association(self, unprocessed_key, processed_key):
+        self._key_association[processed_key] = unprocessed_key
+
+    @property
+    def key_association(self):
+        return self._key_association
 
     def make_child_of(self, chunk):
         """
