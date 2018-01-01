@@ -207,12 +207,10 @@ def bdd(*keywords):
     Run stories matching keywords.
     """
     settings = _personal_settings().data
-    print(
-        _storybook(settings['engine'])
-        .with_params(**{"python version": settings['params']['python version']})
-        .only_uninherited()
-        .shortcut(*keywords).play().report()
-    )
+    _storybook(settings['engine'])\
+        .with_params(**{"python version": settings['params']['python version']})\
+        .only_uninherited()\
+        .shortcut(*keywords).play()
 
 
 @expected(HitchStoryException)
@@ -222,16 +220,14 @@ def regressfile(filename):
 
     Rewrite stories if appropriate.
     """
-    print(
-        _storybook({"rewrite": False}).in_filename(filename)
-                                      .with_params(**{"python version": "2.7.10"})
-                                      .filter(lambda story: not story.info['fails on python 2'])
-                                      .ordered_by_name().play().report()
-    )
-    print(
-        _storybook({"rewrite": False}).with_params(**{"python version": "3.5.0"})
-                                      .in_filename(filename).ordered_by_name().play().report()
-    )
+    _storybook({"rewrite": False}).in_filename(filename)\
+                                  .with_params(**{"python version": "2.7.10"})\
+                                  .filter(lambda story: not story.info['fails on python 2'])\
+                                  .ordered_by_name().play()
+
+    _storybook({"rewrite": False}).with_params(**{"python version": "3.5.0"})\
+                                  .in_filename(filename).ordered_by_name().play()
+
 
 
 @expected(HitchStoryException)
@@ -242,15 +238,11 @@ def regression():
     # HACK: Start using hitchbuildpy to get around this.
     Command("touch", DIR.project.joinpath("strictyaml", "representation.py").abspath()).run()
     storybook = _storybook({}).only_uninherited()
-    print(
-        storybook.with_params(**{"python version": "2.7.10"})
-                 .filter(lambda story: not story.info['fails on python 2'])
-                 .ordered_by_name().play().report()
-    )
+    storybook.with_params(**{"python version": "2.7.10"})\
+             .filter(lambda story: not story.info['fails on python 2'])\
+             .ordered_by_name().play()
     Command("touch", DIR.project.joinpath("strictyaml", "representation.py").abspath()).run()
-    print(
-        storybook.with_params(**{"python version": "3.5.0"}).ordered_by_name().play().report()
-    )
+    storybook.with_params(**{"python version": "3.5.0"}).ordered_by_name().play()
     lint()
     doctest()
     doctest(version="2.7.10")
