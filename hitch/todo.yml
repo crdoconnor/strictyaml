@@ -1,4 +1,4 @@
-- PATCH BUGFIX: Fixed roundtripping of YAML ON maps with key validators.
+- Using YAML objects as keys causes infinite loop.
 
 - Build out documentation pipeline on hitchdev.com/strictyaml.
 
