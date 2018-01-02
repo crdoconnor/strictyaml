@@ -144,6 +144,9 @@ class YAML(object):
 
     def _prepostindices(self, index):
         from strictyaml.compound import MapValidator
+        if isinstance(index, YAML):
+            index = index.data
+
         if isinstance(self.validator, MapValidator):
             strictindex = self.validator.key_validator(YAMLChunk(index)).data
             preindex = self._chunk.key_association[strictindex]

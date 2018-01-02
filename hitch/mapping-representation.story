@@ -58,6 +58,13 @@ Mapping representation:
       - Run:
           code: |
             Ensure(load(yaml_snippet, schema).keys()).equals(["a", "b", "c"])
+            
+    Key lookup:
+      steps:
+      - Run:
+          code: |
+            yaml = load(yaml_snippet, schema)
+            Ensure(yaml[yaml.keys()[0]]).equals(1)
 
     Dict lookup:
       steps:
