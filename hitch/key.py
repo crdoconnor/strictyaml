@@ -229,7 +229,6 @@ def regressfile(filename):
                                   .in_filename(filename).ordered_by_name().play()
 
 
-
 @expected(HitchStoryException)
 def regression():
     """

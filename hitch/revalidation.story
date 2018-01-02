@@ -5,8 +5,10 @@ Revalidation:
     When parsing a YAML document you may wish to validate part of the
     document and then later on validate other sections within it.
 
-    This may be required for several reasons, including that one part
-    of the document validation depends upon another.
+    This may be required because:
+    
+    * One part of the document validation depends upon another (example here).
+    * It simplifies the code to apply different kinds of validation at different steps.
   given:
     setup: |
       from strictyaml import Str, Int, Map, Seq, Any, load

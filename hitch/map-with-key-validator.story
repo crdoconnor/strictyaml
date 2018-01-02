@@ -73,7 +73,8 @@ Slug key validation getitem setitem and delitem:
       steps:
       - Run:
           code: |
-            yaml = load(yaml_snippet, schema)
+            yaml = load(yaml_snippet)
+            yaml.revalidate(schema)
             yaml['dial code'] = '+48'
             print(yaml.as_yaml())
           will output: |-

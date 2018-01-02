@@ -72,6 +72,7 @@ class YAML(object):
             self._value = schema(self._chunk)._value
         else:
             schema(self._chunk)
+        self._validator = schema
 
     @property
     def data(self):
