@@ -55,7 +55,7 @@ Mapping:
             message:
               in python 3: YAML(OrderedDict([('â', 1), ('b', 2), ('c', 3)])) is a mapping,
                 has no text value.
-              in python 2: YAML(OrderedDict([(u'\xe2', 1), (u'b', 2), (u'c', 3)])) is
+              in python 2: YAML(OrderedDict([(u'\xe2', 1), ('b', 2), ('c', 3)])) is
                 a mapping, has no text value.
 
     key not found in schema:

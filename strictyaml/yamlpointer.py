@@ -171,7 +171,7 @@ class YAMLPointer(object):
             elif index_type == "textslice":
                 segment = segment[index[0]:index[1]]
             elif index_type == "key":
-                segment = index[0] if strictdoc else index[1]
+                segment = index[1] if strictdoc else index[0]
             else:
                 raise RuntimeError("Invalid state")
         return segment
