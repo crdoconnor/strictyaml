@@ -27,7 +27,6 @@ class Engine(BaseEngine):
             Optional("modified_yaml_snippet"): Str(),
             Optional("python version"): Str(),
             Optional("ruamel version"): Str(),
-            Optional("repr last line"): Bool(),
             Optional("setup"): Str(),
             Optional("code"): Str(),
         },
@@ -97,10 +96,11 @@ class Engine(BaseEngine):
         raises=Map({
             Optional("type"): Map({"in python 2": Str(), "in python 3": Str()}) | Str(),
             Optional("message"): Map({"in python 2": Str(), "in python 3": Str()}) | Str(),
-        })
+        }),
+        in_interpreter=Bool(),
     )
-    def run(self, code, will_output=None, yaml_output=True, raises=None):
-        if self.given.get('repr last line', False):
+    def run(self, code, will_output=None, yaml_output=True, raises=None, in_interpreter=False):
+        if in_interpreter:
             code = '{0}\nprint(repr({1}))'.format(
                 '\n'.join(code.strip().split('\n')[:-1]),
                 code.strip().split('\n')[-1]
@@ -314,18 +314,18 @@ def docgen():
     readmegen()
     docs = DIR.gen.joinpath("docs")
     if docs.exists():
-        docs.rmtree()
+        docs.rmtree(ignore_errors=True)
 
     # Copy in non-generated docs
-    DIR.gen.joinpath("README.rst").copy(DIR.project.joinpath("docs", "index.rst"))
     DIR.project.joinpath("docs").copytree(docs)
+    DIR.gen.joinpath("README.md").copy(docs/"index.md")
 
-    using = docs.joinpath("using", _current_version())
+    using = docs.joinpath("using", "alpha")
     for story in _storybook({}).with_templates(
         load(DIR.key.joinpath("doctemplates.yml").bytes().decode('utf8')).data
     ).ordered_by_name():
         if story.info['docs']:
-            doc = using.joinpath("{0}.rst".format(story.info['docs']))
+            doc = using.joinpath("{0}.md".format(story.info['docs']))
             if not doc.dirname().exists():
                 doc.dirname().makedirs()
             doc.write_text(story.documentation())
@@ -366,7 +366,7 @@ def readmegen():
 
     readme_vars['why'] = list_dir("why")
     readme_vars['why_not'] = list_dir("why-not")
-    DIR.gen.joinpath("README.rst").write_text(env.get_template("README").render(**readme_vars))
+    DIR.gen.joinpath("README.md").write_text(env.get_template("README").render(**readme_vars))
 
 
 @expected(CommandError)

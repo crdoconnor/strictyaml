@@ -4,23 +4,26 @@ vars:
   title: StrictYAML
   url: http://hitchdev.com/strictyaml
   intro: |
-    StrictYAML is a `type-safe <https://en.wikipedia.org/wiki/Type_safety>`_ YAML parser
+    StrictYAML is a [type-safe](https://en.wikipedia.org/wiki/Type_safety) YAML parser
     that parses a
-    `restricted subset </strictyaml/features-removed>`_
-    of the `YAML </strictyaml/what-is-yaml>`_ specificaton.
+    [restricted subset](strictyaml/features-removed)
+    of the [YAML](strictyaml/what-is-yaml) specificaton.
 
     Priorities:
 
-    * Readability of the YAML.
-    * Ease of use of API.
-    * Secure by default, strict validation of markup and straightforward type casting.
-    * Clear, readable exceptions with code snippets and line numbers.
-    * Acting as a near-drop in replacement for pyyaml, ruamel.yaml or poyo.
-    * Ability to read in (commented) YAML and write it out again with comments preserved.
-    * *Not* speed, currently, although if writing optimized C is your thing, please help.
+    - Readability of the YAML.
+    - Ease of use of API.
+    - Secure by default, strict validation of markup and straightforward type casting.
+    - Clear, readable exceptions with code snippets and line numbers.
+    - Acting as a near-drop in replacement for pyyaml, ruamel.yaml or poyo.
+    - Ability to read in (commented) YAML and write it out again with comments preserved.
+    - *Not* speed, currently, although if writing optimized C is your thing, please help.
 template: |
-  {{ title }}
-  {{ "-" * title|length }}
+  ---
+  title: {{ title }}
+  type: index
+  weight: 0
+  ---
   
   {{ intro }}
   
@@ -31,31 +34,32 @@ template: |
   Install It
   ----------
 
-  .. code-block:: sh
+  ``` {.sourceCode .sh}
 
     $ pip install strictyaml
+  ```
   
   
-  Why not X instead?
-  ------------------
+  Why StrictYAML?
+  ---------------
   
   There are several other markup/config languages which can do similar things to
   StrictYAML as well as approaches. I have researched most of the popular ones and
   tried to give a reasoned justification for why this one works better:
   
   {% for link in why_not -%}
-  * `{{ link['name'] }} </strictyaml/why-not/{{ link['slug'] }}>`_
+  - [{{ link['name'] }}](strictyaml/why-not/{{ link['slug'] }})
   {% endfor %}
   
   
-  Why?
-  ----
+  Design justifications
+  ---------------------
   
   There are some design decisions in StrictYAML which are controversial
   and/or not obvious. Those are documented here:
   
   {% for link in why -%}
-  * `{{ link['name'] }} </strictyaml/why/{{ link['slug'] }}>`_
+  - [{{ link['name'] }}](strictyaml/why/{{ link['slug'] }})
   {% endfor %}
   
   Breaking changes
@@ -66,8 +70,8 @@ template: |
   Contributors
   ------------
 
-  * @gvx
-  * @AlexandreDecan
-  * @lots0logs
-  * @tobbez
+  - @gvx
+  - @AlexandreDecan
+  - @lots0logs
+  - @tobbez
 

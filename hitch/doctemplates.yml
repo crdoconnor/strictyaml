@@ -1,17 +1,18 @@
 story: |
   {{ story.name }}
-  {{ "-" * story.name|length }}
+  {{ "=" * story.name|length }}
 
   {{ story.info['description'] }}
   
   {% if 'yaml_snippet' in story.given %}Example yaml_snippet:
   
-  .. code-block:: yaml
+  ``` {.sourceCode .yaml}
 
       {{ story.given['yaml_snippet']|indent(4) }}
+  ```
   {% endif %}
   
-  {% if 'setup' in story.given %}.. code-block:: python
+  {% if 'setup' in story.given %}``` {.sourceCode .yaml}
   
       {{ story.given['setup']|indent(4) }}
   {% endif %}
@@ -30,9 +31,10 @@ story: |
 readme: |
   {{ story.name }}:
   {% if 'yaml_snippet' in story.given %}
-  .. code-block:: yaml
+  ``` {.sourceCode .yaml}
 
-      {{ story.given['yaml_snippet']|indent(4) }}
+  {{ story.given['yaml_snippet'] }}
+  ```
   {% endif %}
 
   {% for variation in story.variations %}
@@ -43,23 +45,32 @@ readme: |
   {% endfor %}
 
 run: |
-  .. code-block:: python
+  {% if step['in_interpreter'] %}
+  ```python
   
-      {{ step['code']|indent(4) }}
-      {% if 'will_output' in step %}
-  {% if step['yaml_output'] %}.. code-block:: yaml{% else %}.. code-block:: python{% endif %}
-
-      {{ step['will_output']|indent(4) }}
-      {% endif %}
-      {% if 'raises' in step %}
-  .. code-block::
-      {% if 'in python 3' in step['raises']['type'] -%}
-      {{ step['raises']['type']['in python 3'] }}:
-      {%- else %}{{ step['raises']['type'] }}:{% endif -%}
-      {%- if 'in python 3' in step['raises']['message'] -%}
-        {{ step['raises']['message']['in python 3']|indent(6)  }}:
-      {% else %}
-        {{ step['raises']['message']|indent(6) }}
-      {% endif %}
-      {% endif %}
-    
+  {% for line in step['code'].rstrip('\n').split('\n') %}>>> {{ line }}
+  {% endfor -%}
+  {{ step['will_output'] }}
+  ```
+  {% else %}
+  ```python
+  
+  {{ step['code'] }}
+  ```
+  {% if 'will_output' in step %}
+  ```yaml
+  {{ step['will_output'] }}
+  ```
+  {% endif %}
+  {% if 'raises' in step %}
+  ```
+  {% if 'in python 3' in step['raises']['type'] -%}
+  {{ step['raises']['type']['in python 3'] }}:
+  {%- else %}{{ step['raises']['type'] }}:{% endif -%}
+  {%- if 'in python 3' in step['raises']['message'] -%}
+  {{ step['raises']['message']['in python 3']  }}:
+  {% else %}
+  {{ step['raises']['message'] }}
+  {% endif %}
+  {% endif %}
+  {% endif %}

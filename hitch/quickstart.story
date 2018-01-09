@@ -1,7 +1,6 @@
 Simple example: 
   based on: strictyaml
   given:
-    repr last line: yes
     yaml_snippet: |
       # All about the character
       name: Ford Prefect
@@ -19,6 +18,7 @@ Simple example:
             load(yaml_snippet)
           will output: |-
             YAML(OrderedDict([('name', 'Ford Prefect'), ('age', '42'), ('possessions', ['Towel'])]))
+          in interpreter: yes
 
     All data is string, list or OrderedDict:
       fails on python 2: yes
@@ -28,6 +28,7 @@ Simple example:
             load(yaml_snippet).data
           will output: |-
             OrderedDict([('name', 'Ford Prefect'), ('age', '42'), ('possessions', ['Towel'])])
+          in interpreter: yes
     
 Quickstart with schema:
   based on: simple example
@@ -44,10 +45,9 @@ Quickstart with schema:
       schema = Map({"name": Str(), "age": Int(), "possessions": Seq(Str())})
   variations:
     Using a schema:
-      given:
-        repr last line: yes
       steps:
       - Run:
+          in interpreter: yes
           code: |
             person = load(yaml_snippet, schema)
             
@@ -58,7 +58,6 @@ Quickstart with schema:
 A YAMLError will be raised if there are syntactic problems, violations of your schema or use of disallowed YAML features:
   based on: quickstart with schema
   given:
-    repr last line: no
     yaml_snippet: |
       # All about the character
       name: Ford Prefect
@@ -66,10 +65,10 @@ A YAMLError will be raised if there are syntactic problems, violations of your s
   steps:
   - Run:
       code: |
-          try:
-              person = load(yaml_snippet, schema)
-          except YAMLError as error:
-              print(error)
+        try:
+            person = load(yaml_snippet, schema)
+        except YAMLError as error:
+            print(error)
       will output: |-
         while parsing a mapping
           in "<unicode string>", line 1, column 1:
@@ -82,8 +81,6 @@ A YAMLError will be raised if there are syntactic problems, violations of your s
 
 If parsed correctly:
   based on: Quickstart with schema
-  given:
-    repr last line: no
   variations:
     You can modify values and write out the YAML with comments preserved:
       steps:
@@ -103,6 +100,7 @@ If parsed correctly:
     As well as look up line numbers:
       steps:
       - Run:
+          in interpreter: yes
           code: |
             person = load(yaml_snippet, schema)
             print(person['possessions'][0].start_line)

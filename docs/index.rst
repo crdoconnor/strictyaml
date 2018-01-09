@@ -1,7 +1,0 @@
-StrictYAML
-==========
-
-.. toctree::
-   :glob:
-
-   *
