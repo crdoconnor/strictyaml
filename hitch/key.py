@@ -357,7 +357,7 @@ def readmegen():
             if x.namebase != "index"
         ]:
             pages.append({
-              'name': DIR.project.joinpath("docs", directory, "{0}.rst".format(slug))
+              'name': DIR.project.joinpath("docs", directory, "{0}.md".format(slug))
                                  .text().split('\n')[0],
               'slug': slug,
             })
