@@ -1,5 +1,6 @@
-Why does StrictYAML only parse from strings and not files?
-----------------------------------------------------------
+---
+title: Why does StrictYAML only parse from strings and not files?
+---
 
 While other parsers will take strings, file handles and file names,
 StrictYAML will only parse YAML strings.
@@ -15,11 +16,11 @@ If you want a quick and easy one liner way to get text from a file,
 I recommend that you pip install path.py and and use .text() on the
 Path object:
 
-.. code-block:: python
-
-    >>> from path import Path
-    >>> from strictyaml import load
-    >>> parsed_data = load(Path("myfile.yaml").text()).data
-    >>> print(parsed_data)
-    [ parsed yaml ]
+´´´python
+>>> from path import Path
+>>> from strictyaml import load
+>>> parsed_data = load(Path("myfile.yaml").text()).data
+>>> print(parsed_data)
+[ parsed yaml ]
+´´´
 

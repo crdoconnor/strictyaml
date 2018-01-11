@@ -1,5 +1,6 @@
-When should I use a validator and when should I not?
-----------------------------------------------------
+---
+title: When should I use a validator and when should I not?
+---
 
 When starting out on greenfield projects it's much quicker not to create a validator. In such cases it's often more prudent to just parse the YAML and convert the strings explicitly on the fly (e.g. int(yaml['key'])).
 

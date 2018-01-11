@@ -48,7 +48,7 @@ template: |
   tried to give a reasoned justification for why this one works better:
   
   {% for link in why_not -%}
-  - [{{ link['name'] }}](strictyaml/why-not/{{ link['slug'] }})
+  - [{{ link['name'] }}](why-not/{{ link['slug'] }})
   {% endfor %}
   
   
@@ -59,7 +59,7 @@ template: |
   and/or not obvious. Those are documented here:
   
   {% for link in why -%}
-  - [{{ link['name'] }}](strictyaml/why/{{ link['slug'] }})
+  - [{{ link['name'] }}](why/{{ link['slug'] }})
   {% endfor %}
   
   Breaking changes

@@ -1,7 +1,8 @@
-Why not use JSON5?
-------------------
+---
+title: Why not JSON5?
+---
 
-`JSON5 <http://json5.org/>`_ is also a proposed extension to JSON to make it more readable.
+[JSON5](http://json5.org/) is also a proposed extension to JSON to make it more readable.
 
 Its main criticism of YAML is::
 
@@ -11,12 +12,14 @@ This is, I belive, mistaken. It is better if a language is not subtly different 
 
 JSON5 looks like a hybrid of YAML and JSON::
 
-    {
-        foo: 'bar',
-        while: true,
-    }
+```json
+{
+    foo: 'bar',
+    while: true,
+}
+```
 
 It has weaknesses similar to TOML:
 
-* The noisiness of the delimiters that supplant significant whitespace make it less readable and editable.
-* The use of `syntax typing <https://github.com/crdoconnor/strictyaml/blob/master/FAQ.rst#whats-wrong-with-syntax-typing-in-a-readable-configuration-language>`_ is neither necessary, nor an aid to stricter typing if you have a schema.
+- The noisiness of the delimiters that supplant significant whitespace make it less readable and editable.
+- The use of [syntax typing](../../why/syntax-typing-bad) is neither necessary, nor an aid to stricter typing if you have a schema.

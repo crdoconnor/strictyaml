@@ -1,14 +1,14 @@
-What is wrong with binary data?
--------------------------------
+---
+title: Why does StrictYAML not parse direct representations of python objects?
+---
 
-StrictYAML doesn't allow binary data to be parsed and will throw an exception if it sees it:
+StrictYAML doesn't allow direct representations of python objects. For example:
 
-.. code-block:: yaml
+```yaml
+--- !python/hash:UnsafeUserObject
+email: evilhacker@hacker.com
+password: passwordtoset
+type: admin
+```
 
-    evildata: !!binary |
-      R0lGODdhDQAIAIAAAAAAANn
-      Z2SwAAAAADQAIAAACF4SDGQ
-      ar3xxbJ9p0qa7R0YxwzaFME
-      1IAADs=
-
-This idiotic feature led to Ruby on Rails' spectacular `security fail <http://www.h-online.com/open/news/item/Rails-developers-close-another-extremely-critical-flaw-1793511.html>`_.
+This anti-feature led to Ruby on Rails' spectacular [security fail](https://www.sitepoint.com/anatomy-of-an-exploit-an-in-depth-look-at-the-rails-yaml-vulnerability/).

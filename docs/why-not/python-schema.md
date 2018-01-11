@@ -1,12 +1,15 @@
-Why not use JSON Schema for validation?
----------------------------------------
+---
+title: Why not use python's schema library for validation?
+---
 
-Python's 'schema' can also be used to validate objects. You can
-theoretically
+Python's 'schema' (as well as similar libraries) can also be used to validate
+the structure of objects. Validating YAML is even cited as a reason on their
+README.
 
-[ TODO Flesh out ]
+Problems:
 
-* Line numbers
-* Simpler errors in StrictYAML
-* StrictYAML is a more flexible schema
-* No roundtripping
+* Line numbers and code snippets not reported on errors.
+* YAML's implicit typing will still ruin validation.
+* Roundtripping is much less straightforward.
+
+[ TODO flesh out ]

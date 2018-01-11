@@ -1,6 +1,3 @@
-FAQ
-===
-
 docs/why/features-removed.rst
 
 docs/what-is-yaml.rst

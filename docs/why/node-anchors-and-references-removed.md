@@ -1,78 +1,79 @@
-What is wrong with node anchors and references?
------------------------------------------------
+---
+title: What is wrong with node anchors and references?
+---
 
 An example of a snippet of YAML that uses node anchors and references is described on the wikipedia page:
 
-.. code-block:: yaml
+´´´yaml
+# sequencer protocols for Laser eye surgery
+---
+- step:  &id001                  # defines anchor label &id001
+    instrument:      Lasik 2000
+    pulseEnergy:     5.4
+    pulseDuration:   12
+    repetition:      1000
+    spotSize:        1mm
 
-    # sequencer protocols for Laser eye surgery
-    ---
-    - step:  &id001                  # defines anchor label &id001
-        instrument:      Lasik 2000
-        pulseEnergy:     5.4
-        pulseDuration:   12
-        repetition:      1000
-        spotSize:        1mm
-
-    - step: &id002
-        instrument:      Lasik 2000
-        pulseEnergy:     5.0
-        pulseDuration:   10
-        repetition:      500
-        spotSize:        2mm
-    - step: *id001                   # refers to the first step (with anchor &id001)
-    - step: *id002                   # refers to the second step
-    - step: 
-        <<: *id001
-        spotSize: 2mm                # redefines just this key, refers rest from &id001
-    - step: *id002
-
+- step: &id002
+    instrument:      Lasik 2000
+    pulseEnergy:     5.0
+    pulseDuration:   10
+    repetition:      500
+    spotSize:        2mm
+- step: *id001                   # refers to the first step (with anchor &id001)
+- step: *id002                   # refers to the second step
+- step: 
+    <<: *id001
+    spotSize: 2mm                # redefines just this key, refers rest from &id001
+- step: *id002
+´´´
 
 While the intent of the feature is obvious (it lets you deduplicate code), the effect is to make the markup
 more or less unreadable to non-programmers.
 
 The example above could be refactored to be clearly as follows:
 
-.. code-block:: yaml
+´´´yaml
+# sequencer protocols for Laser eye surgery
+---
+- step:
+    instrument:      Lasik 2000
+    pulseEnergy:     5.4
+    pulseDuration:   12
+    repetition:      1000
+    spotSize:        1mm
+- step:
+    instrument:      Lasik 2000
+    pulseEnergy:     5.0
+    pulseDuration:   10
+    repetition:      500
+    spotSize:        2mm
+- step:
+    instrument:      Lasik 2000
+    pulseEnergy:     5.4
+    pulseDuration:   12
+    repetition:      1000
+    spotSize:        1mm
+- step:
+    instrument:      Lasik 2000
+    pulseEnergy:     5.0
+    pulseDuration:   10
+    repetition:      500
+    spotSize:        2mm
+- step:
+    instrument:      Lasik 2000
+    pulseEnergy:     5.4
+    pulseDuration:   12
+    repetition:      1000
+    spotSize:        2mm
+- step:
+    instrument:      Lasik 2000
+    pulseEnergy:     5.0
+    pulseDuration:   10
+    repetition:      500
+    spotSize:        2mm
+´´´
 
-    # sequencer protocols for Laser eye surgery
-    ---
-    - step:
-        instrument:      Lasik 2000
-        pulseEnergy:     5.4
-        pulseDuration:   12
-        repetition:      1000
-        spotSize:        1mm
-    - step:
-        instrument:      Lasik 2000
-        pulseEnergy:     5.0
-        pulseDuration:   10
-        repetition:      500
-        spotSize:        2mm
-    - step:
-        instrument:      Lasik 2000
-        pulseEnergy:     5.4
-        pulseDuration:   12
-        repetition:      1000
-        spotSize:        1mm
-    - step:
-        instrument:      Lasik 2000
-        pulseEnergy:     5.0
-        pulseDuration:   10
-        repetition:      500
-        spotSize:        2mm
-    - step:
-        instrument:      Lasik 2000
-        pulseEnergy:     5.4
-        pulseDuration:   12
-        repetition:      1000
-        spotSize:        2mm
-    - step:
-        instrument:      Lasik 2000
-        pulseEnergy:     5.0
-        pulseDuration:   10
-        repetition:      500
-        spotSize:        2mm
 
 While much more repetitive, the intent of the above is *so much* clearer and easier for non-programmers
 to work with, that it more than compensates for the increased repetition.

@@ -1,13 +1,14 @@
-What is wrong with duplicate keys?
-----------------------------------
+---
+title: What is wrong with duplicate keys?
+---
 
 Duplicate keys are allowed in regular YAML - as parsed by pyyaml, ruamel.yaml and poyo:
 
-.. code-block:: yaml
-
-    x: cow
-    y: dog
-    x: bull
+```yaml
+x: cow
+y: dog
+x: bull
+```
 
 Not only is it unclear whether x should be "cow" or "bull" (the parser will decide 'bull', but did you know that?),
 if there are 200 lines between x: cow and x: bull, a user might very likely change the *first* x and erroneously believe that the resulting value of x has been changed - when it hasn't.

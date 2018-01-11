@@ -1,19 +1,20 @@
-Why not use HJSON?
-------------------
+---
+title: Why not use HJSON?
+---
 
-`HJSON <http://hjson.org/>`_ is an attempt at fixing the aforementioned lack of readability of JSON.
+[HJSON](http://hjson.org/) is an attempt at fixing the aforementioned lack of readability of JSON.
 
 It has the following criticisms of YAML:
 
-* JSON is easier to explain (compare the JSON and YAML specs).
+- JSON is easier to explain (compare the JSON and YAML specs).
 
-* JSON is not bloated (it does not have anchors, substitutions or concatenation).
+- JSON is not bloated (it does not have anchors, substitutions or concatenation).
 
 As with TOML's criticism, these are spot on. However, strictyaml fixes this by *cutting out those parts of the spec*, leaving something that is actually simpler than HJSON.
 
 It has another criticism:
 
-* JSON does not suffer from significant whitespace.
+- JSON does not suffer from significant whitespace.
 
 This is not a valid criticism.
 
