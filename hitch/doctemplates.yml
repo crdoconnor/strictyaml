@@ -1,27 +1,27 @@
 story: |
-  {{ story.name }}
-  {{ "=" * story.name|length }}
+  ---
+  title: {{ story.name }}
+  type: using
+  ---
 
   {{ story.info['description'] }}
   
   {% if 'yaml_snippet' in story.given %}Example yaml_snippet:
   
-  ``` {.sourceCode .yaml}
-
-      {{ story.given['yaml_snippet']|indent(4) }}
+  ```yaml
+  {{ story.given['yaml_snippet'] }}
   ```
   {% endif %}
   
-  {% if 'setup' in story.given %}``` {.sourceCode .yaml}
-  
-      {{ story.given['setup']|indent(4) }}
-  {% endif %}
+  {% if 'setup' in story.given -%}
+  ```python
+  {{ story.given['setup'] }}
+  ```
+  {%- endif %}
 
   {% for variation in story.variations %}
   
-  {{ variation.child_name }}
-  {{ "-" * variation.child_name|length }}
-  
+  {{ variation.child_name }}:
   {{ variation.steps[0].documentation() }}
   {% endfor %}
 
@@ -30,12 +30,17 @@ story: |
 
 readme: |
   {{ story.name }}:
-  {% if 'yaml_snippet' in story.given %}
-  ``` {.sourceCode .yaml}
-
+  {% if 'yaml_snippet' in story.data['given'] %}
+  ```yaml
   {{ story.given['yaml_snippet'] }}
   ```
   {% endif %}
+  {% if 'setup' in story.data['given'] %}
+  ```python
+  {{ story.given['setup'] }}
+  ```
+  {% endif %}
+  
 
   {% for variation in story.variations %}
   
@@ -47,14 +52,12 @@ readme: |
 run: |
   {% if step['in_interpreter'] %}
   ```python
-  
   {% for line in step['code'].rstrip('\n').split('\n') %}>>> {{ line }}
   {% endfor -%}
   {{ step['will_output'] }}
   ```
   {% else %}
   ```python
-  
   {{ step['code'] }}
   ```
   {% if 'will_output' in step %}
@@ -63,14 +66,16 @@ run: |
   ```
   {% endif %}
   {% if 'raises' in step %}
-  ```
+  ```python
   {% if 'in python 3' in step['raises']['type'] -%}
   {{ step['raises']['type']['in python 3'] }}:
   {%- else %}{{ step['raises']['type'] }}:{% endif -%}
   {%- if 'in python 3' in step['raises']['message'] -%}
   {{ step['raises']['message']['in python 3']  }}:
+  ```
   {% else %}
   {{ step['raises']['message'] }}
+  ```
   {% endif %}
   {% endif %}
   {% endif %}

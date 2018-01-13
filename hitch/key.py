@@ -311,7 +311,6 @@ def docgen():
     """
     Generate documentation.
     """
-    readmegen()
     docs = DIR.gen.joinpath("docs")
     if docs.exists():
         docs.rmtree(ignore_errors=True)
@@ -330,11 +329,6 @@ def docgen():
                 doc.dirname().makedirs()
             doc.write_text(story.documentation())
 
-
-def readmegen():
-    """
-    Regenerate README.
-    """
     readme_generator = load(
         DIR.key.joinpath("readme.generator").bytes().decode('utf8')
     ).data
@@ -365,9 +359,24 @@ def readmegen():
             })
 
         return pages
+    
+    
+    def list_dirs(directory):
+        pages = []
+
+        for filepath in pathq(directory):
+            if not filepath.isdir():
+                relpath = filepath.relpath(docs)
+                pages.append({
+                    "name": load(filepath.text().split('---')[1])['title'].data,
+                    "slug": relpath.dirname().joinpath(relpath.namebase).lstrip("/"),
+                })
+        return pages
+            
 
     readme_vars['why'] = list_dir("why")
     readme_vars['why_not'] = list_dir("why-not")
+    readme_vars['using'] = list_dirs(docs/"using"/"alpha")
     DIR.gen.joinpath("README.md").write_text(env.get_template("README").render(**readme_vars))
 
 

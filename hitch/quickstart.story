@@ -33,12 +33,6 @@ Simple example:
 Quickstart with schema:
   based on: simple example
   given:
-    yaml_snippet: |
-      # All about the character
-      name: Ford Prefect
-      age: 42
-      possessions:
-      - Towel
     setup: |
       from strictyaml import load, Map, Str, Int, Seq, YAMLError
       
@@ -80,7 +74,12 @@ A YAMLError will be raised if there are syntactic problems, violations of your s
             ^ (line: 3)
 
 If parsed correctly:
-  based on: Quickstart with schema
+  based on: simple example
+  given:
+    setup: |
+      from strictyaml import load, Map, Str, Int, Seq, YAMLError
+      
+      schema = Map({"name": Str(), "age": Int(), "possessions": Seq(Str())})
   variations:
     You can modify values and write out the YAML with comments preserved:
       steps:
@@ -103,5 +102,5 @@ If parsed correctly:
           in interpreter: yes
           code: |
             person = load(yaml_snippet, schema)
-            print(person['possessions'][0].start_line)
+            person['possessions'][0].start_line
           will output: 5

@@ -1,54 +1,54 @@
 # First pass at something resembling a readme generator
 
 vars:
-  title: StrictYAML
   url: http://hitchdev.com/strictyaml
-  intro: |
-    StrictYAML is a [type-safe](https://en.wikipedia.org/wiki/Type_safety) YAML parser
-    that parses a
-    [restricted subset](strictyaml/features-removed)
-    of the [YAML](strictyaml/what-is-yaml) specificaton.
-
-    Priorities:
-
-    - Readability of the YAML.
-    - Ease of use of API.
-    - Secure by default, strict validation of markup and straightforward type casting.
-    - Clear, readable exceptions with code snippets and line numbers.
-    - Acting as a near-drop in replacement for pyyaml, ruamel.yaml or poyo.
-    - Ability to read in (commented) YAML and write it out again with comments preserved.
-    - *Not* speed, currently, although if writing optimized C is your thing, please help.
 template: |
   ---
-  title: {{ title }}
-  type: index
-  weight: 0
+  title: StrictYAML
+  type: project
   ---
-  
-  {{ intro }}
+
+  StrictYAML is a [type-safe](https://en.wikipedia.org/wiki/Type_safety) YAML parser
+  that parses a [restricted subset](features-removed) of the [YAML](what-is-yaml)
+  specificaton.
+
+  Priorities:
+
+  - Beautiful API
+  - Refusing to parse [the ugly and hard to read features in YAML](features-removed).
+  - Secure by default, strict validation of markup and straightforward type casting.
+  - Clear, readable exceptions with code snippets and line numbers.
+  - Acting as a near-drop in replacement for pyyaml, ruamel.yaml or poyo.
+  - Ability to read in YAML, make changes and write it out again with comments preserved.
+  - *Not* speed, currently, although if writing optimized C is your thing, please help.
   
   {% for story in quickstart %}
   {{ story.documentation(template="readme") }}
   {% endfor %}
   
-  Install It
-  ----------
+  Install
+  -------
 
-  ``` {.sourceCode .sh}
-
-    $ pip install strictyaml
+  ```sh
+  $ pip install strictyaml
   ```
-  
   
   Why StrictYAML?
   ---------------
   
-  There are several other markup/config languages which can do similar things to
-  StrictYAML as well as approaches. I have researched most of the popular ones and
-  tried to give a reasoned justification for why this one works better:
+  Honestly I'd feel embarrassed pushing something like this out without doing a lot
+  of boring and detailed research on the alternatives. Here it is:
   
   {% for link in why_not -%}
   - [{{ link['name'] }}](why-not/{{ link['slug'] }})
+  {% endfor %}
+  
+  
+  Using StrictYAML
+  ----------------
+
+  {% for link in using -%}
+  - [{{ link['name'] }}]({{ link['slug'] }})
   {% endfor %}
   
   
