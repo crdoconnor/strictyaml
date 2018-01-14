@@ -33,6 +33,7 @@ class Engine(BaseEngine):
         info={
             Optional("description"): Str(),
             Optional("importance"): Int(),
+            Optional("experimental"): Bool(),
             Optional("docs"): Str(),
             Optional("fails on python 2"): Bool(),
         },
@@ -317,7 +318,6 @@ def docgen():
 
     # Copy in non-generated docs
     DIR.project.joinpath("docs").copytree(docs)
-    DIR.gen.joinpath("README.md").copy(docs/"index.md")
 
     using = docs.joinpath("using", "alpha")
     for story in _storybook({}).with_templates(
@@ -329,37 +329,12 @@ def docgen():
                 doc.dirname().makedirs()
             doc.write_text(story.documentation())
 
-    readme_generator = load(
-        DIR.key.joinpath("readme.generator").bytes().decode('utf8')
-    ).data
+    readme = docs.joinpath("index.jinja2").text()
     from jinja2.environment import Environment
     from jinja2 import DictLoader
 
     env = Environment()
-    env.loader = DictLoader({"README": readme_generator['template']})
-    readme_vars = readme_generator['vars']
-
-    readme_vars['quickstart'] = _storybook({}).with_templates(
-        load(DIR.key.joinpath("doctemplates.yml").bytes().decode('utf8')).data
-    ).in_filename(DIR.key/"quickstart.story").non_variations().ordered_by_file()
-
-    def list_dir(directory):
-        pages = []
-
-        for slug in [
-            x.namebase for x in DIR.project.joinpath("docs", directory).listdir()
-            if x.namebase != "index"
-        ]:
-            pages.append({
-              'name': load(
-                  DIR.project.joinpath("docs", directory, "{0}.md".format(slug))
-                             .text().split('---')[1],
-              )['title'].data,
-              'slug': slug,
-            })
-
-        return pages
-    
+    env.loader = DictLoader({"README": readme})
     
     def list_dirs(directory):
         pages = []
@@ -372,12 +347,37 @@ def docgen():
                     "slug": relpath.dirname().joinpath(relpath.namebase).lstrip("/"),
                 })
         return pages
-            
+    
+    
+    doc_template_vars = {
+        url="http://hitchdev.com/strictyaml",
+        quickstart=_storybook({}).with_templates(
+            load(DIR.key.joinpath("doctemplates.yml").bytes().decode('utf8')).data
+        ).in_filename(DIR.key/"quickstart.story").non_variations().ordered_by_file(),
+        why=list_dirs(DIR.project/"docs"/"why"),
+        why_not=list_dirs(DIR.project/"docs"/"why-not"),
+        using=list_dirs(docs/"using"/"alpha"),
+        header="{0}\n{1}".format("StrictYAML", "=" * len("StrictYAML")),
+    }
 
-    readme_vars['why'] = list_dir("why")
-    readme_vars['why_not'] = list_dir("why-not")
-    readme_vars['using'] = list_dirs(docs/"using"/"alpha")
-    DIR.gen.joinpath("README.md").write_text(env.get_template("README").render(**readme_vars))
+    for template in pathq(docs).ext("jinja2"):
+        import IPython ; IPython.embed()
+
+    readme_text = env.get_template("README").render(**doc_template_vars)
+
+    import re
+    for match in re.compile("\[.*?\]\(.*?\)").findall(readme_text):
+        if "http://" not in match:
+            readme_text = readme_text.replace(
+                match,
+                re.sub(
+                    "\((.*?)\)",
+                    r"(http://hitchdev.com/strictyaml/\1)",
+                    match
+                )
+            )
+        
+    DIR.gen.joinpath("README.md").write_text(readme_text)
 
 
 @expected(CommandError)

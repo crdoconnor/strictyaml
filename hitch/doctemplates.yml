@@ -3,6 +3,11 @@ story: |
   title: {{ story.name }}
   type: using
   ---
+  {% if story.info['experimental'] %}{% raw %}
+  {{< warning title="Experimental" >}}
+  This feature is in alpha. The API may change on a minor version increment.
+  {{< /warning >}}
+  {% endraw %}{% endif %}
 
   {{ story.info['description'] }}
   
@@ -25,8 +30,9 @@ story: |
   {{ variation.steps[0].documentation() }}
   {% endfor %}
 
-  Page automatically generated from executable user story:
-    https://github.com/crdoconnor/strictyaml/blob/master/hitch/{{ story.filename.basename() }}
+  {% raw %}{{< note title="Executable specification" >}}{% endraw %}
+  Page automatically generated from <a href="https://github.com/crdoconnor/strictyaml/blob/master/hitch/{{ story.filename.basename() }}">{{ story.filename.basename() }}</a>.
+  {% raw %}{{< /note >}}{% endraw %} 
 
 readme: |
   {{ story.name }}:

@@ -1,19 +1,12 @@
-Why not X?
-==========
+---
+title: Why not X?
+---
 
-There are many other technologies out there that perform a 
-very similar function to StrictYAML. If this is the first
-time you have seen StrictYAML, you might naturally want to
-know why you should use it instead of a technology or
-combination of technologies that you are more familiar with.
+Honestly I'd feel embarrassed pushing something like this out without doing a lot
+of boring and detailed research on the alternatives. Here it is:
 
-This section attempts to give a summary of their strengths
-and weaknesses relative to StrictYAML for the unconvinced.
 
-.. toctree::
-   :glob:
-
-   *
+[ TODO : TOC ]
 
 If you'd like to write your a rebuttal to any argument raised
 here, raise a ticket and issue a pull request linking to it at

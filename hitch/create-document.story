@@ -1,5 +1,6 @@
 Build YAML document:
   docs: howto/build-yaml-document
+  experimental: yes
   based on: strictyaml
   description: |
     YAML documents can be built from dicts and lists of
