@@ -24,11 +24,19 @@ story: |
   ```
   {%- endif %}
 
+  {% if story.variations %}
   {% for variation in story.variations %}
-  
   {{ variation.child_name }}:
+  {% if 'yaml snippet' in story.data['given'] %}
+  ```yaml
+  {{ story.given['yaml_snippet'] }}
+  ```
+  {% endif %}
   {{ variation.steps[0].documentation() }}
   {% endfor %}
+  {% else %}
+  {{ story.steps[0].documentation() }}
+  {% endif %}
 
   {% raw %}{{< note title="Executable specification" >}}{% endraw %}
   Page automatically generated from <a href="https://github.com/crdoconnor/strictyaml/blob/master/hitch/{{ story.filename.basename() }}">{{ story.filename.basename() }}</a>.

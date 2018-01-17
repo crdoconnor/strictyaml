@@ -1,4 +1,4 @@
-Optional validation:
+Validating optional keys in mappings:
   docs: compound/optional-keys
   based on: strictyaml
   description: |

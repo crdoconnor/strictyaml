@@ -1,0 +1,3 @@
+---
+title: Compound StrictYAML Validators
+---

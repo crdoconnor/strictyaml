@@ -1,4 +1,4 @@
-Seq validator:
+Sequence/list validator (Seq):
   docs: compound/sequences
   based on: strictyaml
   importance: 5

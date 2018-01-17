@@ -1,4 +1,13 @@
-{{ header }}
+{% if readme -%}
+StrictYAML
+==========
+{%- else -%}
+---
+title: StrictYAML
+---
+
+{{< github-stars user="crdoconnor" project="strictyaml" >}}
+{%- endif %}
 
 StrictYAML is a [type-safe](https://en.wikipedia.org/wiki/Type_safety) YAML parser
 that parses a [restricted subset](features-removed) of the [YAML](what-is-yaml)
@@ -28,11 +37,13 @@ $ pip install strictyaml
 Why StrictYAML?
 ---------------
 
-Honestly I'd feel embarrassed pushing something like this out without doing a lot
-of boring and detailed research on the alternatives. Here it is:
+There are a number of formats and approaches that can achieve more or
+less the same purpose as StrictYAML. I've tried to make it the best one.
+Below is a series of documented justifications:
+
 
 {% for link in why_not -%}
-- [{{ link['name'] }}](why-not/{{ link['slug'] }})
+- [{{ link['name'] }}]({{ link['slug'] }})
 {% endfor %}
 
 
@@ -51,7 +62,7 @@ There are some design decisions in StrictYAML which are controversial
 and/or not obvious. Those are documented here:
 
 {% for link in why -%}
-- [{{ link['name'] }}](why/{{ link['slug'] }})
+- [{{ link['name'] }}]({{ link['slug'] }})
 {% endfor %}
 
 Breaking changes

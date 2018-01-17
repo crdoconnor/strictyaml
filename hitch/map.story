@@ -1,4 +1,4 @@
-Mapping:
+Mappings with defined keys (Map):
   docs: compound/mapping
   based on: strictyaml
   description: |

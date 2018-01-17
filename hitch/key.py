@@ -14,6 +14,7 @@ from hitchrun.decorators import ignore_ctrlc
 from hitchrunpy import ExamplePythonCode, HitchRunPyException, ExpectedExceptionMessageWasDifferent
 import requests
 from templex import Templex, NonMatching
+from path import Path
 
 
 class Engine(BaseEngine):
@@ -331,37 +332,41 @@ def docgen():
 
     readme = docs.joinpath("index.jinja2").text()
     from jinja2.environment import Environment
-    from jinja2 import DictLoader
+    from jinja2 import DictLoader, Template
 
     env = Environment()
     env.loader = DictLoader({"README": readme})
-    
-    def list_dirs(directory):
+
+    def list_dirs(directory, docdir):
         pages = []
 
         for filepath in pathq(directory):
-            if not filepath.isdir():
-                relpath = filepath.relpath(docs)
+            if not filepath.isdir() and filepath.basename() not in ('index.jinja2', 'index.md'):
+                relpath = filepath.relpath(docdir)
                 pages.append({
                     "name": load(filepath.text().split('---')[1])['title'].data,
                     "slug": relpath.dirname().joinpath(relpath.namebase).lstrip("/"),
                 })
         return pages
-    
-    
+
     doc_template_vars = {
-        url="http://hitchdev.com/strictyaml",
-        quickstart=_storybook({}).with_templates(
+        "url": "http://hitchdev.com/strictyaml",
+        "quickstart": _storybook({}).with_templates(
             load(DIR.key.joinpath("doctemplates.yml").bytes().decode('utf8')).data
         ).in_filename(DIR.key/"quickstart.story").non_variations().ordered_by_file(),
-        why=list_dirs(DIR.project/"docs"/"why"),
-        why_not=list_dirs(DIR.project/"docs"/"why-not"),
-        using=list_dirs(docs/"using"/"alpha"),
-        header="{0}\n{1}".format("StrictYAML", "=" * len("StrictYAML")),
+        "why": list_dirs(DIR.project/"docs"/"why", DIR.project/"docs"),
+        "why_not": list_dirs(DIR.project/"docs"/"why-not", DIR.project/"docs"),
+        "using": list_dirs(docs/"using"/"alpha", docs),
+        "readme": False,
     }
 
     for template in pathq(docs).ext("jinja2"):
-        import IPython ; IPython.embed()
+        Path(template.replace(".jinja2", ".md")).write_text(
+            Template(template.text()).render(**doc_template_vars)
+        )
+        template.remove()
+
+    doc_template_vars["readme"] = True
 
     readme_text = env.get_template("README").render(**doc_template_vars)
 
@@ -376,7 +381,7 @@ def docgen():
                     match
                 )
             )
-        
+
     DIR.gen.joinpath("README.md").write_text(readme_text)
 
 

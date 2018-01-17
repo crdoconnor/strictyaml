@@ -1,4 +1,4 @@
-Map Pattern:
+Mappings with arbitrary keys and values:
   docs: compound/map-pattern
   based on: strictyaml
   description: |

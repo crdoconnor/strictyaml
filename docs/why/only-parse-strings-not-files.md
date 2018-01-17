@@ -16,11 +16,15 @@ If you want a quick and easy one liner way to get text from a file,
 I recommend that you pip install path.py and and use .text() on the
 Path object:
 
-´´´python
+```python
 >>> from path import Path
 >>> from strictyaml import load
 >>> parsed_data = load(Path("myfile.yaml").text()).data
 >>> print(parsed_data)
 [ parsed yaml ]
-´´´
+```
 
+Counterarguments
+----------------
+
+- https://github.com/crdoconnor/strictyaml/issues/5

@@ -17,3 +17,9 @@ The *first* question in the FAQ of pyyaml actually subtly indicates that this fe
 
 To take a real life example, use of flow style in [this saltstack YAML definition](https://github.com/saltstack-formulas/mysql-formula/blob/master/mysql/server.sls#L27) which blurs the distinction between flow style and jinja2,
 confusing the reader.
+
+
+Counterarguments
+----------------
+
+- https://github.com/crdoconnor/strictyaml/issues/20
