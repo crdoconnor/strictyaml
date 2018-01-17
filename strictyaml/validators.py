@@ -32,9 +32,13 @@ class OrValidator(Validator):
 
     def __call__(self, chunk):
         try:
-            return self._validator_a(chunk)
+            result = self._validator_a(chunk)
+            result._validator = self
+            return result
         except YAMLValidationError as error:
-            return self._validator_b(chunk)
+            result = self._validator_b(chunk)
+            result._validator = self
+            return result
 
     def __repr__(self):
         return u"{0} | {1}".format(repr(self._validator_a), repr(self._validator_b))

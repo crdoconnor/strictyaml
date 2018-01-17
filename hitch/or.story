@@ -54,3 +54,13 @@ Either/Or validation:
                 in "<unicode string>", line 1, column 1:
                   a: A
                    ^ (line: 1)
+
+    Change item after validated:
+      given:
+        yaml_snippet: 'a: yes'
+      steps:
+      - Run:
+          code: |
+            yaml = load(yaml_snippet, schema)
+            yaml['a'] = 5
+            assert yaml['a'] == 5
