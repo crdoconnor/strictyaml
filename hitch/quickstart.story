@@ -55,22 +55,24 @@ A YAMLError will be raised if there are syntactic problems, violations of your s
       # All about the character
       name: Ford Prefect
       age: 42
-  steps:
-  - Run:
-      code: |
-        try:
-            person = load(yaml_snippet, schema)
-        except YAMLError as error:
-            print(error)
-      will output: |-
-        while parsing a mapping
-          in "<unicode string>", line 1, column 1:
-            # All about the character
-             ^ (line: 1)
-        required key(s) 'possessions' not found
-          in "<unicode string>", line 3, column 1:
-            age: '42'
-            ^ (line: 3)
+  variations:
+    For example, a schema violation:
+      steps:
+      - Run:
+          code: |
+            try:
+                person = load(yaml_snippet, schema)
+            except YAMLError as error:
+                print(error)
+          will output: |-
+            while parsing a mapping
+              in "<unicode string>", line 1, column 1:
+                # All about the character
+                 ^ (line: 1)
+            required key(s) 'possessions' not found
+              in "<unicode string>", line 3, column 1:
+                age: '42'
+                ^ (line: 3)
 
 If parsed correctly:
   based on: simple example

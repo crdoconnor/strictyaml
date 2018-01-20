@@ -1,4 +1,4 @@
-Non-schema validation:
+Parsing YAML without a schema:
   docs: howto/without-a-schema
   based on: strictyaml
   description: |

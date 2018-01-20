@@ -1,4 +1,4 @@
-Revalidation:
+Revalidate an already validate document:
   docs: howto/revalidation
   based on: strictyaml
   description: |

@@ -1,10 +1,10 @@
-Mapping representation:
+Using a YAML mapping object as if it were a dict:
   docs: compound/mapping-yaml-object
   based on: strictyaml
   description: |
     When a YAML document with mappings is parsed, it is not parsed
     as a dict but as a YAML object which behaves very similarly to
-    a dict, but also has some extra capabilities.
+    a dict, but with some extra capabilities.
 
     You can use .items(), .keys(), .values(), look up items with
     square bracket notation, .get(key, with_default_if_nonexistent)
