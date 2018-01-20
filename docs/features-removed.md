@@ -2,6 +2,11 @@
 title: What YAML features does StrictYAML remove?
 ---
 
+StrictYAML restricts you from parsing a number of things which
+the YAML specification says should be parsed.
+
+This is a demonstration of some of those features:
+
 [Implicit Typing](../why/implicit-typing-removed)
 -------------------------------------------------
 
@@ -26,10 +31,13 @@ load(yaml) == {"x": "yes", "y": "null"}
 ---------------------------------------------------------------
 
 ```yaml
-evil: !!binary evildata
+--- !python/hash:UnsafeUserObject
+email: evilhacker@hacker.com
+password: passwordtoset
+type: admin
 ```
 
-Example pyyaml/ruamel/poyo:
+Example pyyaml/ruamel:
 
 ```python
 load(yaml) == {'evil': b'z\xf8\xa5u\xabZ'}
@@ -39,6 +47,26 @@ Example StrictYAML
 
 ```python
 raises TagTokenDisallowed
+```
+
+[Duplicate Keys Disallowed](../why/duplicate-keys-disallowed)
+-------------------------------------------------------------
+
+```yaml
+x: 1
+x: 2
+```
+
+Example pyyaml/poyo:
+
+```python
+load(yaml) == {'x': 2}
+```
+
+Example StrictYAML
+
+```python
+raises DuplicateKeysDisallowed
 ```
 
 
@@ -80,7 +108,7 @@ Example StrictYAML
 
 ```python
 raises NodeAnchorDisallowed
-``
+```
 
 To parse the above YAML *literally* in StrictYAML do:
 
@@ -110,22 +138,3 @@ Example StrictYAML
 raises FlowStyleDisallowed
 `` 
 
-[Duplicate Keys Disallowed](../why/duplicate-keys-disallowed)
--------------------------------------------------------------
-
-```yaml
-x: 1
-x: 2
-```
-
-Example pyyaml/ruamel/poyo:
-
-```python
-load(yaml) == {'x': 2}
-```
-
-Example StrictYAML
-
-```python
-raises DuplicateKeysDisallowed
-```

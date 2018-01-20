@@ -23,7 +23,7 @@ Datetimes (Datetime):
       datetime2: 2016-10-22T14:23:12Z
       datetime3: 20161022T142312Z
   variations:
-    Valid:
+    Each of the four datetimes are valid and parsed:
       steps:
       - Run:
           code: |
@@ -34,7 +34,7 @@ Datetimes (Datetime):
               "datetime3": datetime(2016, 10, 22, 14, 23, 12, tzinfo=tzutc()),
             })
 
-    .text:
+    .text still returns the original text:
       given:
         code:
       steps:
@@ -42,7 +42,7 @@ Datetimes (Datetime):
           code: |
             Ensure(load(yaml_snippet, schema)["date"].text).equals("2016-10-22")
 
-    Non datetime:
+    Non datetimes raise an exception:
       given:
         yaml_snippet: |
           date: 1
