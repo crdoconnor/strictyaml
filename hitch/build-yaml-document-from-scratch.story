@@ -1,4 +1,4 @@
-Build YAML document:
+Build YAML documents from scratch:
   docs: howto/build-yaml-document
   experimental: yes
   based on: strictyaml

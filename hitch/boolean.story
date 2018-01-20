@@ -1,4 +1,4 @@
-Boolean validation:
+Boolean (Bool):
   based on: strictyaml
   docs: scalar/boolean
   description: |

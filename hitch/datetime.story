@@ -1,4 +1,4 @@
-Datetime:
+Datetimes (Datetime):
   docs: scalar/datetime
   based on: strictyaml
   description: |

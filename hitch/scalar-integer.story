@@ -1,4 +1,4 @@
-Scalar integer:
+Integers (Int):
   docs: scalar/integer
   based on: strictyaml
   description: |

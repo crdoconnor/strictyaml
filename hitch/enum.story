@@ -1,4 +1,4 @@
-Enum (enum validation):
+Enumerated scalars (Enum):
   docs: scalar/enum
   based on: strictyaml
   description: |
@@ -15,7 +15,7 @@ Enum (enum validation):
       schema = Map({"a": Enum(["A", "B", "C"])})
     code:
   variations:
-    Valid A:
+    Valid because it contains 'A':
       given:
         yaml_snippet: 'a: A'
       steps:
@@ -23,7 +23,7 @@ Enum (enum validation):
           code: |
             Ensure(load(yaml_snippet, schema)).equals({"a": "A"})
 
-    Valid B:
+    Valid because it contains 'B':
       given:
         yaml_snippet: 'a: B'
       steps:
@@ -31,7 +31,7 @@ Enum (enum validation):
           code: |
             Ensure(load(yaml_snippet, schema)).equals({"a": "B"})
 
-    Valid C:
+    Valid because it contains 'C':
       given:
         yaml_snippet: 'a: C'
       steps:
@@ -39,7 +39,7 @@ Enum (enum validation):
           code: |
             Ensure(load(yaml_snippet, schema)).equals({"a": "C"})
 
-    Invalid not in enum:
+    Invalid because D is not in enum:
       given:
         yaml_snippet: 'a: D'
       steps:
@@ -53,7 +53,8 @@ Enum (enum validation):
                 in "<unicode string>", line 1, column 1:
                   a: D
                    ^ (line: 1)
-    Invalid blank string:
+
+    Invalid because blank string is not in enum:
       given:
         yaml_snippet: 'a:'
       steps:

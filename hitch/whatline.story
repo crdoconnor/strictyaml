@@ -1,4 +1,4 @@
-What line:
+Line numbers of YAML elements:
   based on: strictyaml
   docs: howto/what-line
   description: |

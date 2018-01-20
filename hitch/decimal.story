@@ -1,4 +1,4 @@
-Decimal:
+Decimal numbers (Decimal):
   docs: scalar/decimal
   based on: strictyaml
   description: |
