@@ -204,9 +204,29 @@ Below is a series of documented justifications:
 Using StrictYAML
 ----------------
 
+- [compound](http://hitchdev.com/strictyaml/using/alpha/compound)
+
+  - [Validating optional keys in mappings (Map)](http://hitchdev.com/strictyaml/using/alpha/compound/optional-keys)
+
+  - [Using a YAML object of a parsed mapping](http://hitchdev.com/strictyaml/using/alpha/compound/mapping-yaml-object)
+
+  - [Sequences of unique items (UniqueSeq)](http://hitchdev.com/strictyaml/using/alpha/compound/sequences-of-unique-items)
+
+  - [Mappings with defined keys (Map)](http://hitchdev.com/strictyaml/using/alpha/compound/mapping)
+
+  - [Mappings with arbitrary key names (MapPattern)](http://hitchdev.com/strictyaml/using/alpha/compound/map-pattern)
+
+  - [Fixed length sequences (FixedSeq)](http://hitchdev.com/strictyaml/using/alpha/compound/fixed-length-sequences)
+
+  - [Sequence/list validator (Seq)](http://hitchdev.com/strictyaml/using/alpha/compound/sequences)
+
+  - [Mapping with defined keys and a custom key validator (Map)](http://hitchdev.com/strictyaml/using/alpha/compound/mapping-with-slug-keys)
+
 - [howto](http://hitchdev.com/strictyaml/using/alpha/howto)
 
-  - [Reading in YAML, editing it and writing it back out](http://hitchdev.com/strictyaml/using/alpha/howto/roundtripping)
+  - [Revalidate an already validated document](http://hitchdev.com/strictyaml/using/alpha/howto/revalidation)
+
+  - [Merge YAML documents](http://hitchdev.com/strictyaml/using/alpha/howto/merge-yaml-documents)
 
   - [Parsing YAML without a schema](http://hitchdev.com/strictyaml/using/alpha/howto/without-a-schema)
 
@@ -214,61 +234,41 @@ Using StrictYAML
 
   - [Build a YAML document from scratch in code](http://hitchdev.com/strictyaml/using/alpha/howto/build-yaml-document)
 
-  - [Revalidate an already validated document](http://hitchdev.com/strictyaml/using/alpha/howto/revalidation)
+  - [Reading in YAML, editing it and writing it back out](http://hitchdev.com/strictyaml/using/alpha/howto/roundtripping)
 
   - [Get line numbers of YAML elements](http://hitchdev.com/strictyaml/using/alpha/howto/what-line)
 
   - [Either/or schema validation of two equally valid different kinds of YAML](http://hitchdev.com/strictyaml/using/alpha/howto/either-or-validation)
 
-  - [Merge YAML documents](http://hitchdev.com/strictyaml/using/alpha/howto/merge-yaml-documents)
-
-- [compound](http://hitchdev.com/strictyaml/using/alpha/compound)
-
-  - [Fixed length sequences (http://hitchdev.com/strictyaml/FixedSeq)](http://hitchdev.com/strictyaml/using/alpha/compound/fixed-length-sequences)
-
-  - [Sequences of unique items (http://hitchdev.com/strictyaml/UniqueSeq)](http://hitchdev.com/strictyaml/using/alpha/compound/sequences-of-unique-items)
-
-  - [Using a YAML object of a parsed mapping](http://hitchdev.com/strictyaml/using/alpha/compound/mapping-yaml-object)
-
-  - [Mappings with defined keys (http://hitchdev.com/strictyaml/Map)](http://hitchdev.com/strictyaml/using/alpha/compound/mapping)
-
-  - [Mapping with defined keys and a custom key validator (http://hitchdev.com/strictyaml/Map)](http://hitchdev.com/strictyaml/using/alpha/compound/mapping-with-slug-keys)
-
-  - [Validating optional keys in mappings (http://hitchdev.com/strictyaml/Map)](http://hitchdev.com/strictyaml/using/alpha/compound/optional-keys)
-
-  - [Sequence/list validator (http://hitchdev.com/strictyaml/Seq)](http://hitchdev.com/strictyaml/using/alpha/compound/sequences)
-
-  - [Mappings with arbitrary key names (http://hitchdev.com/strictyaml/MapPattern)](http://hitchdev.com/strictyaml/using/alpha/compound/map-pattern)
-
 - [scalar](http://hitchdev.com/strictyaml/using/alpha/scalar)
 
-  - [Email and URL validators](http://hitchdev.com/strictyaml/using/alpha/scalar/email-and-url)
+  - [Validating strings with regexes (Regex)](http://hitchdev.com/strictyaml/using/alpha/scalar/regular-expressions)
 
-  - [Validating strings with regexes (http://hitchdev.com/strictyaml/Regex)](http://hitchdev.com/strictyaml/using/alpha/scalar/regular-expressions)
-
-  - [Enumerated scalars (http://hitchdev.com/strictyaml/Enum)](http://hitchdev.com/strictyaml/using/alpha/scalar/enum)
+  - [Integers (Int)](http://hitchdev.com/strictyaml/using/alpha/scalar/integer)
 
   - [Empty key validation](http://hitchdev.com/strictyaml/using/alpha/scalar/empty)
 
-  - [Boolean (http://hitchdev.com/strictyaml/Bool)](http://hitchdev.com/strictyaml/using/alpha/scalar/boolean)
+  - [Floating point numbers (Float)](http://hitchdev.com/strictyaml/using/alpha/scalar/float)
 
-  - [Decimal numbers (http://hitchdev.com/strictyaml/Decimal)](http://hitchdev.com/strictyaml/using/alpha/scalar/decimal)
+  - [Decimal numbers (Decimal)](http://hitchdev.com/strictyaml/using/alpha/scalar/decimal)
 
-  - [Parsing comma separated items (http://hitchdev.com/strictyaml/CommaSeparated)](http://hitchdev.com/strictyaml/using/alpha/scalar/comma-separated)
+  - [Enumerated scalars (Enum)](http://hitchdev.com/strictyaml/using/alpha/scalar/enum)
 
-  - [Floating point numbers (http://hitchdev.com/strictyaml/Float)](http://hitchdev.com/strictyaml/using/alpha/scalar/float)
+  - [Parsing strings (Str)](http://hitchdev.com/strictyaml/using/alpha/scalar/string)
 
-  - [Integers (http://hitchdev.com/strictyaml/Int)](http://hitchdev.com/strictyaml/using/alpha/scalar/integer)
+  - [Boolean (Bool)](http://hitchdev.com/strictyaml/using/alpha/scalar/boolean)
 
-  - [Datetimes (http://hitchdev.com/strictyaml/Datetime)](http://hitchdev.com/strictyaml/using/alpha/scalar/datetime)
+  - [Email and URL validators](http://hitchdev.com/strictyaml/using/alpha/scalar/email-and-url)
 
-  - [Parsing strings (http://hitchdev.com/strictyaml/Str)](http://hitchdev.com/strictyaml/using/alpha/scalar/string)
+  - [Datetimes (Datetime)](http://hitchdev.com/strictyaml/using/alpha/scalar/datetime)
+
+  - [Parsing comma separated items (CommaSeparated)](http://hitchdev.com/strictyaml/using/alpha/scalar/comma-separated)
 
 - [restrictions](http://hitchdev.com/strictyaml/using/alpha/restrictions)
 
-  - [Duplicate keys](http://hitchdev.com/strictyaml/using/alpha/restrictions/duplicate-keys)
-
   - [Disallowed YAML](http://hitchdev.com/strictyaml/using/alpha/restrictions/disallowed-yaml)
+
+  - [Duplicate keys](http://hitchdev.com/strictyaml/using/alpha/restrictions/duplicate-keys)
 
 
 

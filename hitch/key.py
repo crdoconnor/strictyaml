@@ -392,8 +392,8 @@ def docgen():
             readme_text = readme_text.replace(
                 match,
                 re.sub(
-                    "\((.*?)\)",
-                    r"(http://hitchdev.com/strictyaml/\1)",
+                    "\[(.*?)\]\((.*?)\)",
+                    r"[\1](http://hitchdev.com/strictyaml/\2)",
                     match
                 )
             )
