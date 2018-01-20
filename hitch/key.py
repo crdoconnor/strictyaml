@@ -388,7 +388,7 @@ def docgen():
 
     import re
     for match in re.compile("\[.*?\]\(.*?\)").findall(readme_text):
-        if "http://" not in match:
+        if "http://" not in match and "https://" not in match:
             readme_text = readme_text.replace(
                 match,
                 re.sub(
