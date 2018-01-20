@@ -330,7 +330,7 @@ def docgen():
                 doc.dirname().makedirs()
             doc.write_text(story.documentation())
 
-    readme = docs.joinpath("index.jinja2").text()
+    readme = DIR.project.joinpath("docs", "index.md.jinja2").text()
     from jinja2.environment import Environment
     from jinja2 import DictLoader, Template
 
@@ -348,6 +348,20 @@ def docgen():
                     "slug": relpath.dirname().joinpath(relpath.namebase).lstrip("/"),
                 })
         return pages
+    
+    def categories(pages):
+        cat = {}
+        for page in pages:
+            levels = page['slug'].split('/')
+            
+            subcat = cat 
+            for level in levels[:-1]:
+                if level not in subcat:
+                    subcat[level] = {}
+                subcat = subcat[level]
+            subcat[levels[-1]] = page
+        return cat
+               
 
     doc_template_vars = {
         "url": "http://hitchdev.com/strictyaml",
@@ -357,11 +371,13 @@ def docgen():
         "why": list_dirs(DIR.project/"docs"/"why", DIR.project/"docs"),
         "why_not": list_dirs(DIR.project/"docs"/"why-not", DIR.project/"docs"),
         "using": list_dirs(docs/"using"/"alpha", docs),
+        "using_categories": categories(list_dirs(docs/"using"/"alpha", docs)),
         "readme": False,
     }
 
     for template in pathq(docs).ext("jinja2"):
-        Path(template.replace(".jinja2", ".md")).write_text(
+        print("Rendering template {0}".format(template))
+        Path(template.replace(".jinja2", "")).write_text(
             Template(template.text()).render(**doc_template_vars)
         )
         template.remove()

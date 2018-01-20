@@ -6,8 +6,8 @@ StrictYAML
 title: StrictYAML
 ---
 
-{{< github-stars user="crdoconnor" project="strictyaml" >}}
-{%- endif %}
+{% raw %}{{< github-stars user="crdoconnor" project="strictyaml" >}}{% endraw %}
+{% endif %}
 
 StrictYAML is a [type-safe](https://en.wikipedia.org/wiki/Type_safety) YAML parser
 that parses a [restricted subset](features-removed) of the [YAML](what-is-yaml)
@@ -50,8 +50,11 @@ Below is a series of documented justifications:
 Using StrictYAML
 ----------------
 
-{% for link in using -%}
-- [{{ link['name'] }}]({{ link['slug'] }})
+{% for category, content in using_categories['using']['alpha'].items() -%}
+- [{{ category }}](using/alpha/{{ category }})
+{% for link in content.values() %}
+  - [{{ link['name'] }}]({{ link['slug'] }})
+{% endfor%}
 {% endfor %}
 
 
