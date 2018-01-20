@@ -348,20 +348,19 @@ def docgen():
                     "slug": relpath.dirname().joinpath(relpath.namebase).lstrip("/"),
                 })
         return pages
-    
+
     def categories(pages):
         cat = {}
         for page in pages:
             levels = page['slug'].split('/')
-            
-            subcat = cat 
+
+            subcat = cat
             for level in levels[:-1]:
                 if level not in subcat:
                     subcat[level] = {}
                 subcat = subcat[level]
             subcat[levels[-1]] = page
         return cat
-               
 
     doc_template_vars = {
         "url": "http://hitchdev.com/strictyaml",

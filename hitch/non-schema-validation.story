@@ -27,18 +27,15 @@ Parsing YAML without a schema:
   variations:
     Parse without validator:
       steps:
-      - Run:
-          code: |
-            Ensure(load(yaml_snippet)).equals({"a": {"x": "9", "y": "8"}, "b": "2", "c": "3"})
+      - Run: |
+          Ensure(load(yaml_snippet)).equals({"a": {"x": "9", "y": "8"}, "b": "2", "c": "3"})
 
     Parse with any validator - equivalent:
       steps:
-      - Run:
-          code: |
-            Ensure(load(yaml_snippet, Any())).equals({"a": {"x": "9", "y": "8"}, "b": "2", "c": "3"})
+      - Run: |
+          Ensure(load(yaml_snippet, Any())).equals({"a": {"x": "9", "y": "8"}, "b": "2", "c": "3"})
 
     Fix higher levels of schema:
       steps:
-      - Run:
-          code: |
-            Ensure(load(yaml_snippet, MapPattern(Str(), Any()))).equals({"a": {"x": "9", "y": "8"}, "b": "2", "c": "3"})
+      - Run: |
+          Ensure(load(yaml_snippet, MapPattern(Str(), Any()))).equals({"a": {"x": "9", "y": "8"}, "b": "2", "c": "3"})

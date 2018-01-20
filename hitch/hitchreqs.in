@@ -4,6 +4,7 @@ strictyaml>=0.11.0
 hitchrunpy>=0.5.0
 hitchrun
 hitchdoc
+pypandoc
 templex
 flake8
 jupyter_console

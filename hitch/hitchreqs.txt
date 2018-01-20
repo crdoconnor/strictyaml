@@ -44,6 +44,7 @@ pycodestyle==2.3.1        # via flake8
 pyflakes==1.5.0           # via flake8
 pygments==2.2.0           # via jupyter-console
 pykwalify==1.6.0          # via hitchtest
+pypandoc==1.4
 pyte==0.6.0               # via icommandlib
 python-build==0.2.13      # via hitchpython
 python-dateutil==2.6.0    # via jupyter-client, pykwalify, strictyaml
@@ -70,7 +71,8 @@ unixpackage==0.4.6        # via hitchtest
 urllib3==1.21.1           # via requests
 uvloop==0.8.1             # via icommandlib
 wcwidth==0.1.7            # via prompt-toolkit, pyte
+wheel==0.30.0             # via pypandoc
 
 # The following packages are considered to be unsafe in a requirements file:
-# pip                       # via hitchrun
-# setuptools                # via ipython, twine
+# pip                       # via hitchrun, pypandoc
+# setuptools                # via ipython, pypandoc, twine
