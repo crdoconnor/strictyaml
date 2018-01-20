@@ -1,4 +1,4 @@
-Sequences of Unique Items:
+Sequences of unique items (UniqueSeq):
   docs: compound/sequences-of-unique-items
   based on: strictyaml
   description: |

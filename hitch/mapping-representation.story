@@ -1,4 +1,4 @@
-Using a YAML mapping object as if it were a dict:
+Using a YAML object of a parsed mapping:
   docs: compound/mapping-yaml-object
   based on: strictyaml
   description: |

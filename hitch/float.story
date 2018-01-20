@@ -1,4 +1,4 @@
-Floats:
+Floating point numbers (Float):
   docs: scalar/float
   based on: strictyaml
   description: |

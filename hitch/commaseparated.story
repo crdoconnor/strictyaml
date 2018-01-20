@@ -1,4 +1,4 @@
-Comma separated:
+Parsing comma separated items (CommaSeparated):
   docs: scalar/comma-separated
   based on: strictyaml
   description: |

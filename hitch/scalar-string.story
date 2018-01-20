@@ -1,4 +1,4 @@
-Scalar str:
+Parsing strings (Str):
   docs: scalar/string
   based on: strictyaml
   description: |

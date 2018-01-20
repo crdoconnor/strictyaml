@@ -1,4 +1,4 @@
-Roundtripped YAML:
+Reading in YAML, editing it and writing it back out:
   docs: howto/roundtripping
   based on: strictyaml
   description: |

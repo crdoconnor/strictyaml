@@ -1,4 +1,4 @@
-Regex strings:
+Validating strings with regexes (Regex):
   docs: scalar/regular-expressions
   based on: strictyaml
   description: |

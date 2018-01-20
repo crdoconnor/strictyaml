@@ -1,6 +1,7 @@
-Map with slug key validator:
+Mapping with defined keys and a custom key validator (Map):
   docs: compound/mapping-with-slug-keys
   based on: strictyaml
+  experimental: yes
   description: |
     A typical mapping except that the key values are determined
     by the value provided by the validator.
@@ -43,7 +44,7 @@ Map with slug key validator:
 
 
 Slug key validator revalidation bug:
-  based on: Map with slug key validator
+  based on: Mapping with defined keys and a custom key validator (Map)
   steps:
   - Run: |
       yaml = load(yaml_snippet, schema)
@@ -60,7 +61,7 @@ Slug key validation getitem setitem and delitem:
     dial code -> dial-code
     
     Therefore treated as the same key.
-  based on: Map with slug key validator
+  based on: Mapping with defined keys and a custom key validator (Map)
   variations:
     Getting:
       steps:

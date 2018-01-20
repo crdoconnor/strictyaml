@@ -1,5 +1,5 @@
-Either/Or validation:
-  docs: compound/either-or-validation
+Either/or schema validation of two equally valid different kinds of YAML:
+  docs: howto/either-or-validation
   description: |
     StrictYAML can be directed to parse two different elements or
     blocks of YAML.

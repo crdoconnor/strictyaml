@@ -1,4 +1,4 @@
-Line numbers of YAML elements:
+Get line numbers of YAML elements:
   based on: strictyaml
   docs: howto/what-line
   description: |
