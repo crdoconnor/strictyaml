@@ -313,6 +313,35 @@ def docgen():
     """
     Generate documentation.
     """
+    class Page(object):
+        def __init__(self, filename):
+            self._filename = filename
+    
+    class TemplatedDocumentation(object):
+        def __init__(self, source_path):
+            self._source_path = source_path
+            self._template_vars = {}
+        
+        def with_vars(self, **template_vars):
+            new_templated_docs = copy(self)
+            new_templated_docs._template_vars = template_vars
+            return new_templated_docs
+        
+        def _templated_vars(self):
+            return self._template_vars
+        
+        def render_to(self, build_path):
+            self._path.copytree(build_path)
+            
+            for template in pathq(build_path).ext("jinja2"):
+                print("Rendering template {0}".format(template))
+                Path(template.replace(".jinja2", "")).write_text(
+                    Template(template.text()).render(**self._templated_vars)
+                )
+                template.remove()
+            
+            
+    
     docs = DIR.gen.joinpath("docs")
     if docs.exists():
         docs.rmtree(ignore_errors=True)
