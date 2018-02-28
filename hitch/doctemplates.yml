@@ -27,9 +27,9 @@ story: |
   {% if story.variations %}
   {% for variation in story.variations %}
   {{ variation.child_name }}:
-  {% if 'yaml snippet' in story.data['given'] %}
+  {% if'yaml_snippet' in variation.data.get('given', {}).keys() %}
   ```yaml
-  {{ story.given['yaml_snippet'] }}
+  {{ variation.given['yaml_snippet'] }}
   ```
   {% endif %}
   {{ variation.steps[0].documentation() }}
