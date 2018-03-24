@@ -26,3 +26,5 @@ infrequently (e.g. once, when a program starts).
 
 For this reason, it is assumed that for most StrictYAML applications, parsing
 speed is of a lower importance than strictness, readability and ease of use.
+
+That being said, any requests that improve parsing or writing speed are welcome.
