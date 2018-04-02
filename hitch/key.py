@@ -1,20 +1,17 @@
-from commandlib import run, CommandError
-import hitchpython
 from hitchstory import StoryCollection, StorySchema, BaseEngine, HitchStoryException
 from hitchstory import validate, expected_exception
 from hitchrun import expected
-from commandlib import Command
+from commandlib import Command, CommandError, python
 from strictyaml import Str, Map, Int, Bool, Optional, load
 from pathquery import pathq
-import hitchtest
 from hitchrun import hitch_maintenance
-from commandlib import python
 from hitchrun import DIR
 from hitchrun.decorators import ignore_ctrlc
 from hitchrunpy import ExamplePythonCode, HitchRunPyException, ExpectedExceptionMessageWasDifferent
 import requests
 from templex import Templex, NonMatching
 from path import Path
+import hitchbuildpy
 
 
 class Engine(BaseEngine):
@@ -52,32 +49,23 @@ class Engine(BaseEngine):
         self.path.state.mkdir()
 
         self.path.profile = self.path.gen.joinpath("profile")
+
         if not self.path.profile.exists():
             self.path.profile.mkdir()
 
-        self.python_package = hitchpython.PythonPackage(
-            self.given['python version']
-        )
-        self.python_package.build()
-
-        self.pip = self.python_package.cmd.pip
-        self.python = self.python_package.cmd.python
-
         # Install debugging packages
-        with hitchtest.monitor([self.path.key.joinpath("debugrequirements.txt")]) as changed:
-            if changed:
-                run(self.pip("install", "-r", "debugrequirements.txt").in_dir(self.path.key))
+        pylibrary = hitchbuildpy.PyLibrary(
+            base_python=hitchbuildpy.PyenvBuild(self.given['python version'])
+                                    .with_build_path(self.path.share),
+            module_name="strictyaml",
+            library_src=self.path.project,
+        ).with_requirementstxt(
+            self.path.key/"debugrequirements.txt"
+        ).with_build_path(self.path.gen)
 
-        # Uninstall and reinstall
-        with hitchtest.monitor(
-            pathq(self.path.project.joinpath("strictyaml")).ext("py")
-        ) as changed:
-            if changed:
-                run(self.pip("uninstall", "strictyaml", "-y").ignore_errors())
-                run(self.pip("install", ".").in_dir(self.path.project))
-                run(self.pip("install", "ruamel.yaml=={0}".format(
-                    self.given["ruamel version"]
-                )))
+        pylibrary.ensure_built()
+
+        self.python = pylibrary.bin.python
 
         self.example_py_code = ExamplePythonCode(self.python, self.path.state)\
             .with_code(self.given.get('code', ''))\
@@ -313,35 +301,35 @@ def docgen():
     """
     Generate documentation.
     """
+    from copy import copy
+
     class Page(object):
         def __init__(self, filename):
             self._filename = filename
-    
+
     class TemplatedDocumentation(object):
         def __init__(self, source_path):
             self._source_path = source_path
             self._template_vars = {}
-        
+
         def with_vars(self, **template_vars):
             new_templated_docs = copy(self)
             new_templated_docs._template_vars = template_vars
             return new_templated_docs
-        
+
         def _templated_vars(self):
             return self._template_vars
-        
+
         def render_to(self, build_path):
             self._path.copytree(build_path)
-            
+
             for template in pathq(build_path).ext("jinja2"):
                 print("Rendering template {0}".format(template))
                 Path(template.replace(".jinja2", "")).write_text(
                     Template(template.text()).render(**self._templated_vars)
                 )
                 template.remove()
-            
-            
-    
+
     docs = DIR.gen.joinpath("docs")
     if docs.exists():
         docs.rmtree(ignore_errors=True)
