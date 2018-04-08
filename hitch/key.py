@@ -14,6 +14,26 @@ from path import Path
 import hitchbuildpy
 
 
+def project_build(paths, python_version, ruamel_version=None):
+    pylibrary = hitchbuildpy.PyLibrary(
+        name="py{0}".format(python_version),
+        base_python=hitchbuildpy.PyenvBuild(python_version)
+                                .with_build_path(paths.share),
+        module_name="strictyaml",
+        library_src=paths.project,
+    ).with_requirementstxt(
+        paths.key/"debugrequirements.txt"
+    ).with_build_path(paths.gen)
+
+    if ruamel_version is not None:
+        pylibrary = pylibrary.with_packages(
+            "ruamel.yaml=={0}".format(ruamel_version)
+        )
+
+    pylibrary.ensure_built()
+    return pylibrary
+
+
 class Engine(BaseEngine):
     """Python engine for running tests."""
 
@@ -53,19 +73,11 @@ class Engine(BaseEngine):
         if not self.path.profile.exists():
             self.path.profile.mkdir()
 
-        # Install debugging packages
-        pylibrary = hitchbuildpy.PyLibrary(
-            base_python=hitchbuildpy.PyenvBuild(self.given['python version'])
-                                    .with_build_path(self.path.share),
-            module_name="strictyaml",
-            library_src=self.path.project,
-        ).with_requirementstxt(
-            self.path.key/"debugrequirements.txt"
-        ).with_build_path(self.path.gen)
-
-        pylibrary.ensure_built()
-
-        self.python = pylibrary.bin.python
+        self.python = project_build(
+            self.path,
+            self.given['python version'],
+            self.given['ruamel version'],
+        ).bin.python
 
         self.example_py_code = ExamplePythonCode(self.python, self.path.state)\
             .with_code(self.given.get('code', ''))\
@@ -224,17 +236,13 @@ def regression():
     """
     Run regression testing - lint and then run all tests.
     """
-    # HACK: Start using hitchbuildpy to get around this.
-    Command("touch", DIR.project.joinpath("strictyaml", "representation.py").abspath()).run()
+    lint()
+    doctest()
     storybook = _storybook({}).only_uninherited()
     storybook.with_params(**{"python version": "2.7.10"})\
              .filter(lambda story: not story.info['fails on python 2'])\
              .ordered_by_name().play()
-    Command("touch", DIR.project.joinpath("strictyaml", "representation.py").abspath()).run()
     storybook.with_params(**{"python version": "3.5.0"}).ordered_by_name().play()
-    lint()
-    doctest()
-    doctest(version="2.7.10")
 
 
 def lint():
@@ -418,8 +426,14 @@ def docgen():
 
 
 @expected(CommandError)
-def doctest(version="3.5.0"):
-    Command(DIR.gen.joinpath("py{0}".format(version), "bin", "python"))(
+def doctest():
+    pylibrary = project_build(DIR, "2.7.10")
+    pylibrary.bin.python(
+        "-m", "doctest", "-v", DIR.project.joinpath("strictyaml", "utils.py")
+    ).in_dir(DIR.project.joinpath("strictyaml")).run()
+    
+    pylibrary = project_build(DIR, "3.5.0")
+    pylibrary.bin.python(
         "-m", "doctest", "-v", DIR.project.joinpath("strictyaml", "utils.py")
     ).in_dir(DIR.project.joinpath("strictyaml")).run()
 

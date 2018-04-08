@@ -1,7 +1,8 @@
 hitchstory>=0.8.0
 strictyaml>=0.11.0
 hitchrunpy>=0.6.0
-hitchbuildpy>=0.3.2
+hitchbuildpy>=0.3.4
+hitchbuild>=0.3.3
 hitchrun
 hitchdoc
 pypandoc
