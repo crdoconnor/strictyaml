@@ -12,6 +12,7 @@ import requests
 from templex import Templex, NonMatching
 from path import Path
 import hitchbuildpy
+import dirtemplate
 
 
 def project_build(paths, python_version, ruamel_version=None):
@@ -305,7 +306,22 @@ def deploy(version):
     ).in_dir(DIR.project).run()
 
 
+@expected(dirtemplate.exceptions.DirTemplateException)
 def docgen():
+    """
+    Build documentation.
+    """
+    template = dirtemplate.DirTemplate(
+        "docs",
+        DIR.project/"docs",
+        DIR.gen,
+    ).with_files(
+        story_md={"story": {}},
+    )
+    template.ensure_built()
+
+
+def old_docgen():
     """
     Generate documentation.
     """
@@ -431,7 +447,7 @@ def doctest():
     pylibrary.bin.python(
         "-m", "doctest", "-v", DIR.project.joinpath("strictyaml", "utils.py")
     ).in_dir(DIR.project.joinpath("strictyaml")).run()
-    
+
     pylibrary = project_build(DIR, "3.5.0")
     pylibrary.bin.python(
         "-m", "doctest", "-v", DIR.project.joinpath("strictyaml", "utils.py")

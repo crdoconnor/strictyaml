@@ -1,5 +1,6 @@
-hitchstory>=0.8.0
+dirtemplate
 strictyaml>=0.11.0
+hitchstory>=0.8.0
 hitchrunpy>=0.6.0
 hitchbuildpy>=0.3.4
 hitchbuild>=0.3.3
@@ -12,4 +13,3 @@ jupyter_console
 twine
 simex
 q
-icommandlib

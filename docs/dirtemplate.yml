@@ -1,0 +1,4 @@
+templated:
+- story.md:
+    content: yes
+    filename: yes
