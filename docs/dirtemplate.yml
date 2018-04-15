@@ -1,3 +1,4 @@
+base templates: base
 templated:
 - story.md:
     content: yes

@@ -311,14 +311,24 @@ def docgen():
     """
     Build documentation.
     """
+    docfolder = DIR.gen/"docs"
+
+    if docfolder.exists():
+        docfolder.rmtree(ignore_errors=True)
+    docfolder.mkdir()
+
+    stories = {
+        "using/alpha/{0}.md".format(story.info['docs']): {"story": story}
+        for story in _storybook({}).ordered_by_name()
+        if story.info.get("docs") is not None
+    }
     template = dirtemplate.DirTemplate(
-        "docs",
-        DIR.project/"docs",
-        DIR.gen,
+        "docs", DIR.project/"docs", DIR.gen,
     ).with_files(
-        story_md={"story": {}},
+        story_md=stories,
     )
     template.ensure_built()
+    print("Docs generated")
 
 
 def old_docgen():
