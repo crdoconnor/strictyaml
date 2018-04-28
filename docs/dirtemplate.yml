@@ -9,5 +9,17 @@ templated:
     content: yes
 - using/index.md:
     content: yes
+- using/alpha/index.md:
+    content: yes
+- using/alpha/index.md:
+    content: yes
+- using/alpha/compound/index.md:
+    content: yes
+- using/alpha/howto/index.md:
+    content: yes
+- using/alpha/restrictions/index.md:
+    content: yes
+- using/alpha/scalar/index.md:
+    content: yes
 - index.md:
     content: yes
