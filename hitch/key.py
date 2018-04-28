@@ -331,10 +331,10 @@ def docgen():
         },
     ).with_vars(
         readme=False,
-        quickstart=_storybook({})\
-            .in_filename(DIR.key/"quickstart.story")\
-            .non_variations()\
-            .ordered_by_file(),
+        quickstart=_storybook({})
+        .in_filename(DIR.key/"quickstart.story")
+        .non_variations()
+        .ordered_by_file(),
     ).with_functions(
         title=title
     )

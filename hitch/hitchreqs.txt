@@ -1,18 +1,17 @@
 argcomplete==1.8.2        # via hitchrun
 certifi==2017.4.17        # via requests
 chardet==3.0.3            # via requests
-click==6.7                # via hitch-pip-tools, hitchrun
+click==6.7                # via hitchrun, pip-tools
 colorama==0.3.9           # via hitchrun, hitchstory, prettystack
 commandlib==0.3.2         # via hitchrun, hitchrunpy, icommandlib
 decorator==4.0.11         # via ipython, traitlets
 dirtemplate==0.1.4
-first==2.0.1              # via hitch-pip-tools
+first==2.0.1              # via pip-tools
 flake8==3.3.0
-hitch-pip-tools==1.8.3    # via hitchrun
 hitchbuild==0.3.3
 hitchbuildpy==0.3.4
 hitchdoc==0.1.1
-hitchrun==0.2.4
+hitchrun==0.2.9
 hitchrunpy==0.6.0
 hitchstory==0.8.0
 icommandlib==0.4.1        # via hitchrunpy
@@ -31,6 +30,7 @@ pathquery==0.2.5
 peewee==2.9.2             # via hitchbuild, hitchdoc
 pexpect==4.2.1            # via ipython
 pickleshare==0.7.4        # via ipython
+pip-tools==2.0.1          # via hitchrun
 pkginfo==1.4.1            # via twine
 prettystack==0.3.0        # via hitchrun, hitchrunpy, hitchstory
 prompt-toolkit==1.0.14    # via jupyter-console
@@ -51,7 +51,7 @@ requests==2.17.3          # via requests-toolbelt, twine
 ruamel.yaml==0.15.34      # via strictyaml
 simex==0.3.5
 simplegeneric==0.8.1      # via ipython
-six==1.10.0               # via hitch-pip-tools, prompt-toolkit, python-dateutil, traitlets
+six==1.10.0               # via pip-tools, prompt-toolkit, python-dateutil, traitlets
 strictyaml==0.11.0
 templex==0.1.1
 tornado==4.5.1            # via ipykernel
@@ -63,7 +63,3 @@ urllib3==1.21.1           # via requests
 uvloop==0.8.1             # via icommandlib
 wcwidth==0.1.7            # via prompt-toolkit, pyte
 wheel==0.30.0             # via pypandoc
-
-# The following packages are considered to be unsafe in a requirements file:
-# pip                       # via hitchrun, pypandoc
-# setuptools                # via ipython, pypandoc, twine
