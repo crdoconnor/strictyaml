@@ -3,7 +3,7 @@ from hitchstory import validate, expected_exception
 from hitchrun import expected
 from commandlib import Command, CommandError, python
 from strictyaml import Str, Map, Int, Bool, Optional, load
-from pathquery import pathq
+from pathquery import pathquery
 from hitchrun import hitch_maintenance
 from hitchrun import DIR
 from hitchrun.decorators import ignore_ctrlc
@@ -172,7 +172,7 @@ class Engine(BaseEngine):
 
 
 def _storybook(settings):
-    return StoryCollection(pathq(DIR.key).ext("story"), Engine(DIR, settings))
+    return StoryCollection(pathquery(DIR.key).ext("story"), Engine(DIR, settings))
 
 
 def _current_version():
@@ -311,21 +311,32 @@ def docgen():
     """
     Build documentation.
     """
+    def title(dirfile):
+        assert len(dirfile.text().split("---")) >= 3, "{} doesn't have ---".format(dirfile)
+        return load(dirfile.text().split("---")[1]).data.get("title", "misc")
+
     docfolder = DIR.gen/"docs"
 
     if docfolder.exists():
         docfolder.rmtree(ignore_errors=True)
     docfolder.mkdir()
 
-    stories = {
-        "using/alpha/{0}.md".format(story.info['docs']): {"story": story}
-        for story in _storybook({}).ordered_by_name()
-        if story.info.get("docs") is not None
-    }
     template = dirtemplate.DirTemplate(
         "docs", DIR.project/"docs", DIR.gen,
     ).with_files(
-        story_md=stories,
+        story_md={
+            "using/alpha/{0}.md".format(story.info['docs']): {"story": story}
+            for story in _storybook({}).ordered_by_name()
+            if story.info.get("docs") is not None
+        },
+    ).with_vars(
+        readme=False,
+        quickstart=_storybook({})\
+            .in_filename(DIR.key/"quickstart.story")\
+            .non_variations()\
+            .ordered_by_file(),
+    ).with_functions(
+        title=title
     )
     template.ensure_built()
     print("Docs generated")
@@ -357,7 +368,7 @@ def old_docgen():
         def render_to(self, build_path):
             self._path.copytree(build_path)
 
-            for template in pathq(build_path).ext("jinja2"):
+            for template in pathquery(build_path).ext("jinja2"):
                 print("Rendering template {0}".format(template))
                 Path(template.replace(".jinja2", "")).write_text(
                     Template(template.text()).render(**self._templated_vars)
@@ -391,7 +402,7 @@ def old_docgen():
     def list_dirs(directory, docdir):
         pages = []
 
-        for filepath in pathq(directory):
+        for filepath in pathquery(directory):
             if not filepath.isdir() and filepath.basename() not in ('index.jinja2', 'index.md'):
                 relpath = filepath.relpath(docdir)
                 pages.append({
@@ -425,7 +436,7 @@ def old_docgen():
         "readme": False,
     }
 
-    for template in pathq(docs).ext("jinja2"):
+    for template in pathquery(docs).ext("jinja2"):
         print("Rendering template {0}".format(template))
         Path(template.replace(".jinja2", "")).write_text(
             Template(template.text()).render(**doc_template_vars)

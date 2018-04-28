@@ -5,7 +5,7 @@ click==6.7                # via hitch-pip-tools, hitchrun
 colorama==0.3.9           # via hitchrun, hitchstory, prettystack
 commandlib==0.3.2         # via hitchrun, hitchrunpy, icommandlib
 decorator==4.0.11         # via ipython, traitlets
-dirtemplate==0.1.2
+dirtemplate==0.1.4
 first==2.0.1              # via hitch-pip-tools
 flake8==3.3.0
 hitch-pip-tools==1.8.3    # via hitchrun
@@ -27,7 +27,7 @@ jupyter-core==4.3.0       # via jupyter-client
 markupsafe==1.0           # via jinja2
 mccabe==0.6.1             # via flake8
 path.py==10.3.1           # via hitchbuild, hitchdoc, hitchrun, hitchrunpy, hitchstory, pathquery, prettystack
-pathquery==0.2.3          # via dirtemplate, hitchbuild, hitchbuildpy, hitchstory
+pathquery==0.2.5
 peewee==2.9.2             # via hitchbuild, hitchdoc
 pexpect==4.2.1            # via ipython
 pickleshare==0.7.4        # via ipython

@@ -3,3 +3,11 @@ templated:
 - story.md:
     content: yes
     filename: yes
+- why/index.md:
+    content: yes
+- why-not/index.md:
+    content: yes
+- using/index.md:
+    content: yes
+- index.md:
+    content: yes

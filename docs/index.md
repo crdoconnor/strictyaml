@@ -24,7 +24,25 @@ Priorities:
 - [Not speed](why/speed-not-a-priority), currently.
 
 {% for story in quickstart %}
-{{ story.documentation(template="readme") }}
+{{ story.name }}:
+{% if 'yaml_snippet' in story.data['given'] %}
+```yaml
+{{ story.given['yaml_snippet'] }}
+```
+{% endif %}
+{% if 'setup' in story.data['given'] %}
+```python
+{{ story.given['setup'] }}
+```
+{% endif %}
+
+
+{% for variation in story.variations %}
+
+{{ variation.child_name }}:
+
+{% with step = variation.steps[0] %}{% include "run.md" %}{% endwith %}
+{% endfor %}
 {% endfor %}
 
 Install
@@ -42,19 +60,36 @@ less the same purpose as StrictYAML. I've tried to make it the best one.
 Below is a series of documented justifications:
 
 
-{% for link in why_not -%}
-- [{{ link['name'] }}]({{ link['slug'] }})
+{% for dirfile in subdir("why-not").is_not_dir() - subdir("why-not").named("index.md") -%} 
+- [{{ title(dirfile) }}](why/{{ dirfile.namebase }})
 {% endfor %}
 
 
 Using StrictYAML
 ----------------
 
-{% for category, content in using_categories['using']['alpha'].items() -%}
-- [{{ category }}](using/alpha/{{ category }})
-{% for link in content.values() %}
-  - [{{ link['name'] }}]({{ link['slug'] }})
-{% endfor%}
+How to:
+
+{% for dirfile in subdir("using/alpha/howto/").is_not_dir() - subdir("using/alpha/howto/").named("index.md") -%}
+- [{{ title(dirfile) }}](using/alpha/howto/{{ dirfile.namebase }})
+{% endfor %}
+
+Compound validators:
+
+{% for dirfile in subdir("using/alpha/compound/").is_not_dir() - subdir("using/alpha/compound/").named("index.md") -%}
+- [{{ title(dirfile) }}](using/alpha/compound/{{ dirfile.namebase }})
+{% endfor %}
+
+Scalar validators:
+
+{% for dirfile in subdir("using/alpha/scalar/").is_not_dir() - subdir("using/alpha/scalar/").named("index.md") -%}
+- [{{ title(dirfile) }}](using/alpha/scalar/{{ dirfile.namebase }})
+{% endfor %}
+
+Restrictions:
+
+{% for dirfile in subdir("using/alpha/restrictions/").is_not_dir() - subdir("using/alpha/restrictions/").named("index.md") -%}
+- [{{ title(dirfile) }}](using/alpha/restrictions/{{ dirfile.namebase }})
 {% endfor %}
 
 
@@ -64,8 +99,8 @@ Design justifications
 There are some design decisions in StrictYAML which are controversial
 and/or not obvious. Those are documented here:
 
-{% for link in why -%}
-- [{{ link['name'] }}]({{ link['slug'] }})
+{% for dirfile in subdir("why").is_not_dir() - subdir("why").named("index.md") -%}
+- [{{ title(dirfile) }}](why/{{ dirfile.namebase }})
 {% endfor %}
 
 Breaking changes
