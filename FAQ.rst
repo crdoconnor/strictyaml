@@ -435,8 +435,8 @@ Whereas this python is more likely to cause problems, especially in a large file
           "French": "Bonjour",
           "German": "Guten tag",
       },
-      "Hello": {
-          "French": "Bonjour",
+      "Goodbye": {
+          "French": "Au revoir",
           "German": "Auf wiedersehen",
       },
   }
