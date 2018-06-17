@@ -10,7 +10,6 @@ from hitchrun.decorators import ignore_ctrlc
 from hitchrunpy import ExamplePythonCode, HitchRunPyException, ExpectedExceptionMessageWasDifferent
 import requests
 from templex import Templex, NonMatching
-from path import Path
 import hitchbuildpy
 import dirtemplate
 
@@ -238,7 +237,7 @@ def regression():
     Run regression testing - lint and then run all tests.
     """
     lint()
-    doctest()
+    doctests()
     storybook = _storybook({}).only_uninherited()
     storybook.with_params(**{"python version": "2.7.10"})\
              .filter(lambda story: not story.info['fails on python 2'])\
