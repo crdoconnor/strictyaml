@@ -1,4 +1,4 @@
-base templates: base
+base templates: template
 templated:
 - story.md:
     content: yes
@@ -7,12 +7,6 @@ templated:
     content: yes
 - why-not/index.md:
     content: yes
-- using/index.md:
-    content: yes
-- using/alpha/index.md:
-    content: yes
-- using/alpha/index.md:
-    content: yes
 - using/alpha/compound/index.md:
     content: yes
 - using/alpha/howto/index.md:
@@ -20,6 +14,12 @@ templated:
 - using/alpha/restrictions/index.md:
     content: yes
 - using/alpha/scalar/index.md:
+    content: yes
+- using/index.md:
+    content: yes
+- using/alpha/index.md:
+    content: yes
+- using/alpha/index.md:
     content: yes
 - index.md:
     content: yes

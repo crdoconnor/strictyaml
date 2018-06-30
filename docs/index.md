@@ -41,7 +41,7 @@ Priorities:
 
 {{ variation.child_name }}:
 
-{% with step = variation.steps[0] %}{% include "run.md" %}{% endwith %}
+{% with step = variation.steps[0] %}{% include "step.jinja2" %}{% endwith %}
 {% endfor %}
 {% endfor %}
 
