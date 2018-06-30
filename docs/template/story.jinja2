@@ -31,10 +31,10 @@ This feature is in alpha. The API may change on a minor version increment.
 {{ variation.given['yaml_snippet'] }}
 ```
 {% endif %}
-{{ variation.steps[0].documentation() }}
+{% with step = variation.steps[0] %}{% include "step.jinja2" %}{% endwith %}
 {% endfor %}
 {% else %}
-{{ story.steps[0].documentation() }}
+{% with step = story.steps[0] %}{% include "step.jinja2" %}{% endwith %}
 {% endif %}
 
 {% raw %}{{< note title="Executable specification" >}}{% endraw %}

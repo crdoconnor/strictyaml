@@ -1,6 +1,6 @@
 base templates: template
 templated:
-- story.md:
+- template/story.jinja2:
     content: yes
     filename: yes
 - why/index.md:

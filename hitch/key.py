@@ -323,7 +323,7 @@ def docgen():
     template = dirtemplate.DirTemplate(
         "docs", DIR.project/"docs", DIR.gen,
     ).with_files(
-        story_md={
+        template_story_jinja2={
             "using/alpha/{0}.md".format(story.info['docs']): {"story": story}
             for story in _storybook({}).ordered_by_name()
             if story.info.get("docs") is not None
