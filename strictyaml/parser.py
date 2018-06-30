@@ -8,7 +8,7 @@ from ruamel.yaml.comments import CommentedSeq, CommentedMap
 
 from strictyaml.any_validator import Any
 from strictyaml.yamllocation import YAMLChunk
-from strictyaml.utils import ruamel_structure
+from strictyaml import utils
 
 from ruamel.yaml.reader import Reader
 from ruamel.yaml.scanner import RoundTripScanner
@@ -242,7 +242,7 @@ def as_document(data, schema=None, label=u'<unicode string>'):
     if schema is None:
         schema = Any()
 
-    return schema(YAMLChunk(ruamel_structure(data), label=label))
+    return schema(YAMLChunk(utils.ruamel_structure(data), label=label))
 
 
 def load(yaml_string, schema=None, label=u"<unicode string>"):
@@ -250,7 +250,7 @@ def load(yaml_string, schema=None, label=u"<unicode string>"):
     Parse the first YAML document in a string
     and produce corresponding YAML object.
     """
-    if str(type(yaml_string)) not in ("<type 'unicode'>", "<type 'str'>", "<class 'str'>"):
+    if not utils.is_string(yaml_string):
         raise TypeError("StrictYAML can only read a string of valid YAML.")
 
     # We manufacture a class that has the label we want

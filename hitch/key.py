@@ -223,7 +223,7 @@ def regressfile(filename):
     Rewrite stories if appropriate.
     """
     _storybook({"rewrite": False}).in_filename(filename)\
-                                  .with_params(**{"python version": "2.7.10"})\
+                                  .with_params(**{"python version": "2.7.12"})\
                                   .filter(lambda story: not story.info['fails on python 2'])\
                                   .ordered_by_name().play()
 
@@ -239,7 +239,7 @@ def regression():
     lint()
     doctests()
     storybook = _storybook({}).only_uninherited()
-    storybook.with_params(**{"python version": "2.7.10"})\
+    storybook.with_params(**{"python version": "2.7.12"})\
              .filter(lambda story: not story.info['fails on python 2'])\
              .ordered_by_name().play()
     storybook.with_params(**{"python version": "3.5.0"}).ordered_by_name().play()
@@ -343,7 +343,7 @@ def docgen():
 
 @expected(CommandError)
 def doctests():
-    pylibrary = project_build(DIR, "2.7.10")
+    pylibrary = project_build(DIR, "2.7.12")
     pylibrary.bin.python(
         "-m", "doctest", "-v", DIR.project.joinpath("strictyaml", "utils.py")
     ).in_dir(DIR.project.joinpath("strictyaml")).run()

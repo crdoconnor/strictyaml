@@ -1,10 +1,18 @@
 from ruamel.yaml.comments import CommentedSeq, CommentedMap
+from strictyaml import exceptions
 from re import compile
 import sys
 
 
 if sys.version_info[0] == 3:
     unicode = str
+
+
+def is_string(value):
+    """
+    Python 2/3 compatible way of checking if a value is a string.
+    """
+    return str(type(value)) in ("<type 'unicode'>", "<type 'str'>", "<class 'str'>")
 
 
 def is_integer(value):
@@ -75,5 +83,16 @@ def ruamel_structure(data):
         ])
     elif isinstance(data, bool):
         return u"yes" if data else u"no"
+    elif isinstance(data, (int, float)):
+        return str(data)
     else:
-        return unicode(data)
+        if not is_string(data):
+            raise exceptions.CannotBuildDocumentFromInvalidData((
+                "Document must be built from a combination of:\n"
+                "string, int, float, bool, list, dict\n\n"
+                "Instead, found variable with type '{}': '{}'"
+            ).format(
+                type(data),
+                data,
+            ))
+        return data

@@ -11,6 +11,10 @@ class StrictYAMLError(MarkedYAMLError):
     pass
 
 
+class CannotBuildDocumentFromInvalidData(StrictYAMLError):
+    pass
+
+
 class YAMLValidationError(StrictYAMLError):
     def __init__(self, context, problem, chunk):
         self.context = context
