@@ -74,11 +74,44 @@ The example above could be refactored to be clearly as follows:
     spotSize:        2mm
 ```
 
+The intent of this document is a lot clearer than the version above - *especially* for
+non-programmers. However, it comes at a cost of increased repetition.
 
-While much more repetitive, the intent of the above is *so much* clearer and easier for non-programmers
-to work with, that it more than compensates for the increased repetition.
+Between the node/anchor version and this I would prefer this.
 
-While it makes little sense to refactor the above snippet to deduplicate repetitive data it may make
-sense to refactor the *structure* as it grows larger (and more repetitive). However, there are a number of
-ways this could be done without using YAML's nodes and anchors (e.g. splitting the file into two files -
-step definitions and step sequences), depending on the nature and quantity of the repetitiveness.
+However, it is still repetitive and ideally it should be non-repetitive and still
+clear. This can be done by refactoring the *structure* of the document and changing
+the way the application interprets it.
+
+For example, instead of representing using the schema above, a schema that separates
+step definitions from actual steps could be used. For example:
+
+```yaml
+step definitions:
+  large:
+    instrument:      Lasik 2000
+    pulseEnergy:     5.4
+    pulseDuration:   12
+    repetition:      1000
+    spotSize:        1mm
+  medium:
+    instrument:      Lasik 2000
+    pulseEnergy:     5.0
+    pulseDuration:   10
+    repetition:      500
+    spotSize:        2mm
+steps:
+- step: large
+- step: medium
+- step: large
+- step: medium
+- step:
+    from: large
+    except:
+      spotSize: 2mm
+- step: large
+```
+
+The above document has an entirely different and slightly complex schema but it
+fundamentally represents the same data as the node/anchor version above, in a clearer
+manner, without duplication.
