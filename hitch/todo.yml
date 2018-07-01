@@ -1,14 +1,12 @@
-- Using YAML objects as keys causes infinite loop.
+- Create rules such that only certain map key combinations are allowed. x and y, x alone, c and y, c alone, etc.
 
-- Build out documentation pipeline on hitchdev.com/strictyaml.
+- Using YAML objects as keys causes infinite loop.
 
 - Add why not section on jsonschema and yaml/ruamel.yaml
 
 - Add why not section on kwalify and ruamel.yaml
 
 - Add why not section on schema and yaml/ruamel.yaml
-
-- Add reference to https://stackoverflow.com/questions/26434053/cargo-toml-for-lib for TOML
 
 - Add scalar types AbsoluteUrl(), RelativeUrl(), Domain()
 
