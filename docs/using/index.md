@@ -19,7 +19,6 @@ Scalar validators:
 {% for dirfile in subdir("using/alpha/scalar/").is_not_dir() - subdir("using/alpha/scalar/").named("index.md") -%}
 - [{{ title(dirfile) }}](using/alpha/scalar/{{ dirfile.namebase }})
 {% endfor %}
-
 Restrictions:
 
 {% for dirfile in subdir("using/alpha/restrictions/").is_not_dir() - subdir("using/alpha/restrictions/").named("index.md") -%}

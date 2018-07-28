@@ -61,7 +61,7 @@ Below is a series of documented justifications:
 
 
 {% for dirfile in subdir("why-not").is_not_dir() - subdir("why-not").named("index.md") -%} 
-- [{{ title(dirfile) }}](why/{{ dirfile.namebase }})
+- [{{ title(dirfile) }}](why-not/{{ dirfile.namebase }})
 {% endfor %}
 
 

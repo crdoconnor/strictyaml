@@ -2,10 +2,10 @@ dirtemplate>=0.1.4
 strictyaml>=0.11.0
 hitchstory>=0.8.0
 hitchrunpy>=0.6.0
-hitchbuildpy>=0.3.4
-hitchbuild>=0.3.3
+hitchbuildpy>=0.4.5
+hitchbuild>=0.4.0
 pathquery>=0.2.5
-hitchrun
+hitchrun>=0.3.1
 hitchdoc
 pypandoc
 templex
