@@ -6,7 +6,7 @@ StrictYAML is the result of some carefully considered, although
 controversial design decisions. These are justified here.
 
 {% for dirfile in thisdir.is_not_dir() - thisdir.named("index.md") -%}
-- [{{ title(dirfile) }}](../{{ dirfile.namebase }})
+- [{{ title(dirfile) }}]({{ dirfile.namebase }})
 {% endfor %}
 
 If you have seen a relevant counterargument to you'd like to link
