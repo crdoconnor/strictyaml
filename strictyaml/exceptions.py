@@ -1,4 +1,4 @@
-from ruamel.yaml import MarkedYAMLError
+from ruamel.yaml.error import MarkedYAMLError
 from ruamel.yaml.dumper import RoundTripDumper
 from ruamel.yaml import dump
 try:
