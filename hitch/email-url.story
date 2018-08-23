@@ -11,7 +11,7 @@ Email and URL validators:
 
       schema = Map({"a": Email(), "b": Url()})
   variations:
-    Valid:
+    Parsed:
       given:
         yaml_snippet: |
           a: billg@microsoft.com
@@ -20,7 +20,7 @@ Email and URL validators:
       - Run: |
           Ensure(load(yaml_snippet, schema)).equals({"a": "billg@microsoft.com", "b": "http://www.google.com/"})
 
-    Invalid:
+    Exception:
       given:
         yaml_snippet: |
           a: notanemail
