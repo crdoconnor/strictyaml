@@ -1,6 +1,6 @@
 Email and URL validators:
-  docs: scalar/email-and-url
   based on: strictyaml
+  docs: scalar/email-and-url
   description: |
     StrictYAML can validate emails (using a simplified regex) and
     URLs.
@@ -11,15 +11,14 @@ Email and URL validators:
 
       schema = Map({"a": Email(), "b": Url()})
   variations:
-    Valid 1:
+    Valid:
       given:
         yaml_snippet: |
           a: billg@microsoft.com
           b: http://www.google.com/
       steps:
-      - Run:
-          code: |
-            Ensure(load(yaml_snippet, schema)).equals({"a": "billg@microsoft.com", "b": "http://www.google.com/"})
+      - Run: |
+          Ensure(load(yaml_snippet, schema)).equals({"a": "billg@microsoft.com", "b": "http://www.google.com/"})
 
     Invalid:
       given:
