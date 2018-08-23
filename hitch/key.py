@@ -215,7 +215,6 @@ def bdd(*keywords):
         .shortcut(*keywords).play()
 
 
-
 @expected(HitchStoryException)
 def rbdd(*keywords):
     """
