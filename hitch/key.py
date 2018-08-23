@@ -215,6 +215,20 @@ def bdd(*keywords):
         .shortcut(*keywords).play()
 
 
+
+@expected(HitchStoryException)
+def rbdd(*keywords):
+    """
+    Run stories matching keywords.
+    """
+    settings = _personal_settings().data
+    settings['engine']['rewrite'] = True
+    _storybook(settings['engine'])\
+        .with_params(**{"python version": settings['params']['python version']})\
+        .only_uninherited()\
+        .shortcut(*keywords).play()
+
+
 @expected(HitchStoryException)
 def regressfile(filename):
     """
