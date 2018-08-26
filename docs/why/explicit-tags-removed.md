@@ -12,6 +12,12 @@ For example, if it were to be applied to "fix" the Godfather movie script parsin
 - Don Corleone: Do I have your loyalty?
 ```
 
-Explicit typecasts in YAML markup are not only ugly, they confuse non-programmers. StrictYAML's philosophy is that type information should be kept strictly separated from data, so this 'feature' of YAML is switched off.
+Explicit typecasts in YAML markup are slightly confusing for non-programmers, much like the concept of 'types' in general. StrictYAML's philosophy is that types should be kept strictly separated from data, so this 'feature' of YAML is switched off.
 
-If data like this is seen in a YAML file it will raise a special exception.
+If tags are seen in a YAML file it will raise a special TagTokenDisallowed exception.
+
+
+Counterpoints
+-------------
+
+* [Valid usage in AWS cloudformation syntax?](https://github.com/crdoconnor/strictyaml/issues/37)
