@@ -9,10 +9,13 @@ TOML's main criticism of YAML is spot on::
 
   TOML aims for simplicity, a goal which is not apparent in the YAML specification.
 
-StrictYAML's cut down version of the YAML specification however - with implicit typing, node anchors/references and flow style cut out,
-ends up being simpler than TOML.
+StrictYAML's cut down version of the YAML specification - with implicit typing, node anchors/references and flow style cut out,
+ends up being *simpler* than TOML.
 
-The main complication in TOML is its inconsistency in how it handles tables and arrays. For example:
+While TOML works well enough for simple data - much like the INI files which inspired it - things start to get a little
+hairier when you have nested tables/arrays.
+
+For example:
 
 ```toml
 # not clear that this is an array
@@ -29,8 +32,7 @@ array = [["foo"], [1]]
 array = ["foo", 1]
 ```
 
-TOML's use of special characters for delimiters instead of whitespace like YAML makes the resulting output noiser and harder for humans
-to parse. Here's an example from the TOML site:
+TOML's overall structure is also less intuitive. So, for example, this:
 
 ```toml
 [[fruit]]
@@ -41,7 +43,7 @@ color = "red"
 shape = "round"
 ```
 
-Equivalent YAML:
+Is not as clear as this:
 
 ```yaml
 fruit:
@@ -51,32 +53,32 @@ fruit:
     shape: round
 ```
 
-It also embeds type information used by the parser into the syntax:
+Finally, like most other markup languages it does [syntax typing](../why/syntax-typing-bad):
 
 ```toml
 flt2 = 3.1415
 string = "hello"
 ```
 
-Whereas strictyaml:
+Whereas, strictyaml(except for a few niche edge cases) simply does not need quotes around any value:
 
 ```yaml
 flt2: 3.1415
 string: hello
 ```
 
-Will yield this:
+...since is parses *everything* as string by default:
 
 ```python
 >>> load(yaml).data
 {"flt2": "3.1415", "string": "hello"}
 ```
 
-Or this:
+...and will parse to other types if that's what the schema says to do:
 
 ```python
 >>> load(yaml, Map({"flt2": Float(), "string": Str()})).data
 {"flt": 3.1415, "string": "hello"}
 ```
 
-This not only eliminates the need for [syntax typing](https://github.com/crdoconnor/strictyaml/blob/master/FAQ.rst#what-is-wrong-with-explicit-syntax-typing-in-a-readable-configuration-languages>), it adds more type safety.
+The schema based approach not only eliminates the need for syntax typing, it is more typesafe.
