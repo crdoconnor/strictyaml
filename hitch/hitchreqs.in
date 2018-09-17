@@ -9,8 +9,5 @@ hitchrun>=0.3.1
 hitchdoc
 pypandoc
 templex
-flake8
-jupyter_console
-twine
 simex
-q
+hitchpylibrarytoolkit>=0.1.5

@@ -55,7 +55,9 @@ class YAML(object):
     def __str__(self):
         if type(self._value) in (unicode, str, int, float, decimal.Decimal):
             return unicode(self._value)
-        elif isinstance(self._value, CommentedMap) or isinstance(self._value, CommentedSeq):
+        elif isinstance(self._value, CommentedMap) or isinstance(
+            self._value, CommentedSeq
+        ):
             raise TypeError(
                 "Cannot cast mapping/sequence '{0}' to string".format(repr(self._value))
             )
@@ -145,6 +147,7 @@ class YAML(object):
 
     def _prepostindices(self, index):
         from strictyaml.compound import MapValidator
+
         if isinstance(index, YAML):
             index = index.data
 
@@ -177,7 +180,9 @@ class YAML(object):
         proposed_chunk.strictparsed()[strictindex] = deepcopy(new_value.as_marked_up())
 
         if self.is_mapping():
-            updated_value = existing_validator(proposed_chunk.val(preindex, strictindex))
+            updated_value = existing_validator(
+                proposed_chunk.val(preindex, strictindex)
+            )
             updated_value._chunk.make_child_of(self._chunk.val(preindex, strictindex))
         else:
             updated_value = existing_validator(proposed_chunk.index(preindex))
@@ -211,7 +216,7 @@ class YAML(object):
         Render the YAML node and subnodes as string.
         """
         dumped = dump(self.as_marked_up(), Dumper=StrictYAMLDumper, allow_unicode=True)
-        return dumped if sys.version_info[0] == 3 else dumped.decode('utf8')
+        return dumped if sys.version_info[0] == 3 else dumped.decode("utf8")
 
     def items(self):
         if not isinstance(self._value, CommentedMap):
@@ -225,7 +230,9 @@ class YAML(object):
 
     def values(self):
         if not isinstance(self._value, CommentedMap):
-            raise TypeError("{0} not a mapping, cannot use .values()".format(repr(self)))
+            raise TypeError(
+                "{0} not a mapping, cannot use .values()".format(repr(self))
+            )
         return [self._value[key] for key, value in self._value.items()]
 
     def get(self, index, default=None):
@@ -260,12 +267,16 @@ class YAML(object):
         return copy(self)
 
     def __gt__(self, val):
-        if isinstance(self._value, CommentedMap) or isinstance(self._value, CommentedSeq):
+        if isinstance(self._value, CommentedMap) or isinstance(
+            self._value, CommentedSeq
+        ):
             raise TypeError("{0} not an orderable type.".format(repr(self._value)))
         return self._value > val
 
     def __lt__(self, val):
-        if isinstance(self._value, CommentedMap) or isinstance(self._value, CommentedSeq):
+        if isinstance(self._value, CommentedMap) or isinstance(
+            self._value, CommentedSeq
+        ):
             raise TypeError("{0} not an orderable type.".format(repr(self._value)))
         return self._value < val
 
@@ -280,8 +291,9 @@ class YAML(object):
         return isinstance(self._value, CommentedSeq)
 
     def is_scalar(self):
-        return not isinstance(self._value, CommentedSeq) \
-            and not isinstance(self._value, CommentedMap)
+        return not isinstance(self._value, CommentedSeq) and not isinstance(
+            self._value, CommentedMap
+        )
 
     @property
     def scalar(self):

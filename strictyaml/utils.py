@@ -73,26 +73,25 @@ def ruamel_structure(data):
     data.
     """
     if isinstance(data, dict):
-        return CommentedMap([
-            (ruamel_structure(key), ruamel_structure(value))
-            for key, value in data.items()
-        ])
+        return CommentedMap(
+            [
+                (ruamel_structure(key), ruamel_structure(value))
+                for key, value in data.items()
+            ]
+        )
     elif isinstance(data, list):
-        return CommentedSeq([
-            ruamel_structure(item) for item in data
-        ])
+        return CommentedSeq([ruamel_structure(item) for item in data])
     elif isinstance(data, bool):
         return u"yes" if data else u"no"
     elif isinstance(data, (int, float)):
         return str(data)
     else:
         if not is_string(data):
-            raise exceptions.CannotBuildDocumentFromInvalidData((
-                "Document must be built from a combination of:\n"
-                "string, int, float, bool, list, dict\n\n"
-                "Instead, found variable with type '{}': '{}'"
-            ).format(
-                type(data),
-                data,
-            ))
+            raise exceptions.CannotBuildDocumentFromInvalidData(
+                (
+                    "Document must be built from a combination of:\n"
+                    "string, int, float, bool, list, dict\n\n"
+                    "Instead, found variable with type '{}': '{}'"
+                ).format(type(data), data)
+            )
         return data

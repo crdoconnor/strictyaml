@@ -12,12 +12,7 @@ class Validator(object):
 
     def __call__(self, chunk):
         self.validate(chunk)
-        return YAML(
-            chunk.strictparsed(),
-            text=None,
-            chunk=chunk,
-            validator=self,
-        )
+        return YAML(chunk.strictparsed(), text=None, chunk=chunk, validator=self)
 
     def __repr__(self):
         return u"{0}()".format(self.__class__.__name__)

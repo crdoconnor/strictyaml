@@ -15,6 +15,7 @@ class YAMLPointer(object):
     A YAML pointer can point to a key, value, item in a sequence or part of a string
     in a value or item.
     """
+
     def __init__(self):
         self._indices = []
 
@@ -42,37 +43,37 @@ class YAMLPointer(object):
         assert isinstance(regularkey, (str, unicode)), type(regularkey)
         assert isinstance(strictkey, (str, unicode)), type(strictkey)
         new_location = deepcopy(self)
-        new_location._indices.append(('val', (regularkey, strictkey)))
+        new_location._indices.append(("val", (regularkey, strictkey)))
         return new_location
 
     def is_val(self):
-        return self._indices[-1][0] == 'val'
+        return self._indices[-1][0] == "val"
 
     def key(self, regularkey, strictkey):
         assert isinstance(regularkey, (str, unicode)), type(regularkey)
         assert isinstance(strictkey, (str, unicode)), type(strictkey)
         new_location = deepcopy(self)
-        new_location._indices.append(('key', (regularkey, strictkey)))
+        new_location._indices.append(("key", (regularkey, strictkey)))
         return new_location
 
     def is_key(self):
-        return self._indices[-1][0] == 'key'
+        return self._indices[-1][0] == "key"
 
     def index(self, index):
         new_location = deepcopy(self)
-        new_location._indices.append(('index', index))
+        new_location._indices.append(("index", index))
         return new_location
 
     def is_index(self):
-        return self._indices[-1][0] == 'index'
+        return self._indices[-1][0] == "index"
 
     def textslice(self, start, end):
         new_location = deepcopy(self)
-        new_location._indices.append(('textslice', (start, end)))
+        new_location._indices.append(("textslice", (start, end)))
         return new_location
 
     def is_textslice(self):
-        return self._indices[-1][0] == 'textslice'
+        return self._indices[-1][0] == "textslice"
 
     def parent(self):
         new_location = deepcopy(self)
@@ -108,7 +109,7 @@ class YAMLPointer(object):
                                 slicedpart[index] = self._slice_segment(
                                     indices[1:],
                                     segment[index],
-                                    include_selected=include_selected
+                                    include_selected=include_selected,
                                 )
 
                             if not include_selected and len(indices) == 1:
@@ -126,7 +127,7 @@ class YAMLPointer(object):
                                 slicedpart[index] = self._slice_segment(
                                     indices[1:],
                                     segment[index],
-                                    include_selected=include_selected
+                                    include_selected=include_selected,
                                 )
 
                             if not include_selected and len(indices) == 1:
@@ -135,31 +136,41 @@ class YAMLPointer(object):
         return slicedpart
 
     def start_line(self, document):
-        slicedpart = self._slice_segment(self._indices, document, include_selected=False)
+        slicedpart = self._slice_segment(
+            self._indices, document, include_selected=False
+        )
 
         if slicedpart is None or slicedpart == {} or slicedpart == []:
             return 1
         else:
-            return len(dump(slicedpart, Dumper=RoundTripDumper).rstrip().split('\n')) + 1
+            return (
+                len(dump(slicedpart, Dumper=RoundTripDumper).rstrip().split("\n")) + 1
+            )
 
     def end_line(self, document):
         slicedpart = self._slice_segment(self._indices, document, include_selected=True)
-        return len(dump(slicedpart, Dumper=RoundTripDumper).rstrip().split('\n'))
+        return len(dump(slicedpart, Dumper=RoundTripDumper).rstrip().split("\n"))
 
     def lines(self, document):
-        return "\n".join(dump(document, Dumper=RoundTripDumper).split('\n')[
-            self.start_line(document) - 1:self.end_line(document)
-        ])
+        return "\n".join(
+            dump(document, Dumper=RoundTripDumper).split("\n")[
+                self.start_line(document) - 1 : self.end_line(document)
+            ]
+        )
 
     def lines_before(self, document, how_many):
-        return "\n".join(dump(document, Dumper=RoundTripDumper).split('\n')[
-            self.start_line(document) - 1 - how_many:self.start_line(document) - 1
-        ])
+        return "\n".join(
+            dump(document, Dumper=RoundTripDumper).split("\n")[
+                self.start_line(document) - 1 - how_many : self.start_line(document) - 1
+            ]
+        )
 
     def lines_after(self, document, how_many):
-        return "\n".join(dump(document, Dumper=RoundTripDumper).split('\n')[
-            self.end_line(document):self.end_line(document) + how_many
-        ])
+        return "\n".join(
+            dump(document, Dumper=RoundTripDumper).split("\n")[
+                self.end_line(document) : self.end_line(document) + how_many
+            ]
+        )
 
     def get(self, document, strictdoc=False):
         segment = document
@@ -169,7 +180,7 @@ class YAMLPointer(object):
             elif index_type == "index":
                 segment = segment[index]
             elif index_type == "textslice":
-                segment = segment[index[0]:index[1]]
+                segment = segment[index[0] : index[1]]
             elif index_type == "key":
                 segment = index[1] if strictdoc else index[0]
             else:

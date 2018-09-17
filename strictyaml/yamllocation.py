@@ -20,9 +20,12 @@ class YAMLChunk(object):
     ruamelparsed document. After it will contain CommentedMaps, CommentedSeqs
     and YAML objects.
     """
+
     def __init__(self, ruamelparsed, pointer=None, label=None, strictparsed=None):
         self._ruamelparsed = ruamelparsed
-        self._strictparsed = deepcopy(ruamelparsed) if strictparsed is None else strictparsed
+        self._strictparsed = (
+            deepcopy(ruamelparsed) if strictparsed is None else strictparsed
+        )
         self._pointer = pointer if pointer is not None else YAMLPointer()
         self._label = label
         self._key_association = {}
@@ -31,7 +34,7 @@ class YAMLChunk(object):
         raise YAMLValidationError(
             expecting,
             found if found is not None else "found {0}".format(self.found()),
-            self
+            self,
         )
 
     def while_parsing_found(self, what, found=None):
@@ -39,8 +42,9 @@ class YAMLChunk(object):
 
     def process(self, new_item):
         strictparsed = self.pointer.parent().get(self._strictparsed, strictdoc=True)
-        current_parsed = strictparsed._value if hasattr(strictparsed, '_value') \
-            else strictparsed
+        current_parsed = (
+            strictparsed._value if hasattr(strictparsed, "_value") else strictparsed
+        )
 
         if self.pointer.is_index():
             current_parsed[self.pointer.last_index] = new_item
@@ -66,7 +70,7 @@ class YAMLChunk(object):
             return u"a sequence"
         elif self.is_mapping():
             return u"a mapping"
-        elif self.contents == u'':
+        elif self.contents == u"":
             return u"a blank string"
         elif utils.is_integer(self.contents):
             return u"an arbitrary integer"
@@ -83,23 +87,22 @@ class YAMLChunk(object):
     def expect_mapping(self):
         if not self.is_mapping():
             self.expecting_but_found(
-                "when expecting a mapping",
-                "found {0}".format(self.found())
+                "when expecting a mapping", "found {0}".format(self.found())
             )
         return [
             (
                 self.key(regular_key, unicode(validated_key)),
                 self.val(regular_key, unicode(validated_key)),
             )
-            for (regular_key, validated_key) in
-            zip(self.contents.keys(), self.strictparsed().keys())
+            for (regular_key, validated_key) in zip(
+                self.contents.keys(), self.strictparsed().keys()
+            )
         ]
 
     def expect_scalar(self, what):
         if not self.is_scalar():
             self.expecting_but_found(
-                "when expecting {0}".format(what),
-                "found {0}".format(self.found()),
+                "when expecting {0}".format(what), "found {0}".format(self.found())
             )
 
     @property
@@ -121,7 +124,9 @@ class YAMLChunk(object):
         Used when modifying a YAML chunk so that the modification can be validated
         before changing it.
         """
-        return YAMLChunk(deepcopy(self._ruamelparsed), pointer=self.pointer, label=self.label)
+        return YAMLChunk(
+            deepcopy(self._ruamelparsed), pointer=self.pointer, label=self.label
+        )
 
     def add_key_association(self, unprocessed_key, processed_key):
         self._key_association[processed_key] = unprocessed_key
@@ -154,7 +159,7 @@ class YAMLChunk(object):
             self._ruamelparsed,
             pointer=pointer,
             label=self._label,
-            strictparsed=self._strictparsed
+            strictparsed=self._strictparsed,
         )
 
     def index(self, index):

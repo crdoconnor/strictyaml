@@ -20,19 +20,25 @@ class MapValidator(Validator):
 
 
 class MapPattern(MapValidator):
-    def __init__(self, key_validator, value_validator, minimum_keys=None, maximum_keys=None):
+    def __init__(
+        self, key_validator, value_validator, minimum_keys=None, maximum_keys=None
+    ):
         self._key_validator = key_validator
         self._value_validator = value_validator
         self._maximum_keys = maximum_keys
         self._minimum_keys = minimum_keys
-        assert isinstance(self._key_validator, ScalarValidator), \
-            "key_validator must be ScalarValidator"
-        assert isinstance(self._value_validator, Validator), \
-            "value_validator must be Validator"
-        assert isinstance(maximum_keys, (type(None), int)), \
-            "maximum_keys must be an integer"
-        assert isinstance(minimum_keys, (type(None), int)), \
-            "maximum_keys must be an integer"
+        assert isinstance(
+            self._key_validator, ScalarValidator
+        ), "key_validator must be ScalarValidator"
+        assert isinstance(
+            self._value_validator, Validator
+        ), "value_validator must be Validator"
+        assert isinstance(
+            maximum_keys, (type(None), int)
+        ), "maximum_keys must be an integer"
+        assert isinstance(
+            minimum_keys, (type(None), int)
+        ), "maximum_keys must be an integer"
 
     @property
     def key_validator(self):
@@ -45,16 +51,20 @@ class MapPattern(MapValidator):
             chunk.expecting_but_found(
                 u"while parsing a mapping",
                 u"expected a maximum of {0} key{1}, found {2}.".format(
-                    self._maximum_keys, u"s" if self._maximum_keys > 1 else u"", len(items)
-                )
+                    self._maximum_keys,
+                    u"s" if self._maximum_keys > 1 else u"",
+                    len(items),
+                ),
             )
 
         if self._minimum_keys is not None and len(items) < self._minimum_keys:
             chunk.expecting_but_found(
                 u"while parsing a mapping",
                 u"expected a minimum of {0} key{1}, found {2}.".format(
-                    self._minimum_keys, u"s" if self._minimum_keys > 1 else u"", len(items)
-                )
+                    self._minimum_keys,
+                    u"s" if self._minimum_keys > 1 else u"",
+                    len(items),
+                ),
             )
 
         for key, value in items:
@@ -73,26 +83,32 @@ class Map(MapValidator):
     def __init__(self, validator, key_validator=None):
         self._validator = validator
         self._key_validator = Str() if key_validator is None else key_validator
-        assert isinstance(self._key_validator, ScalarValidator), \
-            "key validator must be ScalarValidator"
+        assert isinstance(
+            self._key_validator, ScalarValidator
+        ), "key validator must be ScalarValidator"
 
         self._validator_dict = {
-            key.key if isinstance(key, Optional) else key: value for key, value in validator.items()
+            key.key if isinstance(key, Optional) else key: value
+            for key, value in validator.items()
         }
 
-        self._required_keys = [key for key in validator.keys() if not isinstance(key, Optional)]
+        self._required_keys = [
+            key for key in validator.keys() if not isinstance(key, Optional)
+        ]
 
     @property
     def key_validator(self):
         return self._key_validator
 
     def __repr__(self):
-        return u"Map({{{0}}})".format(', '.join([
-            '{0}: {1}'.format(
-                repr(key),
-                repr(value),
-            ) for key, value in self._validator.items()
-        ]))
+        return u"Map({{{0}}})".format(
+            ", ".join(
+                [
+                    "{0}: {1}".format(repr(key), repr(value))
+                    for key, value in self._validator.items()
+                ]
+            )
+        )
 
     def validate(self, chunk):
         found_keys = set()
@@ -104,7 +120,9 @@ class Map(MapValidator):
             if yaml_key.scalar not in self._validator_dict.keys():
                 key.expecting_but_found(
                     u"while parsing a mapping",
-                    u"unexpected key not in schema '{0}'".format(unicode(yaml_key.scalar))
+                    u"unexpected key not in schema '{0}'".format(
+                        unicode(yaml_key.scalar)
+                    ),
                 )
 
             value.process(self._validator_dict[yaml_key.scalar](value))
@@ -116,8 +134,10 @@ class Map(MapValidator):
             chunk.while_parsing_found(
                 u"a mapping",
                 u"required key(s) '{0}' not found".format(
-                    "', '".join(sorted(list(set(self._required_keys).difference(found_keys))))
-                )
+                    "', '".join(
+                        sorted(list(set(self._required_keys).difference(found_keys)))
+                    )
+                ),
             )
 
 
@@ -141,8 +161,9 @@ class FixedSeq(SeqValidator):
     def __init__(self, validators):
         self._validators = validators
         for item in validators:
-            assert isinstance(item, Validator),\
-                "all FixedSeq validators must be Validators"
+            assert isinstance(
+                item, Validator
+            ), "all FixedSeq validators must be Validators"
 
     def __repr__(self):
         return "FixedSeq({0})".format(repr(self._validators))
@@ -154,7 +175,9 @@ class FixedSeq(SeqValidator):
 
         if len(self._validators) != len(sequence):
             chunk.expecting_but_found(
-                "when expecting a sequence of {0} elements".format(len(self._validators)),
+                "when expecting a sequence of {0} elements".format(
+                    len(self._validators)
+                ),
                 "found a sequence of {0} elements".format(len(chunk.contents)),
             )
 
@@ -165,8 +188,9 @@ class FixedSeq(SeqValidator):
 class UniqueSeq(SeqValidator):
     def __init__(self, validator):
         self._validator = validator
-        assert isinstance(self._validator, ScalarValidator), \
-            "UniqueSeq validator must be ScalarValidator"
+        assert isinstance(
+            self._validator, ScalarValidator
+        ), "UniqueSeq validator must be ScalarValidator"
 
     def __repr__(self):
         return "UniqueSeq({0})".format(repr(self._validator))
