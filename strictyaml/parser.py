@@ -203,16 +203,19 @@ class StrictYAMLScanner(RoundTripScanner):
                             "(do not specify types in markup)",
                             token.start_mark,
                         )
-                    if isinstance(
-                        token, ruamelyaml.tokens.FlowMappingStartToken
-                    ) or isinstance(token, ruamelyaml.tokens.FlowSequenceStartToken):
-                        raise exceptions.FlowMappingDisallowed(
-                            "While scanning",
-                            token.start_mark,
-                            "Found ugly disallowed JSONesque flow mapping "
-                            "(surround with ' and ' to make text appear literally)",
-                            token.end_mark,
-                        )
+                    if not self.allow_flow_style:
+                        if isinstance(
+                            token, ruamelyaml.tokens.FlowMappingStartToken
+                        ) or isinstance(
+                            token, ruamelyaml.tokens.FlowSequenceStartToken
+                        ):
+                            raise exceptions.FlowMappingDisallowed(
+                                "While scanning",
+                                token.start_mark,
+                                "Found ugly disallowed JSONesque flow mapping "
+                                "(surround with ' and ' to make text appear literally)",
+                                token.end_mark,
+                            )
                     if isinstance(token, ruamelyaml.tokens.AnchorToken):
                         raise exceptions.AnchorTokenDisallowed(
                             "While scanning",
@@ -255,17 +258,17 @@ def as_document(data, schema=None, label=u"<unicode string>"):
     return schema(YAMLChunk(utils.ruamel_structure(data), label=label))
 
 
-def load(yaml_string, schema=None, label=u"<unicode string>"):
-    """
-    Parse the first YAML document in a string
-    and produce corresponding YAML object.
-    """
+def generic_load(
+    yaml_string, schema=None, label=u"<unicode string>", allow_flow_style=False
+):
     if not utils.is_string(yaml_string):
         raise TypeError("StrictYAML can only read a string of valid YAML.")
 
     # We manufacture a class that has the label we want
     DynamicStrictYAMLLoader = type(
-        "DynamicStrictYAMLLoader", (StrictYAMLLoader,), {"label": label}
+        "DynamicStrictYAMLLoader",
+        (StrictYAMLLoader,),
+        {"label": label, "allow_flow_style": allow_flow_style},
     )
 
     try:
@@ -286,3 +289,28 @@ def load(yaml_string, schema=None, label=u"<unicode string>"):
         schema = Any()
 
     return schema(YAMLChunk(document, label=label))
+
+
+def dirty_load(
+    yaml_string, schema=None, label=u"<unicode string>", allow_flow_style=False
+):
+    """
+    Parse the first YAML document in a string
+    and produce corresponding YAML object.
+
+    If allow_flow_style is set to True, then flow style is allowed.
+    """
+    return generic_load(
+        yaml_string,
+        schema=schema,
+        label=label,
+        allow_flow_style=allow_flow_style,
+    )
+
+
+def load(yaml_string, schema=None, label=u"<unicode string>"):
+    """
+    Parse the first YAML document in a string
+    and produce corresponding YAML object.
+    """
+    return generic_load(yaml_string, schema=schema, label=label)
