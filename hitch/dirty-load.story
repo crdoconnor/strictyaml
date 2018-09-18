@@ -3,8 +3,9 @@ Dirty load:
   based on: strictyaml
   description: |
     StrictYAML refuses to parse flow style and node anchors
-    by default, but since there have since been requests to parse
-    flow style.
+    by default, but since there have since been
+    [some requests](https://github.com/crdoconnor/strictyaml/issues/38)
+    to parse flow style, this now allowed with the "dirty_load" method.
   given:
     setup: |
       from strictyaml import Map, Int, MapPattern, Seq, Str, Any, dirty_load
