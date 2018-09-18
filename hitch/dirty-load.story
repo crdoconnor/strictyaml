@@ -7,14 +7,16 @@ Dirty load:
     flow style.
   given:
     setup: |
-      from strictyaml import Map, Int, Any, dirty_load
+      from strictyaml import Map, Int, MapPattern, Seq, Str, Any, dirty_load
 
-      schema = Map({"x": Map({"a": Any(), "b": Any(), "c": Any()})})
+      schema = Map({"x": Map({"a": Any(), "b": Any(), "c": Any()}), "y": MapPattern(Str(), Str()), "z": Seq(Str())})
   variations:
     Flow style mapping:
       given:
         yaml_snippet: |
           x: { a: 1, b: 2, c: 3 }
+          y: {}
+          z: []
       steps:
       - Run: |
-          assert dirty_load(yaml_snippet, schema, allow_flow_style=True) == {"x": {"a": "1", "b": "2", "c": "3"},}
+          assert dirty_load(yaml_snippet, schema, allow_flow_style=True) == {"x": {"a": "1", "b": "2", "c": "3"}, "y": {}, "z": []}
