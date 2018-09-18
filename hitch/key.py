@@ -12,7 +12,6 @@ from hitchrunpy import (
     ExpectedExceptionMessageWasDifferent,
 )
 from templex import Templex, NonMatching
-import hitchbuildpy
 import dirtemplate
 import hitchpylibrarytoolkit
 
