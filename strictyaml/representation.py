@@ -15,6 +15,25 @@ if sys.version_info[0] == 3:
     unicode = str
 
 
+class YAMLIterator(object):
+    def __init__(self, yaml_object):
+        self._yaml_object = yaml_object
+        self._index = 0
+
+    def __iter__(self):
+        return self
+
+    def next(self):
+        return self.__next__()
+
+    def __next__(self):
+        if self._index >= len(self._yaml_object):
+            raise StopIteration
+        else:
+            self._index = self._index + 1
+            return self._yaml_object[self._index - 1]
+
+
 class YAML(object):
     """
     A YAML object represents a block of YAML which can be:
@@ -226,7 +245,7 @@ class YAML(object):
     def keys(self):
         if not isinstance(self._value, CommentedMap):
             raise TypeError("{0} not a mapping, cannot use .keys()".format(repr(self)))
-        return [key for key, value in self._value.items()]
+        return [key for key, _ in self._value.items()]
 
     def values(self):
         if not isinstance(self._value, CommentedMap):
@@ -247,6 +266,14 @@ class YAML(object):
             return item in self.keys()
         else:
             return item in self._value
+
+    def __iter__(self):
+        if self.is_sequence():
+            return YAMLIterator(self)
+        elif self.is_mapping():
+            return YAMLIterator(self.keys())
+        else:
+            raise TypeError("{0} is a scalar value, cannot iterate.".format(repr(self)))
 
     @property
     def validator(self):

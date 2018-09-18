@@ -134,3 +134,14 @@ Mappings with defined keys (Map):
                    ^ (line: 1)
 
 
+
+    iterator:
+      given:
+        yaml_snippet: |
+          a: 1
+          b: 2
+          c: 3
+      steps:
+      - Run:
+          code: |
+            assert [item for item in load(yaml_snippet, schema)] == ["a", "b", "c"]

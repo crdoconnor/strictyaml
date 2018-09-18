@@ -28,9 +28,13 @@ Sequence/list validator (Seq):
 
     Is sequence:
       steps:
-      - Run:
-          code: |
-            assert load(yaml_snippet, Seq(Str())).is_sequence()
+      - Run: |
+          assert load(yaml_snippet, Seq(Str())).is_sequence()
+
+    Iterator:
+      steps:
+      - Run: |
+          assert [x for x in load(yaml_snippet, Seq(Str()))] == ["1", "2", "3"]
 
     .text is nonsensical:
       given:
