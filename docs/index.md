@@ -10,8 +10,8 @@ title: StrictYAML
 {% endif %}
 
 StrictYAML is a [type-safe](https://en.wikipedia.org/wiki/Type_safety) YAML parser
-that parses a [restricted subset](features-removed) of the [YAML](what-is-yaml)
-specificaton.
+that parses and validates a [restricted subset](features-removed) of the [YAML](what-is-yaml)
+specification.
 
 Priorities:
 
