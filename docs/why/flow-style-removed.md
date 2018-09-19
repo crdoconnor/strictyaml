@@ -21,7 +21,7 @@ confusing the reader.
 Parsing 'dirty' YAML with flow style
 ------------------------------------
 
-To parse YAML with flow style, you can use [dirty load](../using/alpha/restrictions/loading-dirty-yaml).
+To parse YAML with flow style, you can use [dirty load](../../using/alpha/restrictions/loading-dirty-yaml).
 
 
 Counterarguments
