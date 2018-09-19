@@ -68,6 +68,6 @@ traitlets==4.3.2          # via ipykernel, ipython, jupyter-client, jupyter-core
 twine==1.9.1              # via hitchpylibrarytoolkit
 unidecode==0.4.20         # via python-slugify
 urllib3==1.21.1           # via requests
-uvloop==0.8.1             # via icommandlib
+uvloop==0.11.2             # via icommandlib
 wcwidth==0.1.7            # via prompt-toolkit, pyte
 wheel==0.30.0             # via pypandoc
