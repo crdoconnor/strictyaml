@@ -5,12 +5,14 @@ title: Why not use TOML?
 [TOML](https://github.com/toml-lang/toml) is a redesigned configuration language that's essentially an extended version of INI which
 allows the expression of both hierarchical and typed data.
 
-TOML's main criticism of YAML is spot on::
+TOML's main criticism of *YAML* is spot on:
 
-  TOML aims for simplicity, a goal which is not apparent in the YAML specification.
+```
+TOML aims for simplicity, a goal which is not apparent in the YAML specification.
+```
 
-StrictYAML's cut down version of the YAML specification - with implicit typing, node anchors/references and flow style cut out,
-ends up being *simpler* than TOML.
+Yet StrictYAML's cut down version of the YAML specification - with implicit typing, node anchors/references and flow style cut out,
+is simpler than both standard YAML and TOML.
 
 While TOML works well enough for simple data - perhaps as a drop in replacement for the INI files which inspired it -
 things start to get a little hairier when you have more complex nested tables/arrays.
