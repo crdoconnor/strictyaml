@@ -12,8 +12,10 @@ TOML's main criticism of YAML is spot on::
 StrictYAML's cut down version of the YAML specification - with implicit typing, node anchors/references and flow style cut out,
 ends up being *simpler* than TOML.
 
-While TOML works well enough for simple data - much like the INI files which inspired it - things start to get a little
-hairier when you have nested tables/arrays.
+While TOML works well enough for simple data - perhaps as a drop in replacement for the INI files which inspired it -
+things start to get a little hairier when you have more complex nested tables/arrays.
+
+## 1. Nesting
 
 For example:
 
@@ -53,32 +55,47 @@ fruit:
     shape: round
 ```
 
-Finally, like most other markup languages it does [syntax typing](../why/syntax-typing-bad):
+In order to partially circumvent this issue, complicated TOML is often presented with indentation. For example:
+
+* https://github.com/gazreese/gazreese.com/blob/c4c3fa7d576a4c316f11f0f7a652ca11ab23586d/Hugo/config.toml
+* https://github.com/leereilly/csi/blob/567e5b55f766847c9dcc7de482c0fd241fa7377a/lib/data/master.toml
+* https://github.com/CzarSimon/simonlindgren.info/blob/a391a6345b16f2d8093f6d4c5f422399b4b901eb/simon-cv/config.toml
+
+## 2. Syntax Typing
+
+Like most other markup languages TOML has [syntax typing](../../why/syntax-typing-bad).
 
 ```toml
 flt2 = 3.1415
 string = "hello"
 ```
 
-Whereas, strictyaml(except for a few niche edge cases) simply does not need quotes around any value:
+StrictYAML (except for a few very niche edge cases) simply does not require quotes around any value to
+infer a data type. So, for instance:
 
 ```yaml
 flt2: 3.1415
 string: hello
 ```
 
-...since is parses *everything* as string by default:
+Will simply parse as string:
 
 ```python
 >>> load(yaml).data
 {"flt2": "3.1415", "string": "hello"}
 ```
 
-...and will parse to other types if that's what the schema says to do:
+...unless directed to parse as something else by the schema:
 
 ```python
 >>> load(yaml, Map({"flt2": Float(), "string": Str()})).data
 {"flt": 3.1415, "string": "hello"}
 ```
 
-The schema based approach not only eliminates the need for syntax typing, it is more typesafe.
+The schema based approach not only eliminates the need for syntax typing, making the markup terser,
+it is more type-safe at the same time.
+
+
+## 3. Duplicate keys
+
+TOML, like standard YAML, allows [duplicate keys](../../why/duplicate-keys-disallowed) which can lead to ambiguity and bugs.
