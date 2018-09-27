@@ -188,7 +188,7 @@ def _personal_settings():
                 "  rewrite: no\n"
                 "  cprofile: no\n"
                 "params:\n"
-                "  python version: 3.5.0\n"
+                "  python version: 3.7.0\n"
             )
         )
     return load(
@@ -237,7 +237,7 @@ def regressfile(filename):
     ).filter(lambda story: not story.info["fails on python 2"]).ordered_by_name().play()
 
     _storybook({"rewrite": False}).with_params(
-        **{"python version": "3.5.0"}
+        **{"python version": "3.7.0"}
     ).in_filename(filename).ordered_by_name().play()
 
 
@@ -252,7 +252,7 @@ def regression():
     storybook.with_params(**{"python version": "2.7.14"}).filter(
         lambda story: not story.info["fails on python 2"]
     ).ordered_by_name().play()
-    storybook.with_params(**{"python version": "3.5.0"}).ordered_by_name().play()
+    storybook.with_params(**{"python version": "3.7.0"}).ordered_by_name().play()
 
 
 def reformat():
@@ -286,7 +286,7 @@ def docgen():
 
 @expected(CommandError)
 def doctests():
-    for python_version in ["2.7.14", "3.5.0"]:
+    for python_version in ["2.7.14", "3.7.0"]:
         pylibrary = hitchpylibrarytoolkit.project_build(
             "strictyaml", DIR, python_version
         )
@@ -300,7 +300,7 @@ def ipy():
     """
     Run IPython in environment."
     """
-    Command(DIR.gen.joinpath("py3.5.0", "bin", "ipython")).run()
+    Command(DIR.gen.joinpath("py3.7.0", "bin", "ipython")).run()
 
 
 def hvenvup(package, directory):
@@ -312,7 +312,7 @@ def hvenvup(package, directory):
     pip("install", DIR.project.joinpath(directory).abspath()).run()
 
 
-def rerun(version="3.5.0"):
+def rerun(version="3.7.0"):
     """
     Rerun last example code block with specified version of python.
     """
