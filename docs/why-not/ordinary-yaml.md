@@ -2,7 +2,7 @@
 title: Why not use the YAML 2.0 standard? - we don't need a new standard!
 ---
 
-![Standards](http://imgs.xkcd.com/comics/standards.png "Fortnately the configuration one has been solved now that we have Strict uh... wait, no it hasn't...")
+![Standards](https://imgs.xkcd.com/comics/standards.png "Fortnately the configuration one has been solved now that we have Strict uh... wait, no it hasn't...")
 
 StrictYAML is composed of two parts:
 
