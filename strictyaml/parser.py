@@ -20,6 +20,7 @@ from ruamel.yaml.nodes import MappingNode
 from ruamel.yaml.compat import PY2
 from ruamel.yaml.constructor import ConstructorError
 import collections
+import warnings
 
 
 # StrictYAMLConstructor is mostly taken from RoundTripConstructor ruamel/yaml/constructor.py
@@ -284,6 +285,14 @@ def generic_load(
     # Document is just a (string, int, etc.)
     if type(document) not in (CommentedMap, CommentedSeq):
         document = yaml_string
+
+    all_lists = (item for item in document if isinstance(document[item], list))
+
+    for item_name in all_lists:
+        broken_items = (item for item in document[item_name] if ' - ' in item)
+        for broken_item in broken_items:
+            msg = 'potentially broken item "{0}". See block "{1}"'.format(broken_item, item_name)
+            warnings.warn(msg, stacklevel=3)
 
     if schema is None:
         schema = Any()
