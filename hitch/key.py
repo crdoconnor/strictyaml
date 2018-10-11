@@ -8,6 +8,9 @@ import dirtemplate
 import hitchpylibrarytoolkit
 from engine import Engine
 
+## ----------------------------
+## Non-runnable utility methods
+## ----------------------------
 
 def _storybook(settings):
     return StoryCollection(pathquery(DIR.key).ext("story"), Engine(DIR, settings))
@@ -41,6 +44,10 @@ def _personal_settings():
     )
 
 
+## -----------------
+## RUNNABLE COMMANDS
+## -----------------
+
 @expected(HitchStoryException)
 def bdd(*keywords):
     """
@@ -55,7 +62,7 @@ def bdd(*keywords):
 @expected(HitchStoryException)
 def rbdd(*keywords):
     """
-    Run story matching keywords and rewrite if changed.
+    Run story matching keywords and rewrite story if code changed.
     """
     settings = _personal_settings().data
     settings["engine"]["rewrite"] = True
@@ -68,8 +75,6 @@ def rbdd(*keywords):
 def regressfile(filename):
     """
     Run all stories in filename 'filename' in python 2 and 3.
-
-    Rewrite stories if appropriate.
     """
     _storybook({"rewrite": False}).in_filename(filename).with_params(
         **{"python version": "2.7.14"}
@@ -125,6 +130,9 @@ def docgen():
 
 @expected(CommandError)
 def doctests():
+    """
+    Run doctests in utils.py in python 2 and 3.
+    """
     for python_version in ["2.7.14", "3.7.0"]:
         pylibrary = hitchpylibrarytoolkit.project_build(
             "strictyaml", DIR, python_version
