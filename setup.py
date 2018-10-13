@@ -17,7 +17,7 @@ def read(*parts):
 setup(name="strictyaml",
       version=read('VERSION').replace('\n', ''),
       description="Strict, typed YAML parser",
-      long_description=read('README.rst'),
+      long_description=read('README.md'),
       classifiers=[
           'Development Status :: 4 - Beta',
           'Intended Audience :: Developers',
