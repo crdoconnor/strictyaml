@@ -1,7 +1,7 @@
-from hitchstory import StoryCollection, StorySchema, BaseEngine
-from hitchstory import validate, expected_exception
-from templex import Templex, NonMatching
-from strictyaml import Str, Map, Int, Bool, Optional, load
+from hitchstory import StoryCollection, BaseEngine, exceptions, validate, no_stacktrace_for
+from hitchstory import GivenDefinition, GivenProperty, InfoDefinition, InfoProperty
+from templex import Templex
+from strictyaml import Optional, Str, Map, Int, Bool, Enum, load
 import hitchpylibrarytoolkit
 from hitchrunpy import (
     ExamplePythonCode,
@@ -17,24 +17,22 @@ CODE_TYPE = Map({"in python 2": Str(), "in python 3": Str()}) | Str()
 class Engine(BaseEngine):
     """Python engine for running tests."""
 
-    schema = StorySchema(
-        given={
-            Optional("yaml_snippet"): Str(),
-            Optional("yaml_snippet_1"): Str(),
-            Optional("yaml_snippet_2"): Str(),
-            Optional("modified_yaml_snippet"): Str(),
-            Optional("python version"): Str(),
-            Optional("ruamel version"): Str(),
-            Optional("setup"): Str(),
-            Optional("code"): Str(),
-        },
-        info={
-            Optional("description"): Str(),
-            Optional("importance"): Int(),
-            Optional("experimental"): Bool(),
-            Optional("docs"): Str(),
-            Optional("fails on python 2"): Bool(),
-        },
+    given_definition = GivenDefinition(
+        yaml_snippet=GivenProperty(Str()),
+        yaml_snippet_1=GivenProperty(Str()),
+        yaml_snippet_2=GivenProperty(Str()),
+        modified_yaml_snippet=GivenProperty(Str()),
+        python_version=GivenProperty(Str()),
+        ruamel_version=GivenProperty(Str()),
+        setup=GivenProperty(Str()),
+    )
+
+    info_definition = InfoDefinition(
+        status=InfoProperty(schema=Enum(["experimental", "stable"])),
+        docs=InfoProperty(schema=Str()),
+        fails_on_python_2=InfoProperty(schema=Bool()),
+        description=InfoProperty(schema=Str()),
+        experimental=InfoProperty(schema=Bool()),
     )
 
     def __init__(self, keypath, settings):
@@ -75,8 +73,8 @@ class Engine(BaseEngine):
             )
         )
 
-    @expected_exception(NonMatching)
-    @expected_exception(HitchRunPyException)
+    @no_stacktrace_for(AssertionError)
+    @no_stacktrace_for(HitchRunPyException)
     @validate(
         code=Str(),
         will_output=Map({"in python 2": Str(), "in python 3": Str()}) | Str(),

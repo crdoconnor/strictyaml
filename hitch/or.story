@@ -14,7 +14,6 @@ Either/or schema validation of two equally valid different kinds of YAML:
       from ensure import Ensure
 
       schema = Map({"a": Bool() | Int()})
-    code: load(yaml_snippet, schema)
   variations:
     Boolean first choice true:
       given:

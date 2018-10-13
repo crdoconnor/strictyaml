@@ -11,7 +11,6 @@ Validating optional keys in mappings (Map):
       from ensure import Ensure
 
       schema = Map({"a": Int(), Optional("b"): Bool(), })
-    code:
   variations:
     Valid example 1:
       given:

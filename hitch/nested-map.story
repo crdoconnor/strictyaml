@@ -1,6 +1,5 @@
 Nested mapping validation:
   based on: strictyaml
-  importance: 4
   description: |
     Mappings can be nested within one another, which
     will be parsed as a dict within a dict.
@@ -19,7 +18,6 @@ Nested mapping validation:
             y: 8
           b: 2
           c: 3
-        code:
       steps:
       - Run:
           code: |
@@ -34,7 +32,6 @@ Nested mapping validation:
             z: 8
           b: 2
           d: 3
-        code:
       steps:
       - Run:
           code: load(yaml_snippet, schema)
@@ -53,7 +50,6 @@ Nested mapping validation:
           a: 11
           b: 2
           d: 3
-        code: load(yaml_snippet, schema)
       steps:
       - Run:
           code: load(yaml_snippet, schema)

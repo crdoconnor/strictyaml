@@ -301,10 +301,7 @@ def dirty_load(
     If allow_flow_style is set to True, then flow style is allowed.
     """
     return generic_load(
-        yaml_string,
-        schema=schema,
-        label=label,
-        allow_flow_style=allow_flow_style,
+        yaml_string, schema=schema, label=label, allow_flow_style=allow_flow_style
     )
 
 

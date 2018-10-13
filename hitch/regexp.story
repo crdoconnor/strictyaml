@@ -11,7 +11,6 @@ Validating strings with regexes (Regex):
       from ensure import Ensure
 
       schema = Map({"a": Regex(u"[1-4]"), "b": Regex(u"[5-9]")})
-    code:
   variations:
     Parsed correctly:
       given:

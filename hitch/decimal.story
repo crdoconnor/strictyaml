@@ -28,8 +28,6 @@ Decimal numbers (Decimal):
       b: 5.4135
   variations:
     .data to get Decimal object:
-      given:
-        code:
       steps:
       - Run: Ensure(type(load(yaml_snippet, schema)["a"].data) is Dec).is_true()
 

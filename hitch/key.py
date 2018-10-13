@@ -8,9 +8,12 @@ import dirtemplate
 import hitchpylibrarytoolkit
 from engine import Engine
 
-## ----------------------------
-## Non-runnable utility methods
-## ----------------------------
+"""
+----------------------------
+Non-runnable utility methods
+---------------------------
+"""
+
 
 def _storybook(settings):
     return StoryCollection(pathquery(DIR.key).ext("story"), Engine(DIR, settings))
@@ -44,9 +47,12 @@ def _personal_settings():
     )
 
 
-## -----------------
-## RUNNABLE COMMANDS
-## -----------------
+"""
+-----------------
+RUNNABLE COMMANDS
+-----------------
+"""
+
 
 @expected(HitchStoryException)
 def bdd(*keywords):
@@ -78,7 +84,7 @@ def regressfile(filename):
     """
     _storybook({"rewrite": False}).in_filename(filename).with_params(
         **{"python version": "2.7.14"}
-    ).filter(lambda story: not story.info["fails on python 2"]).ordered_by_name().play()
+    ).filter(lambda story: not story.info.get("fails_on_python_2")).ordered_by_name().play()
 
     _storybook({"rewrite": False}).with_params(
         **{"python version": "3.7.0"}
@@ -94,7 +100,7 @@ def regression():
     doctests()
     storybook = _storybook({}).only_uninherited()
     storybook.with_params(**{"python version": "2.7.14"}).filter(
-        lambda story: not story.info["fails on python 2"]
+        lambda story: not story.info.get("fails_on_python_2")
     ).ordered_by_name().play()
     storybook.with_params(**{"python version": "3.7.0"}).ordered_by_name().play()
 
@@ -126,6 +132,16 @@ def docgen():
     Build documentation.
     """
     hitchpylibrarytoolkit.docgen(_storybook({}), DIR.project, DIR.key, DIR.gen)
+
+
+@expected(dirtemplate.exceptions.DirTemplateException)
+def readmegen():
+    """
+    Build documentation.
+    """
+    hitchpylibrarytoolkit.readmegen(
+        _storybook({}), DIR.project, DIR.key, DIR.gen, "strictyaml"
+    )
 
 
 @expected(CommandError)

@@ -13,7 +13,6 @@ Enumerated scalars (Enum):
       from ensure import Ensure
 
       schema = Map({"a": Enum(["A", "B", "C"])})
-    code:
   variations:
     Valid because it contains 'A':
       given:

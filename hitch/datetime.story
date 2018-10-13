@@ -35,8 +35,6 @@ Datetimes (Datetime):
             })
 
     .text still returns the original text:
-      given:
-        code:
       steps:
       - Run:
           code: |

@@ -12,7 +12,6 @@ Enum with item validation:
       from ensure import Ensure
 
       schema = Map({"a": Enum([1, 2, 3], item_validator=Int())})
-    code:
   variations:
     Parse correctly:
       given:

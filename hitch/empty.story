@@ -55,7 +55,6 @@ Empty key validation:
 
     Non-empty value:
       given:
-        code:
         yaml_snippet: 'a: C'
       steps:
       - Run:

@@ -1,7 +1,6 @@
 Sequence/list validator (Seq):
   docs: compound/sequences
   based on: strictyaml
-  importance: 5
   description: |
     Sequences in YAML are denoted by a series of dashes ('-')
     and parsed as a list in python.
