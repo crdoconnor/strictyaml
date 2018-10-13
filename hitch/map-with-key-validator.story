@@ -8,7 +8,7 @@ Mapping with defined keys and a custom key validator (Map):
   given:
     setup: |
       from collections import OrderedDict
-      from strictyaml import Map, Str, Seq, load, ScalarValidator
+      from strictyaml import Map, Optional, Str, Seq, load, ScalarValidator
       from ensure import Ensure
       
       # This example uses slugify from the "python-slugify" package
@@ -20,7 +20,7 @@ Mapping with defined keys and a custom key validator (Map):
 
       schema = Map({
           "name": Str(),
-          "country-code": Str(),
+          Optional("country-code"): Str(),
           "dial-code": Str(),
           "official-languages": Seq(Str())
       }, key_validator=Slug())
