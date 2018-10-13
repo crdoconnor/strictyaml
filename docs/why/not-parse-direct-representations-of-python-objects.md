@@ -19,7 +19,7 @@ to and read them from, say, a database.
 
 By itself, this behavior isn't necessarily capable of enacting a successful
 attack, so not all code that parses untrusted YAML is insecure,
-but it can be used, especially when metaprogramming is used to execute
+but it can be used, especially in conjunction with metaprogramming to execute
 arbitrary code on your system.
 
 This shares a lot in common with the pickle module's behavior, which is why
