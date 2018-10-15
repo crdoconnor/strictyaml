@@ -18,6 +18,7 @@ setup(name="strictyaml",
       version=read('VERSION').replace('\n', ''),
       description="Strict, typed YAML parser",
       long_description=read('README.md'),
+      long_description_content_type="text/markdown",
       classifiers=[
           'Development Status :: 4 - Beta',
           'Intended Audience :: Developers',
