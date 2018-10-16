@@ -37,7 +37,7 @@ Build a YAML document from scratch in code:
 
 Build document from invalid type:
   based on: strictyaml
-  description: |
+  about: |
     YAML documents should only be buildable from dicts
     lists, strings, numbers and booleans.
 
@@ -59,5 +59,15 @@ Build document from invalid type:
           raises:
             type: strictyaml.exceptions.CannotBuildDocumentFromInvalidData
             message: "Document must be built from a combination of:\nstring, int,\
-              \ float, bool, list, dict\n\nInstead, found variable with type '<class\
-              \ '__main__.RandomClass'>': 'some random object'"
+              \ float, bool or nonempty list/dict\n\nInstead, found variable with\
+              \ type 'RandomClass': 'some random object'"
+
+
+    empty dict:
+      steps:
+      - run:
+          code: |
+            as_document({'hello': {}})
+          raises:
+            type: strictyaml.exceptions.CannotBuildDocumentsFromEmptyDictOrList
+            message: Document must be built with non-empty dicts and lists

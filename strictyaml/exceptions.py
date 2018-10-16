@@ -16,6 +16,10 @@ class CannotBuildDocumentFromInvalidData(StrictYAMLError):
     pass
 
 
+class CannotBuildDocumentsFromEmptyDictOrList(StrictYAMLError):
+    pass
+
+
 class YAMLValidationError(StrictYAMLError):
     def __init__(self, context, problem, chunk):
         self.context = context

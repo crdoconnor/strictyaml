@@ -73,6 +73,10 @@ def ruamel_structure(data):
     data.
     """
     if isinstance(data, dict):
+        if len(data) == 0:
+            raise exceptions.CannotBuildDocumentsFromEmptyDictOrList(
+                "Document must be built with non-empty dicts and lists"
+            )
         return CommentedMap(
             [
                 (ruamel_structure(key), ruamel_structure(value))
@@ -80,6 +84,10 @@ def ruamel_structure(data):
             ]
         )
     elif isinstance(data, list):
+        if len(data) == 0:
+            raise exceptions.CannotBuildDocumentsFromEmptyDictOrList(
+                "Document must be built with non-empty dicts and lists"
+            )
         return CommentedSeq([ruamel_structure(item) for item in data])
     elif isinstance(data, bool):
         return u"yes" if data else u"no"
@@ -90,8 +98,8 @@ def ruamel_structure(data):
             raise exceptions.CannotBuildDocumentFromInvalidData(
                 (
                     "Document must be built from a combination of:\n"
-                    "string, int, float, bool, list, dict\n\n"
+                    "string, int, float, bool or nonempty list/dict\n\n"
                     "Instead, found variable with type '{}': '{}'"
-                ).format(type(data), data)
+                ).format(type(data).__name__, data)
             )
         return data
