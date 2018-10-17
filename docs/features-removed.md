@@ -7,8 +7,7 @@ the YAML specification says should be parsed.
 
 This is a demonstration of some of those features:
 
-[Implicit Typing](../why/implicit-typing-removed)
--------------------------------------------------
+## Implicit Typing ([Why?](../why/implicit-typing-removed))
 
 ```yaml
 x: yes
@@ -27,8 +26,7 @@ Example StrictYAML
 load(yaml) == {"x": "yes", "y": "null"}
 ```
 
-[Direct representations of objects](../why/binary-data-removed)
----------------------------------------------------------------
+## Direct representations of objects ([Why?](../why/binary-data-removed))
 
 ```yaml
 --- !python/hash:UnsafeUserObject
@@ -49,8 +47,7 @@ Example StrictYAML
 raises TagTokenDisallowed
 ```
 
-[Duplicate Keys Disallowed](../why/duplicate-keys-disallowed)
--------------------------------------------------------------
+## Duplicate Keys Disallowed ([Why?](../why/duplicate-keys-disallowed))
 
 ```yaml
 x: 1
@@ -70,8 +67,7 @@ raises DuplicateKeysDisallowed
 ```
 
 
-[Explicit tags](../why/explicit-tags-removed)
----------------------------------------------
+## Explicit tags ([Why?](../why/explicit-tags-removed))
 
 ```yaml
 x: !!int 5
@@ -89,8 +85,7 @@ Example StrictYAML
 raises TagTokenDisallowed
 ```
 
-[Node anchors and refs](node-anchors-and-references-removed)
-------------------------------------------------------------
+## Node anchors and refs ([Why?](node-anchors-and-references-removed))
 
 ```yaml
 x: &id001
@@ -118,8 +113,7 @@ x: '&id001'
 y: '*id001'
 ```
 
-[Flow style](../why/flow-style-removed)
----------------------------------------
+## Flow style ([Why?](../why/flow-style-removed))
 
 ```yaml
 x: 1
@@ -136,5 +130,4 @@ Example StrictYAML
 
 ```python
 raises FlowStyleDisallowed
-`` 
-
+```
