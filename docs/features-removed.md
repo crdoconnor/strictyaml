@@ -3,9 +3,12 @@ title: What YAML features does StrictYAML remove?
 ---
 
 StrictYAML restricts you from parsing a number of things which
-the YAML specification says should be parsed.
+the YAML specification says should be parsed. An issue has
+been [raised](https://github.com/yaml/YAML2/issues/8) by
+[David Seaward](https://inkwell.za.net/) about this critique
+on the official YAML repository.
 
-This is a demonstration of some of those features:
+This document lists those of those features:
 
 ## Implicit Typing ([Why?](../why/implicit-typing-removed))
 
