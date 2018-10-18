@@ -8,7 +8,8 @@ Sequence/list validator (Seq):
     Validating sequences of a particular type can be done with
     the Seq validator, specifying the type.
 
-    See also UniqueSeq and FixedSeq for other types of sequence
+    See also [UniqueSeq](../sequences-of-unique-items) and
+    [FixedSeq](../fixed-length-sequences) for other types of sequence
     validation.
   given:
     yaml_snippet: |
@@ -21,9 +22,8 @@ Sequence/list validator (Seq):
   variations:
     Valid Parsed:
       steps:
-      - Run:
-          code: |
-            Ensure(load(yaml_snippet, Seq(Str()))).equals(["1", "2", "3", ])
+      - Run: |
+          Ensure(load(yaml_snippet, Seq(Str()))).equals(["1", "2", "3", ])
 
     Is sequence:
       steps:
@@ -168,10 +168,10 @@ Modify nested sequence:
           code: |
             yaml = load(yaml_snippet, schema)
 
-            yaml['a'] = {'a': "1", "b": "2"}
+            yaml['a'] = {'a': '1'}
           raises:
             type: strictyaml.exceptions.YAMLSerializationError
-            message: "Expected a list, found '{'a': '1', 'b': '2'}'"
+            message: "Expected a list, found '{'a': '1'}'"
 
     with empty list:
       steps:
