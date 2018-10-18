@@ -1,4 +1,4 @@
-from strictyaml.exceptions import YAMLValidationError
+from strictyaml.exceptions import YAMLValidationError, YAMLSerializationError
 from strictyaml.representation import YAML
 import sys
 
@@ -24,6 +24,12 @@ class OrValidator(Validator):
         assert isinstance(validator_b, Validator), "validator_b must be a Validator"
         self._validator_a = validator_a
         self._validator_b = validator_b
+
+    def to_yaml(self, value):
+        try:
+            return self._validator_a.to_yaml(value)
+        except YAMLSerializationError:
+            return self._validator_b.to_yaml(value)
 
     def __call__(self, chunk):
         try:

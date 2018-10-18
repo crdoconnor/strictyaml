@@ -23,13 +23,13 @@ Reading in YAML, editing it and writing it back out:
       - a: 1
       - b: 2
     setup: |
-      from strictyaml import Map, MapPattern, Str, Seq, Int, load
+      from strictyaml import Map, MapPattern, EmptyDict, Str, Seq, Int, load
       from ensure import Ensure
 
       schema = Map({
           "a": Str(),
           "b": Map({"x": Int(), "y": Int()}),
-          "c": Seq(MapPattern(Str(), Str())),
+          "c": EmptyDict() | Seq(MapPattern(Str(), Str())),
       })
   variations:
     Commented:
@@ -47,16 +47,8 @@ Reading in YAML, editing it and writing it back out:
             to_modify['c'][0]['a'] = '3'
             to_modify['b']['x'] = 'not an integer'
           raises:
-            type: strictyaml.exceptions.YAMLValidationError
-            message: |-
-              when expecting an integer
-                in "None", line 1, column 1:
-                  not an integer
-                   ^ (line: 1)
-              found arbitrary text
-                in "None", line 2, column 1:
-                  ...
-                  ^ (line: 2)
+            type: strictyaml.exceptions.YAMLSerializationError
+            message: "'not an integer' not an integer."
     Modified with float:
       steps:
       - run:
@@ -122,3 +114,23 @@ Reading in YAML, editing it and writing it back out:
                 across
                 lines
             - b: 2
+
+
+    With empty dict:
+      steps:
+      - run:
+          code: |
+            to_modify = load(yaml_snippet, schema)
+
+            to_modify['c'] = {}
+            print(to_modify.as_yaml())
+          will output: |-
+            # Some comment
+
+            a: â # value comment
+
+            # Another comment
+            b:
+              x: 4
+              y: 5
+            c:

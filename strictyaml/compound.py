@@ -1,6 +1,7 @@
 from strictyaml.validators import Validator
 from strictyaml.scalar import ScalarValidator
 from strictyaml.scalar import Str
+from ruamel.yaml.comments import CommentedMap, CommentedSeq
 import sys
 
 if sys.version_info[0] == 3:
@@ -73,6 +74,16 @@ class MapPattern(MapValidator):
             value.process(self._value_validator(value))
             chunk.add_key_association(key.contents, yaml_key.data)
 
+    def to_yaml(self, data):
+        # TODO : if not dict raise exception
+        # TODO : if not > 0 keys, raise exception
+        return CommentedMap(
+            [
+                (self._key_validator.to_yaml(key), self._value_validator.to_yaml(value))
+                for key, value in data.items()
+            ]
+        )
+
     def __repr__(self):
         return u"MapPattern({0}, {1})".format(
             repr(self._key_validator), repr(self._value_validator)
@@ -140,6 +151,15 @@ class Map(MapValidator):
                 ),
             )
 
+    def to_yaml(self, data):
+        # TODO : if not dict raise exception
+        # TODO : if not > 0 keys, raise exception
+        # TODO : if keys are not strings, raise exception.
+        return CommentedMap([
+            (key, self._validator_dict[key].to_yaml(value))
+            for key, value in data.items()
+        ])
+
 
 class SeqValidator(Validator):
     pass
@@ -155,6 +175,13 @@ class Seq(SeqValidator):
     def validate(self, chunk):
         for item in chunk.expect_sequence():
             item.process(self._validator(item))
+
+    def to_yaml(self, data):
+        # TODO : if not list raise exception
+        # TODO : if not > 0 keys, raise exception
+        return CommentedSeq([
+            self._validator.to_yaml(item) for item in data
+        ])
 
 
 class FixedSeq(SeqValidator):
@@ -183,6 +210,13 @@ class FixedSeq(SeqValidator):
 
         for item, validator in zip(sequence, self._validators):
             item.process(validator(item))
+
+    def to_yaml(self, data):
+        # TODO : fail on non sequences
+        list_of_items = []
+        for item, validator in zip(data, self._validators):
+            list_of_items.append(validator.to_yaml(item))
+        return CommentedSeq(list_of_items)
 
 
 class UniqueSeq(SeqValidator):

@@ -255,7 +255,7 @@ def as_document(data, schema=None, label=u"<unicode string>"):
     if schema is None:
         schema = Any()
 
-    return schema(YAMLChunk(utils.ruamel_structure(data), label=label))
+    return schema(YAMLChunk(schema.to_yaml(data), label=label))
 
 
 def generic_load(

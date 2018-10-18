@@ -110,7 +110,7 @@ class Engine(BaseEngine):
             )
             try:
                 Templex(will_output).assert_match(actual_output)
-            except NonMatching:
+            except AssertionError:
                 if self.settings.get("rewrite"):
                     self.current_step.update(**{"will output": actual_output})
                 else:

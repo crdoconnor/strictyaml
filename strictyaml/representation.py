@@ -6,7 +6,6 @@ from strictyaml.dumper import StrictYAMLDumper
 from ruamel.yaml import dump
 from copy import copy, deepcopy
 from collections import OrderedDict
-from strictyaml.utils import ruamel_structure
 import decimal
 import sys
 
@@ -191,7 +190,7 @@ class YAML(object):
         if isinstance(value, YAML):
             new_value = existing_validator(value._chunk)
         else:
-            new_value = existing_validator(YAMLChunk(ruamel_structure(value)))
+            new_value = existing_validator(YAMLChunk(existing_validator.to_yaml(value)))
 
         # First validate against forked document
         proposed_chunk = self._chunk.fork()

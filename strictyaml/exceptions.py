@@ -20,6 +20,10 @@ class CannotBuildDocumentsFromEmptyDictOrList(StrictYAMLError):
     pass
 
 
+class YAMLSerializationError(StrictYAMLError):
+    pass
+
+
 class YAMLValidationError(StrictYAMLError):
     def __init__(self, context, problem, chunk):
         self.context = context

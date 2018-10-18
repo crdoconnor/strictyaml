@@ -66,11 +66,15 @@ def comma_separated_positions(text):
     return chunks
 
 
-def ruamel_structure(data):
+def ruamel_structure(data, validator=None):
     """
     Take dicts and lists and return a ruamel.yaml style
     structure of CommentedMaps, CommentedSeqs and
     data.
+
+    If a validator is presented and the type is unknown,
+    it is checked against the validator to see if it will
+    turn it back in to YAML.
     """
     if isinstance(data, dict):
         if len(data) == 0:

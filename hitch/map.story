@@ -13,7 +13,8 @@ Mappings with defined keys (Map):
   given:
     setup: |
       from collections import OrderedDict
-      from strictyaml import Map, Int, load
+      from strictyaml import Map, Int, load, as_document
+      from collections import OrderedDict
       from ensure import Ensure
 
       schema = Map({"a": Int(), "b": Int(), "c": Int()})
@@ -145,3 +146,8 @@ Mappings with defined keys (Map):
       - Run:
           code: |
             assert [item for item in load(yaml_snippet, schema)] == ["a", "b", "c"]
+
+    serialize:
+      steps:
+      - Run: |
+          assert as_document(OrderedDict([(u"â", 1), ("b", 2), ("c", 3)]), schema_2).as_yaml() == yaml_snippet

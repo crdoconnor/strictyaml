@@ -1,3 +1,4 @@
+from strictyaml.exceptions import YAMLSerializationError
 from strictyaml.validators import Validator
 from strictyaml.representation import YAML
 from strictyaml import constants
@@ -104,6 +105,13 @@ class Str(ScalarValidator):
     def validate_scalar(self, chunk):
         return chunk.contents
 
+    def to_yaml(self, data):
+        if not utils.is_string(data):
+            raise YAMLSerializationError(
+                "'{}' is not a string".format(data)
+            )
+        return str(data)
+
 
 class Int(ScalarValidator):
     def validate_scalar(self, chunk):
@@ -112,6 +120,12 @@ class Int(ScalarValidator):
             chunk.expecting_but_found("when expecting an integer")
         else:
             return int(val)
+
+    def to_yaml(self, data):
+        if utils.is_string(data) or isinstance(data, int):
+            if utils.is_integer(str(data)):
+                return str(data)
+        raise YAMLSerializationError("'{}' not an integer.".format(data))
 
 
 class Bool(ScalarValidator):
@@ -128,6 +142,15 @@ class Bool(ScalarValidator):
                 return True
             else:
                 return False
+
+    def to_yaml(self, data):
+        if not isinstance(data, bool):
+            if str(data).lower() in constants.BOOL_VALUES:
+                return data
+            else:
+                raise YAMLSerializationError("Not a boolean")
+        else:
+            return u"yes" if data else u"no"
 
 
 class Float(ScalarValidator):
@@ -171,6 +194,11 @@ class EmptyNone(ScalarValidator):
 class EmptyDict(EmptyNone):
     def empty(self, chunk):
         return {}
+
+    def to_yaml(self, value):
+        if value == {}:
+            return u""
+        raise YAMLSerializationError("Not an empty dict")
 
 
 class EmptyList(EmptyNone):

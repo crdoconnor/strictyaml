@@ -84,7 +84,9 @@ def regressfile(filename):
     """
     _storybook({"rewrite": False}).in_filename(filename).with_params(
         **{"python version": "2.7.14"}
-    ).filter(lambda story: not story.info.get("fails_on_python_2")).ordered_by_name().play()
+    ).filter(
+        lambda story: not story.info.get("fails_on_python_2")
+    ).ordered_by_name().play()
 
     _storybook({"rewrite": False}).with_params(
         **{"python version": "3.7.0"}
@@ -156,3 +158,14 @@ def doctests():
         pylibrary.bin.python(
             "-m", "doctest", "-v", DIR.project.joinpath("strictyaml", "utils.py")
         ).in_dir(DIR.project.joinpath("strictyaml")).run()
+
+
+@expected(CommandError)
+def rerun(version="3.7.0"):
+    """
+    Rerun last example code block with specified version of python.
+    """
+    from commandlib import Command
+    Command(DIR.gen.joinpath("py{0}".format(version), "bin", "python"))(
+        DIR.gen.joinpath("state", "examplepythoncode.py")
+    ).in_dir(DIR.gen.joinpath("state")).run()

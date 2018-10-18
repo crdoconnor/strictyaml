@@ -3,8 +3,8 @@ Build a YAML document from scratch in code:
   experimental: yes
   based on: strictyaml
   description: |
-    YAML documents can be built from dicts and lists of
-    scalar values.
+    YAML documents can be built from combinations of dicts,
+    lists and strings if no schema is used.
   given:
     setup: |
       from ensure import Ensure
@@ -13,7 +13,7 @@ Build a YAML document from scratch in code:
 
       # Can also use regular dict if an arbitrary ordering is ok
       yaml = as_document(OrderedDict(
-          [(u"â", True), ("b", "hâllo"), ("c", [1, 2, 3])]
+          [(u"â", 'yes'), ("b", "hâllo"), ("c", ["1", "2", "3"])]
       ))
   variations:
     Then dump:
@@ -51,16 +51,15 @@ Build document from invalid type:
               return 'some random object'
 
   variations:
-    bytes:
+    non-string:
       steps:
       - run:
           code: |
             as_document({"x": RandomClass()})
           raises:
-            type: strictyaml.exceptions.CannotBuildDocumentFromInvalidData
-            message: "Document must be built from a combination of:\nstring, int,\
-              \ float, bool or nonempty list/dict\n\nInstead, found variable with\
-              \ type 'RandomClass': 'some random object'"
+            type: strictyaml.exceptions.YAMLSerializationError
+            message: |-
+              'some random object' is not a string
 
 
     empty dict:
@@ -69,5 +68,15 @@ Build document from invalid type:
           code: |
             as_document({'hello': {}})
           raises:
-            type: strictyaml.exceptions.CannotBuildDocumentsFromEmptyDictOrList
-            message: Document must be built with non-empty dicts and lists
+            type: strictyaml.exceptions.YAMLSerializationError
+            message: Empty dicts are not serializable to StrictYAML unless schema
+              is used.
+    empty list:
+      steps:
+      - run:
+          code: |
+            as_document({'hello': []})
+          raises:
+            type: strictyaml.exceptions.YAMLSerializationError
+            message: Empty lists are not serializable to StrictYAML unless schema
+              is used.
