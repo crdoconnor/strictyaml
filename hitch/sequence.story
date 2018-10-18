@@ -72,6 +72,7 @@ Sequence/list validator (Seq):
                 in "<unicode string>", line 3, column 1:
                   c: '3'
                   ^ (line: 3)
+
     Invalid nested structure instead:
       given:
         yaml_snippet: |
@@ -143,17 +144,43 @@ Modify nested sequence:
 
       schema = Map({"a": Seq(Str()), "b": Int(), "c": Int()})
 
-      yaml = load(yaml_snippet, schema)
+  variations:
+    successfully:
+      steps:
+      - Run:
+          code: |
+            yaml = load(yaml_snippet, schema)
 
-      yaml['a'] = ['b', 'c', 'd']
-      yaml['a'][1] = 'x'
-  steps:
-  - Run:
-      code: print(yaml.as_yaml())
-      will output: |-
-        a:
-        - b
-        - x
-        - d
-        b: 2
-        c: 3
+            yaml['a'] = ['b', 'c', 'd']
+            yaml['a'][1] = 'x'
+            print(yaml.as_yaml())
+          will output: |-
+            a:
+            - b
+            - x
+            - d
+            b: 2
+            c: 3
+
+    with non sequence where sequence expected:
+      steps:
+      - Run:
+          code: |
+            yaml = load(yaml_snippet, schema)
+
+            yaml['a'] = {'a': "1", "b": "2"}
+          raises:
+            type: strictyaml.exceptions.YAMLSerializationError
+            message: "Expected a list, found '{'a': '1', 'b': '2'}'"
+
+    with empty list:
+      steps:
+      - Run:
+          code: |
+            yaml = load(yaml_snippet, schema)
+
+            yaml['a'] = []
+          raises:
+            type: strictyaml.exceptions.YAMLSerializationError
+            message: "Expected a non-empty list, found an empty list.\nUse EmptyList\
+              \ validator to serialize empty lists."

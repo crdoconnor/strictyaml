@@ -1,8 +1,9 @@
-from strictyaml.validators import Validator
-from strictyaml.scalar import ScalarValidator
-from strictyaml.scalar import Str
 from ruamel.yaml.comments import CommentedMap, CommentedSeq
+from strictyaml.exceptions import YAMLSerializationError
+from strictyaml.scalar import ScalarValidator, Str
+from strictyaml.validators import Validator
 import sys
+
 
 if sys.version_info[0] == 3:
     unicode = str
@@ -162,7 +163,14 @@ class Map(MapValidator):
 
 
 class SeqValidator(Validator):
-    pass
+    def _should_be_list(self, data):
+        if not isinstance(data, list):
+            raise YAMLSerializationError("Expected a list, found '{}'".format(data))
+        if len(data) == 0:
+            raise YAMLSerializationError((
+                "Expected a non-empty list, found an empty list.\n"
+                "Use EmptyList validator to serialize empty lists."
+            ))
 
 
 class Seq(SeqValidator):
@@ -177,8 +185,7 @@ class Seq(SeqValidator):
             item.process(self._validator(item))
 
     def to_yaml(self, data):
-        # TODO : if not list raise exception
-        # TODO : if not > 0 keys, raise exception
+        self._should_be_list(data)
         return CommentedSeq([
             self._validator.to_yaml(item) for item in data
         ])
@@ -212,11 +219,10 @@ class FixedSeq(SeqValidator):
             item.process(validator(item))
 
     def to_yaml(self, data):
-        # TODO : fail on non sequences
-        list_of_items = []
-        for item, validator in zip(data, self._validators):
-            list_of_items.append(validator.to_yaml(item))
-        return CommentedSeq(list_of_items)
+        self._should_be_list(data)
+        return CommentedSeq([
+            validator.to_yaml(item) for item, validator in zip(data, self._validators)
+        ])
 
 
 class UniqueSeq(SeqValidator):
@@ -238,3 +244,16 @@ class UniqueSeq(SeqValidator):
             else:
                 existing_items.add(item.contents)
                 item.process(self._validator(item))
+
+    def to_yaml(self, data):
+        self._should_be_list(data)
+
+        if len(set(data)) < len(data):
+            raise YAMLSerializationError((
+                "Expecting all unique items, "
+                "but duplicates were found in '{}'.".format(data)
+            ))
+
+        return CommentedSeq([
+            self._validator.to_yaml(item) for item in data
+        ])

@@ -10,7 +10,7 @@ Sequences of unique items (UniqueSeq):
       - B
       - C
     setup: |
-      from strictyaml import UniqueSeq, Str, load
+      from strictyaml import UniqueSeq, Str, load, as_document
       from ensure import Ensure
 
       schema = UniqueSeq(Str())
@@ -21,7 +21,7 @@ Sequences of unique items (UniqueSeq):
           code: |
             Ensure(load(yaml_snippet, schema)).equals(["A", "B", "C", ])
 
-    One dupe:
+    Parsing with one dupe raises an exception:
       given:
         yaml_snippet: |
           - A
@@ -41,7 +41,8 @@ Sequences of unique items (UniqueSeq):
                 in "<unicode string>", line 3, column 1:
                   - B
                   ^ (line: 3)
-    All dupes:
+
+    Parsing all dupes raises an exception:
       given:
         yaml_snippet: |
           - 3
@@ -61,3 +62,13 @@ Sequences of unique items (UniqueSeq):
                 in "<unicode string>", line 3, column 1:
                   - '3'
                   ^ (line: 3)
+
+    Serializing with dupes raises an exception:
+      steps:
+      - Run:
+          code: |
+            as_document(["A", "B", "B"], schema)
+          raises:
+            type: strictyaml.exceptions.YAMLSerializationError
+            message: Expecting all unique items, but duplicates were found in '['A',
+              'B', 'B']'.
