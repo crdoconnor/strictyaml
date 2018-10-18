@@ -54,12 +54,12 @@ Mappings with defined keys (Map):
               in python 3: builtins.TypeError
               in python 2: exceptions.TypeError
             message:
-              in python 3: YAML(OrderedDict([('â', 1), ('b', 2), ('c', 3)])) is a mapping,
-                has no text value.
+              in python 3: YAML(OrderedDict([('â', 1), ('b', 2), ('c', 3)])) is a
+                mapping, has no text value.
               in python 2: YAML(OrderedDict([(u'\xe2', 1), ('b', 2), ('c', 3)])) is
                 a mapping, has no text value.
 
-    key not found in schema:
+    parse snippet where key is not found in schema:
       given:
         yaml_snippet: |
           a: 1
@@ -77,7 +77,7 @@ Mappings with defined keys (Map):
                   "\xE2": '3'
                   ^ (line: 3)
 
-    sequence not expected:
+    sequence not expected when parsing:
       given:
         yaml_snippet: |
           - 1
@@ -98,6 +98,22 @@ Mappings with defined keys (Map):
                   - '3'
                   ^ (line: 3)
 
+    List not expected when serializing:
+      steps:
+      - Run:
+          code: as_document([1, 2, 3], schema)
+          raises:
+            type: strictyaml.exceptions.YAMLSerializationError
+            message: Expected a dict, found '[1, 2, 3]'
+
+    Empty dict not valid when serializing:
+      steps:
+      - Run:
+          code: as_document({}, schema)
+          raises:
+            type: strictyaml.exceptions.YAMLSerializationError
+            message: "Expected a non-empty dict, found an empty dict.\nUse EmptyDict\
+              \ validator to serialize empty dicts."
     Unexpected key:
       given:
         yaml_snippet: |

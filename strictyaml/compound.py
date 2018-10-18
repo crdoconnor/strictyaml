@@ -18,7 +18,14 @@ class Optional(object):
 
 
 class MapValidator(Validator):
-    pass
+    def _should_be_mapping(self, data):
+        if not isinstance(data, dict):
+            raise YAMLSerializationError("Expected a dict, found '{}'".format(data))
+        if len(data) == 0:
+            raise YAMLSerializationError((
+                "Expected a non-empty dict, found an empty dict.\n"
+                "Use EmptyDict validator to serialize empty dicts."
+            ))
 
 
 class MapPattern(MapValidator):
@@ -76,8 +83,7 @@ class MapPattern(MapValidator):
             chunk.add_key_association(key.contents, yaml_key.data)
 
     def to_yaml(self, data):
-        # TODO : if not dict raise exception
-        # TODO : if not > 0 keys, raise exception
+        self._should_be_mapping(data)
         return CommentedMap(
             [
                 (self._key_validator.to_yaml(key), self._value_validator.to_yaml(value))
@@ -153,9 +159,8 @@ class Map(MapValidator):
             )
 
     def to_yaml(self, data):
-        # TODO : if not dict raise exception
-        # TODO : if not > 0 keys, raise exception
-        # TODO : if keys are not strings, raise exception.
+        self._should_be_mapping(data)
+        # TODO : if keys not in list or required keys missing, raise exception.
         return CommentedMap([
             (key, self._validator_dict[key].to_yaml(value))
             for key, value in data.items()
