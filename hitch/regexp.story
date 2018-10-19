@@ -7,7 +7,8 @@ Validating strings with regexes (Regex):
     exception is raised.
   given:
     setup: |
-      from strictyaml import Regex, Map, load
+      from strictyaml import Regex, Map, load, as_document
+      from collections import OrderedDict
       from ensure import Ensure
 
       schema = Map({"a": Regex(u"[1-4]"), "b": Regex(u"[5-9]")})
@@ -38,3 +39,30 @@ Validating strings with regexes (Regex):
                 in "<unicode string>", line 1, column 1:
                   a: '5'
                    ^ (line: 1)
+
+    Serialized successfully:
+      steps:
+      - Run:
+          code: |
+            print(as_document(OrderedDict([("a", "1"), ("b", "5")]), schema).as_yaml())
+          will output: |-
+            a: 1
+            b: 5
+
+    Serialization failure non matching regex:
+      steps:
+      - Run:
+          code: |
+            as_document(OrderedDict([("a", "x"), ("b", "5")]), schema)
+          raises:
+            type: strictyaml.exceptions.YAMLSerializationError
+            message: when expecting string matching [1-4] found 'x'
+
+    Serialization failure not a string:
+      steps:
+      - Run:
+          code: |
+            as_document(OrderedDict([("a", 1), ("b", "5")]), schema)
+          raises:
+            type: strictyaml.exceptions.YAMLSerializationError
+            message: when expecting string matching [1-4] got '1' of type int.

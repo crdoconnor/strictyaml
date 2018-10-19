@@ -27,6 +27,14 @@ class ScalarValidator(Validator):
             validator=self,
         )
 
+    def should_be_string(self, data, message):
+        if not utils.is_string(data):
+            raise YAMLSerializationError(
+                "{0} got '{1}' of type {2}.".format(
+                    message, data, type(data).__name__,
+                )
+            )
+
     def validate_scalar(self, chunk):
         raise NotImplementedError("validate_scalar(self, chunk) must be implemented")
 
@@ -103,6 +111,14 @@ class Regex(ScalarValidator):
                 self._matching_message, "found non-matching string"
             )
         return chunk.contents
+
+    def to_yaml(self, data):
+        self.should_be_string(data, self._matching_message)
+        if re.compile(self._regex).match(data) is None:
+            raise YAMLSerializationError(
+                "{} found '{}'".format(self._matching_message, data)
+            )
+        return data
 
 
 class Email(Regex):
