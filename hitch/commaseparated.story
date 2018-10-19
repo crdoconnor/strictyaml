@@ -9,7 +9,7 @@ Parsing comma separated items (CommaSeparated):
     default when parsed.
   given:
     setup: |
-      from strictyaml import CommaSeparated, Int, Str, Map, load
+      from strictyaml import CommaSeparated, Int, Str, Map, load, as_document
       from ensure import Ensure
 
       int_schema = Map({"a": CommaSeparated(Int())})
@@ -52,3 +52,10 @@ Parsing comma separated items (CommaSeparated):
                 in "<unicode string>", line 1, column 1:
                   a: 1, x, 3
                    ^ (line: 1)
+
+    Serialize to comma separated sequence:
+      steps:
+      - Run:
+          code: |
+            print(as_document({"a": [1, 2, 3]}, int_schema).as_yaml())
+          will output: 'a: 1, 2, 3'

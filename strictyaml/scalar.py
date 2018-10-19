@@ -79,6 +79,10 @@ class CommaSeparated(ScalarValidator):
             for positions in utils.comma_separated_positions(chunk.contents)
         ]
 
+    def to_yaml(self, data):
+        # TODO : Data should be list or string that parses correctly
+        return ', '.join([self._item_validator.to_yaml(item) for item in data])
+
     def __repr__(self):
         return "CommaSeparated({0})".format(self._item_validator)
 
