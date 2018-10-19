@@ -119,6 +119,7 @@ class Map(MapValidator):
         return self._key_validator
 
     def __repr__(self):
+        # TODO : repr key_validator
         return u"Map({{{0}}})".format(
             ", ".join(
                 [

@@ -67,3 +67,27 @@ Enumerated scalars (Enum):
                 in "<unicode string>", line 1, column 1:
                   a: ''
                    ^ (line: 1)
+
+    Successful serialization:
+      given:
+        yaml_snippet: 'a: A'
+      steps:
+      - Run:
+          code: |
+            yaml = load(yaml_snippet, schema)
+            yaml['a'] = "B"
+            print(yaml.as_yaml())
+          will output: 'a: B'
+
+    Invalid serialization:
+      given:
+        yaml_snippet: 'a: A'
+      steps:
+      - Run:
+          code: |
+            yaml = load(yaml_snippet, schema)
+            yaml['a'] = "D"
+            print(yaml.as_yaml())
+          raises:
+            type: strictyaml.exceptions.YAMLSerializationError
+            message: "Got 'D' when  expecting one of: A, B, C"
