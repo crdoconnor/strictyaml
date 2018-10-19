@@ -1,11 +1,31 @@
 from ruamel.yaml.comments import CommentedSeq, CommentedMap
 from strictyaml import exceptions
 from re import compile
+import decimal
 import sys
 
 
 if sys.version_info[0] == 3:
     unicode = str
+
+
+def has_number_type(value):
+    """
+    Is a value a number or a non-number?
+    
+    >>> has_number_type(3.5)
+    True
+    
+    >>> has_number_type(3)
+    True
+    
+    >>> has_number_type(decimal.Decimal("3.5"))
+    True
+    
+    >>> has_number_type("3.5")
+    False
+    """
+    return isinstance(value, (int, float, decimal.Decimal))
 
 
 def is_string(value):

@@ -194,9 +194,11 @@ class Float(ScalarValidator):
             return float(val)
 
     def to_yaml(self, data):
-        if utils.is_decimal(str(data)):
-            pass
-        return str(data)
+        if utils.has_number_type(data):
+            return str(data)
+        if utils.is_string(data) and utils.is_decimal(data):
+            return data
+        raise YAMLSerializationError("when expecting a float, got '{}'".format(data))
 
 
 class Decimal(ScalarValidator):

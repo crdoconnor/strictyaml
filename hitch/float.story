@@ -91,3 +91,11 @@ Floating point numbers (Float):
           will output: |-
             a: 3.5
             b: 2.1
+
+    Serialization failure:
+      steps:
+      - Run:
+          code: as_document(OrderedDict([("a", "x"), ("b", "2.1")]), schema)
+          raises:
+            type: strictyaml.exceptions.YAMLSerializationError
+            message: when expecting a float, got 'x'
