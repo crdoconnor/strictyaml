@@ -193,6 +193,11 @@ class Float(ScalarValidator):
         else:
             return float(val)
 
+    def to_yaml(self, data):
+        if utils.is_decimal(str(data)):
+            pass
+        return str(data)
+
 
 class Decimal(ScalarValidator):
     def validate_scalar(self, chunk):

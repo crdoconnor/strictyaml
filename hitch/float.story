@@ -12,7 +12,8 @@ Floating point numbers (Float):
     for values for which precision is not required.
   given:
     setup: |
-      from strictyaml import Map, Float, load
+      from strictyaml import Map, Float, load, as_document
+      from collections import OrderedDict
       from ensure import Ensure
 
       schema = Map({"a": Float(), "b": Float()})
@@ -82,3 +83,11 @@ Floating point numbers (Float):
                 in "<unicode string>", line 1, column 1:
                   a: string
                    ^ (line: 1)
+
+    Serialize successfully:
+      steps:
+      - Run:
+          code: print(as_document(OrderedDict([("a", 3.5), ("b", "2.1")]), schema).as_yaml())
+          will output: |-
+            a: 3.5
+            b: 2.1
