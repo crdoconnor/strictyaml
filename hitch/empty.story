@@ -10,48 +10,42 @@ Empty key validation:
     or [] (empty list).
   given:
     setup: |
-      from strictyaml import Map, Str, Enum, EmptyNone, EmptyDict, EmptyList, load
+      from strictyaml import Map, Str, Enum, EmptyNone, EmptyDict, EmptyList, load, as_document
       from ensure import Ensure
     yaml_snippet: 'a:'
   variations:
     EmptyNone with empty value:
       steps:
-      - Run:
-          code: |
-            Ensure(load(yaml_snippet, Map({"a": EmptyNone() | Enum(["A", "B",])}))).equals({"a": None})
+      - Run: |
+          Ensure(load(yaml_snippet, Map({"a": EmptyNone() | Enum(["A", "B",])}))).equals({"a": None})
 
     EmptyDict:
       steps:
-      - Run:
-          code: |
-            Ensure(load(yaml_snippet, Map({"a": EmptyDict() | Enum(["A", "B",])}))).equals({"a": {}})
+      - Run: |
+          Ensure(load(yaml_snippet, Map({"a": EmptyDict() | Enum(["A", "B",])}))).equals({"a": {}})
 
     EmptyList:
       steps:
-      - Run:
-          code: |
-            Ensure(load(yaml_snippet, Map({"a": EmptyList() | Enum(["A", "B",])}))).equals({"a": []})
+      - Run: |
+          Ensure(load(yaml_snippet, Map({"a": EmptyList() | Enum(["A", "B",])}))).equals({"a": []})
 
     EmptyNone no empty value:
       given:
         yaml_snippet: 'a: A'
       steps:
-      - Run:
-          code: |
-            Ensure(load(yaml_snippet, Map({"a": EmptyNone() | Enum(["A", "B",])}))).equals({"a": "A"})
+      - Run: |
+          Ensure(load(yaml_snippet, Map({"a": EmptyNone() | Enum(["A", "B",])}))).equals({"a": "A"})
 
     Combine Str with EmptyNone and Str is evaluated first:
       steps:
-      - Run:
-          code: |
-            Ensure(load(yaml_snippet, Map({"a": Str() | EmptyNone()}))).equals({"a": ""})
+      - Run: |
+          Ensure(load(yaml_snippet, Map({"a": Str() | EmptyNone()}))).equals({"a": ""})
 
 
     Combine EmptyNone with Str and Str is evaluated last:
       steps:
-      - Run:
-          code: |
-            Ensure(load(yaml_snippet, Map({"a": EmptyNone() | Str()}))).equals({"a": None})
+      - Run: |
+          Ensure(load(yaml_snippet, Map({"a": EmptyNone() | Str()}))).equals({"a": None})
 
     Non-empty value:
       given:
@@ -68,3 +62,24 @@ Empty key validation:
                 in "<unicode string>", line 1, column 1:
                   a: C
                    ^ (line: 1)
+
+    Serialize empty dict:
+      steps:
+      - Run:
+          code: |
+            print(as_document({"a": {}}, Map({"a": EmptyDict() | Str()})).as_yaml())
+          will output: 'a:'
+
+    Serialize empty list:
+      steps:
+      - Run:
+          code: |
+            print(as_document({"a": []}, Map({"a": EmptyList() | Str()})).as_yaml())
+          will output: 'a:'
+
+    Serialize None:
+      steps:
+      - Run:
+          code: |
+            print(as_document({"a": None}, Map({"a": EmptyNone() | Str()})).as_yaml())
+          will output: 'a:'

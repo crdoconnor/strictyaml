@@ -7,7 +7,9 @@ from strictyaml.scalar import Str
 
 def schema_from_document(document):
     if isinstance(document, CommentedMap):
-        return Map({key: schema_from_document(value) for key, value in document.items()})
+        return Map(
+            {key: schema_from_document(value) for key, value in document.items()}
+        )
     elif isinstance(document, CommentedSeq):
         return FixedSeq([schema_from_document(item) for item in document])
     else:

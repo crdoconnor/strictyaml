@@ -166,6 +166,7 @@ def rerun(version="3.7.0"):
     Rerun last example code block with specified version of python.
     """
     from commandlib import Command
+
     Command(DIR.gen.joinpath("py{0}".format(version), "bin", "python"))(
         DIR.gen.joinpath("state", "examplepythoncode.py")
     ).in_dir(DIR.gen.joinpath("state")).run()

@@ -22,10 +22,12 @@ class MapValidator(Validator):
         if not isinstance(data, dict):
             raise YAMLSerializationError("Expected a dict, found '{}'".format(data))
         if len(data) == 0:
-            raise YAMLSerializationError((
-                "Expected a non-empty dict, found an empty dict.\n"
-                "Use EmptyDict validator to serialize empty dicts."
-            ))
+            raise YAMLSerializationError(
+                (
+                    "Expected a non-empty dict, found an empty dict.\n"
+                    "Use EmptyDict validator to serialize empty dicts."
+                )
+            )
 
 
 class MapPattern(MapValidator):
@@ -162,10 +164,12 @@ class Map(MapValidator):
     def to_yaml(self, data):
         self._should_be_mapping(data)
         # TODO : if keys not in list or required keys missing, raise exception.
-        return CommentedMap([
-            (key, self._validator_dict[key].to_yaml(value))
-            for key, value in data.items()
-        ])
+        return CommentedMap(
+            [
+                (key, self._validator_dict[key].to_yaml(value))
+                for key, value in data.items()
+            ]
+        )
 
 
 class SeqValidator(Validator):
@@ -173,10 +177,12 @@ class SeqValidator(Validator):
         if not isinstance(data, list):
             raise YAMLSerializationError("Expected a list, found '{}'".format(data))
         if len(data) == 0:
-            raise YAMLSerializationError((
-                "Expected a non-empty list, found an empty list.\n"
-                "Use EmptyList validator to serialize empty lists."
-            ))
+            raise YAMLSerializationError(
+                (
+                    "Expected a non-empty list, found an empty list.\n"
+                    "Use EmptyList validator to serialize empty lists."
+                )
+            )
 
 
 class Seq(SeqValidator):
@@ -192,9 +198,7 @@ class Seq(SeqValidator):
 
     def to_yaml(self, data):
         self._should_be_list(data)
-        return CommentedSeq([
-            self._validator.to_yaml(item) for item in data
-        ])
+        return CommentedSeq([self._validator.to_yaml(item) for item in data])
 
 
 class FixedSeq(SeqValidator):
@@ -226,9 +230,9 @@ class FixedSeq(SeqValidator):
 
     def to_yaml(self, data):
         self._should_be_list(data)
-        return CommentedSeq([
-            validator.to_yaml(item) for item, validator in zip(data, self._validators)
-        ])
+        return CommentedSeq(
+            [validator.to_yaml(item) for item, validator in zip(data, self._validators)]
+        )
 
 
 class UniqueSeq(SeqValidator):
@@ -255,11 +259,11 @@ class UniqueSeq(SeqValidator):
         self._should_be_list(data)
 
         if len(set(data)) < len(data):
-            raise YAMLSerializationError((
-                "Expecting all unique items, "
-                "but duplicates were found in '{}'.".format(data)
-            ))
+            raise YAMLSerializationError(
+                (
+                    "Expecting all unique items, "
+                    "but duplicates were found in '{}'.".format(data)
+                )
+            )
 
-        return CommentedSeq([
-            self._validator.to_yaml(item) for item in data
-        ])
+        return CommentedSeq([self._validator.to_yaml(item) for item in data])

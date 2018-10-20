@@ -3,6 +3,7 @@ from strictyaml.validators import Validator
 from strictyaml.representation import YAML
 from strictyaml import constants
 from strictyaml import utils
+from datetime import datetime
 import dateutil.parser
 import decimal
 import sys
@@ -30,9 +31,7 @@ class ScalarValidator(Validator):
     def should_be_string(self, data, message):
         if not utils.is_string(data):
             raise YAMLSerializationError(
-                "{0} got '{1}' of type {2}.".format(
-                    message, data, type(data).__name__,
-                )
+                "{0} got '{1}' of type {2}.".format(message, data, type(data).__name__)
             )
 
     def validate_scalar(self, chunk):
@@ -61,8 +60,7 @@ class Enum(ScalarValidator):
         if data not in self._restricted_to:
             raise YAMLSerializationError(
                 "Got '{0}' when  expecting one of: {1}".format(
-                    data,
-                    ', '.join(self._restricted_to),
+                    data, ", ".join(self._restricted_to)
                 )
             )
         return self._item_validator.to_yaml(data)
@@ -89,7 +87,7 @@ class CommaSeparated(ScalarValidator):
 
     def to_yaml(self, data):
         # TODO : Data should be list or string that parses correctly
-        return ', '.join([self._item_validator.to_yaml(item) for item in data])
+        return ", ".join([self._item_validator.to_yaml(item) for item in data])
 
     def __repr__(self):
         return "CommaSeparated({0})".format(self._item_validator)
@@ -139,9 +137,7 @@ class Str(ScalarValidator):
 
     def to_yaml(self, data):
         if not utils.is_string(data):
-            raise YAMLSerializationError(
-                "'{}' is not a string".format(data)
-            )
+            raise YAMLSerializationError("'{}' is not a string".format(data))
         return str(data)
 
 
@@ -217,6 +213,23 @@ class Datetime(ScalarValidator):
         except ValueError:
             chunk.expecting_but_found("when expecting a datetime")
 
+    def to_yaml(self, data):
+        if isinstance(data, datetime):
+            return data.isoformat()
+        if utils.is_string(data):
+            try:
+                dateutil.parser.parse(data)
+                return data
+            except ValueError:
+                raise YAMLSerializationError(
+                    "expected a datetime, got '{}'".format(data)
+                )
+        raise YAMLSerializationError(
+            "expected a datetime, got '{}' of type '{}'".format(
+                data, type(data).__name__
+            )
+        )
+
 
 class EmptyNone(ScalarValidator):
     def validate_scalar(self, chunk):
@@ -229,13 +242,18 @@ class EmptyNone(ScalarValidator):
     def empty(self, chunk):
         return None
 
+    def to_yaml(self, data):
+        if data is None:
+            return u""
+        raise YAMLSerializationError("expected None, got '{}'")
+
 
 class EmptyDict(EmptyNone):
     def empty(self, chunk):
         return {}
 
-    def to_yaml(self, value):
-        if value == {}:
+    def to_yaml(self, data):
+        if data == {}:
             return u""
         raise YAMLSerializationError("Not an empty dict")
 
@@ -243,3 +261,8 @@ class EmptyDict(EmptyNone):
 class EmptyList(EmptyNone):
     def empty(self, chunk):
         return []
+
+    def to_yaml(self, data):
+        if data == []:
+            return u""
+        raise YAMLSerializationError("expected empty list, got '{}'")

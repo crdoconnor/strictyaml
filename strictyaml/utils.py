@@ -12,16 +12,16 @@ if sys.version_info[0] == 3:
 def has_number_type(value):
     """
     Is a value a number or a non-number?
-    
+
     >>> has_number_type(3.5)
     True
-    
+
     >>> has_number_type(3)
     True
-    
+
     >>> has_number_type(decimal.Decimal("3.5"))
     True
-    
+
     >>> has_number_type("3.5")
     False
     """
