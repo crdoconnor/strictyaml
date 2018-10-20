@@ -86,8 +86,16 @@ class CommaSeparated(ScalarValidator):
         ]
 
     def to_yaml(self, data):
-        # TODO : Data should be list or string that parses correctly
-        return ", ".join([self._item_validator.to_yaml(item) for item in data])
+        if isinstance(data, list):
+            return ", ".join([self._item_validator.to_yaml(item) for item in data])
+        elif utils.is_string(data):
+            for item in data.split(","):
+                self._item_validator.to_yaml(item)
+            return data
+        else:
+            raise YAMLSerializationError(
+                "expected string or list, got '{}' of type '{}'".format(data, type(data).__name__)
+            )
 
     def __repr__(self):
         return "CommaSeparated({0})".format(self._item_validator)

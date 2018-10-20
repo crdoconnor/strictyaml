@@ -53,9 +53,33 @@ Parsing comma separated items (CommaSeparated):
                   a: 1, x, 3
                    ^ (line: 1)
 
-    Serialize to comma separated sequence:
+    Serialize list to comma separated sequence:
       steps:
       - Run:
           code: |
             print(as_document({"a": [1, 2, 3]}, int_schema).as_yaml())
           will output: 'a: 1, 2, 3'
+
+    Serialize valid string to comma separated sequence:
+      steps:
+      - Run:
+          code: |
+            print(as_document({"a": "1,2,3"}, int_schema).as_yaml())
+          will output: 'a: 1,2,3'
+
+    Serialize invalid string to comma separated sequence:
+      steps:
+      - Run:
+          code: |
+            print(as_document({"a": "1,x,3"}, int_schema).as_yaml())
+          raises:
+            type: strictyaml.exceptions.YAMLSerializationError
+            message: "'x' not an integer."
+    Attempt to serialize neither list nor string raises exception:
+      steps:
+      - Run:
+          code: |
+            as_document({"a": 1}, int_schema)
+          raises:
+            type: strictyaml.exceptions.YAMLSerializationError
+            message: expected string or list, got '1' of type 'int'
