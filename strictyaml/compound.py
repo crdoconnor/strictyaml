@@ -86,6 +86,7 @@ class MapPattern(MapValidator):
 
     def to_yaml(self, data):
         self._should_be_mapping(data)
+        # TODO : Maximum minimum keys
         return CommentedMap(
             [
                 (self._key_validator.to_yaml(key), self._value_validator.to_yaml(value))
@@ -230,6 +231,7 @@ class FixedSeq(SeqValidator):
 
     def to_yaml(self, data):
         self._should_be_list(data)
+        # TODO : Different length string
         return CommentedSeq(
             [validator.to_yaml(item) for item, validator in zip(data, self._validators)]
         )
