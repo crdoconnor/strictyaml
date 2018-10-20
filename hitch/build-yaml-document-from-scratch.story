@@ -1,6 +1,5 @@
 Build a YAML document from scratch in code:
   docs: howto/build-yaml-document
-  experimental: yes
   based on: strictyaml
   description: |
     YAML documents can be built from combinations of dicts,
@@ -28,41 +27,21 @@ Build a YAML document from scratch in code:
             - 2
             - 3
 
-    Start line:
-      steps:
-      - Run:
-          code: |
-            Ensure(yaml.start_line).equals(1)
-
-
-Build document from invalid type:
-  based on: strictyaml
-  about: |
-    YAML documents should only be buildable from dicts
-    lists, strings, numbers and booleans.
-
-    All other types should raise an exception.
-  given:
-    setup: |
-      from strictyaml import as_document
-
-      class RandomClass(object):
-          def __repr__(self):
-              return 'some random object'
-
-  variations:
-    non-string:
+    However, any type that is not a string, dict or list cannot be parsed without a schema:
       steps:
       - run:
           code: |
+            class RandomClass(object):
+                def __repr__(self):
+                    return 'some random object'
+
             as_document({"x": RandomClass()})
           raises:
             type: strictyaml.exceptions.YAMLSerializationError
             message: |-
               'some random object' is not a string
 
-
-    empty dict:
+    Empty dicts also cannot be serialized without a schema:
       steps:
       - run:
           code: |
@@ -71,7 +50,8 @@ Build document from invalid type:
             type: strictyaml.exceptions.YAMLSerializationError
             message: Empty dicts are not serializable to StrictYAML unless schema
               is used.
-    empty list:
+
+    Neither can lists:
       steps:
       - run:
           code: |
@@ -80,3 +60,9 @@ Build document from invalid type:
             type: strictyaml.exceptions.YAMLSerializationError
             message: Empty lists are not serializable to StrictYAML unless schema
               is used.
+
+    You can grab line numbers from the object that is serialized:
+      steps:
+      - Run:
+          code: |
+            Ensure(yaml.start_line).equals(1)
