@@ -16,6 +16,8 @@ dirtemplate==0.1.4        # via hitchpylibrarytoolkit
 docutils==0.14            # via readme-renderer
 flake8==3.5.0             # via hitchpylibrarytoolkit
 future==0.16.0            # via readme-renderer
+gitdb2==2.0.5             # via gitpython
+gitpython==2.1.11
 hitchbuild==0.4.0         # via dirtemplate, hitchbuildpy
 hitchbuildpy==0.4.5       # via hitchpylibrarytoolkit
 hitchpylibrarytoolkit==0.2.5
@@ -59,6 +61,7 @@ requests==2.19.1          # via requests-toolbelt, twine
 ruamel.yaml==0.15.72      # via strictyaml
 simplegeneric==0.8.1      # via ipython
 six==1.11.0               # via bleach, pip-tools, prompt-toolkit, python-dateutil, readme-renderer, traitlets
+smmap2==2.0.5             # via gitdb2
 strictyaml==0.13.0        # via dirtemplate, hitchstory
 templex==0.2.0            # via hitchpylibrarytoolkit
 toml==0.10.0              # via black

@@ -170,3 +170,49 @@ def rerun(version="3.7.0"):
     Command(DIR.gen.joinpath("py{0}".format(version), "bin", "python"))(
         DIR.gen.joinpath("state", "examplepythoncode.py")
     ).in_dir(DIR.gen.joinpath("state")).run()
+
+
+
+CHANGELOG_MD_TEMPLATE = """\
+# Changelog
+
+{% for version, changes in version_changes.items() %}
+### {{ version }}
+
+{% for change in changes -%}
+* {{ change }}
+{%- else %}
+No relevant code changes.
+{%- endfor %}
+{% endfor %}
+"""
+
+def changeloggen():
+    from git import Repo
+    import jinja2
+    from distutils.version import LooseVersion
+    #import functools
+    from collections import OrderedDict
+    repo = Repo(DIR.project)
+    commits = [x for x in repo.iter_commits()]
+    
+    tag_commits = {tag.commit: tag for tag in repo.tags}
+    
+    current_version = None
+    changes = []
+    version_changes = OrderedDict()
+    
+    for commit in commits:
+        if commit in tag_commits:
+            current_version = tag_commits[commit].name
+            version_changes[current_version] = changes
+            changes = []
+        
+        message = commit.message
+        
+        if message.startswith("FEATURE") or message.startswith("BUGFIX") or message.startswith("MINOR") or message.startswith("BUG") or message.startswith("MAJOR") or message.startswith("PATCH"):
+            changes.append(message)
+
+    DIR.project.joinpath("CHANGELOG.md").write_text(
+        jinja2.Template(CHANGELOG_MD_TEMPLATE).render(version_changes=version_changes)
+    )

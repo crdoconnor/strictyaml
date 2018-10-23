@@ -1,6 +1,5 @@
 {% if readme -%}
-StrictYAML
-==========
+# StrictYAML
 {%- else -%}
 ---
 title: StrictYAML
@@ -45,15 +44,13 @@ Priorities:
 {% endfor %}
 {% endfor %}
 
-Install
--------
+## Install
 
 ```sh
 $ pip install strictyaml
 ```
 
-Why StrictYAML?
----------------
+## Why StrictYAML?
 
 There are a number of formats and approaches that can achieve more or
 less the same purpose as StrictYAML. I've tried to make it the best one.
@@ -65,8 +62,7 @@ Below is a series of documented justifications:
 {% endfor %}
 
 
-Using StrictYAML
-----------------
+## Using StrictYAML
 
 How to:
 
@@ -92,9 +88,7 @@ Restrictions:
 - [{{ title(dirfile) }}](using/alpha/restrictions/{{ dirfile.namebase }})
 {% endfor %}
 
-
-Design justifications
----------------------
+## Design justifications
 
 There are some design decisions in StrictYAML which are controversial
 and/or not obvious. Those are documented here:
@@ -103,16 +97,19 @@ and/or not obvious. Those are documented here:
 - [{{ title(dirfile) }}](why/{{ dirfile.namebase }})
 {% endfor %}
 
-Breaking changes
-----------------
-
-0.5: Data is now parsed by default as a YAML object instead of directly to dict/list. To get dict/list and ordinary values as before, get yaml_object.data.
-
-Contributors
-------------
+## Contributors
 
 - @gvx
 - @AlexandreDecan
 - @lots0logs
 - @tobbez
+
+## Contributing
+
+* Before writing any code, please read the tutorial on [contributing to hitchdev libraries](https://hitchdev.com/approach/contributing-to-hitch-libraries/).
+
+* Before writing any code, if you're proposing a new feature, please raise it on github. If it's an existing feature / bug, please comment and briefly describe how you're going to implement it.
+
+* All code needs to come accompanied with a story that exercises it or (more typically), a modification to an existing story. This is used both to test the code and build the documentation.
+
 
