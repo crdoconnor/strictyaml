@@ -120,16 +120,19 @@ class YAMLChunk(object):
     def pointer(self):
         return self._pointer
 
-    def fork(self):
+    def fork(self, ruamelindex, strictindex, new_value):
         """
         Return a chunk referring to the same location in a duplicated document.
 
         Used when modifying a YAML chunk so that the modification can be validated
         before changing it.
         """
-        return YAMLChunk(
+        forked_chunk = YAMLChunk(
             deepcopy(self._ruamelparsed), pointer=self.pointer, label=self.label
         )
+        forked_chunk.contents[ruamelindex] = new_value.as_marked_up()
+        forked_chunk.strictparsed()[strictindex] = deepcopy(new_value.as_marked_up())
+        return forked_chunk
 
     def add_key_association(self, unprocessed_key, processed_key):
         self._key_association[processed_key] = unprocessed_key

@@ -4,8 +4,8 @@ from strictyaml.exceptions import raise_type_error
 from strictyaml.yamllocation import YAMLChunk
 from strictyaml.dumper import StrictYAMLDumper
 from ruamel.yaml import dump
-from copy import copy, deepcopy
 from collections import OrderedDict
+from copy import copy
 import decimal
 import sys
 
@@ -180,18 +180,16 @@ class YAML(object):
         else:
             new_value = value_validator(YAMLChunk(value_validator.to_yaml(value)))
 
-        # First validate against forked document
-        proposed_chunk = self._chunk.fork()
-        proposed_chunk.contents[ruamelindex] = new_value.as_marked_up()
-        proposed_chunk.strictparsed()[strictindex] = deepcopy(new_value.as_marked_up())
+        # Create forked chunk
+        forked_chunk = self._chunk.fork(ruamelindex, strictindex, new_value)
 
         if self.is_mapping():
             updated_value = value_validator(
-                proposed_chunk.val(ruamelindex, strictindex)
+                forked_chunk.val(ruamelindex, strictindex)
             )
             updated_value._chunk.make_child_of(self._chunk.val(ruamelindex, strictindex))
         else:
-            updated_value = value_validator(proposed_chunk.index(ruamelindex))
+            updated_value = value_validator(forked_chunk.index(ruamelindex))
             updated_value._chunk.make_child_of(self._chunk.index(ruamelindex))
 
         # If validation succeeds, update for real
