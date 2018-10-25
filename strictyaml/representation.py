@@ -58,17 +58,16 @@ class YAML(object):
             self._text = unicode(chunk)
 
     def __int__(self):
+        # TODO: Raise more sensible exception if not int
         return int(self._value)
 
     def __str__(self):
-        if type(self._value) in (unicode, str, int, float, decimal.Decimal):
-            return unicode(self._value)
-        elif isinstance(self._value, CommentedMap) or isinstance(
-            self._value, CommentedSeq
-        ):
+        if not self.is_scalar():
             raise TypeError(
                 "Cannot cast mapping/sequence '{0}' to string".format(repr(self._value))
             )
+        elif type(self._value) in (unicode, str, int, float, decimal.Decimal):
+            return unicode(self._value)
         else:
             raise_type_error(
                 repr(self), "str", "str(yamlobj.data) or str(yamlobj.text)"

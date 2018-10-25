@@ -28,6 +28,9 @@ class YAMLChunk(object):
         )
         self._pointer = pointer if pointer is not None else YAMLPointer()
         self._label = label
+
+        # Associates strictparsed key names with ruamelparsed key names
+        # E.g. "my-key-name" -> "My Key name"
         self._key_association = {}
 
     def expecting_but_found(self, expecting, found=None):
