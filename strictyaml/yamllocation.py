@@ -120,7 +120,7 @@ class YAMLChunk(object):
     def pointer(self):
         return self._pointer
 
-    def fork(self, ruamelindex, strictindex, new_value):
+    def fork(self, strictindex, new_value):
         """
         Return a chunk referring to the same location in a duplicated document.
 
@@ -130,7 +130,7 @@ class YAMLChunk(object):
         forked_chunk = YAMLChunk(
             deepcopy(self._ruamelparsed), pointer=self.pointer, label=self.label
         )
-        forked_chunk.contents[ruamelindex] = new_value.as_marked_up()
+        forked_chunk.contents[self.ruamelindex(strictindex)] = new_value.as_marked_up()
         forked_chunk.strictparsed()[strictindex] = deepcopy(new_value.as_marked_up())
         return forked_chunk
 
@@ -173,6 +173,15 @@ class YAMLChunk(object):
         Return a chunk in a sequence referenced by index.
         """
         return self._select(self._pointer.index(index))
+
+    def ruamelindex(self, strictindex):
+        """
+        Get the ruamel equivalent of a strict parsed index.
+
+        E.g. 0 -> 0, 1 -> 2, parsed-via-slugify -> Parsed via slugify
+        """
+        return self.key_association[strictindex] \
+            if self.is_mapping() else strictindex
 
     def val(self, key, strictkey=None):
         """

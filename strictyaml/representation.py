@@ -179,7 +179,7 @@ class YAML(object):
             new_value = value_validator(YAMLChunk(value_validator.to_yaml(value)))
 
         # Create forked chunk
-        forked_chunk = self._chunk.fork(ruamelindex, strictindex, new_value)
+        forked_chunk = self._chunk.fork(strictindex, new_value)
 
         if self.is_mapping():
             updated_value = value_validator(
@@ -205,7 +205,7 @@ class YAML(object):
     def __delitem__(self, index):
         strictindex = self._strictindex(index)
         del self._value[strictindex]
-        del self._chunk.contents[self._ruamelindex(strictindex)]
+        del self._chunk.contents[self._chunk.ruamelindex(strictindex)]
 
     def __hash__(self):
         return hash(self._value)
