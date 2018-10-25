@@ -21,12 +21,10 @@ class ScalarValidator(Validator):
 
     def __call__(self, chunk):
         chunk.expect_scalar(self.rule_description)
-        return YAML(
-            self.validate_scalar(chunk),
-            text=chunk.contents,
-            chunk=chunk,
-            validator=self,
-        )
+        return YAML(chunk, validator=self)
+
+    def validate(self, chunk):
+        return self.validate_scalar(chunk)
 
     def should_be_string(self, data, message):
         if not utils.is_string(data):

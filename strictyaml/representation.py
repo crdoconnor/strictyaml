@@ -41,31 +41,21 @@ class YAML(object):
     * Used to render to a string of YAML, with comments (.as_yaml()).
     * Revalidated with a stricter schema (.revalidate(schema)).
     """
-
-    def __init__(self, value, text=None, chunk=None, validator=None):
-        """
-        Create a renderable YAML object from data.
-        """
-        if isinstance(value, YAML):
-            self._value = value._value
-            self._text = value._text
-            self._chunk = value._chunk
-            self._validator = value._validator
-        elif isinstance(value, CommentedMap):
-            self._value = value
-            self._text = None
-            self._validator = validator
+    def __init__(self, chunk, validator=None):
+        if isinstance(chunk, YAMLChunk):
             self._chunk = chunk
-        elif isinstance(value, CommentedSeq):
-            self._value = value
-            self._text = None
             self._validator = validator
-            self._chunk = chunk
+            if chunk.is_scalar():
+                self._value = validator.validate(chunk)
+                self._text = chunk.contents
+            else:
+                self._value = chunk.strictparsed()
+                self._text = None
         else:
+            self._chunk = YAMLChunk(chunk)
             self._validator = validator
-            self._value = value
-            self._text = unicode(value) if text is None else text
-            self._chunk = YAMLChunk(text) if chunk is None else chunk
+            self._value = chunk
+            self._text = unicode(chunk)
 
     def __int__(self):
         return int(self._value)
