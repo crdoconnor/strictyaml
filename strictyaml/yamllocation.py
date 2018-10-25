@@ -2,7 +2,7 @@ from ruamel.yaml.comments import CommentedSeq, CommentedMap
 from strictyaml.exceptions import YAMLValidationError
 from strictyaml.yamlpointer import YAMLPointer
 from strictyaml import utils
-from copy import deepcopy
+from copy import deepcopy, copy
 import sys
 
 if sys.version_info[0] == 3:
@@ -21,7 +21,14 @@ class YAMLChunk(object):
     and YAML objects.
     """
 
-    def __init__(self, ruamelparsed, pointer=None, label=None, strictparsed=None):
+    def __init__(
+        self,
+        ruamelparsed,
+        pointer=None,
+        label=None,
+        strictparsed=None,
+        key_association=None,
+    ):
         self._ruamelparsed = ruamelparsed
         self._strictparsed = (
             deepcopy(ruamelparsed) if strictparsed is None else strictparsed
@@ -31,7 +38,7 @@ class YAMLChunk(object):
 
         # Associates strictparsed key names with ruamelparsed key names
         # E.g. "my-key-name" -> "My Key name"
-        self._key_association = {}
+        self._key_association = {} if key_association is None else key_association
 
     def expecting_but_found(self, expecting, found=None):
         raise YAMLValidationError(
@@ -95,7 +102,7 @@ class YAMLChunk(object):
         return [
             (
                 self.key(regular_key, unicode(validated_key)),
-                self.val(regular_key, unicode(validated_key)),
+                self.val(unicode(validated_key)),
             )
             for (regular_key, validated_key) in zip(
                 self.contents.keys(), self.strictparsed().keys()
@@ -128,7 +135,10 @@ class YAMLChunk(object):
         before changing it.
         """
         forked_chunk = YAMLChunk(
-            deepcopy(self._ruamelparsed), pointer=self.pointer, label=self.label
+            deepcopy(self._ruamelparsed),
+            pointer=self.pointer,
+            label=self.label,
+            key_association=copy(self._key_association),
         )
         forked_chunk.contents[self.ruamelindex(strictindex)] = new_value.as_marked_up()
         forked_chunk.strictparsed()[strictindex] = deepcopy(new_value.as_marked_up())
@@ -150,7 +160,7 @@ class YAMLChunk(object):
         if self.is_mapping():
             for key, value in self.contents.items():
                 self.key(key, key).pointer.make_child_of(chunk.pointer)
-                self.val(key, key).make_child_of(chunk)
+                self.val(key).make_child_of(chunk)
         elif self.is_sequence():
             for index, item in enumerate(self.contents):
                 self.index(index).make_child_of(chunk)
@@ -166,6 +176,7 @@ class YAMLChunk(object):
             pointer=pointer,
             label=self._label,
             strictparsed=self._strictparsed,
+            key_association=copy(self._key_association),
         )
 
     def index(self, index):
@@ -180,14 +191,18 @@ class YAMLChunk(object):
 
         E.g. 0 -> 0, 1 -> 2, parsed-via-slugify -> Parsed via slugify
         """
-        return self.key_association[strictindex] \
-            if self.is_mapping() else strictindex
+        return (
+            self.key_association.get(strictindex, strictindex)
+            if self.is_mapping()
+            else strictindex
+        )
 
-    def val(self, key, strictkey=None):
+    def val(self, strictkey):
         """
         Return a chunk referencing a value in a mapping with the key 'key'.
         """
-        return self._select(self._pointer.val(key, strictkey))
+        ruamelkey = self.ruamelindex(strictkey)
+        return self._select(self._pointer.val(ruamelkey, strictkey))
 
     def key(self, key, strictkey=None):
         """

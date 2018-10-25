@@ -37,6 +37,7 @@ class Any(Validator):
     """
     Validates any YAML and returns simple dicts/lists of strings.
     """
+
     def validate(self, chunk):
         return schema_from_document(chunk.contents)(chunk)
 

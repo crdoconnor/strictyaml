@@ -41,6 +41,7 @@ class YAML(object):
     * Used to render to a string of YAML, with comments (.as_yaml()).
     * Revalidated with a stricter schema (.revalidate(schema)).
     """
+
     def __init__(self, chunk, validator=None):
         if isinstance(chunk, YAMLChunk):
             self._chunk = chunk
@@ -155,12 +156,18 @@ class YAML(object):
     def _strictindex(self, index):
         if isinstance(index, YAML):
             index = index.data
-        return self.validator.key_validator(YAMLChunk(index)).data \
-            if self.is_mapping() else index
+        return (
+            self.validator.key_validator(YAMLChunk(index)).data
+            if self.is_mapping()
+            else index
+        )
 
     def _ruamelindex(self, strictindex):
-        return self._chunk.key_association[strictindex] \
-            if self.is_mapping() else strictindex
+        return (
+            self._chunk.key_association[strictindex]
+            if self.is_mapping()
+            else strictindex
+        )
 
     def __nonzero__(self):
         return self.__bool__()
@@ -170,7 +177,6 @@ class YAML(object):
 
     def __setitem__(self, index, value):
         strictindex = self._strictindex(index)
-        ruamelindex = self._ruamelindex(strictindex)
         value_validator = self._value[strictindex].validator
 
         if isinstance(value, YAML):
@@ -182,13 +188,15 @@ class YAML(object):
         forked_chunk = self._chunk.fork(strictindex, new_value)
 
         if self.is_mapping():
-            updated_value = value_validator(
-                forked_chunk.val(ruamelindex, strictindex)
-            )
-            updated_value._chunk.make_child_of(self._chunk.val(ruamelindex, strictindex))
+            updated_value = value_validator(forked_chunk.val(strictindex))
+            updated_value._chunk.make_child_of(self._chunk.val(strictindex))
         else:
-            updated_value = value_validator(forked_chunk.index(ruamelindex))
-            updated_value._chunk.make_child_of(self._chunk.index(ruamelindex))
+            updated_value = value_validator(
+                forked_chunk.index(forked_chunk.ruamelindex(strictindex))
+            )
+            updated_value._chunk.make_child_of(
+                self._chunk.index(self._chunk.ruamelindex(strictindex))
+            )
 
         # If validation succeeds, update for real
         marked_up = new_value.as_marked_up()
@@ -199,8 +207,11 @@ class YAML(object):
             if u"\n" in marked_up:
                 marked_up = PreservedScalarString(marked_up)
 
-        self._chunk.contents[ruamelindex] = marked_up
-        self._value[YAML(ruamelindex) if self.is_mapping() else ruamelindex] = new_value
+        self._chunk.contents[self._chunk.ruamelindex(strictindex)] = marked_up
+        self._value[
+            YAML(forked_chunk.ruamelindex(strictindex)) if self.is_mapping() else
+            forked_chunk.ruamelindex(strictindex)
+        ] = new_value
 
     def __delitem__(self, index):
         strictindex = self._strictindex(index)

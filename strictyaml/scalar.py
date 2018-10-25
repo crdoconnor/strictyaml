@@ -92,7 +92,9 @@ class CommaSeparated(ScalarValidator):
             return data
         else:
             raise YAMLSerializationError(
-                "expected string or list, got '{}' of type '{}'".format(data, type(data).__name__)
+                "expected string or list, got '{}' of type '{}'".format(
+                    data, type(data).__name__
+                )
             )
 
     def __repr__(self):
