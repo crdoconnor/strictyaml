@@ -23,10 +23,16 @@ Example pyyaml/ruamel/poyo:
 load(yaml) == {"x": True, "y": None} 
 ```
 
-Example StrictYAML
+Example StrictYAML without schema:
 
 ```python
 load(yaml) == {"x": "yes", "y": "null"}
+```
+
+Example StrictYAML with schema:
+
+```python
+load(yaml, Map({"x": Bool(), "y": Str()})) == {"x": True, "y": "null"}
 ```
 
 ## Direct representations of objects ([Why?](../why/binary-data-removed))
@@ -88,7 +94,7 @@ Example StrictYAML
 raises TagTokenDisallowed
 ```
 
-## Node anchors and refs ([Why?](node-anchors-and-references-removed))
+## Node anchors and refs ([Why?](../why/node-anchors-and-references-removed))
 
 ```yaml
 x: &id001
