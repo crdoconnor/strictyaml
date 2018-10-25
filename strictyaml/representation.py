@@ -158,11 +158,9 @@ class YAML(object):
         return self.validator.key_validator(YAMLChunk(index)).data \
             if self.is_mapping() else index
 
-    def _ruamelindex(self, index):
-        if isinstance(index, YAML):
-            index = index.data
-        return self._chunk.key_association[self._strictindex(index)] \
-            if self.is_mapping() else index
+    def _ruamelindex(self, strictindex):
+        return self._chunk.key_association[strictindex] \
+            if self.is_mapping() else strictindex
 
     def __nonzero__(self):
         return self.__bool__()
@@ -172,7 +170,7 @@ class YAML(object):
 
     def __setitem__(self, index, value):
         strictindex = self._strictindex(index)
-        ruamelindex = self._ruamelindex(index)
+        ruamelindex = self._ruamelindex(strictindex)
         value_validator = self._value[strictindex].validator
 
         if isinstance(value, YAML):
@@ -205,8 +203,9 @@ class YAML(object):
         self._value[YAML(ruamelindex) if self.is_mapping() else ruamelindex] = new_value
 
     def __delitem__(self, index):
-        del self._value[self._strictindex(index)]
-        del self._chunk.contents[self._ruamelindex(index)]
+        strictindex = self._strictindex(index)
+        del self._value[strictindex]
+        del self._chunk.contents[self._ruamelindex(strictindex)]
 
     def __hash__(self):
         return hash(self._value)
