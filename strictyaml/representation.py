@@ -162,13 +162,6 @@ class YAML(object):
             else index
         )
 
-    def _ruamelindex(self, strictindex):
-        return (
-            self._chunk.key_association[strictindex]
-            if self.is_mapping()
-            else strictindex
-        )
-
     def __nonzero__(self):
         return self.__bool__()
 
