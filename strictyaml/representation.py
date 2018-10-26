@@ -172,14 +172,13 @@ class YAML(object):
         strictindex = self._strictindex(index)
         value_validator = self._value[strictindex].validator
 
-        if isinstance(value, YAML):
-            new_value = value_validator(value._chunk)
-        else:
-            new_value = value_validator(YAMLChunk(value_validator.to_yaml(value)))
+        new_value = value_validator(value._chunk) if isinstance(value, YAML)\
+            else value_validator(YAMLChunk(value_validator.to_yaml(value)))
 
-        # Create forked chunk
+        # Fork the value
         forked_chunk = self._chunk.fork(strictindex, new_value)
 
+        # Validate and attach to current structure
         if self.is_mapping():
             updated_value = value_validator(forked_chunk.val(strictindex))
             updated_value._chunk.make_child_of(self._chunk.val(strictindex))
@@ -187,7 +186,6 @@ class YAML(object):
             updated_value = value_validator(forked_chunk.index(strictindex))
             updated_value._chunk.make_child_of(self._chunk.index(strictindex))
 
-        # If validation succeeds, update for real
         marked_up = new_value.as_marked_up()
 
         # So that the nicer x: | style of text is used instead of
