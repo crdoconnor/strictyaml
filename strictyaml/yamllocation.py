@@ -179,11 +179,11 @@ class YAMLChunk(object):
             key_association=copy(self._key_association),
         )
 
-    def index(self, index):
+    def index(self, strictindex):
         """
         Return a chunk in a sequence referenced by index.
         """
-        return self._select(self._pointer.index(index))
+        return self._select(self._pointer.index(self.ruamelindex(strictindex)))
 
     def ruamelindex(self, strictindex):
         """

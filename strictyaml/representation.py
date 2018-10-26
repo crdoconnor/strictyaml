@@ -184,12 +184,8 @@ class YAML(object):
             updated_value = value_validator(forked_chunk.val(strictindex))
             updated_value._chunk.make_child_of(self._chunk.val(strictindex))
         else:
-            updated_value = value_validator(
-                forked_chunk.index(forked_chunk.ruamelindex(strictindex))
-            )
-            updated_value._chunk.make_child_of(
-                self._chunk.index(self._chunk.ruamelindex(strictindex))
-            )
+            updated_value = value_validator(forked_chunk.index(strictindex))
+            updated_value._chunk.make_child_of(self._chunk.index(strictindex))
 
         # If validation succeeds, update for real
         marked_up = new_value.as_marked_up()
