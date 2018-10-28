@@ -2,6 +2,7 @@ from ruamel.yaml.comments import CommentedMap, CommentedSeq
 from strictyaml.exceptions import YAMLSerializationError
 from strictyaml.scalar import ScalarValidator, Str
 from strictyaml.validators import Validator
+from strictyaml.yamllocation import YAMLChunk
 import sys
 
 
@@ -10,10 +11,12 @@ if sys.version_info[0] == 3:
 
 
 class Optional(object):
-    def __init__(self, key):
+    def __init__(self, key, default=None):
         self.key = key
+        self.default = default
 
     def __repr__(self):
+        # TODO: Add default
         return u'Optional("{0}")'.format(self.key)
 
 
@@ -117,6 +120,13 @@ class Map(MapValidator):
             key for key in validator.keys() if not isinstance(key, Optional)
         ]
 
+        # TODO : validate defaults here
+        self._defaults = {
+            key.key: key.default for key in validator.keys()
+            if isinstance(key, Optional) and
+            key.default is not None
+        }
+
     @property
     def key_validator(self):
         return self._key_validator
@@ -135,6 +145,22 @@ class Map(MapValidator):
     def validate(self, chunk):
         found_keys = set()
         items = chunk.expect_mapping()
+
+        for default_key, default_data in self._defaults.items():
+            if default_key not in [key.contents for key, _ in items]:
+                key_chunk = YAMLChunk(default_key)
+                yaml_key = self._key_validator(key_chunk)
+                strictindex = yaml_key.data
+                value_validator = self._validator_dict[default_key]
+                new_value = value_validator(YAMLChunk(value_validator.to_yaml(default_data)))
+                forked_chunk = chunk.fork(strictindex, new_value)
+                forked_chunk.val(strictindex).process(new_value)
+                updated_value = value_validator(forked_chunk.val(strictindex))
+                updated_value._chunk.make_child_of(chunk.val(strictindex))
+                # marked_up = new_value.as_marked_up()
+                # chunk.contents[chunk.ruamelindex(strictindex)] = marked_up
+                chunk.add_key_association(default_key, strictindex)
+                chunk.strictparsed()[yaml_key] = updated_value
 
         for key, value in items:
             yaml_key = self._key_validator(key)
@@ -169,6 +195,8 @@ class Map(MapValidator):
             [
                 (key, self._validator_dict[key].to_yaml(value))
                 for key, value in data.items()
+                if key not in self._defaults.keys() or
+                key in self._defaults.keys() and value != self._defaults[key]
             ]
         )
 
