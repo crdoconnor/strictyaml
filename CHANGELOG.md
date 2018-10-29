@@ -1,13 +1,16 @@
 # Changelog
 
 
+### 0.15.0
+
+
+* FEATURE : Raise exception when invalid default data is used is used in Optionals.
+* FEATURE : Do not output defaults from Optional() to YAML and ignore parsed defaults where the parsed data is equal to the default specified in Optional().
+* BUGFIX : Include README.md.
+* BUGFIX : Include README.md.
+
+
 ### 0.14.0
-
-* BUGFIX : Include README.md.
-* BUGFIX : Include README.md.
-
-
-### 0.13.0
 
 * BUGFIX : Made comma separated serializer serialize correctly.
 * BUGFIX : Made comma separated serializer serialize correctly.

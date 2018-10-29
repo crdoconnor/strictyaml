@@ -219,6 +219,7 @@ Compound validators:
 - [Mapping with defined keys and a custom key validator (Map)](https://hitchdev.com/strictyaml/using/alpha/compound/mapping-with-slug-keys)
 - [Fixed length sequences (FixedSeq)](https://hitchdev.com/strictyaml/using/alpha/compound/fixed-length-sequences)
 - [Mappings with arbitrary key names (MapPattern)](https://hitchdev.com/strictyaml/using/alpha/compound/map-pattern)
+- [Optional keys with defaults (Map/Optional)](https://hitchdev.com/strictyaml/using/alpha/compound/optional-keys-with-defaults)
 - [Mappings with defined keys (Map)](https://hitchdev.com/strictyaml/using/alpha/compound/mapping)
 - [Validating optional keys in mappings (Map)](https://hitchdev.com/strictyaml/using/alpha/compound/optional-keys)
 
