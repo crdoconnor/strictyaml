@@ -1,5 +1,5 @@
 from ruamel.yaml.comments import CommentedMap, CommentedSeq
-from strictyaml.exceptions import YAMLSerializationError
+from strictyaml.exceptions import YAMLSerializationError, InvalidOptionalDefault
 from strictyaml.scalar import ScalarValidator, Str
 from strictyaml.validators import Validator
 from strictyaml.yamllocation import YAMLChunk
@@ -120,7 +120,19 @@ class Map(MapValidator):
             key for key in validator.keys() if not isinstance(key, Optional)
         ]
 
-        # TODO : validate defaults here
+        for key_val, value_val in validator.items():
+            if isinstance(key_val, Optional):
+                if key_val.default is not None:
+                    try:
+                        value_val.to_yaml(key_val.default)
+                    except YAMLSerializationError as error:
+                        raise InvalidOptionalDefault(
+                            "Optional default for '{}' failed validation:\n  {}".format(
+                                key_val.key,
+                                error,
+                            )
+                        )
+
         self._defaults = {
             key.key: key.default for key in validator.keys()
             if isinstance(key, Optional) and

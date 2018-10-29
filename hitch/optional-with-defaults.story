@@ -1,4 +1,4 @@
-Optional keys with defaults (Map):
+Optional keys with defaults (Map/Optional):
   docs: compound/optional-keys-with-defaults
   experimental: yes
   based on: strictyaml
@@ -15,22 +15,34 @@ Optional keys with defaults (Map):
 
       schema = Map({"a": Int(), Optional("b", default=False): Bool(), })
   variations:
-    Duck typing the result:
+    When parsed the result will include the optional value:
       steps:
       - Run: |
-          Ensure(load(yaml_snippet, schema)).equals({"a": 1, "b": False})
+          Ensure(load(yaml_snippet, schema).data).equals({"a": 1, "b": False})
 
-    Output to YAML:
+    If parsed and then output to YAML again the default data won't be there:
       steps:
       - Run:
           code: print(load(yaml_snippet, schema).as_yaml())
           will output: |-
             a: 1
 
-    Turning default data into documents:
+    When default data is output to YAML it is removed:
       steps:
       - Run:
           code: |
             print(as_document({"a": 1, "b": False}, schema).as_yaml())
           will output: |-
             a: 1
+
+
+Optional keys with bad defaults:
+  experimental: yes
+  based on: Optional keys with defaults (Map/Optional)
+  steps:
+  - Run:
+      code: |
+        Map({"a": Int(), Optional("b", default="nonsense"): Bool(), })
+      raises:
+        type: strictyaml.exceptions.InvalidOptionalDefault
+        message: "Optional default for 'b' failed validation:\n  Not a boolean"
