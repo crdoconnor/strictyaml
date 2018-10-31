@@ -170,7 +170,10 @@ class YAML(object):
 
     def __setitem__(self, index, value):
         strictindex = self._strictindex(index)
-        value_validator = self._value[strictindex].validator
+        try:
+            value_validator = self._value[strictindex].validator
+        except KeyError:
+            value_validator = value.validator
 
         new_value = value_validator(value._chunk) if isinstance(value, YAML)\
             else value_validator(YAMLChunk(value_validator.to_yaml(value)))

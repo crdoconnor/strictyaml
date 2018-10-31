@@ -37,7 +37,6 @@ Optional keys with defaults (Map/Optional):
 
 
 Optional keys with bad defaults:
-  experimental: yes
   based on: Optional keys with defaults (Map/Optional)
   steps:
   - Run:
@@ -46,3 +45,22 @@ Optional keys with bad defaults:
       raises:
         type: strictyaml.exceptions.InvalidOptionalDefault
         message: "Optional default for 'b' failed validation:\n  Not a boolean"
+
+
+Optional keys revalidation bug:
+  based on: Optional keys with defaults (Map/Optional)
+  given:
+    yaml_snippet: |
+      content:
+        a: 1
+  steps:
+  - Run:
+      code: |
+        from strictyaml import MapPattern, Any
+
+        loose_schema = Map({"content": Any()})
+        strict_schema = Map({"a": Int(), Optional("b", default=False): Bool(), })
+
+        myyaml = load(yaml_snippet, loose_schema)
+        myyaml['content'].revalidate(strict_schema)
+        assert myyaml.data == {"content": {"a": 1, "b": False}}
