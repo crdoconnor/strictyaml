@@ -253,7 +253,7 @@ and/or not obvious. Those are documented here:
 
 - [What is wrong with explicit tags?](https://hitchdev.com/strictyaml/why/explicit-tags-removed)
 - [What is wrong with explicit syntax typing in a readable configuration language?](https://hitchdev.com/strictyaml/why/syntax-typing-bad)
-- [What is wrong with implicit typing?](https://hitchdev.com/strictyaml/why/implicit-typing-removed)
+- [The Norway Problem - why StrictYAML won't do implicit typing](https://hitchdev.com/strictyaml/why/implicit-typing-removed)
 - [What is wrong with flow style YAML?](https://hitchdev.com/strictyaml/why/flow-style-removed)
 - [Why does StrictYAML only parse from strings and not files?](https://hitchdev.com/strictyaml/why/only-parse-strings-not-files)
 - [What is wrong with duplicate keys?](https://hitchdev.com/strictyaml/why/duplicate-keys-disallowed)
