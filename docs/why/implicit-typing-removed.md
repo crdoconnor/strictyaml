@@ -1,5 +1,5 @@
 ---
-title: The Norway Problem: Why StrictYAML won't do implicit typing
+title: The Norway Problem - why StrictYAML won't do implicit typing
 ---
 
 A while back I met an old coworker for a beer and he started
