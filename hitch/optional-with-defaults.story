@@ -11,6 +11,7 @@ Optional keys with defaults (Map/Optional):
       a: 1
     setup: |
       from strictyaml import Map, Int, Str, Bool, Optional, load, as_document
+      from collections import OrderedDict
       from ensure import Ensure
 
       schema = Map({"a": Int(), Optional("b", default=False): Bool(), })
@@ -18,7 +19,7 @@ Optional keys with defaults (Map/Optional):
     When parsed the result will include the optional value:
       steps:
       - Run: |
-          Ensure(load(yaml_snippet, schema).data).equals({"a": 1, "b": False})
+          Ensure(load(yaml_snippet, schema).data).equals(OrderedDict([("a", 1), ("b", False)]))
 
     If parsed and then output to YAML again the default data won't be there:
       steps:

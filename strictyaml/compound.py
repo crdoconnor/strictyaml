@@ -158,22 +158,6 @@ class Map(MapValidator):
         found_keys = set()
         items = chunk.expect_mapping()
 
-        for default_key, default_data in self._defaults.items():
-            if default_key not in [key.contents for key, _ in items]:
-                key_chunk = YAMLChunk(default_key)
-                yaml_key = self._key_validator(key_chunk)
-                strictindex = yaml_key.data
-                value_validator = self._validator_dict[default_key]
-                new_value = value_validator(YAMLChunk(value_validator.to_yaml(default_data)))
-                forked_chunk = chunk.fork(strictindex, new_value)
-                forked_chunk.val(strictindex).process(new_value)
-                updated_value = value_validator(forked_chunk.val(strictindex))
-                updated_value._chunk.make_child_of(chunk.val(strictindex))
-                # marked_up = new_value.as_marked_up()
-                # chunk.contents[chunk.ruamelindex(strictindex)] = marked_up
-                chunk.add_key_association(default_key, strictindex)
-                chunk.strictparsed()[yaml_key] = updated_value
-
         for key, value in items:
             yaml_key = self._key_validator(key)
 
@@ -189,6 +173,22 @@ class Map(MapValidator):
             key.process(yaml_key)
             chunk.add_key_association(key.contents, yaml_key.data)
             found_keys.add(yaml_key.scalar)
+
+        for default_key, default_data in self._defaults.items():
+            if default_key not in [key.contents for key, _ in items]:
+                key_chunk = YAMLChunk(default_key)
+                yaml_key = self._key_validator(key_chunk)
+                strictindex = yaml_key.data
+                value_validator = self._validator_dict[default_key]
+                new_value = value_validator(YAMLChunk(value_validator.to_yaml(default_data)))
+                forked_chunk = chunk.fork(strictindex, new_value)
+                forked_chunk.val(strictindex).process(new_value)
+                updated_value = value_validator(forked_chunk.val(strictindex))
+                updated_value._chunk.make_child_of(chunk.val(strictindex))
+                # marked_up = new_value.as_marked_up()
+                # chunk.contents[chunk.ruamelindex(strictindex)] = marked_up
+                chunk.add_key_association(default_key, strictindex)
+                chunk.strictparsed()[yaml_key] = updated_value
 
         if not set(self._required_keys).issubset(found_keys):
             chunk.while_parsing_found(
