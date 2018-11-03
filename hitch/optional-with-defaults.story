@@ -52,15 +52,19 @@ Optional keys revalidation bug:
   given:
     yaml_snippet: |
       content:
-        a: 1
+        subitem:
+          a: 1
   steps:
   - Run:
       code: |
         from strictyaml import MapPattern, Any
 
         loose_schema = Map({"content": Any()})
-        strict_schema = Map({"a": Int(), Optional("b", default=False): Bool(), })
+        strict_schema = Map({"subitem": Map({"a": Int(), Optional("b", default=False): Bool(), })})
 
         myyaml = load(yaml_snippet, loose_schema)
         myyaml['content'].revalidate(strict_schema)
-        assert myyaml.data == {"content": {"a": 1, "b": False}}
+        assert myyaml.data == {"content": {"subitem": {"a": 1, "b": False}}}
+        print(myyaml.data.__repr__())
+      will output: OrderedDict([('content', OrderedDict([('subitem', OrderedDict([('b',
+        False), ('a', 1)]))]))])

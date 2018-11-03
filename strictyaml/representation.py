@@ -42,21 +42,29 @@ class YAML(object):
     * Revalidated with a stricter schema (.revalidate(schema)).
     """
 
-    def __init__(self, chunk, validator=None):
-        if isinstance(chunk, YAMLChunk):
-            self._chunk = chunk
+    def __init__(self, value, validator=None):
+        if isinstance(value, YAMLChunk):
+            self._chunk = value
             self._validator = validator
-            if chunk.is_scalar():
-                self._value = validator.validate(chunk)
-                self._text = chunk.contents
+            if value.is_scalar():
+                self._value = validator.validate(value)
+                self._text = value.contents
             else:
-                self._value = chunk.strictparsed()
+                self._value = value.strictparsed()._value \
+                    if isinstance(value.strictparsed(), YAML) else \
+                    value.strictparsed()
                 self._text = None
+        elif isinstance(value, YAML):
+            self._chunk = value._chunk
+            self._validator = validator if validator is not None \
+                else value.validator
+            self._value = value._value
+            self._text = value._text
         else:
-            self._chunk = YAMLChunk(chunk)
+            self._chunk = YAMLChunk(value)
             self._validator = validator
-            self._value = chunk
-            self._text = unicode(chunk)
+            self._value = value
+            self._text = unicode(value)
 
     def __int__(self):
         # TODO: Raise more sensible exception if not int
@@ -173,6 +181,7 @@ class YAML(object):
         try:
             value_validator = self._value[strictindex].validator
         except KeyError:
+            # TODO: What if value isn't a YAML object?
             value_validator = value.validator
 
         new_value = value_validator(value._chunk) if isinstance(value, YAML)\
