@@ -10,6 +10,7 @@ Enumerated scalars (Enum):
   given:
     setup: |
       from strictyaml import Map, Enum, MapPattern, YAMLValidationError, load
+      from collections import OrderedDict
       from ensure import Ensure
 
       schema = Map({"a": Enum(["A", "B", "C"])})
@@ -18,9 +19,15 @@ Enumerated scalars (Enum):
       given:
         yaml_snippet: 'a: A'
       steps:
-      - Run:
-          code: |
-            Ensure(load(yaml_snippet, schema)).equals({"a": "A"})
+      - Run: |
+          Ensure(load(yaml_snippet, schema)).equals({"a": "A"})
+
+    Get .data from enum:
+      given:
+        yaml_snippet: 'a: A'
+      steps:
+      - Run: |
+          assert isinstance(load(yaml_snippet, schema)['a'].data, str)
 
     Valid because it contains 'B':
       given:

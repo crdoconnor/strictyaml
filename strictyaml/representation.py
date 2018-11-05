@@ -48,6 +48,8 @@ class YAML(object):
             self._validator = validator
             if value.is_scalar():
                 self._value = validator.validate(value)
+                if isinstance(self._value, YAML):
+                    self._value = self._value._value
                 self._text = value.contents
             else:
                 self._value = value.strictparsed()._value \
@@ -66,6 +68,7 @@ class YAML(object):
             self._value = value
             self._text = unicode(value)
         self._selected_validator = None
+        assert not isinstance(self._value, YAML)
 
     def __int__(self):
         # TODO: Raise more sensible exception if not int
