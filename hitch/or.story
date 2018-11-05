@@ -1,4 +1,4 @@
-Either/or schema validation of two equally valid different kinds of YAML:
+Either/or schema validation of different, equally valid different kinds of YAML:
   docs: howto/either-or-validation
   description: |
     StrictYAML can be directed to parse two different elements or
@@ -10,10 +10,10 @@ Either/or schema validation of two equally valid different kinds of YAML:
   based on: strictyaml
   given:
     setup: |
-      from strictyaml import Map, Bool, Int, YAMLValidationError, load
+      from strictyaml import Map, Bool, Int, Str, YAMLValidationError, load
       from ensure import Ensure
 
-      schema = Map({"a": Bool() | Int()})
+      schema = Str() | Map({"a": Bool() | Int()})
   variations:
     Boolean first choice true:
       given:

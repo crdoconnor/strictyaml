@@ -65,6 +65,7 @@ class YAML(object):
             self._validator = validator
             self._value = value
             self._text = unicode(value)
+        self._selected_validator = None
 
     def __int__(self):
         # TODO: Raise more sensible exception if not int
@@ -164,11 +165,12 @@ class YAML(object):
     def _strictindex(self, index):
         if isinstance(index, YAML):
             index = index.data
-        return (
-            self.validator.key_validator(YAMLChunk(index)).data
-            if self.is_mapping()
-            else index
-        )
+        if self.is_mapping():
+            key_validator = self._selected_validator.key_validator if self._selected_validator \
+                is not None else self._validator.key_validator
+            return key_validator(YAMLChunk(index)).data
+        else:
+            return index
 
     def __nonzero__(self):
         return self.__bool__()
