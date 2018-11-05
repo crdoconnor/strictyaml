@@ -6,6 +6,11 @@
 
 No relevant code changes.
 
+### 0.15.3
+
+* BUGFIX : Fix for #46 - prevent Enum parsed values from becoming YAML objects.
+
+
 ### 0.15.2
 
 * BUGFIX : Modifying YAML via __getitem__ where the YAML was validated using an OR operator failed - or validators didn't have a key_validator.
