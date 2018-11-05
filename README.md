@@ -207,7 +207,7 @@ How to:
 - [Reading in YAML, editing it and writing it back out](https://hitchdev.com/strictyaml/using/alpha/howto/roundtripping)
 - [Labeling exceptions](https://hitchdev.com/strictyaml/using/alpha/howto/label-exceptions)
 - [Merge YAML documents](https://hitchdev.com/strictyaml/using/alpha/howto/merge-yaml-documents)
-- [Either/or schema validation of two equally valid different kinds of YAML](https://hitchdev.com/strictyaml/using/alpha/howto/either-or-validation)
+- [Either/or schema validation of different, equally valid different kinds of YAML](https://hitchdev.com/strictyaml/using/alpha/howto/either-or-validation)
 - [Parsing YAML without a schema](https://hitchdev.com/strictyaml/using/alpha/howto/without-a-schema)
 
 

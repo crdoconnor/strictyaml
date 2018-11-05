@@ -3,6 +3,16 @@
 
 ### Latest
 
+
+No relevant code changes.
+
+### 0.15.2
+
+* BUGFIX : Modifying YAML via __getitem__ where the YAML was validated using an OR operator failed - or validators didn't have a key_validator.
+
+
+### 0.15.1
+
 * BUGFIX : Make optional values parsed using Optional appear at the *end* of the ordered dict.
 * BUGFIX : Prevent YAML objects from appearing in .data.
 * BUGFIX : Fix for bug caused by revalidation with Optional default values.
