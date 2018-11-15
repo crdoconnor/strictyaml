@@ -93,7 +93,8 @@ class YAML(object):
         if self.is_scalar():
             self._value = schema(self._chunk)._value
         else:
-            schema(self._chunk)
+            result = schema(self._chunk)
+            self._selected_validator = result._selected_validator
         self._validator = schema
 
     @property
