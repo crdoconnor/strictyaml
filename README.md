@@ -193,6 +193,7 @@ Below is a series of documented justifications:
 - [Why shouldn't I just use python code for configuration?](https://hitchdev.com/strictyaml/why-not/turing-complete-code)
 - [Why not use INI files?](https://hitchdev.com/strictyaml/why-not/ini)
 - [Why not use SDLang?](https://hitchdev.com/strictyaml/why-not/sdlang)
+- [Why avoid using environment variables as configuration?](https://hitchdev.com/strictyaml/why-not/environment-variables-as-config)
 - [Why not use JSON Schema for validation?](https://hitchdev.com/strictyaml/why-not/json-schema)
 
 

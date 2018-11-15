@@ -6,6 +6,11 @@
 
 No relevant code changes.
 
+### 0.15.4
+
+* BUGFIX : If revalidating a subschema with an Or validator and then changing the contents of the parsed data, a cryptic error was raised.
+
+
 ### 0.15.3
 
 * BUGFIX : Fix for #46 - prevent Enum parsed values from becoming YAML objects.
