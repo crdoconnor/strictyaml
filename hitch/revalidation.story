@@ -2,13 +2,14 @@ Revalidate an already validated document:
   docs: howto/revalidation
   based on: strictyaml
   description: |
-    When parsing a YAML document you may wish to validate part of the
-    document and then later on validate other sections within it.
+    When parsing a YAML document you may wish to do more than one validation
+    pass over a document.
 
-    This may be required because:
+    This is needed when:
     
-    * One part of the document validation depends upon another (example here).
-    * It simplifies the code to apply different kinds of validation at different steps.
+    * It simplifies your code to apply validation in stages.
+    * You want to validate recursively.
+    * One part of the document validation depends upon another (this is the example given below).
   given:
     setup: |
       from strictyaml import Str, Int, Map, Seq, Any, load
