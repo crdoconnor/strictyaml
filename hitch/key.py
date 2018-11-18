@@ -18,7 +18,7 @@ Non-runnable utility methods
 
 
 def _storybook(settings):
-    return StoryCollection(pathquery(DIR.key).ext("story"), Engine(DIR, settings))
+    return StoryCollection(pathquery(DIR.key / "story").ext("story"), Engine(DIR, settings))
 
 
 def _current_version():
