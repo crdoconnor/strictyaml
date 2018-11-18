@@ -37,7 +37,7 @@ class OrValidator(Validator):
             result._selected_validator = result._validator
             result._validator = self
             return result
-        except YAMLValidationError as error:
+        except YAMLValidationError:
             result = self._validator_b(chunk)
             result._selected_validator = result._validator
             result._validator = self

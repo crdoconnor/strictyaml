@@ -128,15 +128,14 @@ class Map(MapValidator):
                     except YAMLSerializationError as error:
                         raise InvalidOptionalDefault(
                             "Optional default for '{}' failed validation:\n  {}".format(
-                                key_val.key,
-                                error,
+                                key_val.key, error
                             )
                         )
 
         self._defaults = {
-            key.key: key.default for key in validator.keys()
-            if isinstance(key, Optional) and
-            key.default is not None
+            key.key: key.default
+            for key in validator.keys()
+            if isinstance(key, Optional) and key.default is not None
         }
 
     @property
@@ -180,7 +179,9 @@ class Map(MapValidator):
                 yaml_key = self._key_validator(key_chunk)
                 strictindex = yaml_key.data
                 value_validator = self._validator_dict[default_key]
-                new_value = value_validator(YAMLChunk(value_validator.to_yaml(default_data)))
+                new_value = value_validator(
+                    YAMLChunk(value_validator.to_yaml(default_data))
+                )
                 forked_chunk = chunk.fork(strictindex, new_value)
                 forked_chunk.val(strictindex).process(new_value)
                 updated_value = value_validator(forked_chunk.val(strictindex))
@@ -207,8 +208,9 @@ class Map(MapValidator):
             [
                 (key, self._validator_dict[key].to_yaml(value))
                 for key, value in data.items()
-                if key not in self._defaults.keys() or
-                key in self._defaults.keys() and value != self._defaults[key]
+                if key not in self._defaults.keys()
+                or key in self._defaults.keys()
+                and value != self._defaults[key]
             ]
         )
 

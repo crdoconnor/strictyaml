@@ -52,14 +52,15 @@ class YAML(object):
                     self._value = self._value._value
                 self._text = value.contents
             else:
-                self._value = value.strictparsed()._value \
-                    if isinstance(value.strictparsed(), YAML) else \
-                    value.strictparsed()
+                self._value = (
+                    value.strictparsed()._value
+                    if isinstance(value.strictparsed(), YAML)
+                    else value.strictparsed()
+                )
                 self._text = None
         elif isinstance(value, YAML):
             self._chunk = value._chunk
-            self._validator = validator if validator is not None \
-                else value.validator
+            self._validator = validator if validator is not None else value.validator
             self._value = value._value
             self._text = value._text
         else:
@@ -170,8 +171,11 @@ class YAML(object):
         if isinstance(index, YAML):
             index = index.data
         if self.is_mapping():
-            key_validator = self._selected_validator.key_validator if self._selected_validator \
-                is not None else self._validator.key_validator
+            key_validator = (
+                self._selected_validator.key_validator
+                if self._selected_validator is not None
+                else self._validator.key_validator
+            )
             return key_validator(YAMLChunk(index)).data
         else:
             return index
@@ -190,8 +194,11 @@ class YAML(object):
             # TODO: What if value isn't a YAML object?
             value_validator = value.validator
 
-        new_value = value_validator(value._chunk) if isinstance(value, YAML)\
+        new_value = (
+            value_validator(value._chunk)
+            if isinstance(value, YAML)
             else value_validator(YAMLChunk(value_validator.to_yaml(value)))
+        )
 
         # Fork the value
         forked_chunk = self._chunk.fork(strictindex, new_value)
@@ -214,8 +221,9 @@ class YAML(object):
 
         self._chunk.contents[self._chunk.ruamelindex(strictindex)] = marked_up
         self._value[
-            YAML(forked_chunk.ruamelindex(strictindex)) if self.is_mapping() else
-            forked_chunk.ruamelindex(strictindex)
+            YAML(forked_chunk.ruamelindex(strictindex))
+            if self.is_mapping()
+            else forked_chunk.ruamelindex(strictindex)
         ] = new_value
 
     def __delitem__(self, index):

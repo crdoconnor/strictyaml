@@ -45,7 +45,7 @@ def is_integer(value):
     >>> is_integer("3.4")
     False
     """
-    return compile("^[-+]?\d+$").match(value) is not None
+    return compile("^[-+]?[0-9]+$").match(value) is not None
 
 
 def is_decimal(value):
