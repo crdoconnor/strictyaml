@@ -41,11 +41,6 @@ class Engine(BaseEngine):
 
     def set_up(self):
         """Set up your applications and the test environment."""
-        self.path.state = self.path.gen.joinpath("state")
-        if self.path.state.exists():
-            self.path.state.rmtree(ignore_errors=True)
-        self.path.state.mkdir()
-
         self.path.profile = self.path.gen.joinpath("profile")
 
         if not self.path.profile.exists():
@@ -59,13 +54,13 @@ class Engine(BaseEngine):
         ).bin.python
 
         self.example_py_code = (
-            ExamplePythonCode(self.python, self.path.state)
+            ExamplePythonCode(self.python, self.path.gen)
             .with_code(self.given.get("code", ""))
             .with_setup_code(
-                "import pytest\npytest.register_assert_rewrite()\n" + \
-                self.given.get("setup", ""))
+                self.given.get("setup", "")
+            )
             .with_terminal_size(160, 100)
-            .with_long_strings(
+            .with_strings(
                 yaml_snippet_1=self.given.get("yaml_snippet_1"),
                 yaml_snippet=self.given.get("yaml_snippet"),
                 yaml_snippet_2=self.given.get("yaml_snippet_2"),
@@ -100,23 +95,24 @@ class Engine(BaseEngine):
                 self.path.profile.joinpath("{0}.dat".format(self.story.slug))
             )
 
-        result = (
-            to_run.expect_exceptions().run() if raises is not None else to_run.run()
-        )
-
-        if will_output is not None:
-            actual_output = "\n".join(
-                [line.rstrip() for line in result.output.split("\n")]
+        if raises is None:
+            result = (
+                to_run.expect_exceptions().run() if raises is not None else to_run.run()
             )
-            try:
-                Templex(will_output).assert_match(actual_output)
-            except AssertionError:
-                if self.settings.get("rewrite"):
-                    self.current_step.update(**{"will output": actual_output})
-                else:
-                    raise
 
-        if raises is not None:
+            if will_output is not None:
+                actual_output = "\n".join(
+                    [line.rstrip() for line in result.output.split("\n")]
+                )
+                try:
+                    Templex(will_output).assert_match(actual_output)
+                except AssertionError:
+                    if self.settings.get("rewrite"):
+                        self.current_step.update(**{"will output": actual_output})
+                    else:
+                        raise
+
+        elif raises is not None:
             differential = False  # Difference between python 2 and python 3 output?
             exception_type = raises.get("type")
             message = raises.get("message")
@@ -140,7 +136,7 @@ class Engine(BaseEngine):
                     )
 
             try:
-                result = self.example_py_code.expect_exceptions().run()
+                result = to_run.expect_exceptions().run()
                 result.exception_was_raised(exception_type, message)
             except ExpectedExceptionMessageWasDifferent as error:
                 if self.settings.get("rewrite") and not differential:

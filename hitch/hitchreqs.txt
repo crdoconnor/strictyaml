@@ -19,7 +19,7 @@ hitchbuild==0.4.0         # via dirtemplate, hitchbuildpy
 hitchbuildpy==0.4.5       # via hitchpylibrarytoolkit
 hitchpylibrarytoolkit==0.3.1
 hitchrun==0.3.1
-hitchrunpy==0.6.3         # via hitchpylibrarytoolkit
+hitchrunpy==0.7.0         # via hitchpylibrarytoolkit
 hitchstory==0.11.3        # via hitchpylibrarytoolkit
 icommandlib==0.5.0        # via hitchrunpy
 idna==2.7                 # via requests
