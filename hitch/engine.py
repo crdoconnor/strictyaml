@@ -18,13 +18,28 @@ class Engine(BaseEngine):
     """Python engine for running tests."""
 
     given_definition = GivenDefinition(
-        yaml_snippet=GivenProperty(Str()),
-        yaml_snippet_1=GivenProperty(Str()),
-        yaml_snippet_2=GivenProperty(Str()),
-        modified_yaml_snippet=GivenProperty(Str()),
+        yaml_snippet=GivenProperty(
+            Str(),
+            document="yaml_snippet:\n```yaml\n{{ yaml_snippet }}\n```"
+        ),
+        yaml_snippet_1=GivenProperty(
+            Str(),
+            document="yaml_snippet_1:\n```yaml\n{{ yaml_snippet_1 }}\n```"
+        ),
+        yaml_snippet_2=GivenProperty(
+            Str(),
+            document="yaml_snippet_2:\n```yaml\n{{ yaml_snippet_2 }}\n```"
+        ),
+        modified_yaml_snippet=GivenProperty(
+            Str(),
+            document="modified_yaml_snippet:\n```yaml\n{{ modified_yaml_snippet }}\n```"
+        ),
         python_version=GivenProperty(Str()),
         ruamel_version=GivenProperty(Str()),
-        setup=GivenProperty(Str()),
+        setup=GivenProperty(
+            Str(),
+            document="```python\n{{ setup }}\n```"
+        ),
     )
 
     info_definition = InfoDefinition(
