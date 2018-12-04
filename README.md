@@ -7,7 +7,7 @@ specification.
 Priorities:
 
 - Beautiful API
-- Refusing to parse [the ugly, hard to read and insecure features of YAML](https://hitchdev.com/strictyaml/features-removed).
+- Refusing to parse [the ugly, hard to read and insecure features of YAML](https://hitchdev.com/strictyaml/features-removed) like [the Norway problem](https://hitchdev.com/strictyaml/why/implicit-typing-removed).
 - Strict validation of markup and straightforward type casting.
 - Clear, readable exceptions with **code snippets** and **line numbers**.
 - Acting as a near-drop in replacement for pyyaml, ruamel.yaml or poyo.
@@ -186,7 +186,7 @@ Below is a series of documented justifications:
 - [Why not use TOML?](https://hitchdev.com/strictyaml/why-not/toml)
 - [Why not use the YAML 2.0 standard? - we don't need a new standard!](https://hitchdev.com/strictyaml/why-not/ordinary-yaml)
 - [Why not use kwalify with standard YAML to validate my YAML?](https://hitchdev.com/strictyaml/why-not/pykwalify)
-- [Why not use python's schema library for validation?](https://hitchdev.com/strictyaml/why-not/python-schema)
+- [Why not use python's schema library (or similar) for validation?](https://hitchdev.com/strictyaml/why-not/python-schema)
 - [Why not HOCON?](https://hitchdev.com/strictyaml/why-not/hocon)
 - [Why not JSON5?](https://hitchdev.com/strictyaml/why-not/json5)
 - [Why not use XML for configuration or DSLs?](https://hitchdev.com/strictyaml/why-not/xml)
@@ -277,5 +277,5 @@ and/or not obvious. Those are documented here:
 
 * Before writing any code, if you're proposing a new feature, please raise it on github. If it's an existing feature / bug, please comment and briefly describe how you're going to implement it.
 
-* All code needs to come accompanied with a story that exercises it or (more typically), a modification to an existing story. This is used both to test the code and build the documentation.
+* All code needs to come accompanied with a story that exercises it or a modification to an existing story. This is used both to test the code and build the documentation.
 

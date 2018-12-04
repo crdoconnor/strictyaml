@@ -15,7 +15,7 @@ specification.
 Priorities:
 
 - Beautiful API
-- Refusing to parse [the ugly, hard to read and insecure features of YAML](features-removed), avoiding issues like **[the Norway problem](why/implicit-typing-removed)**.
+- Refusing to parse [the ugly, hard to read and insecure features of YAML](features-removed) like [the Norway problem](why/implicit-typing-removed).
 - Strict validation of markup and straightforward type casting.
 - Clear, readable exceptions with **code snippets** and **line numbers**.
 - Acting as a near-drop in replacement for pyyaml, ruamel.yaml or poyo.
