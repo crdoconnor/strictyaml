@@ -15,7 +15,7 @@ specification.
 Priorities:
 
 - Beautiful API
-- Refusing to parse [the ugly, hard to read and insecure features of YAML](features-removed).
+- Refusing to parse [the ugly, hard to read and insecure features of YAML](features-removed), avoiding issues like **[the Norway problem](why/implicit-typing-removed)**.
 - Strict validation of markup and straightforward type casting.
 - Clear, readable exceptions with **code snippets** and **line numbers**.
 - Acting as a near-drop in replacement for pyyaml, ruamel.yaml or poyo.
@@ -110,6 +110,6 @@ and/or not obvious. Those are documented here:
 
 * Before writing any code, if you're proposing a new feature, please raise it on github. If it's an existing feature / bug, please comment and briefly describe how you're going to implement it.
 
-* All code needs to come accompanied with a story that exercises it or (more typically), a modification to an existing story. This is used both to test the code and build the documentation.
+* All code needs to come accompanied with a story that exercises it or a modification to an existing story. This is used both to test the code and build the documentation.
 
 
