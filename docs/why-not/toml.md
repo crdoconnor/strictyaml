@@ -30,14 +30,18 @@ what parsers already understand:
 * https://github.com/leereilly/csi/blob/567e5b55f766847c9dcc7de482c0fd241fa7377a/lib/data/master.toml
 * https://github.com/CzarSimon/simonlindgren.info/blob/a391a6345b16f2d8093f6d4c5f422399b4b901eb/simon-cv/config.toml
 
-This parallels the way indentation is added in languages with syntactic markers - e.g. 
-JSON, Javascript or Java to make it easier for humans to understand.
+This parallels the way indentation is added in *lots* of programming languages with syntactic markers
+- e.g.  JSON, Javascript or Java are all commonly rendered with non-meaningful indentation to make it
+easier for humans to understand.
 
-Python is a notable exception to this trend - syntactic markers are not necessary and neither
-is auto-indentation for readability because the indentation *is* the marker.
+Not python though.
 
-The argument over the merits of meaningful indentation has been going on for longer than
-StrictYAML's existence, but the various points are argued pretty well in this [stack exchange question about python](https://softwareengineering.stackexchange.com/questions/313034/why-should-a-language-prefer-indentation-over-explicit-markers-for-blocks). In summary:
+Python, which is slowly becoming [the world's most popular programming language](https://www.economist.com/graphic-detail/2018/07/26/python-is-becoming-the-worlds-most-popular-coding-language)
+has long been a stand out exception in how it was designed -
+syntactic markers are *not* necessary to infer program structure because indentation *is* the marker
+that determines program structure.
+
+This argument over the merits of meaningful indentation in python has been going on for decades, but the various points are argued pretty well in this [stack exchange question asking why python did it](https://softwareengineering.stackexchange.com/questions/313034/why-should-a-language-prefer-indentation-over-explicit-markers-for-blocks). In summary:
 
 1. Python inherited the significant indentation from the (now obsolete) predecessor language ABC. ABC is one of the very few programming languages which have used usability testing to direct the design. So while discussions about syntax usually comes down to subjective opinions and personal preferences, the choice of significant indentation actually have a sounder foundation.
 
@@ -45,17 +49,17 @@ StrictYAML's existence, but the various points are argued pretty well in this [s
 
 3. Having symbols delimiting blocks and indentation violates the DRY principle.
 
-4. It does away with the typical C debate of "where to put the curly braces".
+4. It does away with the typical religious C debate of "where to put the curly braces".
 
 
-## 2. It overcomplicates itself just like YAML did
+## 2. It overcomplicates itself just like YAML did by trying to do too much
 
 Somewhat ironically, TOML's creator quite rightly criticizes YAML for not aiming for simplicity
 and then unfortunately falls into the same trap itself. One way it does this is by
 trying to include date and time parsing which imports *all* of the inherent complications associated
 with [dates and times](https://infiniteundo.com/post/25326999628/falsehoods-programmers-believe-about-time).
 
-StrictYAML separates parsing (which is part of the restricted spec) and type coercion (which isn't).
+StrictYAML separates parsing (which is part of the cut down YAML spec) and type coercion (which isn't).
 
 **The only three types StrictYAML parser cares about are mappings, sequences and strings**.
 
@@ -89,29 +93,28 @@ flt2 = 3.1415
 string = "hello"
 ```
 
-StrictYAML does not require quotes around any value to infer a data type. So, for instance:
+StrictYAML does not require quotes around any value to infer a data type because the
+schema is assumed to be the single source of truth for type information. In larger
+documents this removes an enormous amount of syntactic noise.
+
+So, this, for instance:
 
 ```yaml
 flt2: 3.1415
 string: hello
 ```
 
-Will parse as a float if directed by the parser:
+Will parse as a float if directed by the schema to do so (and reject non-floats):
 
 ```python
 >>> load(yaml, Map({"flt2": Float(), "string": Str()})).data
 {"flt": 3.1415, "string": "hello"}
 ```
 
-And will reject *non* floats with an error.
-
-Or, it will default to string if no schema is given, avoiding all ambiguity:
+If no schema is given, the parser will sensibly *unambigously* default to parsing only to string:
 
 ```python
 >>> load(yaml).data
 {"flt2": "3.1415", "string": "hello"}
 ```
 
-Avoiding syntax typing and delegating type information to a schema
-is another way that YAML documents that convey equivalent information can be
-kept terser and thus easier to read.
