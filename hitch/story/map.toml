@@ -1,0 +1,141 @@
+["Mappings with defined keys (Map)"]
+docs = "compound/mapping"
+"based on" = "strictyaml"
+description = "Mappings of one value to another are represented by : in YAML\nand parsed as python dicts.\n\nUsing StrictYAML's 'Map' you can validate that a mapping\ncontains the right keys and the right *type* of values.\n\nNote: for mappings where you don't know the exact names of\nthe keys in advance but you do know the type, use MapPattern.\n"
+
+["Mappings with defined keys (Map)".given]
+setup = "from collections import OrderedDict\nfrom strictyaml import Map, Int, load, as_document\nfrom collections import OrderedDict\nfrom ensure import Ensure\n\nschema = Map({\"a\": Int(), \"b\": Int(), \"c\": Int()})\n\nschema_2 = Map({u\"â\": Int(), \"b\": Int(), \"c\": Int()})\n"
+yaml_snippet = "â: 1\nb: 2\nc: 3\n"
+
+["Mappings with defined keys (Map)".variations]
+
+["Mappings with defined keys (Map)".variations."one key mapping"]
+
+["Mappings with defined keys (Map)".variations."one key mapping".given]
+yaml_snippet = "x: 1"
+
+[["Mappings with defined keys (Map)".variations."one key mapping".steps]]
+Run = "Ensure(load(yaml_snippet, Map({\"x\": Int()})).data).equals(OrderedDict([('x', 1)]))\n"
+
+["Mappings with defined keys (Map)".variations."key value"]
+
+[["Mappings with defined keys (Map)".variations."key value".steps]]
+Run = "Ensure(load(yaml_snippet, schema_2)[u'â']).equals(1)\n"
+
+["Mappings with defined keys (Map)".variations."get item key not found"]
+
+[["Mappings with defined keys (Map)".variations."get item key not found".steps]]
+
+["Mappings with defined keys (Map)".variations."get item key not found".steps.Run]
+code = "load(yaml_snippet, schema_2)['keynotfound']"
+
+["Mappings with defined keys (Map)".variations."get item key not found".steps.Run.raises]
+message = "'keynotfound'"
+
+["Mappings with defined keys (Map)".variations."cannot use .text"]
+
+[["Mappings with defined keys (Map)".variations."cannot use .text".steps]]
+
+["Mappings with defined keys (Map)".variations."cannot use .text".steps.Run]
+code = "load(yaml_snippet, schema_2).text"
+
+["Mappings with defined keys (Map)".variations."cannot use .text".steps.Run.raises]
+
+["Mappings with defined keys (Map)".variations."cannot use .text".steps.Run.raises.type]
+"in python 3" = "builtins.TypeError"
+"in python 2" = "exceptions.TypeError"
+
+["Mappings with defined keys (Map)".variations."cannot use .text".steps.Run.raises.message]
+"in python 3" = "YAML(OrderedDict([('â', 1), ('b', 2), ('c', 3)])) is a mapping, has no text value."
+"in python 2" = "YAML(OrderedDict([(u'\\xe2', 1), ('b', 2), ('c', 3)])) is a mapping, has no text value."
+
+["Mappings with defined keys (Map)".variations."parse snippet where key is not found in schema"]
+
+["Mappings with defined keys (Map)".variations."parse snippet where key is not found in schema".given]
+yaml_snippet = "a: 1\nb: 2\nâ: 3 \n"
+
+[["Mappings with defined keys (Map)".variations."parse snippet where key is not found in schema".steps]]
+
+["Mappings with defined keys (Map)".variations."parse snippet where key is not found in schema".steps.Run]
+code = "load(yaml_snippet, schema)"
+
+["Mappings with defined keys (Map)".variations."parse snippet where key is not found in schema".steps.Run.raises]
+type = "strictyaml.exceptions.YAMLValidationError"
+message = "while parsing a mapping\nunexpected key not in schema 'â'\n  in \"<unicode string>\", line 3, column 1:\n    \"\\xE2\": '3'\n    ^ (line: 3)"
+
+["Mappings with defined keys (Map)".variations."sequence not expected when parsing"]
+
+["Mappings with defined keys (Map)".variations."sequence not expected when parsing".given]
+yaml_snippet = "- 1\n- 2\n- 3 \n"
+
+[["Mappings with defined keys (Map)".variations."sequence not expected when parsing".steps]]
+
+["Mappings with defined keys (Map)".variations."sequence not expected when parsing".steps.Run]
+code = "load(yaml_snippet, schema)"
+
+["Mappings with defined keys (Map)".variations."sequence not expected when parsing".steps.Run.raises]
+type = "strictyaml.exceptions.YAMLValidationError"
+message = "when expecting a mapping\n  in \"<unicode string>\", line 1, column 1:\n    - '1'\n     ^ (line: 1)\nfound a sequence\n  in \"<unicode string>\", line 3, column 1:\n    - '3'\n    ^ (line: 3)"
+
+["Mappings with defined keys (Map)".variations."List not expected when serializing"]
+
+[["Mappings with defined keys (Map)".variations."List not expected when serializing".steps]]
+
+["Mappings with defined keys (Map)".variations."List not expected when serializing".steps.Run]
+code = "as_document([1, 2, 3], schema)"
+
+["Mappings with defined keys (Map)".variations."List not expected when serializing".steps.Run.raises]
+type = "strictyaml.exceptions.YAMLSerializationError"
+message = "Expected a dict, found '[1, 2, 3]'"
+
+["Mappings with defined keys (Map)".variations."Empty dict not valid when serializing"]
+
+[["Mappings with defined keys (Map)".variations."Empty dict not valid when serializing".steps]]
+
+["Mappings with defined keys (Map)".variations."Empty dict not valid when serializing".steps.Run]
+code = "as_document({}, schema)"
+
+["Mappings with defined keys (Map)".variations."Empty dict not valid when serializing".steps.Run.raises]
+type = "strictyaml.exceptions.YAMLSerializationError"
+message = "Expected a non-empty dict, found an empty dict.\nUse EmptyDict validator to serialize empty dicts."
+
+["Mappings with defined keys (Map)".variations."Unexpected key"]
+
+["Mappings with defined keys (Map)".variations."Unexpected key".given]
+yaml_snippet = "a: 1\nb: 2\nc: 3\nd: 4\n"
+
+[["Mappings with defined keys (Map)".variations."Unexpected key".steps]]
+
+["Mappings with defined keys (Map)".variations."Unexpected key".steps.Run]
+code = "load(yaml_snippet, schema)"
+
+["Mappings with defined keys (Map)".variations."Unexpected key".steps.Run.raises]
+type = "strictyaml.exceptions.YAMLValidationError"
+message = "while parsing a mapping\nunexpected key not in schema 'd'\n  in \"<unicode string>\", line 4, column 1:\n    d: '4'\n    ^ (line: 4)"
+
+["Mappings with defined keys (Map)".variations."required key not found"]
+
+["Mappings with defined keys (Map)".variations."required key not found".given]
+yaml_snippet = "a: 1\n"
+
+[["Mappings with defined keys (Map)".variations."required key not found".steps]]
+
+["Mappings with defined keys (Map)".variations."required key not found".steps.Run]
+code = "load(yaml_snippet, schema)"
+
+["Mappings with defined keys (Map)".variations."required key not found".steps.Run.raises]
+type = "strictyaml.exceptions.YAMLValidationError"
+message = "while parsing a mapping\nrequired key(s) 'b', 'c' not found\n  in \"<unicode string>\", line 1, column 1:\n    a: '1'\n     ^ (line: 1)"
+
+["Mappings with defined keys (Map)".variations.iterator]
+
+["Mappings with defined keys (Map)".variations.iterator.given]
+yaml_snippet = "a: 1\nb: 2\nc: 3\n"
+
+[["Mappings with defined keys (Map)".variations.iterator.steps]]
+Run = "assert [item for item in load(yaml_snippet, schema)] == [\"a\", \"b\", \"c\"]\n"
+
+["Mappings with defined keys (Map)".variations.serialize]
+
+[["Mappings with defined keys (Map)".variations.serialize.steps]]
+Run = "assert as_document(OrderedDict([(u\"â\", 1), (\"b\", 2), (\"c\", 3)]), schema_2).as_yaml() == yaml_snippet\n"

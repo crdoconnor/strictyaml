@@ -159,9 +159,8 @@ Mappings with defined keys (Map):
           b: 2
           c: 3
       steps:
-      - Run:
-          code: |
-            assert [item for item in load(yaml_snippet, schema)] == ["a", "b", "c"]
+      - Run: |
+          assert [item for item in load(yaml_snippet, schema)] == ["a", "b", "c"]
 
     serialize:
       steps:
