@@ -3,13 +3,15 @@ title: What is wrong with TOML?
 ---
 
 [TOML](https://github.com/toml-lang/toml) is a configuration file format which was
-designed as an improved version of [INI](../ini). In many ways it's analogous to this
-project - [StrictYAML](https://github.com/crdoconnor/strictyaml) an attempt to improve
-YAML. They are both one of at least [13 potential, often confusing choices](../) for
+designed as a way to fix [INI](../ini). It's analogous to this project -
+[StrictYAML](https://github.com/crdoconnor/strictyaml), an attempt
+to [fix YAML](../../features-removed).
+
+They are both one of at least [13 potential, often confusing choices](../) for
 parsing and serializing configuration files.
 
 TOML isn't the worst choice for configuration files if you use it infrequently
-on small and simple files but as you scale up its usage, its warts start to appear.
+on small and simple files but as you scale up its usage, its many warts start to appear.
 
 Martin Vejnár, the author of PyTOML
 [argued exactly this](https://github.com/avakar/pytoml/issues/15#issuecomment-217739462).
@@ -38,17 +40,18 @@ So what specifically *is* wrong with TOML when you scale it up?
 
 In [this example of a StrictYAML story](https://github.com/crdoconnor/strictyaml/blob/master/hitch/story/map.story)
 and [its equivalent serialized TOML](https://github.com/crdoconnor/strictyaml/blob/master/hitch/story/map.toml)
-the latter ends up [spending **50% more**](https://www.goodreads.com/quotes/775257-my-point-today-is-that-if-we-wish-to-count) in character terms to represent the exact same data.
+the latter ends up [spending](https://www.goodreads.com/quotes/775257-my-point-today-is-that-if-we-wish-to-count) 
+**50% more** characters to represent the exact same data.
 
-This is largely due to the decision to have the full name of every key being associated
-with every value, but is also partly due to the large numbers of syntactic cruft -
+This is largely due to the design decision to have the full name of every key being
+associated with every value, but is also partly due to the large numbers of syntactic cruft -
 quotation marks and square brackets dominate whereas in the YAML example they are
-absent.
+unnecessary.
 
-Shortening program length, all other things being equal,
+Shortening program lengths, all other things being equal,
 [reduces the number of bugs significantly](https://blog.codinghorror.com/diseconomies-of-scale-and-lines-of-code/)
 because maintenance becomes easier and deriving intent from the code becomes clearer.
-What goes for turing complete code also applies to "configuration" code.
+What goes for turing complete code also applies to configuration code.
 
 
 ## 1. TOML's hierarchies are difficult to infer from syntax alone
@@ -81,7 +84,7 @@ considered a good idea - usually for [the reaasons argued in this stack exchange
 
 3. Having symbols delimiting blocks and indentation violates the DRY principle.
 
-4. It does away with the typical religious C debate of "where to put the curly braces" (TOML is not yet popular enough to inspire religious wars over indentation yet).
+4. It does away with the typical religious C debate of "where to put the curly braces" (although TOML is not yet popular enough to inspire such religious wars over indentation... yet).
 
 
 ## 2. Overcomplication: Like YAML, TOML has too many features
