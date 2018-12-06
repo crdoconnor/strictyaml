@@ -8,9 +8,8 @@ improved version of YAML. They are both one of at least
 [13 potential, often confusing choices](../) for parsing and serializing
 configuration files.
 
-To be clear, I am against the use of TOML but I think that it isn't the worst choice
-provided you use it infrequently, for relatively small and non-complex configuration
-files.
+TOML isn't the worst choice for configuration files if you use it infrequently
+on small, simple files but as you scale up its usage, real problems start to appear.
 
 Martin Vejnár, the author of PyTOML
 [argued exactly this](https://github.com/avakar/pytoml/issues/15#issuecomment-217739462)
@@ -26,16 +25,27 @@ Ultimately, despite this PyPA still went ahead and used TOML for PEP-518, albeit
 with a different parser.
 
 I don't believe this to be an awful decision since pyproject.toml *is* fairly trivial
-in its complexity and there's only one per project.
+and there's only one per project.
 
-StrictYAML was designed to be a language to write
-[readable tests with](../../../hitchstory), which requires all three of the same basic
-data types (mapping, list and strings) but which depicts more complex hierarchies
+StrictYAML was designed to be a language to write, among other things,
+[readable 'story' tests](../../../hitchstory), which require the same basic
+data types (mapping, list and strings) but you need a *few* more than one
+per project and they are generally depict more complex hierarchies.
 
 So what specifically is wrong with TOML when you scale it up?
 
+## 1. It's very verbose and very syntactically noisy
 
-## 1. Human readability: TOML's hierarchy is difficult to infer from syntax alone
+In [this example of a StrictYAML story](https://github.com/crdoconnor/strictyaml/blob/master/hitch/story/map.story)
+and [its equivalent TOML](https://github.com/crdoconnor/strictyaml/blob/master/hitch/story/map.toml)
+the latter, if you count the characters, ends up being 50% longer.
+
+This is largely due to the full name of every key being associated with every value, but
+is also partly due to the large numbers of syntactic cruft - quotation marks and square
+brackets.
+
+
+## 1. TOML's hierarchy is difficult to infer from syntax alone
 
 Mapping hierarchy in TOML is determined by dots. This is simple enough for
 parsers to read and understand but this alone makes it difficult to perceive
@@ -93,7 +103,7 @@ developers are encouraged to carefully consider their own need create their own
 date parser/serializer using different tools if it doesn't fit their needs.
 
 
-## 3. Human readability: TOML has noisy syntax
+## 3. Syntax typing
 
 Like most other markup languages TOML has [syntax typing](../../why/syntax-typing-bad) -
 the *writer* of the markup decides if, for example, something should be parsed as a number
@@ -103,6 +113,9 @@ or a string:
 flt2 = 3.1415
 string = "hello"
 ```
+
+Programmers will feel at home maintaining this, but non programmers tend to find the
+difference between "1.5" and 1.5 needlessly confusing.
 
 StrictYAML does not require quotes around any value to infer a data type because the
 schema is assumed to be the single source of truth for type information:
