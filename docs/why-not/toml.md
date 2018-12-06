@@ -15,7 +15,7 @@ Martin Vejnár, the author of PyTOML
 [argued exactly this](https://github.com/avakar/pytoml/issues/15#issuecomment-217739462).
 He initially built a TOML parser out of enthusiasm for this new format but later abandoned
 it. When asked if he would like to see his library used as a dependency for pip as
-part of [PEP-518](https://www.python.org/dev/peps/pep-0518/), he had this to say:
+part of [PEP-518](https://www.python.org/dev/peps/pep-0518/), he explained why:
 
 >TOML is a bad file format. **It looks good at first glance**, and for really really
 >trivial things it is probably good. But once I started using it and the
@@ -26,7 +26,7 @@ with a different parser.
 
 I don't believe this to be an awful decision since pyproject.toml *is* fairly trivial,
 there's only one per project and they had some other relatively unique requirements
-which it fulfilled.
+unrelated to the quality of the language itself.
 
 StrictYAML, by contrast, was designed to be a language to write
 [readable 'story' tests](../../../hitchstory). These require the same basic
@@ -54,9 +54,8 @@ Mapping hierarchy in TOML is determined by dots. This is simple enough for
 parsers to read and understand but this alone makes it difficult to perceive
 the relationships between data.
 
-This has been recognized by many TOML users who have adopted a method that
-will be quite familiar to a lot of programmers - [indentation](https://github.com/leereilly/csi/blob/567e5b55f766847c9dcc7de482c0fd241fa7377a/lib/data/master.toml) that the parser
-[ignores](https://github.com/CzarSimon/simonlindgren.info/blob/a391a6345b16f2d8093f6d4c5f422399b4b901eb/simon-cv/config.toml):
+This has been recognized by [many](https://github.com/leereilly/csi/blob/567e5b55f766847c9dcc7de482c0fd241fa7377a/lib/data/master.toml) TOML [writers](https://github.com/CzarSimon/simonlindgren.info/blob/a391a6345b16f2d8093f6d4c5f422399b4b901eb/simon-cv/config.toml) who have adopted a method that
+will be quite familiar to a lot of programmers - indentation that the parser ignores:
 
 [![Non-meaningful indentation](../toml-indentation-1.png)](https://github.com/gazreese/gazreese.com/blob/c4c3fa7d576a4c316f11f0f7a652ca11ab23586d/Hugo/config.toml)
 
@@ -70,37 +69,40 @@ Python, has long been a stand out exception in how it was designed -
 syntactic markers are *not* necessary to infer program structure because indentation *is* the marker
 that determines program structure.
 
-This argument over the merits of meaningful indentation in python has been going on for decades, and not everybody agrees, but the various points are argued pretty well in this [stack exchange question asking why python did it](https://softwareengineering.stackexchange.com/questions/313034/why-should-a-language-prefer-indentation-over-explicit-markers-for-blocks). In summary:
+This argument over the merits of meaningful indentation in python has been going on for decades, and [not everybody agrees with this](https://www.quora.com/Do-you-think-that-indentation-in-Python-is-annoying), but it's generally
+considered a good idea - usually for [the reaasons argued in this stack exchange question](https://softwareengineering.stackexchange.com/questions/313034/why-should-a-language-prefer-indentation-over-explicit-markers-for-blocks):
 
-1. Python inherited the significant indentation from the (now obsolete) predecessor language ABC. ABC is one of the very few programming languages which have used usability testing to direct the design. So while discussions about syntax usually comes down to subjective opinions and personal preferences, the choice of significant indentation actually have a sounder foundation.
+1. Python inherited the significant indentation from the (now obsolete) predecessor language ABC. ABC is one of the very few programming languages which have used usability testing to direct the design. So while discussions about syntax usually comes down to subjective opinions and personal preferences, the choice of significant indentation actually has a sounder foundation.
 
 2. Guido van Rossum came across subtle bugs where the indentation disagreed with the syntactic grouping. Meaningful indentation fixed this class of bug. Since there are no begin/end brackets there cannot be a disagreement between grouping perceived by the parser and the human reader.
 
 3. Having symbols delimiting blocks and indentation violates the DRY principle.
 
-4. It does away with the typical religious C debate of "where to put the curly braces".
+4. It does away with the typical religious C debate of "where to put the curly braces" (TOML is not yet popular enough to inspire religious wars over indentation yet).
 
 
 ## 2. Overcomplication: Like YAML, TOML has too many features
 
-Somewhat ironically, TOML's creator quite rightly criticizes YAML for not aiming for simplicity
-and then unfortunately falls into the same trap itself - albeit not quite as deeply.
+Somewhat ironically, TOML's creator quite rightly
+[criticizes YAML for not aiming for simplicity](https://github.com/toml-lang/toml#comparison-with-other-formats)
+and then falls into the same trap itself - albeit not quite as deeply.
 
 One way it does this is by trying to include date and time parsing which imports
-*all* of the inherent complications associated with dates and times. Dates and times,
-as many more experienced programmers are probably aware is an unexpectedly deep rabbit hole
-of [complications and quirky, unexpected, bug inducing edge cases](https://infiniteundo.com/post/25326999628/falsehoods-programmers-believe-about-time). TOML experiences [many](https://github.com/uiri/toml/issues/55) [edge case](https://github.com/uiri/toml/issues/196) [bugs](https://github.com/uiri/toml/issues/202) because of this.
+*all* of the inherent complications associated with dates and times.
 
-The best way to deal with complications like these is to decouple, isolate the complexity and *delegate* it to a
-[specialist tool that is good at handling that specific problem](https://en.wikipedia.org/wiki/Unix_philosophy).
+Dates and times, as many more experienced programmers are probably aware is an unexpectedly deep rabbit hole
+of [complications and quirky, unexpected, headache and bug inducing edge cases](https://infiniteundo.com/post/25326999628/falsehoods-programmers-believe-about-time). TOML experiences [many](https://github.com/uiri/toml/issues/55) [of these](https://github.com/uiri/toml/issues/196) [edge cases](https://github.com/uiri/toml/issues/202) because of this.
 
-StrictYAML takes JSON's (arguably successful) KISS approach - that is, avoid the problem and let a tool
-that is known to be good at it deal with it.
+The best way to deal with [essential complexity](https://simplicable.com/new/accidental-complexity-vs-essential-complexity) like these is to decouple, isolate the complexity and *delegate* it to a
+[specialist tool that is good at handling that specific problem](https://en.wikipedia.org/wiki/Unix_philosophy)
+which you can swap out later if required.
+
+This the approach that JSON took (arguably a good decision) and it's the approach that StrictYAML takes too.
 
 StrictYAML the library (as opposed to the format) has a validator that uses
 [python's most popular date/time parsing library](https://dateutil.readthedocs.io/en/stable/) although
-developers are encouraged to carefully consider their own need create their own
-date parser/serializer using different tools if it doesn't fit their needs.
+developers are not obliged or even necessarily encouraged to use this. StrictYAML parses everything as a
+string by default and whatever validation occurs later is considered to be outside of its purvue.
 
 
 ## 3. Syntax typing
