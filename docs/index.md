@@ -57,7 +57,7 @@ less the same purpose as StrictYAML. I've tried to make it the best one.
 Below is a series of documented justifications:
 
 
-{% for dirfile in subdir("why-not").is_not_dir() - subdir("why-not").named("index.md") -%} 
+{% for dirfile in subdir("why-not").ext("md") - subdir("why-not").named("index.md") -%} 
 - [{{ title(dirfile) }}](why-not/{{ dirfile.namebase }})
 {% endfor %}
 
@@ -66,25 +66,25 @@ Below is a series of documented justifications:
 
 How to:
 
-{% for dirfile in subdir("using/alpha/howto/").is_not_dir() - subdir("using/alpha/howto/").named("index.md") -%}
+{% for dirfile in subdir("using/alpha/howto/").ext("md") - subdir("using/alpha/howto/").named("index.md") -%}
 - [{{ title(dirfile) }}](using/alpha/howto/{{ dirfile.namebase }})
 {% endfor %}
 
 Compound validators:
 
-{% for dirfile in subdir("using/alpha/compound/").is_not_dir() - subdir("using/alpha/compound/").named("index.md") -%}
+{% for dirfile in subdir("using/alpha/compound/").ext("md") - subdir("using/alpha/compound/").named("index.md") -%}
 - [{{ title(dirfile) }}](using/alpha/compound/{{ dirfile.namebase }})
 {% endfor %}
 
 Scalar validators:
 
-{% for dirfile in subdir("using/alpha/scalar/").is_not_dir() - subdir("using/alpha/scalar/").named("index.md") -%}
+{% for dirfile in subdir("using/alpha/scalar/").ext("md") - subdir("using/alpha/scalar/").named("index.md") -%}
 - [{{ title(dirfile) }}](using/alpha/scalar/{{ dirfile.namebase }})
 {% endfor %}
 
 Restrictions:
 
-{% for dirfile in subdir("using/alpha/restrictions/").is_not_dir() - subdir("using/alpha/restrictions/").named("index.md") -%}
+{% for dirfile in subdir("using/alpha/restrictions/").ext("md") - subdir("using/alpha/restrictions/").named("index.md") -%}
 - [{{ title(dirfile) }}](using/alpha/restrictions/{{ dirfile.namebase }})
 {% endfor %}
 
@@ -93,7 +93,7 @@ Restrictions:
 There are some design decisions in StrictYAML which are controversial
 and/or not obvious. Those are documented here:
 
-{% for dirfile in subdir("why").is_not_dir() - subdir("why").named("index.md") -%}
+{% for dirfile in subdir("why").ext("md") - subdir("why").named("index.md") -%}
 - [{{ title(dirfile) }}](why/{{ dirfile.namebase }})
 {% endfor %}
 

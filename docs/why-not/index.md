@@ -6,7 +6,7 @@ There are a number of formats and approaches that can achieve more or
 less the same purpose as StrictYAML. Below is a series of comparisons
 with some of the more famous ones:
 
-{% for dirfile in thisdir.is_not_dir() - thisdir.named("index.md") -%}
+{% for dirfile in thisdir.ext("md") - thisdir.named("index.md") -%}
 - [{{ title(dirfile) }}]({{ dirfile.namebase }})
 {% endfor %}
 
