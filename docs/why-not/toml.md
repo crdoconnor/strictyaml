@@ -12,57 +12,57 @@ TOML isn't the worst choice for configuration files if you use it infrequently
 on small, simple files but as you scale up its usage, real problems start to appear.
 
 Martin Vejnár, the author of PyTOML
-[argued exactly this](https://github.com/avakar/pytoml/issues/15#issuecomment-217739462)
-initially built a TOML parser out of enthusiasm for this new format but later abandoned
+[argued exactly this](https://github.com/avakar/pytoml/issues/15#issuecomment-217739462).
+He initially built a TOML parser out of enthusiasm for this new format but later abandoned
 it. When asked if he would like to see his library used as a dependency for pip as
-part of [PEP-518](https://www.python.org/dev/peps/pep-0518/), he explained himself:
+part of [PEP-518](https://www.python.org/dev/peps/pep-0518/), he had this to say:
 
 >TOML is a bad file format. **It looks good at first glance**, and for really really
 >trivial things it is probably good. But once I started using it and the
 >configuration schema became more complex, I found the syntax ugly and hard to read.
 
-Ultimately, despite this PyPA still went ahead and used TOML for PEP-518, albeit
+Despite this, PyPA still went ahead and used TOML for PEP-518, albeit
 with a different parser.
 
-I don't believe this to be an awful decision since pyproject.toml *is* fairly trivial
-and there's only one per project.
+I don't believe this to be an awful decision since pyproject.toml *is* fairly trivial,
+there's only one per project and they had some other relatively unique requirements
+which it fulfilled.
 
-StrictYAML was designed to be a language to write, among other things,
-[readable 'story' tests](../../../hitchstory), which require the same basic
-data types (mapping, list and strings) but you need a *few* more than one
-per project and they are generally depict more complex hierarchies.
+StrictYAML, by contrast, was designed to be a language to write
+[readable 'story' tests](../../../hitchstory). These require the same basic
+data types (mapping, list and strings) but you need more files and more
+complex hierarchies within those files than you do when you are just
+specifying project dependencies.
 
-So what specifically is wrong with TOML when you scale it up?
+So what specifically *is* wrong with TOML when you scale it up?
 
 ## 1. It's very verbose and very syntactically noisy
 
 In [this example of a StrictYAML story](https://github.com/crdoconnor/strictyaml/blob/master/hitch/story/map.story)
-and [its equivalent TOML](https://github.com/crdoconnor/strictyaml/blob/master/hitch/story/map.toml)
-the latter, if you count the characters, ends up being 50% longer.
+and [its equivalent serialized TOML](https://github.com/crdoconnor/strictyaml/blob/master/hitch/story/map.toml)
+the latter ends up being 50% longer by character count.
 
-This is largely due to the full name of every key being associated with every value, but
-is also partly due to the large numbers of syntactic cruft - quotation marks and square
-brackets.
+This is largely due to the decision to have the full name of every key being associated
+with every value, but is also partly due to the large numbers of syntactic cruft -
+quotation marks and square brackets dominate whereas in the YAML example they are
+absent.
 
 
-## 1. TOML's hierarchy is difficult to infer from syntax alone
+## 1. TOML's hierarchies are difficult to infer from syntax alone
 
 Mapping hierarchy in TOML is determined by dots. This is simple enough for
 parsers to read and understand but this alone makes it difficult to perceive
 the relationships between data.
 
 This has been recognized by many TOML users who have adopted a method that
-will be quite familiar to a lot of programmers:
+will be quite familiar to a lot of programmers - [indentation](https://github.com/leereilly/csi/blob/567e5b55f766847c9dcc7de482c0fd241fa7377a/lib/data/master.toml) that the parser
+[ignores](https://github.com/CzarSimon/simonlindgren.info/blob/a391a6345b16f2d8093f6d4c5f422399b4b901eb/simon-cv/config.toml):
 
 [![Non-meaningful indentation](../toml-indentation-1.png)](https://github.com/gazreese/gazreese.com/blob/c4c3fa7d576a4c316f11f0f7a652ca11ab23586d/Hugo/config.toml)
 
-Indentation that is meaningful to humans but not parsers (
-[Other](https://github.com/leereilly/csi/blob/567e5b55f766847c9dcc7de482c0fd241fa7377a/lib/data/master.toml)
-[examples](https://github.com/CzarSimon/simonlindgren.info/blob/a391a6345b16f2d8093f6d4c5f422399b4b901eb/simon-cv/config.toml)).
-
-This parallels the way indentation is added in *lots* of programming languages with syntactic markers
-- e.g.  JSON, Javascript or Java are all commonly rendered with non-parsed indentation to make it
-easier for humans to understand.
+This parallels the way indentation is added in *lots* of programming languages that have syntactic markers
+like brackets - e.g.  JSON, Javascript or Java are all commonly rendered with non-parsed indentation to make it
+easier for humans to understand them.
 
 But not python.
 
@@ -70,7 +70,7 @@ Python, has long been a stand out exception in how it was designed -
 syntactic markers are *not* necessary to infer program structure because indentation *is* the marker
 that determines program structure.
 
-This argument over the merits of meaningful indentation in python has been going on for decades, but the various points are argued pretty well in this [stack exchange question asking why python did it](https://softwareengineering.stackexchange.com/questions/313034/why-should-a-language-prefer-indentation-over-explicit-markers-for-blocks). In summary:
+This argument over the merits of meaningful indentation in python has been going on for decades, and not everybody agrees, but the various points are argued pretty well in this [stack exchange question asking why python did it](https://softwareengineering.stackexchange.com/questions/313034/why-should-a-language-prefer-indentation-over-explicit-markers-for-blocks). In summary:
 
 1. Python inherited the significant indentation from the (now obsolete) predecessor language ABC. ABC is one of the very few programming languages which have used usability testing to direct the design. So while discussions about syntax usually comes down to subjective opinions and personal preferences, the choice of significant indentation actually have a sounder foundation.
 
@@ -81,7 +81,7 @@ This argument over the merits of meaningful indentation in python has been going
 4. It does away with the typical religious C debate of "where to put the curly braces".
 
 
-## 2. Overcomplication: Like YAML it has too many features
+## 2. Overcomplication: Like YAML, TOML has too many features
 
 Somewhat ironically, TOML's creator quite rightly criticizes YAML for not aiming for simplicity
 and then unfortunately falls into the same trap itself - albeit not quite as deeply.
@@ -89,13 +89,13 @@ and then unfortunately falls into the same trap itself - albeit not quite as dee
 One way it does this is by trying to include date and time parsing which imports
 *all* of the inherent complications associated with dates and times. Dates and times,
 as many more experienced programmers are probably aware is an unexpectedly deep rabbit hole
-of [complications and quirky, unexpected, bug inducing edge cases](https://infiniteundo.com/post/25326999628/falsehoods-programmers-believe-about-time).
+of [complications and quirky, unexpected, bug inducing edge cases](https://infiniteundo.com/post/25326999628/falsehoods-programmers-believe-about-time). TOML experiences [many](https://github.com/uiri/toml/issues/55) [edge case](https://github.com/uiri/toml/issues/196) [bugs](https://github.com/uiri/toml/issues/202) because of this.
 
 The best way to deal with complications like these is to decouple, isolate the complexity and *delegate* it to a
 [specialist tool that is good at handling that specific problem](https://en.wikipedia.org/wiki/Unix_philosophy).
 
-StrictYAML takes JSON's (arguably successful) KISS approach - that is, for complex data types parsed from and
-serialized to strings, parsing and serialization of strings should be delegated to another tool.
+StrictYAML takes JSON's (arguably successful) KISS approach - that is, avoid the problem and let a tool
+that is known to be good at it deal with it.
 
 StrictYAML the library (as opposed to the format) has a validator that uses
 [python's most popular date/time parsing library](https://dateutil.readthedocs.io/en/stable/) although
