@@ -2,41 +2,57 @@
 title: What is wrong with TOML?
 ---
 
-[TOML](https://github.com/toml-lang/toml) is a configuration file format which was
-designed as a way to fix [INI](../ini). It's analogous to this project -
-[StrictYAML](https://github.com/crdoconnor/strictyaml), an attempt
-to [fix YAML](../../features-removed).
+```yaml
+# This is a TOML document.
 
-They are both one of at least [13 potential, often confusing choices](../) for
-parsing and serializing configuration files.
+title = "TOML Example"
 
-TOML isn't the worst choice for configuration files if you use it infrequently
-on small and simple files but as you scale up its usage, its many warts start to appear.
+[owner]
+name = "Tom Preston-Werner"
+dob = 1979-05-27T07:32:00-08:00 # First class dates
+```
+
+[TOML](https://github.com/toml-lang/toml) is a configuration designed as a sort
+of "improved" [INI file](../ini). It's analogous to this project -
+[StrictYAML](https://github.com/crdoconnor/strictyaml), a similar attempt
+to [fix YAML's flaws](../../features-removed):
+
+```yaml
+# All about the character
+name: Ford Prefect
+age: 42
+possessions:
+- Towel
+```
+
+I'm not going to argue here that TOML is the *worst* file format out there -
+if you use it infrequently on small and simple files it does its job fine.
+
+It's a warning though: as you scale up its usage, many bad warts start to appear.
 
 Martin Vejnár, the author of PyTOML
 [argued exactly this](https://github.com/avakar/pytoml/issues/15#issuecomment-217739462).
 He initially built a TOML parser out of enthusiasm for this new format but later abandoned
 it. When asked if he would like to see his library used as a dependency for pip as
-part of [PEP-518](https://www.python.org/dev/peps/pep-0518/), he explained why he abandoned
-the project:
+part of [PEP-518](https://www.python.org/dev/peps/pep-0518/), he said no - and
+explained why he abandoned the project:
 
 >TOML is a bad file format. **It looks good at first glance**, and for really really
 >trivial things it is probably good. But once I started using it and the
 >configuration schema became more complex, I found the syntax ugly and hard to read.
 
 Despite this, PyPA still went ahead and used TOML for PEP-518. Fortunately
-pyproject.toml *is* fairly trivial and appears once per project
-so its issues aren't such a problem.
+pyproject.toml *is* fairly trivial and appears just once per project
+so the problems he alludes to aren't that pronounced.
 
 StrictYAML, by contrast, was designed to be a language to write
-[readable 'story' tests](../../../hitchstory). These require the same basic
-data types (mapping, list and strings) but at a higher scale - you need more
-files and more complex hierarchies within those files than you do
-when you are just specifying project dependencies.
+[readable 'story' tests](../../../hitchstory) where there will be *many* files
+per project with more complex hierarchies, a use case where TOML starts
+to really suck.
 
 So what specifically *is* wrong with TOML when you scale it up?
 
-## 1. It's very verbose and very syntactically noisy
+## 1. It's very verbose. It's not DRY. It's syntactically noisy.
 
 In [this example of a StrictYAML story](https://github.com/crdoconnor/strictyaml/blob/master/hitch/story/map.story)
 and [its equivalent serialized TOML](https://github.com/crdoconnor/strictyaml/blob/master/hitch/story/map.toml)
@@ -44,11 +60,13 @@ the latter ends up [spending](https://www.goodreads.com/quotes/775257-my-point-t
 **50% more** characters to represent the exact same data.
 
 This is largely due to the design decision to have the full name of every key being
-associated with every value, but is also partly due to the large numbers of syntactic cruft -
-quotation marks and square brackets dominate whereas in the YAML example they are
-unnecessary.
+associated with every value which is **not** [DRY](../../../code-quality/least-code).
 
-Shortening program lengths, all other things being equal,
+It is also partly due to the large numbers of syntactic cruft - quotation marks
+and square brackets dominate TOML documents whereas in the StrictYAML example they are
+absent.
+
+Shortening program lengths (and DRYing code), all other things being equal,
 [reduces the number of bugs significantly](https://blog.codinghorror.com/diseconomies-of-scale-and-lines-of-code/)
 because maintenance becomes easier and deriving intent from the code becomes clearer.
 What goes for turing complete code also applies to configuration code.
