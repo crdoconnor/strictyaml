@@ -2,37 +2,35 @@
 title: What is wrong with TOML?
 ---
 
-[TOML](https://github.com/toml-lang/toml) is an improved version of [INI](../ini) -
-analogous to this project - [StrictYAML](https://github.com/crdoconnor/strictyaml) is a
-improved version of YAML. They are both one of at least
-[13 potential, often confusing choices](../) for parsing and serializing
-configuration files.
+[TOML](https://github.com/toml-lang/toml) is a configuration file format which was
+designed as an improved version of [INI](../ini). In many ways it's analogous to this
+project - [StrictYAML](https://github.com/crdoconnor/strictyaml) an attempt to improve
+YAML. They are both one of at least [13 potential, often confusing choices](../) for
+parsing and serializing configuration files.
 
 TOML isn't the worst choice for configuration files if you use it infrequently
-on small, simple files but as you scale up its usage, real problems start to appear.
+on small and simple files but as you scale up its usage, its warts start to appear.
 
 Martin Vejnár, the author of PyTOML
 [argued exactly this](https://github.com/avakar/pytoml/issues/15#issuecomment-217739462).
 He initially built a TOML parser out of enthusiasm for this new format but later abandoned
 it. When asked if he would like to see his library used as a dependency for pip as
-part of [PEP-518](https://www.python.org/dev/peps/pep-0518/), he explained why:
+part of [PEP-518](https://www.python.org/dev/peps/pep-0518/), he explained why he abandoned
+the project:
 
 >TOML is a bad file format. **It looks good at first glance**, and for really really
 >trivial things it is probably good. But once I started using it and the
 >configuration schema became more complex, I found the syntax ugly and hard to read.
 
-Despite this, PyPA still went ahead and used TOML for PEP-518, albeit
-with a different parser.
-
-I don't believe this to be an awful decision since pyproject.toml *is* fairly trivial,
-there's only one per project and they had some other relatively unique requirements
-unrelated to the quality of the language itself.
+Despite this, PyPA still went ahead and used TOML for PEP-518. Fortunately
+pyproject.toml *is* fairly trivial and appears once per project
+so its issues aren't such a problem.
 
 StrictYAML, by contrast, was designed to be a language to write
 [readable 'story' tests](../../../hitchstory). These require the same basic
-data types (mapping, list and strings) but you need more files and more
-complex hierarchies within those files than you do when you are just
-specifying project dependencies.
+data types (mapping, list and strings) but at a higher scale - you need more
+files and more complex hierarchies within those files than you do
+when you are just specifying project dependencies.
 
 So what specifically *is* wrong with TOML when you scale it up?
 
@@ -40,12 +38,17 @@ So what specifically *is* wrong with TOML when you scale it up?
 
 In [this example of a StrictYAML story](https://github.com/crdoconnor/strictyaml/blob/master/hitch/story/map.story)
 and [its equivalent serialized TOML](https://github.com/crdoconnor/strictyaml/blob/master/hitch/story/map.toml)
-the latter ends up being 50% longer by character count.
+the latter ends up [spending **50% more**](https://www.goodreads.com/quotes/775257-my-point-today-is-that-if-we-wish-to-count) in character terms to represent the exact same data.
 
 This is largely due to the decision to have the full name of every key being associated
 with every value, but is also partly due to the large numbers of syntactic cruft -
 quotation marks and square brackets dominate whereas in the YAML example they are
 absent.
+
+Shortening program length, all other things being equal,
+[reduces the number of bugs significantly](https://blog.codinghorror.com/diseconomies-of-scale-and-lines-of-code/)
+because maintenance becomes easier and deriving intent from the code becomes clearer.
+What goes for turing complete code also applies to "configuration" code.
 
 
 ## 1. TOML's hierarchies are difficult to infer from syntax alone
