@@ -1,0 +1,62 @@
+json:
+  syntax to data ratio:
+  % length of JSON: 100
+  syntax typing: yes
+  well defined: yes
+  comments: no
+  hierarchical: yes
+  duplicate keys: no
+  multiline strings: no
+  meaningful whitespace: no
+  complex features: no
+
+strictyaml:
+  syntax to data ratio:
+  % length of JSON:
+  syntax typing: no
+  well defined: yes
+  comments: yes
+  syntactic noise ratio:
+  hierarchical: yes
+  duplicate keys: no
+  multiline strings: yes
+  meaningful whitespace: yes
+  complex features: no
+
+yaml:
+  syntax to data ratio:
+  % length of JSON:
+  syntax typing: yes
+  well defined: yes
+  comments: yes
+  hierarchical: yes
+  duplicate keys: yes
+  multiline strings: yes
+  meaningful whitespace: no
+  complex features: yes
+
+ini:
+  syntactic noise ratio:
+  % length of JSON:
+  syntax typing: no
+  well defined: no
+  comments: yes
+  hierarchical: no
+  duplicate keys: yes
+  multiline strings: no
+  meaningful whitespace: no
+  complex features: no
+
+toml:
+  syntax to data ratio:
+  % length of JSON:
+  syntax typing: no
+  well defined: no
+  comments: yes
+  hierarchical: yes
+  duplicate keys: no
+  multiline strings: yes
+  meaningful whitespace: no
+  complex features: yes
+
+json5:
