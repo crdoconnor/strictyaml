@@ -2,12 +2,11 @@
 title: The Norway Problem - why StrictYAML won't do implicit typing
 ---
 
-A while back I met an old coworker for a beer and he started
-telling me about this interesting internationalization bug he
-faced.
+A while back I met an old coworker and he started telling me about this
+interesting bug he faced:
 
-"So, we started internationalizing the website and I added a few
-more countries - France, Germany, etc. to the configuration file"
+"So, we started internationalizing the website by creating a config
+file. We added the UK, Ireland, France and Germany at first."
 
 ```yaml
 countries:
@@ -17,8 +16,8 @@ countries:
 - DE
 ```
 
-"This was fine for a while. Then eventually we got around to adding
-Norway..."
+"This was fine for a while. However, when we got around to adding
+Norway all hell broke loose..."
 
 ```yaml
 countries:
@@ -29,13 +28,11 @@ countries:
 - NO
 ```
 
-"and then, suddenly, everything broke..."
-
 The problem here is "implicit typing" - the YAML specification states that
-the parser should be 'smart' about the strings that are entered in to it and
-attempt to convert them into the relevant types for you.
+the parser should be clever about the strings that are entered in to it and
+attempt to interpret them and convert them into the relevant types for you.
 
-If you feed any of these in, for example, [pyyaml](http://pyyaml.org) or [Poyo](https://github.com/hackebrot/poyo):
+If you feed this configuration file into [pyyaml](http://pyyaml.org) or [Poyo](https://github.com/hackebrot/poyo):
 
 ```python
 >>> from pyyaml import load
@@ -43,10 +40,13 @@ If you feed any of these in, for example, [pyyaml](http://pyyaml.org) or [Poyo](
 {'countries': ['GB', 'IE', 'FR', 'DE', False]}
 ```
 
-Needless to say, feeding the boolean "False" to just about any other part
-of the program where "NO" was expected will break it, possibly catastrophically.
+Did you know it snows a *lot* in "False"?
 
-It can be "quick fixed" by using quotes:
+Feeding the boolean "False" to just about any other part
+of the program where the string "NO" of course would break it,
+catastrophically, and at the least convenient moment.
+
+It was "quick fixed" by using quotes - but it's kind of a hack:
 
 ```yaml
 countries:
@@ -57,8 +57,9 @@ countries:
 - 'NO'
 ```
 
-StrictYAML sidesteps this problem by only *ever* parsing to a string or a data
-type explicitly defined by the schema:
+StrictYAML sidesteps this problem by optimizing for "zero surprises" -
+only *ever* parsing to a string or a data type *explicitly* defined
+by the schema:
 
 ```python
 >>> from strictyaml import load
