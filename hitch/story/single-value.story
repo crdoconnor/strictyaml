@@ -49,3 +49,9 @@ Single value:
       - Run:
           code: |
             Ensure(load("null: null")).equals({"null": "null"})
+
+    #Single value with comment:
+      #steps:
+      #- Run:
+          #code: |
+            #Ensure(load("# ought not to be parsed\nstring")).equals("string")
