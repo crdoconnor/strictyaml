@@ -33,6 +33,7 @@ from strictyaml.compound import MapPattern
 from strictyaml.compound import Seq
 from strictyaml.compound import UniqueSeq
 from strictyaml.compound import FixedSeq
+from strictyaml.compound import AlternateMaps
 
 # Base exception from ruamel.yaml (all exceptions inherit from this)
 from ruamel.yaml import YAMLError

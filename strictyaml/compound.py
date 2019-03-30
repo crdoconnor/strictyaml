@@ -215,6 +215,16 @@ class Map(MapValidator):
         )
 
 
+class AlternateMaps(MapValidator):
+    def __init__(self, alternatives, key=None):
+        self._alternatives = alternatives
+        self._key = key
+
+    def validate(self, chunk):
+        items = chunk.expect_mapping()
+        # TODO : Finish
+
+
 class SeqValidator(Validator):
     def _should_be_list(self, data):
         if not isinstance(data, list):
