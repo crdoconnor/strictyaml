@@ -1,7 +1,7 @@
 from ruamel.yaml.comments import CommentedMap, CommentedSeq
 from strictyaml.exceptions import YAMLSerializationError, InvalidOptionalDefault
 from strictyaml.scalar import ScalarValidator, Str
-from strictyaml.validators import Validator
+from strictyaml.validators import Validator, MapValidator
 from strictyaml.yamllocation import YAMLChunk
 import sys
 
@@ -18,19 +18,6 @@ class Optional(object):
     def __repr__(self):
         # TODO: Add default
         return u'Optional("{0}")'.format(self.key)
-
-
-class MapValidator(Validator):
-    def _should_be_mapping(self, data):
-        if not isinstance(data, dict):
-            raise YAMLSerializationError("Expected a dict, found '{}'".format(data))
-        if len(data) == 0:
-            raise YAMLSerializationError(
-                (
-                    "Expected a non-empty dict, found an empty dict.\n"
-                    "Use EmptyDict validator to serialize empty dicts."
-                )
-            )
 
 
 class MapPattern(MapValidator):

@@ -54,6 +54,17 @@ Either/or schema validation of different, equally valid different kinds of YAML:
                   a: A
                    ^ (line: 1)
 
+    Invalid combinations of more than one map:
+      given:
+        yaml_snippet: 'a: x'
+      steps:
+      - Run:
+          code: |
+            load(yaml_snippet, Map({"a": Str()}) | Map({"b": Str()}))
+          raises:
+            type: strictyaml.exceptions.InvalidValidatorError
+            message: You tried to Or ('|') together 2 Map validators. Try using revalidation
+              instead.
     Change item after validated:
       given:
         yaml_snippet: 'a: yes'

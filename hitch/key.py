@@ -137,7 +137,9 @@ def docgen():
     """
     Build documentation.
     """
-    hitchpylibrarytoolkit.docgen(_storybook({}), DIR.project, DIR.key / "story", DIR.gen)
+    hitchpylibrarytoolkit.docgen(
+        _storybook({}), DIR.project, DIR.key / "story", DIR.gen
+    )
 
 
 @expected(dirtemplate.exceptions.DirTemplateException)

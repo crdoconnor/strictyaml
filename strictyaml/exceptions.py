@@ -12,6 +12,10 @@ class StrictYAMLError(MarkedYAMLError):
     pass
 
 
+class InvalidValidatorError(StrictYAMLError):
+    pass
+
+
 class CannotBuildDocumentFromInvalidData(StrictYAMLError):
     pass
 
