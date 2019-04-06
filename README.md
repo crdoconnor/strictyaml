@@ -183,7 +183,7 @@ Below is a series of documented justifications:
 
 
 - [Why not JSON for simple configuration files?](https://hitchdev.com/strictyaml/why-not/json)
-- [Why not use TOML?](https://hitchdev.com/strictyaml/why-not/toml)
+- [What is wrong with TOML?](https://hitchdev.com/strictyaml/why-not/toml)
 - [Why not use the YAML 2.0 standard? - we don't need a new standard!](https://hitchdev.com/strictyaml/why-not/ordinary-yaml)
 - [Why not use kwalify with standard YAML to validate my YAML?](https://hitchdev.com/strictyaml/why-not/pykwalify)
 - [Why not use python's schema library (or similar) for validation?](https://hitchdev.com/strictyaml/why-not/python-schema)
@@ -253,8 +253,8 @@ There are some design decisions in StrictYAML which are controversial
 and/or not obvious. Those are documented here:
 
 - [What is wrong with explicit tags?](https://hitchdev.com/strictyaml/why/explicit-tags-removed)
-- [What is wrong with explicit syntax typing in a readable configuration language?](https://hitchdev.com/strictyaml/why/syntax-typing-bad)
-- [The Norway Problem - why StrictYAML won't do implicit typing](https://hitchdev.com/strictyaml/why/implicit-typing-removed)
+- [What is syntax typing?](https://hitchdev.com/strictyaml/why/syntax-typing-bad)
+- [The Norway Problem - why StrictYAML refuses to do implicit typing and so should you](https://hitchdev.com/strictyaml/why/implicit-typing-removed)
 - [What is wrong with flow style YAML?](https://hitchdev.com/strictyaml/why/flow-style-removed)
 - [Why does StrictYAML only parse from strings and not files?](https://hitchdev.com/strictyaml/why/only-parse-strings-not-files)
 - [What is wrong with duplicate keys?](https://hitchdev.com/strictyaml/why/duplicate-keys-disallowed)

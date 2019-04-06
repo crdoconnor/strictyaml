@@ -6,6 +6,16 @@
 
 No relevant code changes.
 
+### 1.0.1
+
+* FEATURE : #51 - OrValidation with multiple Map validators does not work effectively - raise exception if user tries to use more than one.
+
+
+### 1.0.0
+
+
+No relevant code changes.
+
 ### 0.15.4
 
 * BUGFIX : If revalidating a subschema with an Or validator and then changing the contents of the parsed data, a cryptic error was raised.
