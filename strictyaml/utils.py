@@ -1,4 +1,5 @@
 from ruamel.yaml.comments import CommentedSeq, CommentedMap
+from collections import Iterable
 from strictyaml import exceptions
 from re import compile
 import decimal
@@ -7,6 +8,21 @@ import sys
 
 if sys.version_info[0] == 3:
     unicode = str
+
+
+def flatten(items):
+    """
+    Yield items from any nested iterable.
+
+    >>> list(flatten([[1, 2, 3], [[4, 5], 6, 7]]))
+    [1, 2, 3, 4, 5, 6, 7]
+    """
+    for x in items:
+        if isinstance(x, Iterable) and not isinstance(x, (str, bytes)):
+            for sub_x in flatten(x):
+                yield sub_x
+        else:
+            yield x
 
 
 def has_number_type(value):

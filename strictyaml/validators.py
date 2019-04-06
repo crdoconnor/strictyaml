@@ -1,6 +1,7 @@
 from strictyaml.exceptions import YAMLValidationError, YAMLSerializationError
 from strictyaml.exceptions import InvalidValidatorError
 from strictyaml.representation import YAML
+from strictyaml import utils
 import sys
 
 
@@ -38,6 +39,9 @@ class OrValidator(Validator):
         assert isinstance(validator_a, Validator), "validator_a must be a Validator"
         assert isinstance(validator_b, Validator), "validator_b must be a Validator"
 
+        self._validator_a = validator_a
+        self._validator_b = validator_b
+
         def unpacked(validator):
             if isinstance(validator, OrValidator):
                 return [
@@ -47,24 +51,10 @@ class OrValidator(Validator):
             else:
                 return [validator]
 
-        from collections import Iterable
-
-        def flatten(items):
-            """Yield items from any nested iterable; see Reference."""
-            for x in items:
-                if isinstance(x, Iterable) and not isinstance(x, (str, bytes)):
-                    for sub_x in flatten(x):
-                        yield sub_x
-                else:
-                    yield x
-
-        self._validator_a = validator_a
-        self._validator_b = validator_b
-
         map_validator_count = len(
             [
                 validator
-                for validator in list(flatten(unpacked(self)))
+                for validator in list(utils.flatten(unpacked(self)))
                 if isinstance(validator, MapValidator)
             ]
         )
