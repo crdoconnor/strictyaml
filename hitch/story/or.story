@@ -10,7 +10,7 @@ Either/or schema validation of different, equally valid different kinds of YAML:
   based on: strictyaml
   given:
     setup: |
-      from strictyaml import Map, Bool, Int, Str, YAMLValidationError, load
+      from strictyaml import Map, Seq, Bool, Int, Str, YAMLValidationError, load
       from ensure import Ensure
 
       schema = Str() | Map({"a": Bool() | Int()})
@@ -65,6 +65,21 @@ Either/or schema validation of different, equally valid different kinds of YAML:
             type: strictyaml.exceptions.InvalidValidatorError
             message: You tried to Or ('|') together 2 Map validators. Try using revalidation
               instead.
+
+    Invalid combinations of more than one seq:
+      given:
+        yaml_snippet: |
+          - 1
+          - 2
+      steps:
+      - Run:
+          code: |
+            load(yaml_snippet, Seq(Int()) | Seq(Str()))
+          raises:
+            type: strictyaml.exceptions.InvalidValidatorError
+            message: You tried to Or ('|') together 2 Seq validators. Try using revalidation
+              instead.
+
     Change item after validated:
       given:
         yaml_snippet: 'a: yes'

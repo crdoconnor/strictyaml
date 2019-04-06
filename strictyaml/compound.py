@@ -1,7 +1,7 @@
-from ruamel.yaml.comments import CommentedMap, CommentedSeq
 from strictyaml.exceptions import YAMLSerializationError, InvalidOptionalDefault
+from strictyaml.validators import Validator, MapValidator, SeqValidator
+from ruamel.yaml.comments import CommentedMap, CommentedSeq
 from strictyaml.scalar import ScalarValidator, Str
-from strictyaml.validators import Validator, MapValidator
 from strictyaml.yamllocation import YAMLChunk
 import sys
 
@@ -200,19 +200,6 @@ class Map(MapValidator):
                 and value != self._defaults[key]
             ]
         )
-
-
-class SeqValidator(Validator):
-    def _should_be_list(self, data):
-        if not isinstance(data, list):
-            raise YAMLSerializationError("Expected a list, found '{}'".format(data))
-        if len(data) == 0:
-            raise YAMLSerializationError(
-                (
-                    "Expected a non-empty list, found an empty list.\n"
-                    "Use EmptyList validator to serialize empty lists."
-                )
-            )
 
 
 class Seq(SeqValidator):

@@ -34,6 +34,19 @@ class MapValidator(Validator):
             )
 
 
+class SeqValidator(Validator):
+    def _should_be_list(self, data):
+        if not isinstance(data, list):
+            raise YAMLSerializationError("Expected a list, found '{}'".format(data))
+        if len(data) == 0:
+            raise YAMLSerializationError(
+                (
+                    "Expected a non-empty list, found an empty list.\n"
+                    "Use EmptyList validator to serialize empty lists."
+                )
+            )
+
+
 class OrValidator(Validator):
     def __init__(self, validator_a, validator_b):
         assert isinstance(validator_a, Validator), "validator_a must be a Validator"
@@ -64,6 +77,20 @@ class OrValidator(Validator):
                 "You tried to Or ('|') together {} Map validators. "
                 "Try using revalidation instead."
             ).format(map_validator_count))
+
+        seq_validator_count = len(
+            [
+                validator
+                for validator in list(utils.flatten(unpacked(self)))
+                if isinstance(validator, SeqValidator)
+            ]
+        )
+
+        if seq_validator_count > 1:
+            raise InvalidValidatorError((
+                "You tried to Or ('|') together {} Seq validators. "
+                "Try using revalidation instead."
+            ).format(seq_validator_count))
 
     def to_yaml(self, value):
         try:
