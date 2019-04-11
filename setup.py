@@ -42,9 +42,17 @@ setup(name="strictyaml",
       author_email='colm.oconnor.github@gmail.com',
       url='http://hitchdev.com/strictyaml',
       license='MIT',
-      install_requires=["ruamel.yaml>=0.14.2", "python-dateutil>=2.6.0", ],
+      install_requires=[
+          "ruamel.yaml>=0.14.2",
+          "python-dateutil>=2.6.0",
+          "colorama>=0.4.1",
+          "termcolor>=1.0.0",
+      ],
       packages=find_packages(exclude=["tests", "docs", ]),
       package_data={},
       zip_safe=False,
       include_package_data=True,
+      entry_points={
+          'console_scripts': ['strictyaml=strictyaml.cli:main'],
+      },
 )

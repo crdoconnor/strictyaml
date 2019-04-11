@@ -1,3 +1,6 @@
+import subprocess
+import shlex
+
 from hitchstory import StoryCollection, BaseEngine, exceptions, validate, no_stacktrace_for
 from hitchstory import GivenDefinition, GivenProperty, InfoDefinition, InfoProperty
 from templex import Templex
@@ -82,6 +85,55 @@ class Engine(BaseEngine):
                 modified_yaml_snippet=self.given.get("modified_yaml_snippet"),
             )
         )
+
+    @no_stacktrace_for(AssertionError)
+    @validate(
+        command=Str(),
+        shell=Str(),
+        stdin=Str(),
+        stdout=Str(),
+        stderr=Str(),
+        rc=Int(),
+    )
+    def shell(
+        self,
+        command,
+        shell=None,
+        stdin=None,
+        stdout=None,
+        stderr=None,
+        rc=None,
+    ):
+        opts = {
+            'encoding': 'utf-8',
+            'text': True,
+        }
+
+        if shell:
+            opts['args'] = [shell, '-c', command]
+        else:
+            opts['args'] = shlex.split(command)
+
+        if stdin:
+            opts['input'] = stdin
+
+        if stderr or stdout:
+            opts['capture_output'] = True
+
+        proc = subprocess.run(**opts)
+        if rc is not None:
+            msg = ("Command returned %r instead of %r" % (proc.returncode, rc))
+            assert proc.returncode == rc, msg
+
+        if stdout is not None:
+            msg = ("Expected stdout to be:\n\n%s\n\nBut instead got:\n\n%s"
+                    % (stdout, proc.stdout))
+            assert proc.stdout == stdout, msg
+
+        if stderr is not None:
+            msg = ("Expected stderr to be:\n\n%s\n\nBut instead got:\n\n%s"
+                    % (stderr, proc.stderr))
+            assert proc.stderr == stderr, msg
 
     @no_stacktrace_for(AssertionError)
     @no_stacktrace_for(HitchRunPyException)
