@@ -1,10 +1,13 @@
 from ruamel.yaml.comments import CommentedSeq, CommentedMap
-from collections import Iterable
 from strictyaml import exceptions
 from re import compile
 import decimal
 import sys
 
+if sys.version_info[:2] > (3, 4):
+    from collections.abc import Iterable
+else:
+    from collections import Iterable
 
 if sys.version_info[0] == 3:
     unicode = str
