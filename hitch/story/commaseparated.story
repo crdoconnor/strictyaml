@@ -34,6 +34,15 @@ Parsing comma separated items (CommaSeparated):
           code: |
             Ensure(load(yaml_snippet, str_schema)).equals({"a": ["1", "2", "3"]})
 
+    Parse empty comma separated string:
+      given:
+        yaml_snippet: |
+          a: 
+      steps:
+      - Run:
+          code: |
+            Ensure(load(yaml_snippet, str_schema)).equals({"a": []})
+
     Invalid int comma separated sequence:
       given:
         yaml_snippet: |
@@ -67,6 +76,13 @@ Parsing comma separated items (CommaSeparated):
             print(as_document({"a": "1,2,3"}, int_schema).as_yaml())
           will output: 'a: 1,2,3'
 
+    Serialize empty list to comma separated sequence:
+      steps:
+      - Run:
+          code: |
+            print(as_document({"a": []}, int_schema).as_yaml())
+          will output: 'a:'
+
     Serialize invalid string to comma separated sequence:
       steps:
       - Run:
@@ -75,6 +91,7 @@ Parsing comma separated items (CommaSeparated):
           raises:
             type: strictyaml.exceptions.YAMLSerializationError
             message: "'x' not an integer."
+
     Attempt to serialize neither list nor string raises exception:
       steps:
       - Run:

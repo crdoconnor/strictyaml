@@ -76,6 +76,8 @@ class CommaSeparated(ScalarValidator):
         ), "item validator must be scalar too"
 
     def validate_scalar(self, chunk):
+        if chunk.contents == "":
+            return []
         return [
             self._item_validator.validate_scalar(
                 chunk.textslice(positions[0], positions[1])
