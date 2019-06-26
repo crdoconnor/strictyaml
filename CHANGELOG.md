@@ -6,6 +6,14 @@
 
 No relevant code changes.
 
+### 1.0.2
+
+* BUGFIX : #63 CommaSeparated should recognize a blank string as a valid empty list.
+* BUGFIX : #61 fix for exception when parsing MapPattern with a non-string (float) as a key - hat tip @dgg5503.
+* BUGFIX : Fix deprecation warning on Iterable from collections raised by #60 - hat tip @dthonon.
+* FEATURE : Raise exception if more than one sequence validators are combined.
+
+
 ### 1.0.1
 
 * FEATURE : #51 - OrValidation with multiple Map validators does not work effectively - raise exception if user tries to use more than one.
