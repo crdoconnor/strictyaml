@@ -111,7 +111,8 @@ class YAML(object):
         if isinstance(self._value, CommentedMap):
             mapping = OrderedDict()
             for key, value in self._value.items():
-                mapping[key.data] = value.data
+                if isinstance(key, YAML):
+                    mapping[key.data] = value.data if isinstance(value, YAML) else value
             return mapping
         elif isinstance(self._value, CommentedSeq):
             return [item.data for item in self._value]

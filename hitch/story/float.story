@@ -12,7 +12,7 @@ Floating point numbers (Float):
     for values for which precision is not required.
   given:
     setup: |
-      from strictyaml import Map, Float, load, as_document
+      from strictyaml import Map, MapPattern, Str, Float, load, as_document
       from collections import OrderedDict
       from ensure import Ensure
 
@@ -99,3 +99,14 @@ Floating point numbers (Float):
           raises:
             type: strictyaml.exceptions.YAMLSerializationError
             message: when expecting a float, got 'x'
+
+    Float as key:
+      steps:
+      - Run:
+          code: |
+            document = as_document(OrderedDict([("3.5", "a"), ("2.1", "c")]), MapPattern(Float(), Str()))
+            print(document.data[3.5])
+            print(document.data[2.1])
+          will output: |-
+            a
+            c
