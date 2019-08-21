@@ -104,7 +104,7 @@ class Map(MapValidator):
         }
 
         self._required_keys = [
-            key for key in validator.keys() if not isinstance(key, Optional)
+            key for key, key_type in validator.items() if not isinstance(key_type, Optional)
         ]
 
         for key_val, value_val in validator.items():
