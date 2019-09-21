@@ -192,11 +192,17 @@ class YAML(object):
 
     def __setitem__(self, index, value):
         strictindex = self._strictindex(index)
-        try:
-            value_validator = self._value[strictindex].validator
-        except KeyError:
-            # TODO: What if value isn't a YAML object?
-            value_validator = value.validator
+        if self.is_mapping():
+            value_validator = (
+                    self._selected_validator._validator_dict[strictindex]
+                    if self._selected_validator is not None
+                    else self._validator._validator_dict[strictindex])
+        else:
+            try:
+                value_validator = self._value[strictindex].validator
+            except KeyError:
+                # TODO: What if value isn't a YAML object?
+                value_validator = value.validator
 
         new_value = (
             value_validator(value._chunk)
