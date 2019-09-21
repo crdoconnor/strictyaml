@@ -61,14 +61,16 @@ class YAMLChunk(object):
                 return string_key
             else:
                 for key in current_parsed.keys():
-                    if hasattr(key, '_value'):
+                    if hasattr(key, "_value"):
                         if key.text == string_key:
                             return key
 
         if self.pointer.is_index():
             current_parsed[self.pointer.last_index] = new_item
         elif self.pointer.is_val():
-            current_parsed[actual_key_from_string_key(self.pointer.last_regularkey)] = new_item
+            current_parsed[
+                actual_key_from_string_key(self.pointer.last_regularkey)
+            ] = new_item
         elif self.pointer.is_key():
             key = actual_key_from_string_key(self.pointer.last_regularkey)
             existing_val = current_parsed[key]

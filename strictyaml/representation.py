@@ -194,9 +194,10 @@ class YAML(object):
         strictindex = self._strictindex(index)
         if self.is_mapping():
             value_validator = (
-                    self._selected_validator._validator_dict[strictindex]
-                    if self._selected_validator is not None
-                    else self._validator._validator_dict[strictindex])
+                self._selected_validator._validator_dict[strictindex]
+                if self._selected_validator is not None
+                else self._validator._validator_dict[strictindex]
+            )
         else:
             try:
                 value_validator = self._value[strictindex].validator
