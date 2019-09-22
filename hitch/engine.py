@@ -2,6 +2,7 @@ from hitchstory import StoryCollection, BaseEngine, exceptions, validate, no_sta
 from hitchstory import GivenDefinition, GivenProperty, InfoDefinition, InfoProperty
 from templex import Templex
 from strictyaml import Optional, Str, Map, Int, Bool, Enum, load
+from path import Path
 import hitchpylibrarytoolkit
 from hitchrunpy import (
     ExamplePythonCode,
@@ -61,12 +62,16 @@ class Engine(BaseEngine):
         if not self.path.profile.exists():
             self.path.profile.mkdir()
 
-        self.python = hitchpylibrarytoolkit.project_build(
-            "strictyaml",
-            self.path,
-            self.given["python version"],
-            {"ruamel.yaml": self.given["ruamel version"]},
-        ).bin.python
+        if not self.settings.get("python_path"):
+            self.python = hitchpylibrarytoolkit.project_build(
+                "strictyaml",
+                self.path,
+                self.given["python version"],
+                {"ruamel.yaml": self.given["ruamel version"]},
+            ).bin.python
+        else:
+            self.python = Path(self.settings.get("python_path"))
+            assert self.python.exists()
 
         self.example_py_code = (
             ExamplePythonCode(self.python, self.path.gen)

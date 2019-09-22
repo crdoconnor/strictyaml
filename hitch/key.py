@@ -111,6 +111,16 @@ def regression():
     storybook.with_params(**{"python version": "3.7.0"}).ordered_by_name().play()
 
 
+@expected(HitchStoryException)
+def regression_on_python_path(python_path, python_version):
+    """
+    Run regression tests - e.g. hk regression_on_python_path /usr/bin/python 3.7.0
+    """
+    _storybook({
+        "python_path": python_path,
+    }).with_params(**{"python version": python_version}).only_uninherited().ordered_by_name().play()
+
+
 def reformat():
     """
     Reformat using black and then relint.
