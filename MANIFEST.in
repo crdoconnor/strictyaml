@@ -1,3 +1,6 @@
 include VERSION
 include LICENSE.txt
 include README.md
+recursive-include hitch *
+prune hitch/__pycache__
+prune hitch/gen
