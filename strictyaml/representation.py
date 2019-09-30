@@ -1,6 +1,5 @@
 from ruamel.yaml.comments import CommentedSeq, CommentedMap
-from ruamel.yaml.scalarstring import PreservedScalarString
-from strictyaml.exceptions import raise_type_error
+from strictyaml.exceptions import raise_type_error, YAMLSerializationError
 from strictyaml.yamllocation import YAMLChunk
 from strictyaml.dumper import StrictYAMLDumper
 from ruamel.yaml import dump
@@ -192,43 +191,50 @@ class YAML(object):
 
     def __setitem__(self, index, value):
         strictindex = self._strictindex(index)
-        try:
-            value_validator = self._value[strictindex].validator
-        except KeyError:
-            # TODO: What if value isn't a YAML object?
-            value_validator = value.validator
 
-        new_value = (
-            value_validator(value._chunk)
-            if isinstance(value, YAML)
-            else value_validator(YAMLChunk(value_validator.to_yaml(value)))
-        )
-
-        # Fork the value
-        forked_chunk = self._chunk.fork(strictindex, new_value)
-
-        # Validate and attach to current structure
-        if self.is_mapping():
-            updated_value = value_validator(forked_chunk.val(strictindex))
-            updated_value._chunk.make_child_of(self._chunk.val(strictindex))
+        # Generate nice error messages - first, copy our whole node's data
+        # and use ``to_yaml()`` to determine if the resulting data would
+        # validate our schema.  Must replace whole current node to support
+        # complex types, e.g. ``EmptyList() | Seq(Str())``.
+        if isinstance(value, YAML):
+            yaml_value = self._chunk.fork(strictindex, value)
+            new_value = self._validator(yaml_value)
         else:
-            updated_value = value_validator(forked_chunk.index(strictindex))
-            updated_value._chunk.make_child_of(self._chunk.index(strictindex))
+            old_data = self.data
+            if isinstance(old_data, dict):
+                old_data[index] = value
+            elif isinstance(old_data, list):
+                if len(old_data) <= index:
+                    raise YAMLSerializationError('cannot extend list via __setitem__.  '
+                                                 'Instead, replace whole list on parent '
+                                                 'node.')
+                old_data[index] = value
+            else:
+                raise NotImplementedError(repr(old_data))
+            yaml_value = YAMLChunk(self._validator.to_yaml(old_data))
+            yaml_value_repr = self._validator(yaml_value)
 
-        marked_up = new_value.as_marked_up()
+            # Now that the new content is properly validated, create a valid
+            # chunk with the new information.
+            forked_chunk = self._chunk.fork(strictindex, yaml_value_repr[strictindex])
+            new_value = self._validator(forked_chunk)
 
-        # So that the nicer x: | style of text is used instead of
-        # x: "text\nacross\nlines"
-        if isinstance(marked_up, (str, unicode)):
-            if u"\n" in marked_up:
-                marked_up = PreservedScalarString(marked_up)
-
-        self._chunk.contents[self._chunk.ruamelindex(strictindex)] = marked_up
-        self._value[
-            YAML(forked_chunk.ruamelindex(strictindex))
-            if self.is_mapping()
-            else forked_chunk.ruamelindex(strictindex)
-        ] = new_value
+        # Now, overwrite our chunk and value with the new information.
+        old_chunk = self._chunk  # Needed for reference to pre-fork ruamel
+        self._chunk = new_value._chunk
+        self._value = new_value._value
+        self._text = new_value._text
+        self._selected_validator = new_value._selected_validator
+        # Update any parent ruamel links to point to our new chunk.
+        self._chunk.pointer.set(old_chunk, '_ruamelparsed',
+                                new_value._chunk.contents)
+        self._chunk.pointer.set(old_chunk, '_strictparsed',
+                                self, strictdoc=True)
+        # forked chunk made a deep copy of the original document, but we just
+        # updated pointers in the original document.  So, restore our chunk to
+        # pointing at the original document.
+        self._chunk._ruamelparsed = old_chunk._ruamelparsed
+        self._chunk._strictparsed = old_chunk._strictparsed
 
     def __delitem__(self, index):
         strictindex = self._strictindex(index)
@@ -329,9 +335,7 @@ class YAML(object):
         return isinstance(self._value, CommentedSeq)
 
     def is_scalar(self):
-        return not isinstance(self._value, CommentedSeq) and not isinstance(
-            self._value, CommentedMap
-        )
+        return not self.is_mapping() and not self.is_sequence()
 
     @property
     def scalar(self):

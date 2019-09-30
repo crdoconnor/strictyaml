@@ -77,10 +77,13 @@ def is_decimal(value):
     >>> is_decimal("3.5")
     True
 
+    >>> is_decimal("4.")
+    True
+
     >>> is_decimal("blah")
     False
     """
-    return compile(r"^[-+]?[0-9]*\.?[0-9]+([eE][-+]?[0-9]+)?$").match(value) is not None
+    return compile(r"^[-+]?[0-9]*(\.[0-9]*)?([eE][-+]?[0-9]+)?$").match(value) is not None
 
 
 def comma_separated_positions(text):

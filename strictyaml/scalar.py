@@ -8,6 +8,7 @@ import dateutil.parser
 import decimal
 import sys
 import re
+from ruamel.yaml.scalarstring import PreservedScalarString
 
 
 if sys.version_info[0] == 3:
@@ -148,7 +149,10 @@ class Str(ScalarValidator):
     def to_yaml(self, data):
         if not utils.is_string(data):
             raise YAMLSerializationError("'{}' is not a string".format(data))
-        return str(data)
+        s = str(data)
+        if u"\n" in s:
+            s = PreservedScalarString(s)
+        return s
 
 
 class Int(ScalarValidator):

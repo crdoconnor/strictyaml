@@ -149,6 +149,12 @@ class YAMLChunk(object):
             label=self.label,
             key_association=copy(self._key_association),
         )
+        if self.is_scalar():
+            # Necessary for e.g. EmptyDict, which reports as a scalar.
+            forked_chunk.pointer.set(forked_chunk, '_ruamelparsed',
+                                     CommentedMap())
+            forked_chunk.pointer.set(forked_chunk, '_strictparsed',
+                                     CommentedMap(), strictdoc=True)
         forked_chunk.contents[self.ruamelindex(strictindex)] = new_value.as_marked_up()
         forked_chunk.strictparsed()[strictindex] = deepcopy(new_value.as_marked_up())
         return forked_chunk

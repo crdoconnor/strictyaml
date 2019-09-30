@@ -1,6 +1,7 @@
 from strictyaml.exceptions import YAMLSerializationError, InvalidOptionalDefault
 from strictyaml.validators import Validator, MapValidator, SeqValidator
 from ruamel.yaml.comments import CommentedMap, CommentedSeq
+from strictyaml.representation import YAML
 from strictyaml.scalar import ScalarValidator, Str
 from strictyaml.yamllocation import YAMLChunk
 import sys
@@ -176,7 +177,17 @@ class Map(MapValidator):
                 # marked_up = new_value.as_marked_up()
                 # chunk.contents[chunk.ruamelindex(strictindex)] = marked_up
                 chunk.add_key_association(default_key, strictindex)
-                chunk.strictparsed()[yaml_key] = updated_value
+                sp = chunk.strictparsed()
+                if isinstance(sp, YAML):
+                    # Do not trigger __setitem__ validation at this point, as
+                    # we just ran the validator, and
+                    # representation.py:revalidate() doesn't overwrite the
+                    # _validator property until after all values are checked,
+                    # which leads to an exception being raised if it is
+                    # re-checked.
+                    sp._value[yaml_key] = updated_value
+                else:
+                    sp[yaml_key] = updated_value
 
         if not set(self._required_keys).issubset(found_keys):
             chunk.while_parsing_found(
