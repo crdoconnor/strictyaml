@@ -187,5 +187,43 @@ class YAMLPointer(object):
                 raise RuntimeError("Invalid state")
         return segment
 
+    def set(self, src_obj, src_attr, new_ruamel, strictdoc=False):
+        """Since set() needs to overwrite what this pointer points to, it
+        affects the parent object.  Therefore, rather than taking "document"
+        as get(), it takes the object which holds the document and the name
+        of the property which is the document.
+        """
+        obj_last = src_obj
+        key_last = src_attr
+        r = getattr(src_obj, src_attr)
+        for index_type, index in self._indices:
+            obj_last = r
+            if index_type == "val":
+                key_last = index[1] if strictdoc else index[0]
+                r = r[key_last]
+            elif index_type == "index":
+                key_last = index
+                r = r[key_last]
+            elif index_type == "textslice":
+                key_last = None
+                r = r[index[0] : index[1]]
+            elif index_type == "key":
+                key_last = None
+                r = index[1] if strictdoc else index[0]
+            else:
+                raise RuntimeError("Invalid state")
+        if obj_last is src_obj:
+            # Starts with an attribute set
+            setattr(src_obj, src_attr, new_ruamel)
+        elif key_last is not None:
+            # Others are item set
+            if hasattr(obj_last, '_value'):
+                # Only want to overwrite value, do NOT re-validate schema...
+                obj_last._value[key_last] = new_ruamel
+            else:
+                obj_last[key_last] = new_ruamel
+        else:
+            raise NotImplementedError("invalid key, cannot set")
+
     def __repr__(self):
         return "<YAMLPointer: {0}>".format(self._indices)
