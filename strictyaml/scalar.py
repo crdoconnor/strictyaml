@@ -149,10 +149,9 @@ class Str(ScalarValidator):
     def to_yaml(self, data):
         if not utils.is_string(data):
             raise YAMLSerializationError("'{}' is not a string".format(data))
-        s = str(data)
-        if u"\n" in s:
-            s = PreservedScalarString(s)
-        return s
+        if "\n" in data:
+            return PreservedScalarString(data)
+        return data
 
 
 class Int(ScalarValidator):
