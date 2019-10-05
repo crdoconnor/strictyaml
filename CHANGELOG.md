@@ -6,6 +6,35 @@
 
 No relevant code changes.
 
+### 1.0.5
+
+* BUGFIX : Fixed python 2 bug introduced when fixing #72.
+* BUG: issue #72.  Now __setitem__ uses schema.
+
+Before this commit, schemas could be violated when assigning to
+Map/Sequence members.  Now, modifications to the data must fit the
+data's schema.
+
+Furthermore, if the node on which __setitem__ is called has a compound
+schema, the selected validator within the compound schema may change
+correctly.
+
+
+### 1.0.4
+
+* FEATURE : Include tests / stories in package.
+* BUG: issue #72.  Now __setitem__ uses schema.
+
+Before this commit, schemas could be violated when assigning to
+Map/Sequence members.  Now, modifications to the data must fit the
+data's schema.
+
+
+### 1.0.3
+
+* BUGFIX : Fix for #64 integer value on YAML object being interpreted as string.
+
+
 ### 1.0.2
 
 * BUGFIX : #63 CommaSeparated should recognize a blank string as a valid empty list.
