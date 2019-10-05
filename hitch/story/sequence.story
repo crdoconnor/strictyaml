@@ -35,6 +35,21 @@ Sequence/list validator (Seq):
       - Run: |
           assert [x for x in load(yaml_snippet, Seq(Str()))] == ["1", "2", "3"]
 
+    Lists of lists:
+      given:
+        yaml_snippet: |
+          -
+            - a
+            - b
+            - c
+          -
+            - d
+            - e
+            - f
+      steps:
+      - Run: |
+          assert load(yaml_snippet, Seq(Seq(Str()))) == [["a", "b", "c"], ["d", "e", "f"]]
+          
     .text is nonsensical:
       given:
         yaml_snippet: |
@@ -128,7 +143,8 @@ Sequence/list validator (Seq):
                 in "<unicode string>", line 3, column 1:
                   - '3.4'
                   ^ (line: 3)
-
+                  
+                  
 Modify nested sequence:
   based on: strictyaml
   given:
