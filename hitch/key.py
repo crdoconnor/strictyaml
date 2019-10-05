@@ -177,12 +177,12 @@ def doctests():
 
 
 @expected(CommandError)
-def rerun(version="3.7.0"):
+def rerun():
     """
     Rerun last example code block with specified version of python.
     """
     from commandlib import Command
-
+    version = _personal_settings().data['params']['python version']
     Command(DIR.gen.joinpath("py{0}".format(version), "bin", "python"))(
-        DIR.gen.joinpath("state", "examplepythoncode.py")
-    ).in_dir(DIR.gen.joinpath("state")).run()
+        DIR.gen.joinpath("working", "examplepythoncode.py")
+    ).in_dir(DIR.gen.joinpath("working")).run()
