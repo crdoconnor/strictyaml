@@ -267,6 +267,7 @@ and/or not obvious. Those are documented here:
 
 ## Contributors
 
+- @wwoods
 - @gvx
 - @AlexandreDecan
 - @lots0logs
