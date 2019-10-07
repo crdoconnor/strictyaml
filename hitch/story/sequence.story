@@ -49,7 +49,7 @@ Sequence/list validator (Seq):
       steps:
       - Run: |
           assert load(yaml_snippet, Seq(Seq(Str()))) == [["a", "b", "c"], ["d", "e", "f"]]
-          
+
     .text is nonsensical:
       given:
         yaml_snippet: |
@@ -137,14 +137,9 @@ Sequence/list validator (Seq):
           code: load(yaml_snippet, Seq(Int()))
           raises:
             type: strictyaml.exceptions.YAMLValidationError
-            message: |-
-              when expecting an integer
-              found an arbitrary number
-                in "<unicode string>", line 3, column 1:
-                  - '3.4'
-                  ^ (line: 3)
-                  
-                  
+            message: "when expecting an integer\nfound an arbitrary number\n  in \"\
+              <unicode string>\", line 3, column 1:\n    - '3.4'\n    ^ (line: 3)"
+
 Modify nested sequence:
   based on: strictyaml
   given:
