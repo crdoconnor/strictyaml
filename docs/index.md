@@ -97,12 +97,18 @@ and/or not obvious. Those are documented here:
 - [{{ title(dirfile) }}](why/{{ dirfile.namebase }})
 {% endfor %}
 
+## Star Contributors
+
+- @wwoods
+
 ## Contributors
 
 - @gvx
 - @AlexandreDecan
 - @lots0logs
 - @tobbez
+- @jaredsampson
+- @BoboTIG
 
 ## Contributing
 
