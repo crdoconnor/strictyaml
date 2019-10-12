@@ -32,7 +32,7 @@ Get line numbers of YAML elements:
       steps:
       - Run:
           code: |
-            Ensure(snippet["a"].start_line).equals(2)
+            Ensure(snippet["a"].start_line).equals(3)
             Ensure(snippet["d"].start_line).equals(9)
 
     If there is a trailing comment the end line includes it:
@@ -46,7 +46,7 @@ Get line numbers of YAML elements:
       steps:
       - Run:
           code: |
-            Ensure(snippet.keys()[1].start_line).equals(2)
+            Ensure(snippet.keys()[1].start_line).equals(3)
 
     Start line and end line of whole snippet:
       steps:
@@ -59,7 +59,7 @@ Get line numbers of YAML elements:
       steps:
       - Run:
           code: |
-            Ensure(snippet['a'].lines_before(1)).equals("y: p")
+            Ensure(snippet['a'].lines_before(1)).equals("# Some comment")
 
     Grabbing a line after an item:
       steps:
@@ -67,13 +67,12 @@ Get line numbers of YAML elements:
           code: |
             Ensure(snippet['a'].lines_after(4)).equals("b: y\nc: a\n\nd: b")
 
-    Grabbing the lines of an item including comments before and after:
+    Grabbing the lines of an item including surrounding comments:
       steps:
       - Run:
           code: |
             print(load(yaml_snippet, schema)['a'].lines())
           will output: |-
-            # Some comment
             a: |
               x
 
