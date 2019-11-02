@@ -1,6 +1,7 @@
 """
 Parsing code for strictyaml.
 """
+import sys
 
 from ruamel import yaml as ruamelyaml
 from strictyaml import exceptions
