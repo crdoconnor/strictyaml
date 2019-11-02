@@ -2,7 +2,7 @@ appdirs==1.4.3            # via black
 argcomplete==1.9.4        # via hitchrun
 attrs==18.2.0             # via black
 backcall==0.1.0           # via ipython
-black==18.9b0             # via hitchpylibrarytoolkit
+black==19.10b0            # via hitchpylibrarytoolkit
 bleach==3.0.2             # via readme-renderer
 certifi==2018.10.15       # via requests
 chardet==3.0.4            # via requests
@@ -34,6 +34,7 @@ mccabe==0.6.1             # via flake8
 parso==0.3.1              # via jedi
 path.py==11.5.0           # via hitchbuild, hitchrun, hitchrunpy, hitchstory, pathquery, prettystack
 pathquery==0.3.0          # via dirtemplate, hitchbuild, hitchbuildpy, hitchstory
+pathspec==0.6.0           # via black
 peewee==3.7.1             # via hitchbuild
 pexpect==4.6.0            # via ipython
 pickleshare==0.7.5        # via ipython
@@ -52,6 +53,7 @@ python-slugify==1.2.6     # via dirtemplate, hitchbuild, hitchstory
 pyuv==1.4.0               # via icommandlib
 q==2.6                    # via hitchpylibrarytoolkit
 readme-renderer==24.0     # via twine
+regex==2019.11.1          # via black
 requests-toolbelt==0.8.0  # via twine
 requests==2.20.1          # via requests-toolbelt, twine
 ruamel.yaml==0.15.78      # via strictyaml
@@ -63,8 +65,13 @@ toml==0.10.0              # via black
 tqdm==4.28.1              # via twine
 traitlets==4.3.2          # via ipython
 twine==1.12.1             # via hitchpylibrarytoolkit
+typed-ast==1.4.0          # via black
 unidecode==1.0.22         # via python-slugify
 urllib3==1.24.1           # via requests
 uvloop==0.11.3            # via icommandlib
 wcwidth==0.1.7            # via prompt-toolkit, pyte
 webencodings==0.5.1       # via bleach
+
+# The following packages are considered to be unsafe in a requirements file:
+# pip==19.3.1               # via hitchrun
+# setuptools==41.6.0        # via flake8, ipython, twine
