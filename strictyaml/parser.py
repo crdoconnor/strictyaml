@@ -1,6 +1,7 @@
 """
 Parsing code for strictyaml.
 """
+import sys
 
 from ruamel import yaml as ruamelyaml
 from strictyaml import exceptions
@@ -19,7 +20,11 @@ from ruamel.yaml.resolver import VersionedResolver
 from ruamel.yaml.nodes import MappingNode
 from ruamel.yaml.compat import PY2
 from ruamel.yaml.constructor import ConstructorError
-import collections
+
+if sys.version_info[:2] > (3, 4):
+    from collections.abc import Hashable
+else:
+    from collections import Hashable
 
 
 # StrictYAMLConstructor is mostly taken from RoundTripConstructor ruamel/yaml/constructor.py
@@ -54,7 +59,7 @@ class StrictYAMLConstructor(RoundTripConstructor):
             # keys can be list -> deep
             key = self.construct_object(key_node, deep=True)
             # lists are not hashable, but tuples are
-            if not isinstance(key, collections.Hashable):
+            if not isinstance(key, Hashable):
                 if isinstance(key, list):
                     key = tuple(key)
             if PY2:
@@ -68,7 +73,7 @@ class StrictYAMLConstructor(RoundTripConstructor):
                         key_node.start_mark,
                     )
             else:
-                if not isinstance(key, collections.Hashable):
+                if not isinstance(key, Hashable):
                     raise ConstructorError(
                         "while constructing a mapping",
                         node.start_mark,
