@@ -67,6 +67,17 @@ def bdd(*keywords):
     _storybook(settings["engine"]).with_params(
         **{"python version": settings["params"]["python version"]}
     ).only_uninherited().shortcut(*keywords).play()
+    
+    
+@expected(HitchStoryException)
+def tver(pyversion, *keywords):
+    """
+    Run story against specific version of python - e.g. tver 3.7.0 modify multi line
+    """
+    settings = _personal_settings().data
+    _storybook(settings["engine"]).with_params(
+        **{"python version": pyversion}
+    ).only_uninherited().shortcut(*keywords).play()
 
 
 @expected(HitchStoryException)
