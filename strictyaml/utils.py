@@ -43,8 +43,11 @@ def has_number_type(value):
 
     >>> has_number_type("3.5")
     False
+    
+    >>> has_number_type(True)
+    False
     """
-    return isinstance(value, (int, float, decimal.Decimal))
+    return isinstance(value, (int, float, decimal.Decimal)) and not isinstance(value, bool)
 
 
 def is_string(value):

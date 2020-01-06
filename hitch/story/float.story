@@ -12,7 +12,7 @@ Floating point numbers (Float):
     for values for which precision is not required.
   given:
     setup: |
-      from strictyaml import Map, MapPattern, Str, Float, load, as_document
+      from strictyaml import Map, MapPattern, Str, Float, Bool, load, as_document
       from collections import OrderedDict
       from ensure import Ensure
 
@@ -110,3 +110,12 @@ Floating point numbers (Float):
           will output: |-
             a
             c
+
+    Float or bool:
+      steps:
+      - Run:
+          code: |
+            document = as_document({"a": True}, Map({"a": Float() | Bool()}))
+            print(document.as_yaml())
+          will output: |-
+            a: yes
