@@ -43,7 +43,7 @@ def has_number_type(value):
 
     >>> has_number_type("3.5")
     False
-    
+
     >>> has_number_type(True)
     False
     """
@@ -54,7 +54,7 @@ def is_string(value):
     """
     Python 2/3 compatible way of checking if a value is a string.
     """
-    return isinstance(value, str) or \
+    return isinstance(value, unicode) or \
         str(type(value)) in ("<type 'unicode'>", "<type 'str'>", "<class 'str'>")
 
 

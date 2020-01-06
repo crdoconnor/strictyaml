@@ -67,8 +67,8 @@ def bdd(*keywords):
     _storybook(settings["engine"]).with_params(
         **{"python version": settings["params"]["python version"]}
     ).only_uninherited().shortcut(*keywords).play()
-    
-    
+
+
 @expected(HitchStoryException)
 def tver(pyversion, *keywords):
     """
