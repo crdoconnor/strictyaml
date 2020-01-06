@@ -69,6 +69,24 @@ Reading in YAML, editing it and writing it back out:
             - a: 1.0001
             - b: 2
 
+    Modify multi line string:
+      given:
+        yaml_snippet: |
+          a: some
+          b: |
+            text
+      steps:
+      - run:
+          code: |
+            schema = Map({"a": Str(), "b": Str()})
+            to_modify = load(yaml_snippet, schema)
+            to_modify['a'] = 'changed'
+            print(to_modify.as_yaml())
+          will output: |-
+            a: changed
+            b: |
+              text
+
 
     Modified with one variable:
       steps:
