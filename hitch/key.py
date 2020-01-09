@@ -17,9 +17,9 @@ Non-runnable utility methods
 """
 
 
-def _storybook(settings):
+def _storybook(*settings):
     return StoryCollection(
-        pathquery(DIR.key / "story").ext("story"), Engine(DIR, settings)
+        pathquery(DIR.key / "story").ext("story"), Engine(DIR, *settings)
     )
 
 
@@ -51,6 +51,10 @@ def _personal_settings():
     )
 
 
+def _default_python_version():
+    return _personal_settings().data["params"]["python version"]
+
+
 """
 -----------------
 RUNNABLE COMMANDS
@@ -63,9 +67,8 @@ def bdd(*keywords):
     """
     Run story matching keywords.
     """
-    settings = _personal_settings().data
-    _storybook(settings["engine"]).with_params(
-        **{"python version": settings["params"]["python version"]}
+    _storybook().with_params(
+        **{"python version": _default_python_version()}
     ).only_uninherited().shortcut(*keywords).play()
 
 
@@ -74,8 +77,7 @@ def tver(pyversion, *keywords):
     """
     Run story against specific version of python - e.g. tver 3.7.0 modify multi line
     """
-    settings = _personal_settings().data
-    _storybook(settings["engine"]).with_params(
+    _storybook().with_params(
         **{"python version": pyversion}
     ).only_uninherited().shortcut(*keywords).play()
 
@@ -85,10 +87,8 @@ def rbdd(*keywords):
     """
     Run story matching keywords and rewrite story if code changed.
     """
-    settings = _personal_settings().data
-    settings["engine"]["rewrite"] = True
-    _storybook(settings["engine"]).with_params(
-        **{"python version": settings["params"]["python version"]}
+    _storybook(rewrite=True).with_params(
+        **{"python version": _default_python_version()}
     ).only_uninherited().shortcut(*keywords).play()
 
 
@@ -97,13 +97,13 @@ def regressfile(filename):
     """
     Run all stories in filename 'filename' in python 2 and 3.
     """
-    _storybook({"rewrite": False}).in_filename(filename).with_params(
+    _storybook().in_filename(filename).with_params(
         **{"python version": "2.7.14"}
     ).filter(
         lambda story: not story.info.get("fails_on_python_2")
     ).ordered_by_name().play()
 
-    _storybook({"rewrite": False}).with_params(
+    _storybook().with_params(
         **{"python version": "3.7.0"}
     ).in_filename(filename).ordered_by_name().play()
 
@@ -127,9 +127,8 @@ def regression_on_python_path(python_path, python_version):
     """
     Run regression tests - e.g. hk regression_on_python_path /usr/bin/python 3.7.0
     """
-    _storybook({
-        "python_path": python_path,
-    }).with_params(**{"python version": python_version}).only_uninherited().ordered_by_name().play()
+    _storybook(python_path=python_path).with_params(**{"python version": python_version})\
+        .only_uninherited().ordered_by_name().play()
 
 
 def reformat():

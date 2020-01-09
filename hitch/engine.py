@@ -51,9 +51,11 @@ class Engine(BaseEngine):
         experimental=InfoProperty(schema=Bool()),
     )
 
-    def __init__(self, keypath, settings):
+    def __init__(self, keypath, python_path=None, rewrite=False, cprofile=False):
         self.path = keypath
-        self.settings = settings
+        self._python_path = python_path
+        self._rewrite = rewrite
+        self._cprofile = cprofile
 
     def set_up(self):
         """Set up your applications and the test environment."""
@@ -62,7 +64,7 @@ class Engine(BaseEngine):
         if not self.path.profile.exists():
             self.path.profile.mkdir()
 
-        if not self.settings.get("python_path"):
+        if not self._python_path:
             self.python = hitchpylibrarytoolkit.project_build(
                 "strictyaml",
                 self.path,
@@ -70,7 +72,7 @@ class Engine(BaseEngine):
                 {"ruamel.yaml": self.given["ruamel version"]},
             ).bin.python
         else:
-            self.python = Path(self.settings.get("python_path"))
+            self.python = Path(self._python_path)
             assert self.python.exists()
 
         self.example_py_code = (
@@ -110,7 +112,7 @@ class Engine(BaseEngine):
             )
         to_run = self.example_py_code.with_code(code)
 
-        if self.settings.get("cprofile"):
+        if self._cprofile:
             to_run = to_run.with_cprofile(
                 self.path.profile.joinpath("{0}.dat".format(self.story.slug))
             )
@@ -127,7 +129,7 @@ class Engine(BaseEngine):
                 try:
                     Templex(will_output).assert_match(actual_output)
                 except AssertionError:
-                    if self.settings.get("rewrite"):
+                    if self._rewrite:
                         self.current_step.update(**{"will output": actual_output})
                     else:
                         raise
@@ -159,7 +161,7 @@ class Engine(BaseEngine):
                 result = to_run.expect_exceptions().run()
                 result.exception_was_raised(exception_type, message)
             except ExpectedExceptionMessageWasDifferent as error:
-                if self.settings.get("rewrite") and not differential:
+                if self._rewrite and not differential:
                     new_raises = raises.copy()
                     new_raises["message"] = result.exception.message
                     self.current_step.update(raises=new_raises)
@@ -172,9 +174,9 @@ class Engine(BaseEngine):
         IPython.embed()
 
     def on_success(self):
-        if self.settings.get("rewrite"):
+        if self._rewrite:
             self.new_story.save()
-        if self.settings.get("cprofile"):
+        if self._cprofile:
             self.python(
                 self.path.key.joinpath("printstats.py"),
                 self.path.profile.joinpath("{0}.dat".format(self.story.slug)),
