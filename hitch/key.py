@@ -168,7 +168,7 @@ def readmegen():
     Build README.md and CHANGELOG.md.
     """
     hitchpylibrarytoolkit.readmegen(
-        _storybook({}), DIR.project, DIR.key / "story", DIR.gen, PROJECT_NAME
+        _storybook(), DIR.project, DIR.key / "story", DIR.gen, PROJECT_NAME
     )
 
 

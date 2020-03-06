@@ -3,8 +3,15 @@
 
 ### Latest
 
+* BUGFIX : Fix accidental python 2 breakage.
+* BUGFIX : Accidental misrecognition of boolean values as numbers - cause of #85.
+* BUGFIX : Fix for #86 - handle changing multiline strings.
+* BUGFIX: handle deprecated collections import in the parser (#82)
 
-No relevant code changes.
+* bugfix - handle deprecated collections import in the parser
+
+* import sys
+
 
 ### 1.0.5
 

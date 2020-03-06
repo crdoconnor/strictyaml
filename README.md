@@ -125,7 +125,7 @@ If parsed correctly:
 
 
 ```python
-from strictyaml import load, Map, Str, Int, Seq, YAMLError
+from strictyaml import load, Map, Str, Int, Seq, YAMLError, as_document
 
 schema = Map({"name": Str(), "age": Int(), "possessions": Seq(Str())})
 
@@ -165,6 +165,22 @@ As well as look up line numbers:
 >>> person['possessions'][0].start_line
 5
 ```
+
+
+
+And construct YAML documents from dicts or lists:
+
+
+```python
+print(as_document({"x": 1}).as_yaml())
+
+```
+
+```yaml
+x: 1
+```
+
+
 
 
 
@@ -265,13 +281,18 @@ and/or not obvious. Those are documented here:
 - [What is wrong with flow style YAML?](https://hitchdev.com/strictyaml/why/flow-style-removed)
 
 
-## Contributors
+## Star Contributors
 
 - @wwoods
+
+## Contributors
+
 - @gvx
 - @AlexandreDecan
 - @lots0logs
 - @tobbez
+- @jaredsampson
+- @BoboTIG
 
 ## Contributing
 
