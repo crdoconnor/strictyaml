@@ -17,9 +17,9 @@ Non-runnable utility methods
 """
 
 
-def _storybook(*settings):
+def _storybook(**settings):
     return StoryCollection(
-        pathquery(DIR.key / "story").ext("story"), Engine(DIR, *settings)
+        pathquery(DIR.key / "story").ext("story"), Engine(DIR, **settings)
     )
 
 
@@ -115,7 +115,7 @@ def regression():
     """
     lint()
     doctests()
-    storybook = _storybook({}).only_uninherited()
+    storybook = _storybook().only_uninherited()
     storybook.with_params(**{"python version": "2.7.14"}).filter(
         lambda story: not story.info.get("fails_on_python_2")
     ).ordered_by_name().play()

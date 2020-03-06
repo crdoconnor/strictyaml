@@ -1,4 +1,4 @@
-Simple example: 
+Simple example:
   based on: strictyaml
   given:
     yaml_snippet: |
@@ -29,13 +29,13 @@ Simple example:
           will output: |-
             OrderedDict([('name', 'Ford Prefect'), ('age', '42'), ('possessions', ['Towel'])])
           in interpreter: yes
-    
+
 Quickstart with schema:
   based on: simple example
   given:
     setup: |
       from strictyaml import load, Map, Str, Int, Seq, YAMLError
-      
+
       schema = Map({"name": Str(), "age": Int(), "possessions": Seq(Str())})
   variations:
     42 is now parsed as an integer:
@@ -78,8 +78,8 @@ If parsed correctly:
   based on: simple example
   given:
     setup: |
-      from strictyaml import load, Map, Str, Int, Seq, YAMLError
-      
+      from strictyaml import load, Map, Str, Int, Seq, YAMLError, as_document
+
       schema = Map({"name": Str(), "age": Int(), "possessions": Seq(Str())})
   variations:
     You can modify values and write out the YAML with comments preserved:
@@ -95,8 +95,8 @@ If parsed correctly:
             age: 43
             possessions:
             - Towel
-      
-      
+
+
     As well as look up line numbers:
       steps:
       - Run:
@@ -105,3 +105,12 @@ If parsed correctly:
             person = load(yaml_snippet, schema)
             person['possessions'][0].start_line
           will output: 5
+
+    And construct YAML documents from dicts or lists:
+      steps:
+      - Run:
+          in interpreter: no
+          code: |
+            print(as_document({"x": 1}).as_yaml())
+          will output: |-
+            x: 1

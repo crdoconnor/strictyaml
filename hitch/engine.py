@@ -107,9 +107,15 @@ class Engine(BaseEngine):
         in_interpreter=False,
     ):
         if in_interpreter:
-            code = "{0}\nprint(repr({1}))".format(
-                "\n".join(code.strip().split("\n")[:-1]), code.strip().split("\n")[-1]
-            )
+            if self.given["python version"].startswith("3"):
+                code = "{0}\nprint(repr({1}))".format(
+                    "\n".join(code.strip().split("\n")[:-1]), code.strip().split("\n")[-1]
+                )
+            else:
+                code = "{0}\nprint repr({1})".format(
+                    "\n".join(code.strip().split("\n")[:-1]), code.strip().split("\n")[-1]
+                )
+                
         to_run = self.example_py_code.with_code(code)
 
         if self._cprofile:
