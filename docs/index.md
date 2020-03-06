@@ -103,6 +103,7 @@ and/or not obvious. Those are documented here:
 
 ## Contributors
 
+- @ChristopherGS
 - @gvx
 - @AlexandreDecan
 - @lots0logs
