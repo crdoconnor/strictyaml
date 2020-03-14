@@ -158,7 +158,7 @@ def docgen():
     Build documentation.
     """
     hitchpylibrarytoolkit.docgen(
-        _storybook({}), DIR.project, DIR.key / "story", DIR.gen
+        _storybook(), DIR.project, DIR.key / "story", DIR.gen
     )
 
 
