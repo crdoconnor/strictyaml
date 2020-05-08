@@ -138,6 +138,23 @@ def reformat():
     hitchpylibrarytoolkit.reformat(DIR.project, PROJECT_NAME)
 
 
+def ipython():
+    """
+    Run ipython in strictyaml virtualenv.
+    """
+    DIR.gen.joinpath("example.py").write_text((
+        "from strictyaml import *\n"
+        "import IPython\n"
+        "IPython.embed()\n"
+    ))
+    from commandlib import Command
+    version = _personal_settings().data['params']['python version']
+    Command(DIR.gen.joinpath("py{0}".format(version), "bin", "python"))(
+        DIR.gen.joinpath("example.py")
+    ).run()
+    
+
+
 def lint():
     """
     Lint project code and hitch code.
