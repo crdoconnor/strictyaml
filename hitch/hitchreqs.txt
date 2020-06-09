@@ -12,13 +12,13 @@ commandlib==0.3.5         # via hitchrun, icommandlib
 decorator==4.3.0          # via ipython, traitlets
 dirtemplate==0.1.4        # via hitchpylibrarytoolkit
 docutils==0.14            # via readme-renderer
-flake8==3.6.0             # via hitchpylibrarytoolkit
+flake8==3.8.3             # via hitchpylibrarytoolkit
 gitdb2==2.0.5             # via gitpython
 gitpython==2.1.11         # via hitchpylibrarytoolkit
 hitchbuild==0.4.0         # via dirtemplate, hitchbuildpy
 hitchbuildpy==0.4.5       # via hitchpylibrarytoolkit
-hitchpylibrarytoolkit==0.3.1
-hitchrun==0.3.1
+hitchpylibrarytoolkit==0.3.1  # via -r hitchreqs.in
+hitchrun==0.3.1           # via -r hitchreqs.in
 hitchrunpy==0.7.0         # via hitchpylibrarytoolkit
 hitchstory==0.12.0        # via hitchpylibrarytoolkit
 icommandlib==0.5.0        # via hitchrunpy
@@ -44,8 +44,8 @@ prettystack==0.3.0        # via hitchrun, hitchrunpy, hitchstory
 prompt-toolkit==2.0.7     # via ipython
 psutil==5.4.8             # via icommandlib
 ptyprocess==0.6.0         # via pexpect
-pycodestyle==2.4.0        # via flake8
-pyflakes==2.0.0           # via flake8
+pycodestyle==2.6.0        # via flake8
+pyflakes==2.2.0           # via flake8
 pygments==2.2.0           # via ipython, readme-renderer
 pyte==0.8.0               # via icommandlib
 python-dateutil==2.7.5    # via strictyaml
@@ -73,5 +73,5 @@ wcwidth==0.1.7            # via prompt-toolkit, pyte
 webencodings==0.5.1       # via bleach
 
 # The following packages are considered to be unsafe in a requirements file:
-# pip==19.3.1               # via hitchrun
-# setuptools==41.6.0        # via flake8, ipython, twine
+# pip
+# setuptools

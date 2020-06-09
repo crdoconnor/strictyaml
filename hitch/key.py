@@ -152,9 +152,9 @@ def ipython():
     Command(DIR.gen.joinpath("py{0}".format(version), "bin", "python"))(
         DIR.gen.joinpath("example.py")
     ).run()
-    
 
 
+@expected(CommandError)
 def lint():
     """
     Lint project code and hitch code.
