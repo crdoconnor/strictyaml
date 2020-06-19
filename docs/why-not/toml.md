@@ -52,6 +52,7 @@ to really suck.
 
 So what specifically *is* wrong with TOML when you scale it up?
 
+
 ## 1. It's very verbose. It's not DRY. It's syntactically noisy.
 
 In [this example of a StrictYAML story](https://github.com/crdoconnor/strictyaml/blob/master/hitch/story/map.story)
@@ -72,7 +73,7 @@ because maintenance becomes easier and deriving intent from the code becomes cle
 What goes for turing complete code also applies to configuration code.
 
 
-## 1. TOML's hierarchies are difficult to infer from syntax alone
+## 2. TOML's hierarchies are difficult to infer from syntax alone
 
 Mapping hierarchy in TOML is determined by dots. This is simple enough for
 parsers to read and understand but this alone makes it difficult to perceive
@@ -87,14 +88,14 @@ This parallels the way indentation is added in *lots* of programming languages t
 like brackets - e.g.  JSON, Javascript or Java are all commonly rendered with non-parsed indentation to make it
 easier for humans to understand them.
 
-But not python.
+But not Python.
 
 Python, has long been a stand out exception in how it was designed -
 syntactic markers are *not* necessary to infer program structure because indentation *is* the marker
 that determines program structure.
 
-This argument over the merits of meaningful indentation in python has been going on for decades, and [not everybody agrees with this](https://www.quora.com/Do-you-think-that-indentation-in-Python-is-annoying), but it's generally
-considered a good idea - usually for [the reaasons argued in this stack exchange question](https://softwareengineering.stackexchange.com/questions/313034/why-should-a-language-prefer-indentation-over-explicit-markers-for-blocks):
+This argument over the merits of meaningful indentation in Python has been going on for decades, and [not everybody agrees with this](https://www.quora.com/Do-you-think-that-indentation-in-Python-is-annoying), but it's generally
+considered a good idea - usually for [the reasons argued in this stack exchange question](https://softwareengineering.stackexchange.com/questions/313034/why-should-a-language-prefer-indentation-over-explicit-markers-for-blocks):
 
 1. Python inherited the significant indentation from the (now obsolete) predecessor language ABC. ABC is one of the very few programming languages which have used usability testing to direct the design. So while discussions about syntax usually comes down to subjective opinions and personal preferences, the choice of significant indentation actually has a sounder foundation.
 
@@ -105,7 +106,7 @@ considered a good idea - usually for [the reaasons argued in this stack exchange
 4. It does away with the typical religious C debate of "where to put the curly braces" (although TOML is not yet popular enough to inspire such religious wars over indentation... yet).
 
 
-## 2. Overcomplication: Like YAML, TOML has too many features
+## 3. Overcomplication: Like YAML, TOML has too many features
 
 Somewhat ironically, TOML's creator quite rightly
 [criticizes YAML for not aiming for simplicity](https://github.com/toml-lang/toml#comparison-with-other-formats)
@@ -124,12 +125,12 @@ which you can swap out later if required.
 This the approach that JSON took (arguably a good decision) and it's the approach that StrictYAML takes too.
 
 StrictYAML the library (as opposed to the format) has a validator that uses
-[python's most popular date/time parsing library](https://dateutil.readthedocs.io/en/stable/) although
+[Python's most popular date/time parsing library](https://dateutil.readthedocs.io/en/stable/) although
 developers are not obliged or even necessarily encouraged to use this. StrictYAML parses everything as a
 string by default and whatever validation occurs later is considered to be outside of its purvue.
 
 
-## 3. Syntax typing
+## 4. Syntax typing
 
 Like most other markup languages TOML has [syntax typing](../../why/syntax-typing-bad) -
 the *writer* of the markup decides if, for example, something should be parsed as a number
@@ -159,12 +160,13 @@ The lack of syntax typing combined with the use of indentation instead of square
 to denote hierarchies makes equivalent StrictYAML documents 10-20% shorter, cleaner
 and ultimately more readable.
 
+
 ## Advantages of TOML still has over StrictYAML
 
 There are currently still a few:
 
 * StrictYAML does not currently have an "official spec". The spec is currently just "YAML 2.0 with [features removed](../../features-removed)". This has some advantages (e.g. YAML syntax highlighting in editors works just fine) but also some disadvantages (some documents will render differently).
 
-* StrictYAML does not yet have parsers in languages other than python. If you'd like to write one for your language (if you don't also do validation it actually wouldn't be very complicated), contact me, I'd love to help you in any way I can - including doing a test suite and documentation.
+* StrictYAML does not yet have parsers in languages other than Python. If you'd like to write one for your language (if you don't also do validation it actually wouldn't be very complicated), contact me, I'd love to help you in any way I can - including doing a test suite and documentation.
 
 * Popularity.
