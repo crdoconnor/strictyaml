@@ -206,7 +206,7 @@ Below is a series of documented justifications:
 - [Why avoid using environment variables as configuration?](https://hitchdev.com/strictyaml/why-not/environment-variables-as-config)
 - [Why not use XML for configuration or DSLs?](https://hitchdev.com/strictyaml/why-not/xml)
 - [Why not use INI files?](https://hitchdev.com/strictyaml/why-not/ini)
-- [Why not use the YAML 2.0 standard? - we don't need a new standard!](https://hitchdev.com/strictyaml/why-not/ordinary-yaml)
+- [Why not use the YAML 1.2 standard? - we don't need a new standard!](https://hitchdev.com/strictyaml/why-not/ordinary-yaml)
 - [Why not use python's schema library (or similar) for validation?](https://hitchdev.com/strictyaml/why-not/python-schema)
 - [Why not HOCON?](https://hitchdev.com/strictyaml/why-not/hocon)
 - [Why not use SDLang?](https://hitchdev.com/strictyaml/why-not/sdlang)

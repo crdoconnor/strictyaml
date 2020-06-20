@@ -62,9 +62,9 @@ countries:
 - 'NO'
 ```
 
-The most tragic aspect of this bug, howevere, is that it is
-*intended* behavior according to the YAML 2.0 specification.
-The real fix requires explicitly disregaring the spec - which
+The most tragic aspect of this bug, however, is that it is
+*intended* behavior according to the [YAML 1.2 specification](https://github.com/yaml/yaml-spec/tree/spec-1.2).
+The real fix requires explicitly disregarding the spec - which
 is why most YAML parsers have it.
 
 StrictYAML sidesteps this problem by ignoring key parts of the
