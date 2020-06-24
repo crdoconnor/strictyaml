@@ -50,7 +50,7 @@ class Enum(ScalarValidator):
         val._validator = self
         if val.scalar not in self._restricted_to:
             chunk.expecting_but_found(
-                "when expecting one of: {0}".format(", ".join(self._restricted_to))
+                "when expecting one of: {0}".format(", ".join(map(str,self._restricted_to)))
             )
         else:
             return val
@@ -59,7 +59,7 @@ class Enum(ScalarValidator):
         if data not in self._restricted_to:
             raise YAMLSerializationError(
                 "Got '{0}' when  expecting one of: {1}".format(
-                    data, ", ".join(self._restricted_to)
+                    data, ", ".join(map(str,self._restricted_to))
                 )
             )
         return self._item_validator.to_yaml(data)
