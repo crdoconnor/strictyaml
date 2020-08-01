@@ -294,11 +294,10 @@ and/or not obvious. Those are documented here:
 - @jaredsampson
 - @BoboTIG
 
+
 ## Contributing
 
-* Before writing any code, please read the tutorial on [contributing to hitchdev libraries](https://hitchdev.com/approach/contributing-to-hitch-libraries/).
-
-* Before writing any code, if you're proposing a new feature, please raise it on github. If it's an existing feature / bug, please comment and briefly describe how you're going to implement it.
-
-* All code needs to come accompanied with a story that exercises it or a modification to an existing story. This is used both to test the code and build the documentation.
+- Before writing any code, please read the tutorial on [contributing to hitchdev libraries](https://hitchdev.com/approach/contributing-to-hitch-libraries/).
+- Before writing any code, if you're proposing a new feature, please raise it on github. If it's an existing feature / bug, please comment and briefly describe how you're going to implement it.
+- All code needs to come accompanied with a story that exercises it or a modification to an existing story. This is used both to test the code and build the documentation.
 

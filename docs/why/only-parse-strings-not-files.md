@@ -24,7 +24,7 @@ Path object:
 [ parsed yaml ]
 ```
 
-Counterarguments
-----------------
 
-- https://github.com/crdoconnor/strictyaml/issues/5
+## Counterarguments
+
+- <https://github.com/crdoconnor/strictyaml/issues/5>
