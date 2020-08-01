@@ -17,7 +17,6 @@ Explicit typecasts in YAML markup are slightly confusing for non-programmers, mu
 If tags are seen in a YAML file it will raise a special TagTokenDisallowed exception.
 
 
-Counterpoints
--------------
+## Counterpoints
 
-* [Valid usage in AWS cloudformation syntax?](https://github.com/crdoconnor/strictyaml/issues/37)
+- [Valid usage in AWS cloudformation syntax?](https://github.com/crdoconnor/strictyaml/issues/37)

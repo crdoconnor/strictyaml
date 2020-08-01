@@ -165,8 +165,6 @@ and ultimately more readable.
 
 There are currently still a few:
 
-* StrictYAML does not currently have an "official spec". The spec is currently just "YAML 1.2 with [features removed](../../features-removed)". This has some advantages (e.g. YAML syntax highlighting in editors works just fine) but also some disadvantages (some documents will render differently).
-
-* StrictYAML does not yet have parsers in languages other than Python. If you'd like to write one for your language (if you don't also do validation it actually wouldn't be very complicated), contact me, I'd love to help you in any way I can - including doing a test suite and documentation.
-
-* Popularity.
+- StrictYAML does not currently have an "official spec". The spec is currently just "YAML 1.2 with [features removed](../../features-removed)". This has some advantages (e.g. YAML syntax highlighting in editors works just fine) but also some disadvantages (some documents will render differently).
+- StrictYAML does not yet have parsers in languages other than Python. If you'd like to write one for your language (if you don't also do validation it actually wouldn't be very complicated), contact me, I'd love to help you in any way I can - including doing a test suite and documentation.
+- Popularity.

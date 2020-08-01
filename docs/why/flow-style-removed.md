@@ -18,14 +18,13 @@ The *first* question in the FAQ of pyyaml actually subtly indicates that this fe
 To take a real life example, use of flow style in [this saltstack YAML definition](https://github.com/saltstack-formulas/mysql-formula/blob/master/mysql/server.sls#L27) which blurs the distinction between flow style and jinja2,
 confusing the reader.
 
-Parsing 'dirty' YAML with flow style
-------------------------------------
+
+## Parsing 'dirty' YAML with flow style
 
 To parse YAML with flow style, you can use [dirty load](../../using/alpha/restrictions/loading-dirty-yaml).
 
 
-Counterarguments
-----------------
+## Counterarguments
 
-- https://github.com/crdoconnor/strictyaml/issues/20
-- https://github.com/crdoconnor/strictyaml/issues/38
+- <https://github.com/crdoconnor/strictyaml/issues/20>
+- <https://github.com/crdoconnor/strictyaml/issues/38>

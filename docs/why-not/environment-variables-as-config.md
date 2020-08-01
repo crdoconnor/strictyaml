@@ -13,8 +13,8 @@ The reason cited by the 12 factor website for using them is:
 
 Two of these are fine reasons. It is true that these are both good reasons:
 
-* Easy to change between deploys.
-* Language and OS agnostic.
+- Easy to change between deploys.
+- Language and OS agnostic.
 
 However, neither of these things requires that config be stored in environment variables.
 It's easy enough to create language and OS agnostic configuration files
@@ -36,9 +36,8 @@ Environment variables are a form of global state. Every variable
 is associated only with the environment. The variables will be shared with many
 other variables which have a multitude of different uses:
 
-* The chances of variable cross contamination is high - accidentally naming one variable the same as another which is unknowingly used for a different purpose (e.g. PATH) is elevated, and this can have both weird, hard to debug and terrible effects.
-
-* If you need to inspect environment variables e.g. to find one that you thought was there and it actually missing, tracking it down is a pain.
+- The chances of variable cross contamination is high - accidentally naming one variable the same as another which is unknowingly used for a different purpose (e.g. PATH) is elevated, and this can have both weird, hard to debug and terrible effects.
+- If you need to inspect environment variables e.g. to find one that you thought was there and it actually missing, tracking it down is a pain.
 
 Global state in and of itself isn't a "bad thing" but *too much* global
 state is a very bad thing. A small amount of configuration (e.g. less than

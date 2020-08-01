@@ -22,10 +22,10 @@ years.
 
 The language expressiveness trade off applies at every level in code
 
- * [We need less powerful languages](http://lukeplant.me.uk/blog/posts/less-powerful-languages/).
- * [Rule of least power (wikipedia)](https://en.wikipedia.org/wiki/Rule_of_least_power).
- * [Principle of least power by Tim Berners Lee](https://www.w3.org/DesignIssues/Principles.html#PLP).
- * [Principle of least power by Jeff Atwood (coding horror blogger / stack overflow founder)](https://blog.codinghorror.com/the-principle-of-least-power/).
+- [We need less powerful languages](http://lukeplant.me.uk/blog/posts/less-powerful-languages/).
+- [Rule of least power (wikipedia)](https://en.wikipedia.org/wiki/Rule_of_least_power).
+- [Principle of least power by Tim Berners Lee](https://www.w3.org/DesignIssues/Principles.html#PLP).
+- [Principle of least power by Jeff Atwood (coding horror blogger / stack overflow founder)](https://blog.codinghorror.com/the-principle-of-least-power/).
 
 A good way of refactoring, in fact, is to take a large chunk of Turing-complete Python code that *can* be transformed directly into StrictYAML with no loss in expressiveness and and to transform it - for example, a list of translation strings, countries or parameters.
 
