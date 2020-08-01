@@ -77,8 +77,8 @@ a: text               # not necessary
 b: "yes"              # necessary
 c: "0"                # necessary
 d: "3.5"              # necessary
-e: in                 # not necssary
-f: out                # not necesary
+e: in                 # not necessary
+f: out                # not necessary
 g: shake it all about # not necessary
 h: "on"               # necessary
 ```

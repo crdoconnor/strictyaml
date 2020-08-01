@@ -154,10 +154,11 @@ A less popular, although equally true idea is the notion that markup
 languages like YAML have the same issues with types - as demonstrated
 above.
 
+
 ## User Experience
 
 In a way, type systems can be considered both a mathematical concern
-and a UX device. In the above case 
+and a UX device.
 
 In the above, and in most cases, implicit typing represents a major violation
 of the UX [principle of least astonishment](https://en.wikipedia.org/wiki/Principle_of_least_astonishment).

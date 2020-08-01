@@ -127,7 +127,7 @@ This the approach that JSON took (arguably a good decision) and it's the approac
 StrictYAML the library (as opposed to the format) has a validator that uses
 [Python's most popular date/time parsing library](https://dateutil.readthedocs.io/en/stable/) although
 developers are not obliged or even necessarily encouraged to use this. StrictYAML parses everything as a
-string by default and whatever validation occurs later is considered to be outside of its purvue.
+string by default and whatever validation occurs later is considered to be outside of its purview.
 
 
 ## 4. Syntax typing
@@ -154,7 +154,7 @@ string: hello
 
 In the above example it just removes two characters, but in larger documents with more
 complex data, pushing type parsing decision to the schema (or assuming strings)
-emoves an enormous amount of syntactic noise.
+removes an enormous amount of syntactic noise.
 
 The lack of syntax typing combined with the use of indentation instead of square brackets
 to denote hierarchies makes equivalent StrictYAML documents 10-20% shorter, cleaner

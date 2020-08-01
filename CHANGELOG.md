@@ -325,7 +325,7 @@ No relevant code changes.
 * FEATURE : Implemented __contains__ so the 'in' method can be used.
 * FEATURE : Added .get(val) and .keys() so mapping YAML objects can be treated like dicts.
 * FEATURE : Added .items() to YAML object.
-* FEATURE : Handle srting casting for integers.
+* FEATURE : Handle string casting for integers.
 * FEATURE : Raise TypeError when trying to cast a string to bool.
 * FEATURE : Raise TypeError when attempting to cast YAML(bool) to string.
 * FEATURE : Get lines for a specific YAML value, lines before it and lines after.
@@ -333,7 +333,7 @@ No relevant code changes.
 * FEATURE : Any validator.
 * FEATURE : Fixed length sequence validation.
 * BUG : Fixed roundtripping.
-* FEATURE : Rountripped YAML with modifications.
+* FEATURE : Roundtripped YAML with modifications.
 * BUG : Fixed ruamel.yaml version at a higher level.
 * FEATURE : Parse YAML into roundtrippable YAML object.
 
