@@ -1,5 +1,5 @@
 ---
-title: What is wrong with flow style YAML?
+title: What is wrong with flow-style YAML?
 ---
 
 Flow style is essentially JSON embedded in YAML - making use of curly { } and square brackets to denote lists and mappings.

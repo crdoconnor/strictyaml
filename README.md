@@ -277,8 +277,8 @@ and/or not obvious. Those are documented here:
 - [The Norway Problem - why StrictYAML refuses to do implicit typing and so should you](https://hitchdev.com/strictyaml/why/implicit-typing-removed)
 - [Why does StrictYAML not parse direct representations of Python objects?](https://hitchdev.com/strictyaml/why/not-parse-direct-representations-of-python-objects)
 - [Why does StrictYAML only parse from strings and not files?](https://hitchdev.com/strictyaml/why/only-parse-strings-not-files)
-- [Why does StrictYAML make you define a schema in Python - a turing complete language?](https://hitchdev.com/strictyaml/why/turing-complete-schema)
-- [What is wrong with flow style YAML?](https://hitchdev.com/strictyaml/why/flow-style-removed)
+- [Why does StrictYAML make you define a schema in Python - a Turing-complete language?](https://hitchdev.com/strictyaml/why/turing-complete-schema)
+- [What is wrong with flow-style YAML?](https://hitchdev.com/strictyaml/why/flow-style-removed)
 
 
 ## Star Contributors

@@ -70,7 +70,7 @@ absent.
 Shortening program lengths (and DRYing code), all other things being equal,
 [reduces the number of bugs significantly](https://blog.codinghorror.com/diseconomies-of-scale-and-lines-of-code/)
 because maintenance becomes easier and deriving intent from the code becomes clearer.
-What goes for turing complete code also applies to configuration code.
+What goes for Turing-complete code also applies to configuration code.
 
 
 ## 2. TOML's hierarchies are difficult to infer from syntax alone

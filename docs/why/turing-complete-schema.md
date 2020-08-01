@@ -1,8 +1,8 @@
 ---
-title: Why does StrictYAML make you define a schema in Python - a turing complete language?
+title: Why does StrictYAML make you define a schema in Python - a Turing-complete language?
 ---
 
-StrictYAML defines schemas in Python (i.e. turing complete) code. For example:
+StrictYAML defines schemas in Python (i.e. Turing-complete) code. For example:
 
 ```python
 Map({"name": Str(), "email": Str()})
@@ -23,11 +23,11 @@ mapping:
       
 There are some trade offs here:
 
-Schema definition in a non-turing complete language like YAML makes
+Schema definition in a non-Turing-complete language like YAML makes
 the schema programming language independent and gives it more
 potential for being read and understood by non-programmers.
 
-However, schema definition in a non-turing complete language also
+However, schema definition in a non-Turing-complete language also
 restricts and makes certain use cases impossible or awkward.
 
 Some use cases I came across included:
