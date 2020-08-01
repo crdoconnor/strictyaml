@@ -8,7 +8,7 @@ Its main criticism of YAML is::
 
   There are other formats that are human-friendlier, like YAML, but changing from JSON to a completely different format is undesirable in many cases.
 
-This is, I belive, mistaken. It is better if a language is not subtly different if you are going to use it as such. Subtle differences invite mistakes brought on by confusion.
+This is, I believe, mistaken. It is better if a language is not subtly different if you are going to use it as such. Subtle differences invite mistakes brought on by confusion.
 
 JSON5 looks like a hybrid of YAML and JSON::
 

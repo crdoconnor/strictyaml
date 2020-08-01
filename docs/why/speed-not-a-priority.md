@@ -9,7 +9,7 @@ for both humans and machines to read and write.
 
 The main difference is simply one of degree:
 
-JSON is primariliy optimized for *machine* readability and writability, while
+JSON is primarily optimized for *machine* readability and writability, while
 still maintaining human readability.
 
 YAML is optimized for *human* readability and writability, while maintaining
