@@ -22,7 +22,7 @@ An example of a snippet of YAML that uses node anchors and references is describ
     spotSize:        2mm
 - step: *id001                   # refers to the first step (with anchor &id001)
 - step: *id002                   # refers to the second step
-- step: 
+- step:
     <<: *id001
     spotSize: 2mm                # redefines just this key, refers rest from &id001
 - step: *id002

@@ -10,6 +10,7 @@ on the official YAML repository.
 
 This document lists those of those features:
 
+
 ## Implicit Typing ([Why?](../why/implicit-typing-removed))
 
 ```yaml
@@ -20,7 +21,7 @@ y: null
 Example pyyaml/ruamel/poyo:
 
 ```python
-load(yaml) == {"x": True, "y": None} 
+load(yaml) == {"x": True, "y": None}
 ```
 
 Example StrictYAML without schema:
@@ -34,6 +35,7 @@ Example StrictYAML with schema:
 ```python
 load(yaml, Map({"x": Bool(), "y": Str()})) == {"x": True, "y": "null"}
 ```
+
 
 ## Direct representations of objects ([Why?](../why/binary-data-removed))
 
@@ -55,6 +57,7 @@ Example StrictYAML
 ```python
 raises TagTokenDisallowed
 ```
+
 
 ## Duplicate Keys Disallowed ([Why?](../why/duplicate-keys-disallowed))
 
@@ -94,6 +97,7 @@ Example StrictYAML
 raises TagTokenDisallowed
 ```
 
+
 ## Node anchors and refs ([Why?](../why/node-anchors-and-references-removed))
 
 ```yaml
@@ -121,6 +125,7 @@ x: '&id001'
   a: 1
 y: '*id001'
 ```
+
 
 ## Flow style ([Why?](../why/flow-style-removed))
 

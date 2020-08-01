@@ -115,7 +115,7 @@ class Engine(BaseEngine):
                 code = "{0}\nprint repr({1})".format(
                     "\n".join(code.strip().split("\n")[:-1]), code.strip().split("\n")[-1]
                 )
-                
+
         to_run = self.example_py_code.with_code(code)
 
         if self._cprofile:

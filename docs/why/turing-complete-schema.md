@@ -20,7 +20,7 @@ mapping:
     type:      str
     required:  yes
 ```
-      
+
 There are some trade offs here:
 
 Schema definition in a non-Turing-complete language like YAML makes

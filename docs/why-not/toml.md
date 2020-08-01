@@ -57,7 +57,7 @@ So what specifically *is* wrong with TOML when you scale it up?
 
 In [this example of a StrictYAML story](https://github.com/crdoconnor/strictyaml/blob/master/hitch/story/map.story)
 and [its equivalent serialized TOML](https://github.com/crdoconnor/strictyaml/blob/master/hitch/story/map.toml)
-the latter ends up [spending](https://www.goodreads.com/quotes/775257-my-point-today-is-that-if-we-wish-to-count) 
+the latter ends up [spending](https://www.goodreads.com/quotes/775257-my-point-today-is-that-if-we-wish-to-count)
 **50% more** characters to represent the exact same data.
 
 This is largely due to the design decision to have the full name of every key being

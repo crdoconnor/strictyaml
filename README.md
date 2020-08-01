@@ -4,6 +4,7 @@ StrictYAML is a [type-safe](https://en.wikipedia.org/wiki/Type_safety) YAML pars
 that parses and validates a [restricted subset](https://hitchdev.com/strictyaml/features-removed) of the [YAML](https://hitchdev.com/strictyaml/what-is-yaml)
 specification.
 
+
 Priorities:
 
 - Beautiful API
@@ -23,21 +24,14 @@ name: Ford Prefect
 age: 42
 possessions:
 - Towel
-
 ```
-
 
 ```python
 from strictyaml import load, Map, Str, Int, Seq, YAMLError
-
 ```
 
 
-
-
-
 Default parse result:
-
 
 ```python
 >>> load(yaml_snippet)
@@ -45,9 +39,7 @@ YAML(OrderedDict([('name', 'Ford Prefect'), ('age', '42'), ('possessions', ['Tow
 ```
 
 
-
 All data is string, list or OrderedDict:
-
 
 ```python
 >>> load(yaml_snippet).data
@@ -55,23 +47,16 @@ OrderedDict([('name', 'Ford Prefect'), ('age', '42'), ('possessions', ['Towel'])
 ```
 
 
-
 Quickstart with schema:
-
 
 ```python
 from strictyaml import load, Map, Str, Int, Seq, YAMLError
 
 schema = Map({"name": Str(), "age": Int(), "possessions": Seq(Str())})
-
 ```
 
 
-
-
-
 42 is now parsed as an integer:
-
 
 ```python
 >>> person = load(yaml_snippet, schema)
@@ -80,30 +65,22 @@ OrderedDict([('name', 'Ford Prefect'), ('age', 42), ('possessions', ['Towel'])])
 ```
 
 
-
 A YAMLError will be raised if there are syntactic problems, violations of your schema or use of disallowed YAML features:
 
 ```yaml
 # All about the character
 name: Ford Prefect
 age: 42
-
 ```
 
 
-
-
-
-
 For example, a schema violation:
-
 
 ```python
 try:
     person = load(yaml_snippet, schema)
 except YAMLError as error:
     print(error)
-
 ```
 
 ```yaml
@@ -118,31 +95,21 @@ required key(s) 'possessions' not found
 ```
 
 
-
-
-
 If parsed correctly:
-
 
 ```python
 from strictyaml import load, Map, Str, Int, Seq, YAMLError, as_document
 
 schema = Map({"name": Str(), "age": Int(), "possessions": Seq(Str())})
-
 ```
 
 
-
-
-
 You can modify values and write out the YAML with comments preserved:
-
 
 ```python
 person = load(yaml_snippet, schema)
 person['age'] = 43
 print(person.as_yaml())
-
 ```
 
 ```yaml
@@ -154,11 +121,7 @@ possessions:
 ```
 
 
-
-
-
 As well as look up line numbers:
-
 
 ```python
 >>> person = load(yaml_snippet, schema)
@@ -167,13 +130,10 @@ As well as look up line numbers:
 ```
 
 
-
 And construct YAML documents from dicts or lists:
-
 
 ```python
 print(as_document({"x": 1}).as_yaml())
-
 ```
 
 ```yaml
@@ -181,15 +141,12 @@ x: 1
 ```
 
 
-
-
-
-
 ## Install
 
 ```sh
 $ pip install strictyaml
 ```
+
 
 ## Why StrictYAML?
 
@@ -211,7 +168,6 @@ Below is a series of documented justifications:
 - [Why not HOCON?](https://hitchdev.com/strictyaml/why-not/hocon)
 - [Why not use SDLang?](https://hitchdev.com/strictyaml/why-not/sdlang)
 - [Why not use kwalify with standard YAML to validate my YAML?](https://hitchdev.com/strictyaml/why-not/pykwalify)
-
 
 
 ## Using StrictYAML
@@ -284,6 +240,7 @@ and/or not obvious. Those are documented here:
 ## Star Contributors
 
 - @wwoods
+
 
 ## Contributors
 

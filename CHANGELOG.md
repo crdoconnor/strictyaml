@@ -57,8 +57,8 @@ data's schema.
 
 ### 1.0.0
 
-
 No relevant code changes.
+
 
 ### 0.15.4
 
@@ -263,8 +263,8 @@ No relevant code changes.
 
 ### 0.5.9
 
-
 No relevant code changes.
+
 
 ### 0.5.8
 
@@ -343,6 +343,7 @@ No relevant code changes.
 
 No relevant code changes.
 
+
 ### 0.4.1
 
 * BUG : Fixed comma separated validator - now removes trailing spaces when parsing "a, b, c" so it does not parse as "a", " b", " c".
@@ -385,8 +386,8 @@ No relevant code changes.
 
 ### 0.3.2
 
-
 No relevant code changes.
+
 
 ### 0.3.1
 
@@ -406,8 +407,8 @@ No relevant code changes.
 
 ### 0.1.6
 
-
 No relevant code changes.
+
 
 ### 0.1.5
 
