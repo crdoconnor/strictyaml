@@ -3,7 +3,7 @@ title: Why not use XML for configuration or DSLs?
 ---
 
 XML suffers from overcomplication much like vanilla YAML does - although to an ever greater degree, thanks to 
-the committee driven design. Doctypes and namespaces are horrendous additions to the language, for instance. XML is not only not really human readable (beyond a very basic subset of the language), it's often barely *programmer* readable despite being less expressive than most turing complete languages. It's a flagrant violation of the [rule of least power](https://en.wikipedia.org/wiki/Rule_of_least_power).
+the committee-driven design. Doctypes and namespaces are horrendous additions to the language, for instance. XML is not only not really human readable (beyond a very basic subset of the language), it's often barely *programmer* readable despite being less expressive than most Turing-complete languages. It's a flagrant violation of the [rule of least power](https://en.wikipedia.org/wiki/Rule_of_least_power).
 
 The language was, in fact, *so* overcomplicated that it ended up increasing the attack surface of the parser itself to the point that it led to parsers with [security vulnerabilities](https://en.wikipedia.org/wiki/Billion_laughs).
 
