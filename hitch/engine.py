@@ -141,7 +141,7 @@ class Engine(BaseEngine):
                         raise
 
         elif raises is not None:
-            differential = False  # Difference between python 2 and python 3 output?
+            differential = False  # Difference between Python 2 and Python 3 output?
             exception_type = raises.get("type")
             message = raises.get("message")
 

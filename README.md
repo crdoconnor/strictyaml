@@ -200,14 +200,14 @@ Below is a series of documented justifications:
 
 - [Why not use JSON Schema for validation?](https://hitchdev.com/strictyaml/why-not/json-schema)
 - [What is wrong with TOML?](https://hitchdev.com/strictyaml/why-not/toml)
-- [Why shouldn't I just use python code for configuration?](https://hitchdev.com/strictyaml/why-not/turing-complete-code)
+- [Why shouldn't I just use Python code for configuration?](https://hitchdev.com/strictyaml/why-not/turing-complete-code)
 - [Why not JSON5?](https://hitchdev.com/strictyaml/why-not/json5)
 - [Why not JSON for simple configuration files?](https://hitchdev.com/strictyaml/why-not/json)
 - [Why avoid using environment variables as configuration?](https://hitchdev.com/strictyaml/why-not/environment-variables-as-config)
 - [Why not use XML for configuration or DSLs?](https://hitchdev.com/strictyaml/why-not/xml)
 - [Why not use INI files?](https://hitchdev.com/strictyaml/why-not/ini)
 - [Why not use the YAML 1.2 standard? - we don't need a new standard!](https://hitchdev.com/strictyaml/why-not/ordinary-yaml)
-- [Why not use python's schema library (or similar) for validation?](https://hitchdev.com/strictyaml/why-not/python-schema)
+- [Why not use Python's schema library (or similar) for validation?](https://hitchdev.com/strictyaml/why-not/python-schema)
 - [Why not HOCON?](https://hitchdev.com/strictyaml/why-not/hocon)
 - [Why not use SDLang?](https://hitchdev.com/strictyaml/why-not/sdlang)
 - [Why not use kwalify with standard YAML to validate my YAML?](https://hitchdev.com/strictyaml/why-not/pykwalify)
@@ -275,9 +275,9 @@ and/or not obvious. Those are documented here:
 - [What is wrong with duplicate keys?](https://hitchdev.com/strictyaml/why/duplicate-keys-disallowed)
 - [What is wrong with explicit tags?](https://hitchdev.com/strictyaml/why/explicit-tags-removed)
 - [The Norway Problem - why StrictYAML refuses to do implicit typing and so should you](https://hitchdev.com/strictyaml/why/implicit-typing-removed)
-- [Why does StrictYAML not parse direct representations of python objects?](https://hitchdev.com/strictyaml/why/not-parse-direct-representations-of-python-objects)
+- [Why does StrictYAML not parse direct representations of Python objects?](https://hitchdev.com/strictyaml/why/not-parse-direct-representations-of-python-objects)
 - [Why does StrictYAML only parse from strings and not files?](https://hitchdev.com/strictyaml/why/only-parse-strings-not-files)
-- [Why does StrictYAML make you define a schema in python - a turing complete language?](https://hitchdev.com/strictyaml/why/turing-complete-schema)
+- [Why does StrictYAML make you define a schema in Python - a turing complete language?](https://hitchdev.com/strictyaml/why/turing-complete-schema)
 - [What is wrong with flow style YAML?](https://hitchdev.com/strictyaml/why/flow-style-removed)
 
 

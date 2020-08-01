@@ -3,7 +3,7 @@
 
 ### Latest
 
-* BUGFIX : Fix accidental python 2 breakage.
+* BUGFIX : Fix accidental Python 2 breakage.
 * BUGFIX : Accidental misrecognition of boolean values as numbers - cause of #85.
 * BUGFIX : Fix for #86 - handle changing multiline strings.
 * BUGFIX: handle deprecated collections import in the parser (#82)
@@ -15,7 +15,7 @@
 
 ### 1.0.5
 
-* BUGFIX : Fixed python 2 bug introduced when fixing #72.
+* BUGFIX : Fixed Python 2 bug introduced when fixing #72.
 * BUG: issue #72.  Now __setitem__ uses schema.
 
 Before this commit, schemas could be violated when assigning to
@@ -215,7 +215,7 @@ No relevant code changes.
 
 * PERFORMANCE : Improved performance of dumping by restricting the number of times deepcopy() is called.
 * FEATURE : Performance improvements.
-* FEATURE : Create dumpable YAML documents from simple dicts/lists of python data.
+* FEATURE : Create dumpable YAML documents from simple dicts/lists of Python data.
 * FEATURE : Create documents from scratch.
 * FEATURE : Create YAML documents directly.
 * FEATURE : Merging of YAML documents.
@@ -230,14 +230,14 @@ No relevant code changes.
 ### 0.7.2
 
 * BUGFIX : Decimal point representer does not work with decimal.Decimal() object, so using float instead.
-* BUGFIX : In python 2.x, the __ne__ magic method is called on != rather than negating the result of the __eq__ method. This caused undesired behavior in python 2.x.
+* BUGFIX : In Python 2.x, the __ne__ magic method is called on != rather than negating the result of the __eq__ method. This caused undesired behavior in Python 2.x.
 * FEATURE : Parser errors will have the correct label attached.
 * FEATURE : .data now returns ordereddicts.
 * BUG : Boolean 'y' and 'n' values ought to resolve to True and False.
 * BUG : Map keys were accidentally optional by default.
 * BUG : Disallowed exceptions were previously not labeled.
 * BUG : Duplicate key exceptions were previously not labeled.
-* BUG : Fix for roundtripping multiline strings in python 2.
+* BUG : Fix for roundtripping multiline strings in Python 2.
 * FEATURE : Label parsed YAML and have the label appear in exceptions.
 * BUG : Fix the way that data is roundtrip loaded into the yaml object via __setitem__.
 * BUG : Fixed roundtripping without using load()
@@ -315,7 +315,7 @@ No relevant code changes.
 
 * BUG : Fixed some broken elements of roundtripping.
 * BUG : .data representations did not give keys as strings.
-* BUG : Fixed bool(x) overriding in python 2.
+* BUG : Fixed bool(x) overriding in Python 2.
 * FEATURE : Greater than / less than implemented along with better post-representation assignment to mappings.
 * FEATURE : Better repr()
 * BUG : Keys are now represented as YAML() objects with full access to the location of the key in the YAML document.
