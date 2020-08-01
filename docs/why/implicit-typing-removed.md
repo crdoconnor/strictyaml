@@ -112,6 +112,7 @@ However, the solution I really wanted was:
 >>> load(versions) == [{"python": "3.5.3", "postgres": "9.3"}]    # that's better
 ```
 
+
 ## The world's most buggy name
 
 [Christopher Null](http://www.wired.com/2015/11/null) has a name that is
@@ -136,6 +137,7 @@ With StrictYAML:
 >>> from strictyaml import load
 >>> load(name) == {"first name": "Christopher", "surname": "Null"}
 ```
+
 
 ## Type theoretical concerns
 

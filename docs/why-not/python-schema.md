@@ -12,12 +12,14 @@ and passing it through the schema.
 
 Unfortunately there are a number of problems with this approach:
 
+
 ## You still have [the Norway Problem](../why/implicit-typing-removed)
 
 If the standard YAML parser parses 'NO' as false or [empty string as
 None](https://github.com/Grokzen/pykwalify/issues/77) then it doesn't
 really matter if the schema says an empty string or the text 'NO' is
 okay, it will be seeing a 'None' or a 'False' which will cause a failure.
+
 
 ## You can't get line numbers and snippets for the validation errors
 
@@ -26,6 +28,7 @@ and feeding the output to schema is still problematic. If you pass a
 parsed dict to schema, schema can't tell which line number the failure
 happened on and can't give you a code snippet highlighting where it
 happened.
+
 
 ## Roundtripping becomes very very difficult if not impossible
 

@@ -44,11 +44,13 @@ Priorities:
 {% endfor %}
 {% endfor %}
 
+
 ## Install
 
 ```sh
 $ pip install strictyaml
 ```
+
 
 ## Why StrictYAML?
 
@@ -56,8 +58,7 @@ There are a number of formats and approaches that can achieve more or
 less the same purpose as StrictYAML. I've tried to make it the best one.
 Below is a series of documented justifications:
 
-
-{% for dirfile in subdir("why-not").ext("md") - subdir("why-not").named("index.md") -%} 
+{% for dirfile in subdir("why-not").ext("md") - subdir("why-not").named("index.md") -%}
 - [{{ title(dirfile) }}](why-not/{{ dirfile.namebase }})
 {% endfor %}
 
@@ -88,6 +89,7 @@ Restrictions:
 - [{{ title(dirfile) }}](using/alpha/restrictions/{{ dirfile.namebase }})
 {% endfor %}
 
+
 ## Design justifications
 
 There are some design decisions in StrictYAML which are controversial
@@ -97,9 +99,11 @@ and/or not obvious. Those are documented here:
 - [{{ title(dirfile) }}](why/{{ dirfile.namebase }})
 {% endfor %}
 
+
 ## Star Contributors
 
 - @wwoods
+
 
 ## Contributors
 

@@ -30,6 +30,7 @@ Moreover, there are several disadvantages to using environment variables
 that tend to exhibit themselves nastily when the size of the configuration grows beyond
 a certain point.
 
+
 ## Environment variables are global state
 
 Environment variables are a form of global state. Every variable
@@ -44,6 +45,7 @@ state is a very bad thing. A small amount of configuration (e.g. less than
 10 variables) can often be placed in to environment variables with very
 little harm, but as soon as the amount grows the danger of the global
 state grows.
+
 
 ## Environment variable values cannot handle structures more complex than a string
 
@@ -84,7 +86,8 @@ di: 01;34      # directory is blue
 While the codes are cryptic and probably should be changed (e.g. directory: blue), the cryptic nature
 can at least be easily explained with comments.
 
-## Creating naming conventions to handle the inability to handle 
+
+## Creating naming conventions to handle the inability to handle
 
 A common example:
 
