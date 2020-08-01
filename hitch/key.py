@@ -75,7 +75,7 @@ def bdd(*keywords):
 @expected(HitchStoryException)
 def tver(pyversion, *keywords):
     """
-    Run story against specific version of python - e.g. tver 3.7.0 modify multi line
+    Run story against specific version of Python - e.g. tver 3.7.0 modify multi line
     """
     _storybook().with_params(
         **{"python version": pyversion}
@@ -206,7 +206,7 @@ def doctests():
 @expected(CommandError)
 def rerun():
     """
-    Rerun last example code block with specified version of python.
+    Rerun last example code block with specified version of Python.
     """
     from commandlib import Command
     version = _personal_settings().data['params']['python version']

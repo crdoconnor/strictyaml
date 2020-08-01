@@ -49,7 +49,7 @@ means that if the data appears a *lot*
 
 ## When would you sacrifice terseness?
 
-Let's return to python for a second and imagine that 
+Let's return to Python for a second and imagine that 
 
 ```python
 x = "11" # this is a string

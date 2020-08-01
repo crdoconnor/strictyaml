@@ -1,5 +1,5 @@
 ---
-title: Why not use python's schema library (or similar) for validation?
+title: Why not use Python's schema library (or similar) for validation?
 ---
 
 Python's 'schema' (as well as similar libraries) can also be used to validate
