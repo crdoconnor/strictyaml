@@ -4,7 +4,6 @@ StrictYAML is a [type-safe](https://en.wikipedia.org/wiki/Type_safety) YAML pars
 that parses and validates a [restricted subset](https://hitchdev.com/strictyaml/features-removed) of the [YAML](https://hitchdev.com/strictyaml/what-is-yaml)
 specification.
 
-
 Priorities:
 
 - Beautiful API
@@ -24,14 +23,21 @@ name: Ford Prefect
 age: 42
 possessions:
 - Towel
+
 ```
+
 
 ```python
 from strictyaml import load, Map, Str, Int, Seq, YAMLError
+
 ```
 
 
+
+
+
 Default parse result:
+
 
 ```python
 >>> load(yaml_snippet)
@@ -39,7 +45,9 @@ YAML(OrderedDict([('name', 'Ford Prefect'), ('age', '42'), ('possessions', ['Tow
 ```
 
 
+
 All data is string, list or OrderedDict:
+
 
 ```python
 >>> load(yaml_snippet).data
@@ -47,16 +55,23 @@ OrderedDict([('name', 'Ford Prefect'), ('age', '42'), ('possessions', ['Towel'])
 ```
 
 
+
 Quickstart with schema:
+
 
 ```python
 from strictyaml import load, Map, Str, Int, Seq, YAMLError
 
 schema = Map({"name": Str(), "age": Int(), "possessions": Seq(Str())})
+
 ```
 
 
+
+
+
 42 is now parsed as an integer:
+
 
 ```python
 >>> person = load(yaml_snippet, schema)
@@ -65,22 +80,30 @@ OrderedDict([('name', 'Ford Prefect'), ('age', 42), ('possessions', ['Towel'])])
 ```
 
 
+
 A YAMLError will be raised if there are syntactic problems, violations of your schema or use of disallowed YAML features:
 
 ```yaml
 # All about the character
 name: Ford Prefect
 age: 42
+
 ```
 
 
+
+
+
+
 For example, a schema violation:
+
 
 ```python
 try:
     person = load(yaml_snippet, schema)
 except YAMLError as error:
     print(error)
+
 ```
 
 ```yaml
@@ -95,21 +118,31 @@ required key(s) 'possessions' not found
 ```
 
 
+
+
+
 If parsed correctly:
+
 
 ```python
 from strictyaml import load, Map, Str, Int, Seq, YAMLError, as_document
 
 schema = Map({"name": Str(), "age": Int(), "possessions": Seq(Str())})
+
 ```
 
 
+
+
+
 You can modify values and write out the YAML with comments preserved:
+
 
 ```python
 person = load(yaml_snippet, schema)
 person['age'] = 43
 print(person.as_yaml())
+
 ```
 
 ```yaml
@@ -121,7 +154,11 @@ possessions:
 ```
 
 
+
+
+
 As well as look up line numbers:
+
 
 ```python
 >>> person = load(yaml_snippet, schema)
@@ -130,15 +167,23 @@ As well as look up line numbers:
 ```
 
 
+
 And construct YAML documents from dicts or lists:
+
 
 ```python
 print(as_document({"x": 1}).as_yaml())
+
 ```
 
 ```yaml
 x: 1
 ```
+
+
+
+
+
 
 
 ## Install
@@ -154,7 +199,6 @@ There are a number of formats and approaches that can achieve more or
 less the same purpose as StrictYAML. I've tried to make it the best one.
 Below is a series of documented justifications:
 
-
 - [Why not use JSON Schema for validation?](https://hitchdev.com/strictyaml/why-not/json-schema)
 - [What is wrong with TOML?](https://hitchdev.com/strictyaml/why-not/toml)
 - [Why shouldn't I just use Python code for configuration?](https://hitchdev.com/strictyaml/why-not/turing-complete-code)
@@ -168,6 +212,7 @@ Below is a series of documented justifications:
 - [Why not HOCON?](https://hitchdev.com/strictyaml/why-not/hocon)
 - [Why not use SDLang?](https://hitchdev.com/strictyaml/why-not/sdlang)
 - [Why not use kwalify with standard YAML to validate my YAML?](https://hitchdev.com/strictyaml/why-not/pykwalify)
+
 
 
 ## Using StrictYAML
@@ -220,6 +265,7 @@ Restrictions:
 - [Duplicate keys](https://hitchdev.com/strictyaml/using/alpha/restrictions/duplicate-keys)
 
 
+
 ## Design justifications
 
 There are some design decisions in StrictYAML which are controversial
@@ -237,6 +283,7 @@ and/or not obvious. Those are documented here:
 - [What is wrong with flow-style YAML?](https://hitchdev.com/strictyaml/why/flow-style-removed)
 
 
+
 ## Star Contributors
 
 - @wwoods
@@ -244,6 +291,8 @@ and/or not obvious. Those are documented here:
 
 ## Contributors
 
+- @WaltWoods
+- @ChristopherGS
 - @gvx
 - @AlexandreDecan
 - @lots0logs
@@ -257,4 +306,3 @@ and/or not obvious. Those are documented here:
 - Before writing any code, please read the tutorial on [contributing to hitchdev libraries](https://hitchdev.com/approach/contributing-to-hitch-libraries/).
 - Before writing any code, if you're proposing a new feature, please raise it on github. If it's an existing feature / bug, please comment and briefly describe how you're going to implement it.
 - All code needs to come accompanied with a story that exercises it or a modification to an existing story. This is used both to test the code and build the documentation.
-
