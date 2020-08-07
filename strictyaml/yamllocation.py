@@ -61,14 +61,16 @@ class YAMLChunk(object):
                 return string_key
             else:
                 for key in current_parsed.keys():
-                    if hasattr(key, '_value'):
+                    if hasattr(key, "_value"):
                         if key.text == string_key:
                             return key
 
         if self.pointer.is_index():
             current_parsed[self.pointer.last_index] = new_item
         elif self.pointer.is_val():
-            current_parsed[actual_key_from_string_key(self.pointer.last_regularkey)] = new_item
+            current_parsed[
+                actual_key_from_string_key(self.pointer.last_regularkey)
+            ] = new_item
         elif self.pointer.is_key():
             key = actual_key_from_string_key(self.pointer.last_regularkey)
             existing_val = current_parsed[key]
@@ -151,10 +153,10 @@ class YAMLChunk(object):
         )
         if self.is_scalar():
             # Necessary for e.g. EmptyDict, which reports as a scalar.
-            forked_chunk.pointer.set(forked_chunk, '_ruamelparsed',
-                                     CommentedMap())
-            forked_chunk.pointer.set(forked_chunk, '_strictparsed',
-                                     CommentedMap(), strictdoc=True)
+            forked_chunk.pointer.set(forked_chunk, "_ruamelparsed", CommentedMap())
+            forked_chunk.pointer.set(
+                forked_chunk, "_strictparsed", CommentedMap(), strictdoc=True
+            )
         forked_chunk.contents[self.ruamelindex(strictindex)] = new_value.as_marked_up()
         forked_chunk.strictparsed()[strictindex] = deepcopy(new_value.as_marked_up())
         return forked_chunk

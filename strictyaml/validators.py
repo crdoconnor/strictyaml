@@ -73,10 +73,12 @@ class OrValidator(Validator):
         )
 
         if map_validator_count > 1:
-            raise InvalidValidatorError((
-                "You tried to Or ('|') together {} Map validators. "
-                "Try using revalidation instead."
-            ).format(map_validator_count))
+            raise InvalidValidatorError(
+                (
+                    "You tried to Or ('|') together {} Map validators. "
+                    "Try using revalidation instead."
+                ).format(map_validator_count)
+            )
 
         seq_validator_count = len(
             [
@@ -87,10 +89,12 @@ class OrValidator(Validator):
         )
 
         if seq_validator_count > 1:
-            raise InvalidValidatorError((
-                "You tried to Or ('|') together {} Seq validators. "
-                "Try using revalidation instead."
-            ).format(seq_validator_count))
+            raise InvalidValidatorError(
+                (
+                    "You tried to Or ('|') together {} Seq validators. "
+                    "Try using revalidation instead."
+                ).format(seq_validator_count)
+            )
 
     def to_yaml(self, value):
         try:

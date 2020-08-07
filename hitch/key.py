@@ -103,9 +103,9 @@ def regressfile(filename):
         lambda story: not story.info.get("fails_on_python_2")
     ).ordered_by_name().play()
 
-    _storybook().with_params(
-        **{"python version": "3.7.0"}
-    ).in_filename(filename).ordered_by_name().play()
+    _storybook().with_params(**{"python version": "3.7.0"}).in_filename(
+        filename
+    ).ordered_by_name().play()
 
 
 @expected(HitchStoryException)
@@ -127,8 +127,9 @@ def regression_on_python_path(python_path, python_version):
     """
     Run regression tests - e.g. hk regression_on_python_path /usr/bin/python 3.7.0
     """
-    _storybook(python_path=python_path).with_params(**{"python version": python_version})\
-        .only_uninherited().ordered_by_name().play()
+    _storybook(python_path=python_path).with_params(
+        **{"python version": python_version}
+    ).only_uninherited().ordered_by_name().play()
 
 
 def reformat():
@@ -142,13 +143,12 @@ def ipython():
     """
     Run ipython in strictyaml virtualenv.
     """
-    DIR.gen.joinpath("example.py").write_text((
-        "from strictyaml import *\n"
-        "import IPython\n"
-        "IPython.embed()\n"
-    ))
+    DIR.gen.joinpath("example.py").write_text(
+        ("from strictyaml import *\n" "import IPython\n" "IPython.embed()\n")
+    )
     from commandlib import Command
-    version = _personal_settings().data['params']['python version']
+
+    version = _personal_settings().data["params"]["python version"]
     Command(DIR.gen.joinpath("py{0}".format(version), "bin", "python"))(
         DIR.gen.joinpath("example.py")
     ).run()
@@ -174,9 +174,7 @@ def docgen():
     """
     Build documentation.
     """
-    hitchpylibrarytoolkit.docgen(
-        _storybook(), DIR.project, DIR.key / "story", DIR.gen
-    )
+    hitchpylibrarytoolkit.docgen(_storybook(), DIR.project, DIR.key / "story", DIR.gen)
 
 
 @expected(dirtemplate.exceptions.DirTemplateException)
@@ -209,7 +207,8 @@ def rerun():
     Rerun last example code block with specified version of Python.
     """
     from commandlib import Command
-    version = _personal_settings().data['params']['python version']
+
+    version = _personal_settings().data["params"]["python version"]
     Command(DIR.gen.joinpath("py{0}".format(version), "bin", "python"))(
         DIR.gen.joinpath("working", "examplepythoncode.py")
     ).in_dir(DIR.gen.joinpath("working")).run()

@@ -24,7 +24,9 @@ def schema_from_data(data, allow_empty):
             raise YAMLSerializationError(
                 "Empty dicts are not serializable to StrictYAML unless schema is used."
             )
-        return Map({key: schema_from_data(value, allow_empty) for key, value in data.items()})
+        return Map(
+            {key: schema_from_data(value, allow_empty) for key, value in data.items()}
+        )
     elif isinstance(data, list):
         if len(data) == 0:
             if allow_empty:

@@ -205,9 +205,11 @@ class YAML(object):
                 old_data[index] = value
             elif isinstance(old_data, list):
                 if len(old_data) <= index:
-                    raise YAMLSerializationError('cannot extend list via __setitem__.  '
-                                                 'Instead, replace whole list on parent '
-                                                 'node.')
+                    raise YAMLSerializationError(
+                        "cannot extend list via __setitem__.  "
+                        "Instead, replace whole list on parent "
+                        "node."
+                    )
                 old_data[index] = value
             else:
                 raise NotImplementedError(repr(old_data))
@@ -226,10 +228,8 @@ class YAML(object):
         self._text = new_value._text
         self._selected_validator = new_value._selected_validator
         # Update any parent ruamel links to point to our new chunk.
-        self._chunk.pointer.set(old_chunk, '_ruamelparsed',
-                                new_value._chunk.contents)
-        self._chunk.pointer.set(old_chunk, '_strictparsed',
-                                self, strictdoc=True)
+        self._chunk.pointer.set(old_chunk, "_ruamelparsed", new_value._chunk.contents)
+        self._chunk.pointer.set(old_chunk, "_strictparsed", self, strictdoc=True)
         # forked chunk made a deep copy of the original document, but we just
         # updated pointers in the original document.  So, restore our chunk to
         # pointing at the original document.

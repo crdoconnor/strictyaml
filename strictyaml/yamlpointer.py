@@ -217,7 +217,7 @@ class YAMLPointer(object):
             setattr(src_obj, src_attr, new_ruamel)
         elif key_last is not None:
             # Others are item set
-            if hasattr(obj_last, '_value'):
+            if hasattr(obj_last, "_value"):
                 # Only want to overwrite value, do NOT re-validate schema...
                 obj_last._value[key_last] = new_ruamel
             else:

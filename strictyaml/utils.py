@@ -47,15 +47,20 @@ def has_number_type(value):
     >>> has_number_type(True)
     False
     """
-    return isinstance(value, (int, float, decimal.Decimal)) and not isinstance(value, bool)
+    return isinstance(value, (int, float, decimal.Decimal)) and not isinstance(
+        value, bool
+    )
 
 
 def is_string(value):
     """
     Python 2/3 compatible way of checking if a value is a string.
     """
-    return isinstance(value, unicode) or \
-        str(type(value)) in ("<type 'unicode'>", "<type 'str'>", "<class 'str'>")
+    return isinstance(value, unicode) or str(type(value)) in (
+        "<type 'unicode'>",
+        "<type 'str'>",
+        "<class 'str'>",
+    )
 
 
 def is_integer(value):
@@ -87,7 +92,9 @@ def is_decimal(value):
     >>> is_decimal("blah")
     False
     """
-    return compile(r"^[-+]?[0-9]*(\.[0-9]*)?([eE][-+]?[0-9]+)?$").match(value) is not None
+    return (
+        compile(r"^[-+]?[0-9]*(\.[0-9]*)?([eE][-+]?[0-9]+)?$").match(value) is not None
+    )
 
 
 def comma_separated_positions(text):

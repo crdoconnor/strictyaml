@@ -3,7 +3,7 @@ Enum with item validation:
   based on: strictyaml
   description: |
     See also: enum validation.
-    
+
     Your enums can be a transformed string or something other than a string
     if you use an item validator.
   given:
@@ -44,13 +44,9 @@ Enum with item validation:
           code: load(yaml_snippet, schema)
           raises:
             type: strictyaml.exceptions.YAMLValidationError
-            message: |-
-              when expecting one of: 1, 2, 3
-              found arbitrary text
-                in "<unicode string>", line 1, column 1:
-                  a: 4
-                   ^ (line: 1)
-
+            message: "when expecting one of: 1, 2, 3\nfound an arbitrary integer\n\
+              \  in \"<unicode string>\", line 1, column 1:\n    a: '4'\n     ^ (line:\
+              \ 1)"
     Invalid because blank string is not in enum:
       given:
         yaml_snippet: 'a:'
@@ -59,9 +55,5 @@ Enum with item validation:
           code: load(yaml_snippet, schema)
           raises:
             type: strictyaml.exceptions.YAMLValidationError
-            message: |-
-              when expecting one of: 1, 2, 3
-              found a blank string
-                in "<unicode string>", line 1, column 1:
-                  a: ''
-                   ^ (line: 1)
+            message: "when expecting an integer\nfound a blank string\n  in \"<unicode\
+              \ string>\", line 1, column 1:\n    a: ''\n     ^ (line: 1)"
