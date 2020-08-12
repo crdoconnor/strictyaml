@@ -12,6 +12,8 @@ Floating point numbers (Float):
     for values for which precision is not required.
   given:
     setup: |
+      from math import isnan, isinf
+
       from strictyaml import Map, MapPattern, Str, Float, Bool, load, as_document
       from collections import OrderedDict
       from ensure import Ensure
@@ -58,6 +60,28 @@ Floating point numbers (Float):
           code: |
             Ensure(load(yaml_snippet, schema)["a"] < 0).is_false()
 
+    Has NaN values:
+      given:
+        yaml_snippet: |
+          a: nan
+          b: .NaN
+      steps:
+        - Run:
+            code: |
+              Ensure(isnan(load(yaml_snippet, schema)["a"].data)).is_true()
+              Ensure(isnan(load(yaml_snippet, schema)["b"].data)).is_true()
+
+    Has infinity values:
+      given:
+        yaml_snippet: |
+          a: -.Inf
+          b: INF
+      steps:
+        - Run:
+            code: |
+              Ensure(isinf(load(yaml_snippet, schema)["a"].data)).is_true()
+              Ensure(isinf(load(yaml_snippet, schema)["b"].data)).is_true()
+
     Cannot cast to bool:
       steps:
       - Run:
@@ -91,6 +115,22 @@ Floating point numbers (Float):
           will output: |-
             a: 3.5
             b: 2.1
+
+    Serialize successfully with NaN:
+      steps:
+      - Run:
+          code: print(as_document(OrderedDict([("a", 3.5), ("b", float("nan"))]), schema).as_yaml())
+          will output: |-
+            a: 3.5
+            b: nan
+
+    Serialize successfully with infinity:
+      steps:
+        - Run:
+            code: print(as_document(OrderedDict([("a", float("inf")), ("b", float("-inf"))]), schema).as_yaml())
+            will output: |-
+              a: inf
+              b: -inf
 
     Serialization failure:
       steps:

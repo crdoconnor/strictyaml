@@ -97,6 +97,68 @@ def is_decimal(value):
     )
 
 
+def is_infinity(value):
+    """
+    Is string a valid representation for positive or negative infinity?
+
+    Valid formats are:
+    [+/-]inf, [+/-]INF, [+/-]Inf, [+/-].inf, [+/-].INF and [+/-].Inf
+
+    >>> is_infinity(".inf")
+    True
+
+    >>> is_infinity("+.INF")
+    True
+
+    >>> is_infinity("-.Inf")
+    True
+
+    >>> is_infinity("Inf")
+    True
+
+    >>> is_infinity("INF")
+    True
+
+    >>> is_infinity("-INF")
+    True
+
+    >>> is_infinity("infinitesimal")
+    False
+    """
+    return (
+        compile(r"^[-+]?\.?(?:inf|Inf|INF)$").match(value) is not None
+    )
+
+
+def is_not_a_number(value):
+    """
+    Is string a valid representation for 'not a number'?
+
+    Valid formats are: nan, NaN, NAN, .nan, .NaN, .NAN.
+
+    >>> is_not_a_number(".nan")
+    True
+
+    >>> is_not_a_number(".NaN")
+    True
+
+    >>> is_not_a_number("NAN")
+    True
+
+    >>> is_not_a_number("nan")
+    True
+
+    >>> is_not_a_number("nanan")
+    False
+
+    >>> is_not_a_number("1e5")
+    False
+    """
+    return (
+        compile(r"^\.?(?:nan|NaN|NAN)$").match(value) is not None
+    )
+
+
 def comma_separated_positions(text):
     """
     Start and end positions of comma separated text items.
