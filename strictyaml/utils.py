@@ -125,9 +125,7 @@ def is_infinity(value):
     >>> is_infinity("infinitesimal")
     False
     """
-    return (
-        compile(r"^[-+]?\.?(?:inf|Inf|INF)$").match(value) is not None
-    )
+    return compile(r"^[-+]?\.?(?:inf|Inf|INF)$").match(value) is not None
 
 
 def is_not_a_number(value):
@@ -154,9 +152,7 @@ def is_not_a_number(value):
     >>> is_not_a_number("1e5")
     False
     """
-    return (
-        compile(r"^\.?(?:nan|NaN|NAN)$").match(value) is not None
-    )
+    return compile(r"^\.?(?:nan|NaN|NAN)$").match(value) is not None
 
 
 def comma_separated_positions(text):

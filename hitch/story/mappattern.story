@@ -10,7 +10,7 @@ Mappings with arbitrary key names (MapPattern):
     'Map' validator instead.
   given:
     setup: |
-      from strictyaml import MapPattern, Int, Float, Str, YAMLValidationError, load
+      from strictyaml import MapPattern, Int, Float, Str, Any, Seq, YAMLValidationError, load
       from ensure import Ensure
 
       schema = MapPattern(Str(), Int())
@@ -54,6 +54,18 @@ Mappings with arbitrary key names (MapPattern):
       - Run:
           code: |
             Ensure(load(yaml_snippet, MapPattern(Float(), Int())).data).equals({10.25: 23, 20.33: 76})
+            
+    With Int and List:
+      given:
+        yaml_snippet: |
+          1:
+          - ABC
+          2:
+          - DEF
+      steps:
+      - Run:
+          code: |
+            Ensure(load(yaml_snippet, MapPattern(Int(), Seq(Str()))).data).equals({1: ["ABC"], 2: ["DEF"]})
 
 
     Invalid 1:

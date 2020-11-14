@@ -172,19 +172,28 @@ class YAMLPointer(object):
             ]
         )
 
+    def _individual_get(self, segment, index_type, index, strictdoc):
+        if index_type == "val":
+            for key, value in segment.items():
+                if key == index[0]:
+                    return value
+                if hasattr(key, "text"):
+                    if key.text == index[0]:
+                        return value
+            raise Exception("Invalid state")
+        elif index_type == "index":
+            return segment[index]
+        elif index_type == "textslice":
+            return segment[index[0] : index[1]]
+        elif index_type == "key":
+            return index[1] if strictdoc else index[0]
+        else:
+            raise Exception("Invalid state")
+
     def get(self, document, strictdoc=False):
         segment = document
         for index_type, index in self._indices:
-            if index_type == "val":
-                segment = segment[index[1] if strictdoc else index[0]]
-            elif index_type == "index":
-                segment = segment[index]
-            elif index_type == "textslice":
-                segment = segment[index[0] : index[1]]
-            elif index_type == "key":
-                segment = index[1] if strictdoc else index[0]
-            else:
-                raise RuntimeError("Invalid state")
+            segment = self._individual_get(segment, index_type, index, strictdoc)
         return segment
 
     def set(self, src_obj, src_attr, new_ruamel, strictdoc=False):
