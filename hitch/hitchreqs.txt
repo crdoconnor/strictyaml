@@ -57,7 +57,7 @@ regex==2019.11.1          # via black
 requests-toolbelt==0.8.0  # via twine
 requests==2.20.1          # via requests-toolbelt, twine
 ruamel.yaml==0.15.78      # via strictyaml
-six==1.11.0               # via bleach, pip-tools, prompt-toolkit, python-dateutil, readme-renderer, traitlets
+six==1.15.0               # via bleach, pip-tools, prompt-toolkit, python-dateutil, readme-renderer, traitlets
 smmap2==2.0.5             # via gitdb2
 strictyaml==0.15.4        # via dirtemplate, hitchstory
 templex==0.2.0            # via hitchpylibrarytoolkit
