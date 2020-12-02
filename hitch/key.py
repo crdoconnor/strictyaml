@@ -212,3 +212,30 @@ def rerun():
     Command(DIR.gen.joinpath("py{0}".format(version), "bin", "python"))(
         DIR.gen.joinpath("working", "examplepythoncode.py")
     ).in_dir(DIR.gen.joinpath("working")).run()
+
+@expected(CommandError)
+def bash():
+    """
+    Run bash
+    """
+    from commandlib import Command
+    Command("bash").run()
+    
+    
+@expected(CommandError)
+def ipython():
+    """
+    Run bash
+    """
+    from hitchrun import DIR
+    import IPython ; IPython.embed()
+    
+
+def build():
+    import hitchpylibrarytoolkit
+    hitchpylibrarytoolkit.project_build(
+        "strictyaml",
+        DIR,
+        "3.7.0",
+        {"ruamel.yaml": "0.16.5"},
+    )

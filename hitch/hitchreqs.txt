@@ -38,7 +38,7 @@ pathspec==0.6.0           # via black
 peewee==3.7.1             # via hitchbuild
 pexpect==4.6.0            # via ipython
 pickleshare==0.7.5        # via ipython
-pip-tools==3.1.0          # via hitchrun
+pip-tools==5.4.0          # via hitchrun
 pkginfo==1.4.2            # via twine
 prettystack==0.3.0        # via hitchrun, hitchrunpy, hitchstory
 prompt-toolkit==2.0.7     # via ipython
