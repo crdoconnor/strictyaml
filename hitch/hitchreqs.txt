@@ -15,10 +15,10 @@ docutils==0.14            # via readme-renderer
 flake8==3.8.3             # via hitchpylibrarytoolkit
 gitdb2==2.0.5             # via gitpython
 gitpython==2.1.11         # via hitchpylibrarytoolkit
-hitchbuild==0.4.0         # via dirtemplate, hitchbuildpy
-hitchbuildpy==0.4.5       # via hitchpylibrarytoolkit
-hitchpylibrarytoolkit==0.3.1  # via -r hitchreqs.in
-hitchrun==0.3.1           # via -r hitchreqs.in
+hitchbuild==0.6.3         # via dirtemplate, hitchbuildpy
+hitchbuildpy==0.5.4       # via hitchpylibrarytoolkit
+hitchpylibrarytoolkit==0.4.1  # via -r hitchreqs.in
+hitchrun==0.3.4           # via -r hitchreqs.in, hitchpylibrarytoolkit
 hitchrunpy==0.7.0         # via hitchpylibrarytoolkit
 hitchstory==0.12.0        # via hitchpylibrarytoolkit
 icommandlib==0.5.0        # via hitchrunpy
