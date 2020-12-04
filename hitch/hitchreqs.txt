@@ -8,7 +8,7 @@ certifi==2018.10.15       # via requests
 chardet==3.0.4            # via requests
 click==7.0                # via black, hitchrun, pip-tools
 colorama==0.4.0           # via hitchrun, hitchstory, prettystack
-commandlib==0.3.5         # via hitchrun, icommandlib
+commandlib==0.3.5         # via hitchbuildpy, hitchrun, icommandlib
 decorator==4.3.0          # via ipython, traitlets
 dirtemplate==0.1.4        # via hitchpylibrarytoolkit
 docutils==0.14            # via readme-renderer
