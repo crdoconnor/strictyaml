@@ -25,7 +25,7 @@ hitchstory==0.12.1        # via hitchpylibrarytoolkit
 icommandlib==0.5.0        # via hitchrunpy
 idna==2.10                # via requests
 ipython-genutils==0.2.0   # via traitlets
-ipython==7.19.0           # via hitchpylibrarytoolkit
+ipython==7.16.1           # via hitchpylibrarytoolkit
 jedi==0.17.2              # via ipython
 jeepney==0.6.0            # via keyring, secretstorage
 jinja2==2.11.2            # via dirtemplate, hitchrunpy, hitchstory, prettystack
