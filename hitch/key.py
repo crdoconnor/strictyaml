@@ -10,6 +10,11 @@ from engine import Engine
 
 PROJECT_NAME = "strictyaml"
 
+toolkit = hitchpylibrarytoolkit.ProjectToolkit(
+    "strictyaml",
+    DIR,
+)
+
 """
 ----------------------------
 Non-runnable utility methods
@@ -159,7 +164,7 @@ def lint():
     """
     Lint project code and hitch code.
     """
-    hitchpylibrarytoolkit.lint(DIR.project, PROJECT_NAME)
+    toolkit.lint()
 
 
 def deploy(version):
@@ -213,6 +218,7 @@ def rerun():
         DIR.gen.joinpath("working", "examplepythoncode.py")
     ).in_dir(DIR.gen.joinpath("working")).run()
 
+
 @expected(CommandError)
 def bash():
     """
@@ -220,16 +226,7 @@ def bash():
     """
     from commandlib import Command
     Command("bash").run()
-    
-    
-@expected(CommandError)
-def ipython():
-    """
-    Run bash
-    """
-    from hitchrun import DIR
-    import IPython ; IPython.embed()
-    
+
 
 def build():
     import hitchpylibrarytoolkit
