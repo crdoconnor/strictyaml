@@ -198,8 +198,9 @@ def doctests():
     Run doctests in utils.py in python 2 and 3.
     """
     for python_version in ["2.7.14", "3.7.0"]:
-        pylibrary = hitchpylibrarytoolkit.project_build(
-            PROJECT_NAME, DIR, python_version
+        pylibrary = hitchpylibrarytoolkit.PyLibraryBuild(
+            "strictyaml",
+            DIR,
         )
         pylibrary.bin.python(
             "-m", "doctest", "-v", DIR.project.joinpath(PROJECT_NAME, "utils.py")
