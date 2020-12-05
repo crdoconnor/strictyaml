@@ -19,8 +19,10 @@ class Optional(object):
         self.default = default
 
     def __repr__(self):
-        # TODO: Add default
-        return u'Optional("{0}")'.format(self.key)
+        if self.default is Optional.NO_DEFAULT:
+            return u'Optional("{0}")'.format(self.key)
+        else:
+            return u'Optional("{0}", default={1})'.format(self.key, repr(self.default))
 
 
 class MapPattern(MapValidator):
