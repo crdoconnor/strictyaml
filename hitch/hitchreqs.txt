@@ -18,8 +18,8 @@ gitdb==4.0.5              # via gitpython
 gitpython==3.1.11         # via hitchpylibrarytoolkit
 hitchbuild==0.6.3         # via dirtemplate, hitchbuildpy
 hitchbuildpy==0.5.4       # via hitchpylibrarytoolkit
-hitchpylibrarytoolkit==0.4.1  # via -r hitchreqs.in
-hitchrun==0.3.4           # via -r hitchreqs.in, hitchpylibrarytoolkit
+hitchpylibrarytoolkit==0.4.2  # via -r hitchreqs.in
+hitchrun==0.4.0           # via -r hitchreqs.in, hitchpylibrarytoolkit
 hitchrunpy==0.10.0        # via hitchpylibrarytoolkit
 hitchstory==0.12.1        # via hitchpylibrarytoolkit
 icommandlib==0.5.0        # via hitchrunpy
