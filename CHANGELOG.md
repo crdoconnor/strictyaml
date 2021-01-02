@@ -3,6 +3,27 @@
 
 ### Latest
 
+
+No relevant code changes.
+
+### 1.2.0
+
+* FEATURE : #129 : Optional keys in mappings and set value to None - with thanks to @wwoods.
+
+
+### 1.1.1
+
+
+No relevant code changes.
+
+### 1.1.0
+
+* FEATURE: Add support for NaN and infinity representations (#122)
+
+
+
+### 1.0.7
+
 * BUGFIX: Fix for #116 - handle Enum or integers errors
 * BUGFIX : Fix accidental python 2 breakage.
 * BUGFIX : Accidental misrecognition of boolean values as numbers - cause of #85.
