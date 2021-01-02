@@ -8,8 +8,8 @@ jobs:
 
     steps:
     - uses: actions/checkout@v1
-    - name: Setup tmate session
-      uses: mxschmitt/action-tmate@v3
+    #- name: Setup tmate session
+    #  uses: mxschmitt/action-tmate@v3
     - name: Install dependencies
       run: |
         #sudo apt-get update
