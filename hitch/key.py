@@ -171,7 +171,7 @@ def deploy(version):
     """
     Deploy to pypi as specified version.
     """
-    hitchpylibrarytoolkit.deploy(DIR.project, PROJECT_NAME, version)
+    toolkit.deploy(version)
 
 
 @expected(dirtemplate.exceptions.DirTemplateException)
