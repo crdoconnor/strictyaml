@@ -10,7 +10,7 @@ Optional keys with defaults (Map/Optional):
     yaml_snippet: |
       a: 1
     setup: |
-      from strictyaml import Map, Int, Str, Bool, Optional, load, as_document
+      from strictyaml import Map, Int, Str, Bool, EmptyNone, Optional, load, as_document
       from collections import OrderedDict
       from ensure import Ensure
 
@@ -35,6 +35,13 @@ Optional keys with defaults (Map/Optional):
             print(as_document({"a": 1, "b": False}, schema).as_yaml())
           will output: |-
             a: 1
+    
+    When you want a key to stay and default to None:
+      steps:
+      - Run:
+          code: |
+            schema = Map({"a": Int(), Optional("b", default=None, drop_if_none=False): EmptyNone() | Bool(), })
+            Ensure(load(yaml_snippet, schema).data).equals(OrderedDict([("a", 1), ("b", None)]))
 
 
 Optional keys with bad defaults:
@@ -61,11 +68,11 @@ Optional keys revalidation bug:
         from strictyaml import MapPattern, Any
 
         loose_schema = Map({"content": Any()})
-        strict_schema = Map({"subitem": Map({"a": Int(), Optional("b", default=False): Bool(), })})
+        strict_schema = Map({"subitem": Map({"a": Int(), Optional("b", default=False): Bool()})})
 
         myyaml = load(yaml_snippet, loose_schema)
         myyaml['content'].revalidate(strict_schema)
-        assert myyaml.data == {"content": {"subitem": {"a": 1, "b": False}}}
+        assert myyaml.data == {"content": {"subitem": {"a": 1, "b": False}}}, myyaml.data
         print(myyaml.data.__repr__())
       will output: OrderedDict([('content', OrderedDict([('subitem', OrderedDict([('a',
         1), ('b', False)]))]))])

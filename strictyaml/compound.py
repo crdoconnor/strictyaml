@@ -12,9 +12,10 @@ if sys.version_info[0] == 3:
 
 
 class Optional(object):
-    def __init__(self, key, default=None):
+    def __init__(self, key, default=None, drop_if_none=True):
         self.key = key
         self.default = default
+        self.drop_if_none = drop_if_none
 
     def __repr__(self):
         # TODO: Add default
@@ -105,12 +106,17 @@ class Map(MapValidator):
         }
 
         self._required_keys = [
-            key for key in validator.keys() if not isinstance(key, Optional)
+            key for key in validator.keys()
+            if not isinstance(key, Optional)
         ]
 
         for key_val, value_val in validator.items():
             if isinstance(key_val, Optional):
-                if key_val.default is not None:
+                if key_val.default is not None and not key_val.drop_if_none:
+                    raise InvalidOptionalDefault(
+                        "If you have a default that isn't None, drop_if_none must be True."
+                    )
+                if key_val.default is not None and key_val.drop_if_none:
                     try:
                         value_val.to_yaml(key_val.default)
                     except YAMLSerializationError as error:
@@ -123,7 +129,7 @@ class Map(MapValidator):
         self._defaults = {
             key.key: key.default
             for key in validator.keys()
-            if isinstance(key, Optional) and key.default is not None
+            if isinstance(key, Optional) and (key.default is not None or not key.drop_if_none)
         }
 
     @property
