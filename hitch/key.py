@@ -179,7 +179,7 @@ def docgen():
     """
     Build documentation.
     """
-    hitchpylibrarytoolkit.docgen(_storybook(), DIR.project, DIR.key / "story", DIR.gen)
+    toolkit.docgen(Engine(DIR))
 
 
 @expected(dirtemplate.exceptions.DirTemplateException)
@@ -187,9 +187,7 @@ def readmegen():
     """
     Build README.md and CHANGELOG.md.
     """
-    hitchpylibrarytoolkit.readmegen(
-        _storybook(), DIR.project, DIR.key / "story", DIR.gen, PROJECT_NAME
-    )
+    toolkit.readmegen(Engine(DIR))
 
 
 @expected(CommandError)
