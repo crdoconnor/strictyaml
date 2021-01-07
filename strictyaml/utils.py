@@ -70,10 +70,13 @@ def is_integer(value):
     >>> is_integer("4")
     True
 
+    >>> is_integer("4_000")
+    True
+
     >>> is_integer("3.4")
     False
     """
-    return compile("^[-+]?[0-9]+$").match(value) is not None
+    return compile(r"^[-+]?[0-9_]+$").match(value) is not None
 
 
 def is_decimal(value):
@@ -83,17 +86,24 @@ def is_decimal(value):
     >>> is_decimal("4")
     True
 
+    >>> is_decimal("4_000")
+    True
+
     >>> is_decimal("3.5")
     True
 
     >>> is_decimal("4.")
     True
 
+    >>> is_decimal("4.000_001")
+    True
+
     >>> is_decimal("blah")
     False
     """
     return (
-        compile(r"^[-+]?[0-9]*(\.[0-9]*)?([eE][-+]?[0-9]+)?$").match(value) is not None
+        compile(r"^[-+]?[0-9_]*(\.[0-9_]*)?([eE][-+]?[0-9_]+)?$").match(value)
+        is not None
     )
 
 
