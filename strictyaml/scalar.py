@@ -114,12 +114,16 @@ class Regex(ScalarValidator):
         Give regular expression, e.g. u'[0-9]'
         """
         self._regex = regular_expression
+        # re.fullmatch is only available in Python 3.4+ so append "$" if needed
+        if not regular_expression.endswith(r"$"):
+            regular_expression += r"$"
+        self._fullmatch = re.compile(regular_expression).match
         self._matching_message = "when expecting string matching {0}".format(
             self._regex
         )
 
     def validate_scalar(self, chunk):
-        if re.compile(self._regex).match(chunk.contents) is None:
+        if self._fullmatch(chunk.contents) is None:
             chunk.expecting_but_found(
                 self._matching_message, "found non-matching string"
             )
@@ -127,7 +131,7 @@ class Regex(ScalarValidator):
 
     def to_yaml(self, data):
         self.should_be_string(data, self._matching_message)
-        if re.compile(self._regex).match(data) is None:
+        if self._fullmatch(data) is None:
             raise YAMLSerializationError(
                 "{} found '{}'".format(self._matching_message, data)
             )
@@ -136,13 +140,13 @@ class Regex(ScalarValidator):
 
 class Email(Regex):
     def __init__(self):
-        self._regex = constants.REGEXES["email"]
+        super().__init__(constants.REGEXES["email"])
         self._matching_message = "when expecting an email address"
 
 
 class Url(Regex):
     def __init__(self):
-        self._regex = constants.REGEXES["url"]
+        super().__init__(constants.REGEXES["url"])
         self._matching_message = "when expecting a url"
 
 
