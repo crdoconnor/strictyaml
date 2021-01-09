@@ -17,7 +17,7 @@ Simple example:
           code: |
             load(yaml_snippet)
           will output: |-
-            YAML(OrderedDict([('name', 'Ford Prefect'), ('age', '42'), ('possessions', ['Towel'])]))
+            YAML({'name': 'Ford Prefect', 'age': '42', 'possessions': ['Towel']})
           in interpreter: yes
 
     All data is string, list or OrderedDict:
@@ -27,7 +27,7 @@ Simple example:
           code: |
             load(yaml_snippet).data
           will output: |-
-            OrderedDict([('name', 'Ford Prefect'), ('age', '42'), ('possessions', ['Towel'])])
+            {'name': 'Ford Prefect', 'age': '42', 'possessions': ['Towel']}
           in interpreter: yes
 
 Quickstart with schema:
@@ -46,7 +46,7 @@ Quickstart with schema:
             person = load(yaml_snippet, schema)
             person.data
           will output: |-
-            OrderedDict([('name', 'Ford Prefect'), ('age', 42), ('possessions', ['Towel'])])
+            {'name': 'Ford Prefect', 'age': 42, 'possessions': ['Towel']}
 
 A YAMLError will be raised if there are syntactic problems, violations of your schema or use of disallowed YAML features:
   based on: quickstart with schema

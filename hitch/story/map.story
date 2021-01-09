@@ -54,10 +54,8 @@ Mappings with defined keys (Map):
               in python 3: builtins.TypeError
               in python 2: exceptions.TypeError
             message:
-              in python 3: YAML(OrderedDict([('â', 1), ('b', 2), ('c', 3)])) is a
-                mapping, has no text value.
-              in python 2: YAML(OrderedDict([(u'\xe2', 1), ('b', 2), ('c', 3)])) is
-                a mapping, has no text value.
+              in python 3: "YAML({'â': 1, 'b': 2, 'c': 3}) is a mapping, has no text value."
+              in python 2: "YAML({u'\\xe2': 1, 'b': 2, 'c': 3}) is a mapping, has no text value."
 
     parse snippet where key is not found in schema:
       given:

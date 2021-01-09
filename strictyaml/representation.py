@@ -3,7 +3,6 @@ from strictyaml.exceptions import raise_type_error, YAMLSerializationError
 from strictyaml.yamllocation import YAMLChunk
 from strictyaml.dumper import StrictYAMLDumper
 from ruamel.yaml import dump
-from collections import OrderedDict
 from copy import copy
 import decimal
 import sys
@@ -11,6 +10,18 @@ import sys
 
 if sys.version_info[0] == 3:
     unicode = str
+
+if sys.version_info[:2] < (3, 7):
+    from collections import OrderedDict as OrderedDictBase
+
+    class OrderedDict(OrderedDictBase):
+        def __repr__(self):
+            return "{" + ", ".join(
+                "{}: {}".format(repr(k), repr(v))
+                for k, v in self.items()
+            ) + "}"
+else:
+    OrderedDict = dict
 
 
 class YAMLIterator(object):
