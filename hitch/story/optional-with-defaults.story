@@ -74,5 +74,4 @@ Optional keys revalidation bug:
         myyaml['content'].revalidate(strict_schema)
         assert myyaml.data == {"content": {"subitem": {"a": 1, "b": False}}}, myyaml.data
         print(myyaml.data.__repr__())
-      will output: OrderedDict([('content', OrderedDict([('subitem', OrderedDict([('a',
-        1), ('b', False)]))]))])
+      will output: "{'content': {'subitem': {'a': 1, 'b': False}}}"
