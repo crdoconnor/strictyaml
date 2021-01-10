@@ -26,6 +26,16 @@ Integers (Int):
       - Run: |
           Ensure(parsed).equals({"a": 1, "b": 5})
 
+    Has underscores:
+      given:
+        yaml_snippet: |
+          a: 10_000_000
+          b: 10_0_0
+      steps:
+        - Run:
+            code: |
+              Ensure(load(yaml_snippet, schema).data).equals({"a": 10_000_000, "b": 10_0_0})
+
     Cast with str:
       steps:
       - Run: Ensure(str(parsed["a"])).equals("1")

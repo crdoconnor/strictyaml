@@ -82,6 +82,16 @@ Floating point numbers (Float):
               Ensure(isinf(load(yaml_snippet, schema)["a"].data)).is_true()
               Ensure(isinf(load(yaml_snippet, schema)["b"].data)).is_true()
 
+    Has underscores:
+      given:
+        yaml_snippet: |
+          a: 10_000_000.5
+          b: 10_0_0.2_5
+      steps:
+        - Run:
+            code: |
+              Ensure(load(yaml_snippet, schema).data).equals({"a": 10000000.5, "b": 1000.25})
+
     Cannot cast to bool:
       steps:
       - Run:

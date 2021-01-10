@@ -168,7 +168,8 @@ class Int(ScalarValidator):
         if not utils.is_integer(val):
             chunk.expecting_but_found("when expecting an integer")
         else:
-            return int(val)
+            # Only Python 3.6+ supports underscores in numeric literals
+            return int(val.replace("_", ""))
 
     def to_yaml(self, data):
         if utils.is_string(data) or isinstance(data, int):
@@ -209,7 +210,8 @@ class Float(ScalarValidator):
             val = val.replace(".", "")
         elif not utils.is_decimal(val):
             chunk.expecting_but_found("when expecting a float")
-        return float(val)
+        # Only Python 3.6+ supports underscores in numeric literals
+        return float(val.replace("_", ""))
 
     def to_yaml(self, data):
         if utils.has_number_type(data):
