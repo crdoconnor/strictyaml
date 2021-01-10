@@ -34,7 +34,7 @@ Integers (Int):
       steps:
         - Run:
             code: |
-              Ensure(load(yaml_snippet, schema).data).equals({"a": 10_000_000, "b": 10_0_0})
+              Ensure(load(yaml_snippet, schema).data).equals({"a": 10000000, "b": 1000})
 
     Cast with str:
       steps:

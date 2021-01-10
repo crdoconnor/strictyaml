@@ -140,13 +140,13 @@ class Regex(ScalarValidator):
 
 class Email(Regex):
     def __init__(self):
-        super().__init__(constants.REGEXES["email"])
+        super(Email, self).__init__(constants.REGEXES["email"])
         self._matching_message = "when expecting an email address"
 
 
 class Url(Regex):
     def __init__(self):
-        super().__init__(constants.REGEXES["url"])
+        super(Url, self).__init__(constants.REGEXES["url"])
         self._matching_message = "when expecting a url"
 
 
