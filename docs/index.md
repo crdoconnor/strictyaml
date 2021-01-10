@@ -103,6 +103,7 @@ and/or not obvious. Those are documented here:
 ## Star Contributors
 
 - @wwoods
+- @chrisburr
 
 
 ## Contributors

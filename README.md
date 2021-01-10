@@ -41,7 +41,7 @@ Default parse result:
 
 ```python
 >>> load(yaml_snippet)
-YAML(OrderedDict([('name', 'Ford Prefect'), ('age', '42'), ('possessions', ['Towel'])]))
+YAML({'name': 'Ford Prefect', 'age': '42', 'possessions': ['Towel']})
 ```
 
 
@@ -51,7 +51,7 @@ All data is string, list or OrderedDict:
 
 ```python
 >>> load(yaml_snippet).data
-OrderedDict([('name', 'Ford Prefect'), ('age', '42'), ('possessions', ['Towel'])])
+{'name': 'Ford Prefect', 'age': '42', 'possessions': ['Towel']}
 ```
 
 
@@ -76,7 +76,7 @@ schema = Map({"name": Str(), "age": Int(), "possessions": Seq(Str())})
 ```python
 >>> person = load(yaml_snippet, schema)
 >>> person.data
-OrderedDict([('name', 'Ford Prefect'), ('age', 42), ('possessions', ['Towel'])])
+{'name': 'Ford Prefect', 'age': 42, 'possessions': ['Towel']}
 ```
 
 
@@ -287,6 +287,7 @@ and/or not obvious. Those are documented here:
 ## Star Contributors
 
 - @wwoods
+- @chrisburr
 
 
 ## Contributors

@@ -6,6 +6,14 @@
 
 No relevant code changes.
 
+### 1.3.0
+
+* BUGFIX : Fixes to ensure python 2.7.14 compatibility. This is probably the last time I will do this.
+* FEATURE : Use dict instead of OrderedDict for Python 3.7+
+* BUGFIX : Require Regex to be a full match
+* FEATURE: Support underscores in int and decimal
+
+
 ### 1.2.0
 
 * FEATURE : #129 : Optional keys in mappings and set value to None - with thanks to @wwoods.
