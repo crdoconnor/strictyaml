@@ -40,6 +40,23 @@ Validating strings with regexes (Regex):
                   a: '5'
                    ^ (line: 1)
 
+    Non-matching suffix:
+      given:
+        yaml_snippet: |
+          a: 1 Hello
+          b: 5
+      steps:
+      - Run:
+          code: load(yaml_snippet, schema)
+          raises:
+            type: strictyaml.exceptions.YAMLValidationError
+            message: |-
+              when expecting string matching [1-4]
+              found non-matching string
+                in "<unicode string>", line 1, column 1:
+                  a: 1 Hello
+                   ^ (line: 1)
+
     Serialized successfully:
       steps:
       - Run:
