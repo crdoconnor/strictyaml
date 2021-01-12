@@ -106,8 +106,7 @@ class Map(MapValidator):
         }
 
         self._required_keys = [
-            key for key in validator.keys()
-            if not isinstance(key, Optional)
+            key for key in validator.keys() if not isinstance(key, Optional)
         ]
 
         for key_val, value_val in validator.items():
@@ -129,7 +128,8 @@ class Map(MapValidator):
         self._defaults = {
             key.key: key.default
             for key in validator.keys()
-            if isinstance(key, Optional) and (key.default is not None or not key.drop_if_none)
+            if isinstance(key, Optional)
+            and (key.default is not None or not key.drop_if_none)
         }
 
     @property

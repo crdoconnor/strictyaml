@@ -141,7 +141,7 @@ def reformat():
     """
     Reformat using black and then relint.
     """
-    hitchpylibrarytoolkit.reformat(DIR.project, PROJECT_NAME)
+    toolkit.reformat()
 
 
 def ipython():
@@ -224,11 +224,13 @@ def bash():
     Run bash
     """
     from commandlib import Command
+
     Command("bash").run()
 
 
 def build():
     import hitchpylibrarytoolkit
+
     hitchpylibrarytoolkit.project_build(
         "strictyaml",
         DIR,

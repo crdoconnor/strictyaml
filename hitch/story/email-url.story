@@ -15,10 +15,10 @@ Email and URL validators:
       given:
         yaml_snippet: |
           a: billg@microsoft.com
-          b: http://www.google.com/
+          b: http://www.twitter.com/@realDonaldTrump
       steps:
       - Run: |
-          Ensure(load(yaml_snippet, schema)).equals({"a": "billg@microsoft.com", "b": "http://www.google.com/"})
+          Ensure(load(yaml_snippet, schema)).equals({"a": "billg@microsoft.com", "b": "http://www.twitter.com/@realDonaldTrump"})
 
     Exception:
       given:

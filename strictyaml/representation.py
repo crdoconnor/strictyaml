@@ -16,10 +16,13 @@ if sys.version_info[:2] < (3, 7):
 
     class OrderedDict(OrderedDictBase):
         def __repr__(self):
-            return "{" + ", ".join(
-                "{}: {}".format(repr(k), repr(v))
-                for k, v in self.items()
-            ) + "}"
+            return (
+                "{"
+                + ", ".join("{}: {}".format(repr(k), repr(v)) for k, v in self.items())
+                + "}"
+            )
+
+
 else:
     OrderedDict = dict
 
