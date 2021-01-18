@@ -14,3 +14,14 @@ Revalidation with an or breaks lookup:
       parsed['x'].revalidate(strict_schema)
       parsed['x']['a'] = "x"
       assert parsed['x']['a'] == "x"
+
+Parsing string with data shouldn't resolve to ruamel data structures:
+  based on: strictyaml
+  given:
+    yaml_snippet: 'x: |\n   x'
+    setup: |
+      from strictyaml import load
+      from ruamel.yaml.scalarstring import ScalarString
+  steps:
+  - run: |
+      assert not isinstance(load("- >\n hello").data[0], ScalarString)

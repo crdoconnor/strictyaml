@@ -2,7 +2,7 @@ from ruamel.yaml.comments import CommentedSeq, CommentedMap
 from strictyaml.exceptions import raise_type_error, YAMLSerializationError
 from strictyaml.yamllocation import YAMLChunk
 from strictyaml.dumper import StrictYAMLDumper
-from ruamel.yaml import dump
+from ruamel.yaml import dump, scalarstring
 from copy import copy
 import decimal
 import sys
@@ -133,6 +133,8 @@ class YAML(object):
         elif isinstance(self._value, CommentedSeq):
             return [item.data for item in self._value]
         else:
+            if isinstance(self._value, scalarstring.ScalarString):
+                return str(self._value)
             return self._value
 
     def as_marked_up(self):

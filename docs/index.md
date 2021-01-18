@@ -108,6 +108,7 @@ and/or not obvious. Those are documented here:
 
 ## Contributors
 
+- @eulores
 - @WaltWoods
 - @ChristopherGS
 - @gvx
