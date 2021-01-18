@@ -6,6 +6,16 @@
 
 No relevant code changes.
 
+### 1.3.2
+
+* BUGFIX : Fix for #135 hat tip @eulores.
+
+
+### 1.3.1
+
+* BUGFIX : Fix for faulty Url validator.
+
+
 ### 1.3.0
 
 * BUGFIX : Fixes to ensure python 2.7.14 compatibility. This is probably the last time I will do this.
