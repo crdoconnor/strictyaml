@@ -24,6 +24,7 @@ from strictyaml.scalar import Float
 from strictyaml.scalar import Decimal
 from strictyaml.scalar import Datetime
 from strictyaml.scalar import CommaSeparated
+from strictyaml.scalar import NullNone
 from strictyaml.scalar import EmptyNone
 from strictyaml.scalar import EmptyDict
 from strictyaml.scalar import EmptyList

@@ -10,7 +10,7 @@ Empty key validation:
     or [] (empty list).
   given:
     setup: |
-      from strictyaml import Map, Str, Enum, EmptyNone, EmptyDict, EmptyList, load, as_document
+      from strictyaml import Map, Str, Enum, EmptyNone, EmptyDict, EmptyList, NullNone, load, as_document
       from ensure import Ensure
     yaml_snippet: 'a:'
   variations:
@@ -28,6 +28,11 @@ Empty key validation:
       steps:
       - Run: |
           Ensure(load(yaml_snippet, Map({"a": EmptyList() | Enum(["A", "B",])}))).equals({"a": []})
+    
+    NullNone:
+      steps:
+      - Run: |
+          Ensure(load("a: null", Map({"a": NullNone() | Enum(["A", "B",])}))).equals({"a": None})
 
     EmptyNone no empty value:
       given:

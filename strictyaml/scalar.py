@@ -261,6 +261,23 @@ class Datetime(ScalarValidator):
         )
 
 
+class NullNone(ScalarValidator):
+    def validate_scalar(self, chunk):
+        val = chunk.contents
+        if val.lower() != "null":
+            chunk.expecting_but_found("when expecting a 'null', got '{}' instead.".format(val))
+        else:
+            return self.empty(chunk)
+
+    def empty(self, chunk):
+        return None
+
+    def to_yaml(self, data):
+        if data is None:
+            return u"null"
+        raise YAMLSerializationError("expected None, got '{}'")
+    
+
 class EmptyNone(ScalarValidator):
     def validate_scalar(self, chunk):
         val = chunk.contents
