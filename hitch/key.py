@@ -100,14 +100,8 @@ def rbdd(*keywords):
 @expected(HitchStoryException)
 def regressfile(filename):
     """
-    Run all stories in filename 'filename' in python 2 and 3.
+    Run all stories in filename 'filename' in python 3.7.
     """
-    _storybook().in_filename(filename).with_params(
-        **{"python version": "2.7.14"}
-    ).filter(
-        lambda story: not story.info.get("fails_on_python_2")
-    ).ordered_by_name().play()
-
     _storybook().with_params(**{"python version": "3.7.0"}).in_filename(
         filename
     ).ordered_by_name().play()
@@ -121,9 +115,6 @@ def regression():
     lint()
     doctests()
     storybook = _storybook().only_uninherited()
-    storybook.with_params(**{"python version": "2.7.14"}).filter(
-        lambda story: not story.info.get("fails_on_python_2")
-    ).ordered_by_name().play()
     storybook.with_params(**{"python version": "3.7.0"}).ordered_by_name().play()
 
 

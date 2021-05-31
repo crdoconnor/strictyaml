@@ -276,7 +276,7 @@ class NullNone(ScalarValidator):
         if data is None:
             return u"null"
         raise YAMLSerializationError("expected None, got '{}'")
-    
+
 
 class EmptyNone(ScalarValidator):
     def validate_scalar(self, chunk):
