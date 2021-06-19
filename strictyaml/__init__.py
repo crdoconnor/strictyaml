@@ -35,8 +35,8 @@ from strictyaml.compound import Seq
 from strictyaml.compound import UniqueSeq
 from strictyaml.compound import FixedSeq
 
-# Base exception from ruamel.yaml (all exceptions inherit from this)
-from ruamel.yaml import YAMLError
+# Base exception from strictyaml.ruamel (all exceptions inherit from this)
+from strictyaml.ruamel import YAMLError
 
 # Exceptions
 from strictyaml.exceptions import StrictYAMLError

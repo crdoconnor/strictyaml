@@ -10,7 +10,7 @@ import dateutil.parser
 import decimal
 import sys
 import re
-from ruamel.yaml.scalarstring import PreservedScalarString
+from strictyaml.ruamel.scalarstring import PreservedScalarString
 
 
 if sys.version_info[0] == 3:
@@ -265,7 +265,9 @@ class NullNone(ScalarValidator):
     def validate_scalar(self, chunk):
         val = chunk.contents
         if val.lower() != "null":
-            chunk.expecting_but_found("when expecting a 'null', got '{}' instead.".format(val))
+            chunk.expecting_but_found(
+                "when expecting a 'null', got '{}' instead.".format(val)
+            )
         else:
             return self.empty(chunk)
 

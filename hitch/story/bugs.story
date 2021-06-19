@@ -21,7 +21,7 @@ Parsing string with data shouldn't resolve to ruamel data structures:
     yaml_snippet: 'x: |\n   x'
     setup: |
       from strictyaml import load
-      from ruamel.yaml.scalarstring import ScalarString
+      from strictyaml.ruamel.scalarstring import ScalarString
   steps:
   - run: |
       assert not isinstance(load("- >\n hello").data[0], ScalarString)

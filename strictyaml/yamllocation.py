@@ -1,4 +1,4 @@
-from ruamel.yaml.comments import CommentedSeq, CommentedMap
+from strictyaml.ruamel.comments import CommentedSeq, CommentedMap
 from strictyaml.exceptions import YAMLValidationError
 from strictyaml.yamlpointer import YAMLPointer
 from strictyaml import utils

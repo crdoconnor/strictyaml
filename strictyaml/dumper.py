@@ -2,11 +2,11 @@
 
 from __future__ import absolute_import
 
-from ruamel.yaml.representer import RoundTripRepresenter
-from ruamel.yaml.scalarstring import ScalarString
-from ruamel.yaml.emitter import Emitter
-from ruamel.yaml.serializer import Serializer
-from ruamel.yaml.resolver import BaseResolver
+from strictyaml.ruamel.representer import RoundTripRepresenter
+from strictyaml.ruamel.scalarstring import ScalarString
+from strictyaml.ruamel.emitter import Emitter
+from strictyaml.ruamel.serializer import Serializer
+from strictyaml.ruamel.resolver import BaseResolver
 import sys
 
 if sys.version_info[0] == 3:

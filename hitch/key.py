@@ -155,7 +155,7 @@ def lint():
     """
     Lint project code and hitch code.
     """
-    toolkit.lint()
+    toolkit.lint(exclude=["__init__.py", "ruamel"])
 
 
 def deploy(version):

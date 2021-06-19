@@ -1,8 +1,8 @@
-from ruamel.yaml.comments import CommentedSeq, CommentedMap
+from strictyaml.ruamel.comments import CommentedSeq, CommentedMap
 from strictyaml.exceptions import raise_type_error, YAMLSerializationError
 from strictyaml.yamllocation import YAMLChunk
 from strictyaml.dumper import StrictYAMLDumper
-from ruamel.yaml import dump, scalarstring
+from strictyaml.ruamel import dump, scalarstring
 from copy import copy
 import decimal
 import sys
@@ -139,8 +139,8 @@ class YAML(object):
 
     def as_marked_up(self):
         """
-        Returns ruamel.yaml CommentedSeq/CommentedMap objects
-        with comments. This can be fed directly into a ruamel.yaml
+        Returns strictyaml.ruamel CommentedSeq/CommentedMap objects
+        with comments. This can be fed directly into a strictyaml.ruamel
         dumper.
         """
         return self._chunk.contents

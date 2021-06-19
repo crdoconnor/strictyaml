@@ -1,6 +1,6 @@
 from strictyaml.exceptions import YAMLSerializationError, InvalidOptionalDefault
 from strictyaml.validators import Validator, MapValidator, SeqValidator
-from ruamel.yaml.comments import CommentedMap, CommentedSeq
+from strictyaml.ruamel.comments import CommentedMap, CommentedSeq
 from strictyaml.representation import YAML
 from strictyaml.scalar import ScalarValidator, Str
 from strictyaml.yamllocation import YAMLChunk

@@ -1,5 +1,5 @@
-from ruamel.yaml.comments import CommentedSeq, CommentedMap
-from ruamel.yaml import dump, RoundTripDumper
+from strictyaml.ruamel.comments import CommentedSeq, CommentedMap
+from strictyaml.ruamel import dump, RoundTripDumper
 from copy import deepcopy
 import sys
 

@@ -1,4 +1,4 @@
-from ruamel.yaml.comments import CommentedSeq, CommentedMap
+from strictyaml.ruamel.comments import CommentedSeq, CommentedMap
 from strictyaml import exceptions
 from re import compile
 import decimal
@@ -189,7 +189,7 @@ def comma_separated_positions(text):
 
 def ruamel_structure(data, validator=None):
     """
-    Take dicts and lists and return a ruamel.yaml style
+    Take dicts and lists and return a strictyaml.ruamel style
     structure of CommentedMaps, CommentedSeqs and
     data.
 

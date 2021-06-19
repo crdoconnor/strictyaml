@@ -3,23 +3,23 @@ Parsing code for strictyaml.
 """
 import sys
 
-from ruamel import yaml as ruamelyaml
+from strictyaml import ruamel as ruamelyaml
 from strictyaml import exceptions
-from ruamel.yaml.comments import CommentedSeq, CommentedMap
+from strictyaml.ruamel.comments import CommentedSeq, CommentedMap
 
 from strictyaml.any_validator import Any
 from strictyaml.yamllocation import YAMLChunk
 from strictyaml import utils
 
-from ruamel.yaml.reader import Reader
-from ruamel.yaml.scanner import RoundTripScanner
-from ruamel.yaml.parser import RoundTripParser
-from ruamel.yaml.composer import Composer
-from ruamel.yaml.constructor import RoundTripConstructor
-from ruamel.yaml.resolver import VersionedResolver
-from ruamel.yaml.nodes import MappingNode
-from ruamel.yaml.compat import PY2
-from ruamel.yaml.constructor import ConstructorError
+from strictyaml.ruamel.reader import Reader
+from strictyaml.ruamel.scanner import RoundTripScanner
+from strictyaml.ruamel.parser import RoundTripParser
+from strictyaml.ruamel.composer import Composer
+from strictyaml.ruamel.constructor import RoundTripConstructor
+from strictyaml.ruamel.resolver import VersionedResolver
+from strictyaml.ruamel.nodes import MappingNode
+from strictyaml.ruamel.compat import PY2
+from strictyaml.ruamel.constructor import ConstructorError
 
 if sys.version_info[:2] > (3, 4):
     from collections.abc import Hashable
@@ -51,7 +51,7 @@ class StrictYAMLConstructor(RoundTripConstructor):
             if len(node.comment) > 2:
                 maptyp.yaml_end_comment_extend(node.comment[2], clear=True)
         if node.anchor:
-            from ruamel.yaml.serializer import templated_id
+            from strictyaml.ruamel.serializer import templated_id
 
             if not templated_id(node.anchor):
                 maptyp.yaml_set_anchor(node.anchor)

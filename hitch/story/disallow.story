@@ -119,7 +119,7 @@ Disallowed YAML:
       - Run:
           code: load(yaml_snippet, schema, label="disallowed")
           raises:
-            type: ruamel.yaml.scanner.ScannerError
+            type: strictyaml.ruamel.scanner.ScannerError
             message: |-
               while scanning a simple key
                 in "disallowed", line 2, column 1:
