@@ -302,6 +302,7 @@ and/or not obvious. Those are documented here:
 - @jaredsampson
 - @BoboTIG
 
+StrictYAML also includes code from [ruamel.yaml](https://yaml.readthedocs.io/en/latest/), Copyright Anthon van der Neut.
 
 ## Contributing
 
