@@ -115,6 +115,7 @@ def regression():
     lint()
     doctests()
     storybook = _storybook().only_uninherited()
+    storybook.with_params(**{"python version": "2.7.14"}).ordered_by_name().play()
     storybook.with_params(**{"python version": "3.7.0"}).ordered_by_name().play()
 
 
