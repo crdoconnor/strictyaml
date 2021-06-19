@@ -6,6 +6,23 @@
 
 No relevant code changes.
 
+### 1.4.3
+
+* FEATURE : Regression testing on python 2.7.14. This is probably the last release which will support Python 2.
+* FEATURE : Bundle last propertly working ruamel.yaml version in with strictyaml.
+
+
+### 1.4.2
+
+* BUGFIX : Ensure strictyaml continues to work -- updated temporary fix.
+
+
+### 1.4.1
+
+* BUGFIX : Ensure strictyaml continues to work.
+* FEATURE : NullNone - parse 'null' as None like YAML 1.2 does.
+
+
 ### 1.3.2
 
 * BUGFIX : Fix for #135 hat tip @eulores.
