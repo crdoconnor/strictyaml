@@ -178,6 +178,22 @@ class Int(ScalarValidator):
         raise YAMLSerializationError("'{}' not an integer.".format(data))
 
 
+class HexInt(ScalarValidator):
+    def validate_scalar(self, chunk):
+        val = chunk.contents
+        if not utils.is_hexadecimal(val):
+            chunk.expecting_but_found("when expecting a hexadecimal integer")
+        return int(val, 16)
+
+    def to_yaml(self, data):
+        if utils.is_hexadecimal(data):
+            if isinstance(data, int):
+                return hex(data)
+            else:
+                return data
+        raise YAMLSerializationError("'{}' not a hexademial integer.".format(data))
+
+
 class Bool(ScalarValidator):
     def validate_scalar(self, chunk):
         val = chunk.contents

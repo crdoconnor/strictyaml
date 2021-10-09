@@ -79,6 +79,31 @@ def is_integer(value):
     return compile(r"^[-+]?[0-9_]+$").match(value) is not None
 
 
+def is_hexadecimal(value):
+    """
+    Is a string a string of a hexademcial integer?
+
+    >>> is_hexadecimal("0xa1")
+    True
+
+    >>> is_hexadecimal("0XA1")
+    True
+
+    >>> is_hexadecimal("0xa1x")
+    False
+
+    >>> is_hexadecimal("xa1")
+    False
+
+    >>> is_hexadecimal("a1")
+    False
+
+    >>> is_hexadecimal("1")
+    False
+    """
+    return compile(r"^0[xX]+[a-fA-F0-9]+$").match(value) is not None
+
+
 def is_decimal(value):
     """
     Is a string a decimal?
