@@ -19,6 +19,7 @@ from strictyaml.scalar import Email
 from strictyaml.scalar import Url
 from strictyaml.scalar import Str
 from strictyaml.scalar import Int
+from strictyaml.scalar import HexInt
 from strictyaml.scalar import Bool
 from strictyaml.scalar import Float
 from strictyaml.scalar import Decimal
