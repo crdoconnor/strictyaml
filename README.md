@@ -256,6 +256,7 @@ Scalar validators:
 - [Validating strings with regexes (Regex)](https://hitchdev.com/strictyaml/using/alpha/scalar/)
 - [Parsing strings (Str)](https://hitchdev.com/strictyaml/using/alpha/scalar/)
 - [Enumerated scalars (Enum)](https://hitchdev.com/strictyaml/using/alpha/scalar/)
+- [Hexadecimal Integers (HexInt)](https://hitchdev.com/strictyaml/using/alpha/scalar/)
 
 
 Restrictions:
