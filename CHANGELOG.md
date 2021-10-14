@@ -3,6 +3,11 @@
 
 ### Latest
 
+
+No relevant code changes.
+
+### 1.5.0
+
 * FEATURE: HexInt scalar validator. Parses hex integers case insensitively while preserving style for "round tripping". (#157)
 
 

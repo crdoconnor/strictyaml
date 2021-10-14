@@ -289,9 +289,9 @@ and/or not obvious. Those are documented here:
 
 - @wwoods
 - @chrisburr
+- @jnichols0
 
-
-## Contributors
+## Other Contributors
 
 - @eulores
 - @WaltWoods
