@@ -38,7 +38,7 @@ Mappings combining defined and undefined keys (MapCombined):
                   "bar": "42",
               }
           )
-    "Optional is abscent":
+    "Optional is absent":
       given:
         yaml_snippet: |
           required: Hello World
@@ -66,7 +66,7 @@ Mappings combining defined and undefined keys (MapCombined):
                   "baz": "forty two",
               }
           )
-    "Required is abscent":
+    "Required is absent":
       given:
         yaml_snippet: |
           bar: 42
