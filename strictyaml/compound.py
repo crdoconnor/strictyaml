@@ -219,6 +219,10 @@ class Map(MapValidator):
         )
 
 
+class MapCombined(Map):
+    pass  # TODO
+
+
 class Seq(SeqValidator):
     def __init__(self, validator):
         self._validator = validator

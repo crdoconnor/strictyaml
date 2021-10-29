@@ -32,6 +32,7 @@ from strictyaml.scalar import EmptyList
 from strictyaml.compound import Optional
 from strictyaml.compound import Map
 from strictyaml.compound import MapPattern
+from strictyaml.compound import MapCombined
 from strictyaml.compound import Seq
 from strictyaml.compound import UniqueSeq
 from strictyaml.compound import FixedSeq
