@@ -232,9 +232,7 @@ class MapCombined(Map):
         return self._validator_dict.get(key, self._value_validator)
 
     def unexpected_key(self, key, yaml_key, value, chunk):
-        key.process(yaml_key)
-        value.process(self._value_validator(value))
-        chunk.add_key_association(key.contents, yaml_key.data)
+        pass
 
 
 class Seq(SeqValidator):
