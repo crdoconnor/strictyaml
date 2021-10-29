@@ -8,11 +8,14 @@ Mappings combining defined and undefined keys (MapCombined):
       from strictyaml import Any, Int, MapCombined, Optional, Str, load
       from ensure import Ensure
 
-      schema = MapCombined({
-        "required": Str(),
-        Optional("foo"): Int(),
-        Str(): Any(),
-      })
+      schema = MapCombined(
+        {
+          "required": Str(),
+          Optional("foo"): Int(),
+        },
+        Str(),
+        Any(),
+      )
     yaml_snippet: |
       required: Hello World
       foo: 42
@@ -21,7 +24,7 @@ Mappings combining defined and undefined keys (MapCombined):
   - Run: |
       Ensure(load(yaml_snippet, schema).data).equals(
           {
-              "name": "Hello World",
+              "required": "Hello World",
               "foo": 42,
               "bar": "42",
           }
