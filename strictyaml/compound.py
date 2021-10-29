@@ -147,6 +147,15 @@ class Map(MapValidator):
             )
         )
 
+    def get_validator(self, key):
+        return self._validator_dict[key]
+
+    def unexpected_key(self, key, yaml_key, value, chunk):
+        key.expecting_but_found(
+            u"while parsing a mapping",
+            u"unexpected key not in schema '{0}'".format(unicode(yaml_key.scalar)),
+        )
+
     def validate(self, chunk):
         found_keys = set()
         items = chunk.expect_mapping()
@@ -155,14 +164,9 @@ class Map(MapValidator):
             yaml_key = self._key_validator(key)
 
             if yaml_key.scalar not in self._validator_dict.keys():
-                key.expecting_but_found(
-                    u"while parsing a mapping",
-                    u"unexpected key not in schema '{0}'".format(
-                        unicode(yaml_key.scalar)
-                    ),
-                )
+                self.unexpected_key(key, yaml_key, value, chunk)
 
-            value.process(self._validator_dict[yaml_key.scalar](value))
+            value.process(self.get_validator(yaml_key.scalar)(value))
             key.process(yaml_key)
             chunk.add_key_association(key.contents, yaml_key.data)
             found_keys.add(yaml_key.scalar)
@@ -172,7 +176,7 @@ class Map(MapValidator):
                 key_chunk = YAMLChunk(default_key)
                 yaml_key = self._key_validator(key_chunk)
                 strictindex = yaml_key.data
-                value_validator = self._validator_dict[default_key]
+                value_validator = self.get_validator(default_key)
                 new_value = value_validator(
                     YAMLChunk(value_validator.to_yaml(default_data))
                 )
@@ -210,7 +214,7 @@ class Map(MapValidator):
         # TODO : if keys not in list or required keys missing, raise exception.
         return CommentedMap(
             [
-                (key, self._validator_dict[key].to_yaml(value))
+                (key, self.get_validator(key).to_yaml(value))
                 for key, value in data.items()
                 if key not in self._defaults.keys()
                 or key in self._defaults.keys()
@@ -220,7 +224,17 @@ class Map(MapValidator):
 
 
 class MapCombined(Map):
-    pass  # TODO
+    def __init__(self, map_validator, key_validator, value_validator):
+        super(MapCombined, self).__init__(map_validator, key_validator)
+        self._value_validator = value_validator
+
+    def get_validator(self, key):
+        return self._validator_dict.get(key, self._value_validator)
+
+    def unexpected_key(self, key, yaml_key, value, chunk):
+        key.process(yaml_key)
+        value.process(self._value_validator(value))
+        chunk.add_key_association(key.contents, yaml_key.data)
 
 
 class Seq(SeqValidator):
