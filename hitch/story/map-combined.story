@@ -1,7 +1,13 @@
 Mappings combining defined and undefined keys (MapCombined):
+  docs: compound/map-combined
   based on: strictyaml
   experimental: yes
   description: |
+    When you wish to support arbitrary optional keys in
+    some mappings (i.e. to specify some required keys in
+    the schema, but allow any additional ones on top of
+    that), you use a MapCombined.
+
     See https://github.com/crdoconnor/strictyaml/issues/148#issuecomment-861007657
   given:
     setup: |
