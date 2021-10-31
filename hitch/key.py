@@ -115,7 +115,6 @@ def regression():
     lint()
     doctests()
     storybook = _storybook().only_uninherited()
-    storybook.with_params(**{"python version": "2.7.14"}).ordered_by_name().play()
     storybook.with_params(**{"python version": "3.7.0"}).ordered_by_name().play()
 
 
@@ -127,6 +126,21 @@ def regression_on_python_path(python_path, python_version):
     _storybook(python_path=python_path).with_params(
         **{"python version": python_version}
     ).only_uninherited().ordered_by_name().play()
+
+
+@expected(hitchpylibrarytoolkit.ToolkitError)
+def checks():
+    """
+    Run all checks ensure linter, code formatter, tests and docgen all run correctly.
+
+    These checks should prevent code that doesn't have the proper checks run from being merged.
+    """
+    toolkit.validate_reformatting()
+    toolkit.lint(exclude=["__init__.py", "ruamel"])
+    toolkit.validate_readmegen(Engine(DIR))
+    doctests()
+    storybook = _storybook().only_uninherited()
+    storybook.with_params(**{"python version": "3.7.0"}).ordered_by_name().play()
 
 
 def reformat():

@@ -233,6 +233,7 @@ Compound validators:
 
 - [Using a YAML object of a parsed mapping](https://hitchdev.com/strictyaml/using/alpha/compound/)
 - [Mapping with defined keys and a custom key validator (Map)](https://hitchdev.com/strictyaml/using/alpha/compound/)
+- [Mappings combining defined and undefined keys (MapCombined)](https://hitchdev.com/strictyaml/using/alpha/compound/)
 - [Mappings with defined keys (Map)](https://hitchdev.com/strictyaml/using/alpha/compound/)
 - [Updating document with a schema](https://hitchdev.com/strictyaml/using/alpha/compound/)
 - [Validating optional keys in mappings (Map)](https://hitchdev.com/strictyaml/using/alpha/compound/)
