@@ -58,7 +58,7 @@ There are a number of formats and approaches that can achieve more or
 less the same purpose as StrictYAML. I've tried to make it the best one.
 Below is a series of documented justifications:
 
-{% for dirfile in subdir("why-not").ext("md") - subdir("why-not").named("index.md") -%}
+{% for dirfile in (subdir("why-not").ext("md") - subdir("why-not").named("index.md"))|sort() -%}
 - [{{ title(dirfile) }}](why-not/{{ dirfile.namebase }})
 {% endfor %}
 
@@ -67,7 +67,7 @@ Below is a series of documented justifications:
 
 How to:
 
-{% for dirfile in subdir("using/alpha/howto/").ext("md") - subdir("using/alpha/howto/").named("index.md") -%}
+{% for dirfile in (subdir("using/alpha/howto/").ext("md") - subdir("using/alpha/howto/").named("index.md"))|sort() -%}
 - [{{ title(dirfile) }}](using/alpha/howto/{{ dirfile.namebase }})
 {% endfor %}
 
@@ -79,13 +79,13 @@ Compound validators:
 
 Scalar validators:
 
-{% for dirfile in subdir("using/alpha/scalar/").ext("md") - subdir("using/alpha/scalar/").named("index.md") -%}
+{% for dirfile in (subdir("using/alpha/scalar/").ext("md") - subdir("using/alpha/scalar/").named("index.md"))|sort() -%}
 - [{{ title(dirfile) }}](using/alpha/scalar/{{ dirfile.namebase }})
 {% endfor %}
 
 Restrictions:
 
-{% for dirfile in subdir("using/alpha/restrictions/").ext("md") - subdir("using/alpha/restrictions/").named("index.md") -%}
+{% for dirfile in (subdir("using/alpha/restrictions/").ext("md") - subdir("using/alpha/restrictions/").named("index.md"))|sort() -%}
 - [{{ title(dirfile) }}](using/alpha/restrictions/{{ dirfile.namebase }})
 {% endfor %}
 
@@ -95,7 +95,7 @@ Restrictions:
 There are some design decisions in StrictYAML which are controversial
 and/or not obvious. Those are documented here:
 
-{% for dirfile in subdir("why").ext("md") - subdir("why").named("index.md") -%}
+{% for dirfile in (subdir("why").ext("md") - subdir("why").named("index.md"))|sort() -%}
 - [{{ title(dirfile) }}](why/{{ dirfile.namebase }})
 {% endfor %}
 
