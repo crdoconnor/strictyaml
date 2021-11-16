@@ -73,7 +73,7 @@ How to:
 
 Compound validators:
 
-{% for dirfile in subdir("using/alpha/compound/").ext("md") - subdir("using/alpha/compound/").named("index.md") -%}
+{% for dirfile in (subdir("using/alpha/compound/").ext("md") - subdir("using/alpha/compound/").named("index.md"))|sort() -%}
 - [{{ title(dirfile) }}](using/alpha/compound/{{ dirfile.namebase }})
 {% endfor %}
 
