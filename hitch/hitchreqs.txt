@@ -50,7 +50,7 @@ hitchbuild==0.6.3
     #   hitchbuildpy
 hitchbuildpy==0.5.4
     # via hitchpylibrarytoolkit
-hitchpylibrarytoolkit==0.4.8
+hitchpylibrarytoolkit==0.4.9
     # via -r hitchreqs.in
 hitchrun==0.4.0
     # via
