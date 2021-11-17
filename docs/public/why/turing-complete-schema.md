@@ -1,0 +1,42 @@
+---
+title: Why does StrictYAML make you define a schema in Python - a Turing-complete language?
+---
+
+StrictYAML defines schemas in Python (i.e. Turing-complete) code. For example:
+
+```python
+Map({"name": Str(), "email": Str()})
+```
+
+Instead of:
+
+```yaml
+type:       map
+mapping:
+"name":
+    type:      str
+    required:  yes
+"email":
+    type:      str
+    required:  yes
+```
+
+There are some trade offs here:
+
+Schema definition in a non-Turing-complete language like YAML makes
+the schema programming language independent and gives it more
+potential for being read and understood by non-programmers.
+
+However, schema definition in a non-Turing-complete language also
+restricts and makes certain use cases impossible or awkward.
+
+Some use cases I came across included:
+
+- Being able to import pycountry's country list and restrict "country: " to valid country names.
+- Being able to implement a schema that validated date/time scalar values against the specific date/time parser I wanted.
+- Being able to revalidate sections of the document on a 'second pass' that used new data - e.g. a list in one part of the document is restricted to items which come from another part.
+
+
+## Counterarguments
+
+- <https://github.com/crdoconnor/strictyaml/issues/16>
