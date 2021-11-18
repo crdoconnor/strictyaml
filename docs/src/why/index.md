@@ -5,7 +5,7 @@ title: Design Justifications
 StrictYAML is the result of some carefully considered, although
 controversial design decisions. These are justified here.
 
-{% for dirfile in thisdir.is_not_dir() - thisdir.named("index.md") -%}
+{% for dirfile in (thisdir.is_not_dir() - thisdir.named("index.md"))|sort() -%}
 - [{{ title(dirfile) }}]({{ dirfile.namebase }})
 {% endfor %}
 
