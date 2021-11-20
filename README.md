@@ -200,6 +200,7 @@ less the same purpose as StrictYAML. I've tried to make it the best one.
 Below is a series of documented justifications:
 
 - [Why avoid using environment variables as configuration?](https://hitchdev.com/strictyaml/why-not/)
+- [Why not use HJSON?](https://hitchdev.com/strictyaml/why-not/)
 - [Why not HOCON?](https://hitchdev.com/strictyaml/why-not/)
 - [Why not use INI files?](https://hitchdev.com/strictyaml/why-not/)
 - [Why not use JSON Schema for validation?](https://hitchdev.com/strictyaml/why-not/)
