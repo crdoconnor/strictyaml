@@ -2,6 +2,6 @@
 title: Restrictions
 ---
 
-- [Disallowed YAML]()
-- [Duplicate keys]()
-- [Dirty load]()
+- [Disallowed YAML](disallowed-yaml)
+- [Duplicate keys](duplicate-keys)
+- [Dirty load](loading-dirty-yaml)

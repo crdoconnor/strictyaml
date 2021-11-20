@@ -59,7 +59,7 @@ less the same purpose as StrictYAML. I've tried to make it the best one.
 Below is a series of documented justifications:
 
 {% for dirfile in (subdir("why-not").ext("md") - subdir("why-not").named("index.md"))|sort() -%}
-- [{{ title(dirfile) }}](why-not/{{ dirfile.namebase }})
+- [{{ title(dirfile) }}](why-not/{{ dirfile.name.splitext()[0] }})
 {% endfor %}
 
 
@@ -68,25 +68,25 @@ Below is a series of documented justifications:
 How to:
 
 {% for dirfile in (subdir("using/alpha/howto/").ext("md") - subdir("using/alpha/howto/").named("index.md"))|sort() -%}
-- [{{ title(dirfile) }}](using/alpha/howto/{{ dirfile.namebase }})
+- [{{ title(dirfile) }}](using/alpha/howto/{{ dirfile.name.splitext()[0] }})
 {% endfor %}
 
 Compound validators:
 
 {% for dirfile in (subdir("using/alpha/compound/").ext("md") - subdir("using/alpha/compound/").named("index.md"))|sort() -%}
-- [{{ title(dirfile) }}](using/alpha/compound/{{ dirfile.namebase }})
+- [{{ title(dirfile) }}](using/alpha/compound/{{ dirfile.name.splitext()[0] }})
 {% endfor %}
 
 Scalar validators:
 
 {% for dirfile in (subdir("using/alpha/scalar/").ext("md") - subdir("using/alpha/scalar/").named("index.md"))|sort() -%}
-- [{{ title(dirfile) }}](using/alpha/scalar/{{ dirfile.namebase }})
+- [{{ title(dirfile) }}](using/alpha/scalar/{{ dirfile.name.splitext()[0] }})
 {% endfor %}
 
 Restrictions:
 
 {% for dirfile in (subdir("using/alpha/restrictions/").ext("md") - subdir("using/alpha/restrictions/").named("index.md"))|sort() -%}
-- [{{ title(dirfile) }}](using/alpha/restrictions/{{ dirfile.namebase }})
+- [{{ title(dirfile) }}](using/alpha/restrictions/{{ dirfile.name.splitext()[0] }})
 {% endfor %}
 
 
@@ -96,7 +96,7 @@ There are some design decisions in StrictYAML which are controversial
 and/or not obvious. Those are documented here:
 
 {% for dirfile in (subdir("why").ext("md") - subdir("why").named("index.md"))|sort() -%}
-- [{{ title(dirfile) }}](why/{{ dirfile.namebase }})
+- [{{ title(dirfile) }}](why/{{ dirfile.name.splitext()[0] }})
 {% endfor %}
 
 

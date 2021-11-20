@@ -199,20 +199,20 @@ There are a number of formats and approaches that can achieve more or
 less the same purpose as StrictYAML. I've tried to make it the best one.
 Below is a series of documented justifications:
 
-- [Why avoid using environment variables as configuration?](https://hitchdev.com/strictyaml/why-not/)
-- [Why not use HJSON?](https://hitchdev.com/strictyaml/why-not/)
-- [Why not HOCON?](https://hitchdev.com/strictyaml/why-not/)
-- [Why not use INI files?](https://hitchdev.com/strictyaml/why-not/)
-- [Why not use JSON Schema for validation?](https://hitchdev.com/strictyaml/why-not/)
-- [Why not JSON for simple configuration files?](https://hitchdev.com/strictyaml/why-not/)
-- [Why not JSON5?](https://hitchdev.com/strictyaml/why-not/)
-- [Why not use the YAML 1.2 standard? - we don't need a new standard!](https://hitchdev.com/strictyaml/why-not/)
-- [Why not use kwalify with standard YAML to validate my YAML?](https://hitchdev.com/strictyaml/why-not/)
-- [Why not use Python's schema library (or similar) for validation?](https://hitchdev.com/strictyaml/why-not/)
-- [Why not use SDLang?](https://hitchdev.com/strictyaml/why-not/)
-- [What is wrong with TOML?](https://hitchdev.com/strictyaml/why-not/)
-- [Why shouldn't I just use Python code for configuration?](https://hitchdev.com/strictyaml/why-not/)
-- [Why not use XML for configuration or DSLs?](https://hitchdev.com/strictyaml/why-not/)
+- [Why avoid using environment variables as configuration?](https://hitchdev.com/strictyaml/why-not/environment-variables-as-config)
+- [Why not use HJSON?](https://hitchdev.com/strictyaml/why-not/hjson)
+- [Why not HOCON?](https://hitchdev.com/strictyaml/why-not/hocon)
+- [Why not use INI files?](https://hitchdev.com/strictyaml/why-not/ini)
+- [Why not use JSON Schema for validation?](https://hitchdev.com/strictyaml/why-not/json-schema)
+- [Why not JSON for simple configuration files?](https://hitchdev.com/strictyaml/why-not/json)
+- [Why not JSON5?](https://hitchdev.com/strictyaml/why-not/json5)
+- [Why not use the YAML 1.2 standard? - we don't need a new standard!](https://hitchdev.com/strictyaml/why-not/ordinary-yaml)
+- [Why not use kwalify with standard YAML to validate my YAML?](https://hitchdev.com/strictyaml/why-not/pykwalify)
+- [Why not use Python's schema library (or similar) for validation?](https://hitchdev.com/strictyaml/why-not/python-schema)
+- [Why not use SDLang?](https://hitchdev.com/strictyaml/why-not/sdlang)
+- [What is wrong with TOML?](https://hitchdev.com/strictyaml/why-not/toml)
+- [Why shouldn't I just use Python code for configuration?](https://hitchdev.com/strictyaml/why-not/turing-complete-code)
+- [Why not use XML for configuration or DSLs?](https://hitchdev.com/strictyaml/why-not/xml)
 
 
 
@@ -220,52 +220,52 @@ Below is a series of documented justifications:
 
 How to:
 
-- [Build a YAML document from scratch in code](https://hitchdev.com/strictyaml/using/alpha/howto/)
-- [Either/or schema validation of different, equally valid different kinds of YAML](https://hitchdev.com/strictyaml/using/alpha/howto/)
-- [Labeling exceptions](https://hitchdev.com/strictyaml/using/alpha/howto/)
-- [Merge YAML documents](https://hitchdev.com/strictyaml/using/alpha/howto/)
-- [Revalidate an already validated document](https://hitchdev.com/strictyaml/using/alpha/howto/)
-- [Reading in YAML, editing it and writing it back out](https://hitchdev.com/strictyaml/using/alpha/howto/)
-- [Get line numbers of YAML elements](https://hitchdev.com/strictyaml/using/alpha/howto/)
-- [Parsing YAML without a schema](https://hitchdev.com/strictyaml/using/alpha/howto/)
+- [Build a YAML document from scratch in code](https://hitchdev.com/strictyaml/using/alpha/howto/build-yaml-document)
+- [Either/or schema validation of different, equally valid different kinds of YAML](https://hitchdev.com/strictyaml/using/alpha/howto/either-or-validation)
+- [Labeling exceptions](https://hitchdev.com/strictyaml/using/alpha/howto/label-exceptions)
+- [Merge YAML documents](https://hitchdev.com/strictyaml/using/alpha/howto/merge-yaml-documents)
+- [Revalidate an already validated document](https://hitchdev.com/strictyaml/using/alpha/howto/revalidation)
+- [Reading in YAML, editing it and writing it back out](https://hitchdev.com/strictyaml/using/alpha/howto/roundtripping)
+- [Get line numbers of YAML elements](https://hitchdev.com/strictyaml/using/alpha/howto/what-line)
+- [Parsing YAML without a schema](https://hitchdev.com/strictyaml/using/alpha/howto/without-a-schema)
 
 
 Compound validators:
 
-- [Fixed length sequences (FixedSeq)](https://hitchdev.com/strictyaml/using/alpha/compound/)
-- [Mappings combining defined and undefined keys (MapCombined)](https://hitchdev.com/strictyaml/using/alpha/compound/)
-- [Mappings with arbitrary key names (MapPattern)](https://hitchdev.com/strictyaml/using/alpha/compound/)
-- [Mapping with defined keys and a custom key validator (Map)](https://hitchdev.com/strictyaml/using/alpha/compound/)
-- [Using a YAML object of a parsed mapping](https://hitchdev.com/strictyaml/using/alpha/compound/)
-- [Mappings with defined keys (Map)](https://hitchdev.com/strictyaml/using/alpha/compound/)
-- [Optional keys with defaults (Map/Optional)](https://hitchdev.com/strictyaml/using/alpha/compound/)
-- [Validating optional keys in mappings (Map)](https://hitchdev.com/strictyaml/using/alpha/compound/)
-- [Sequences of unique items (UniqueSeq)](https://hitchdev.com/strictyaml/using/alpha/compound/)
-- [Sequence/list validator (Seq)](https://hitchdev.com/strictyaml/using/alpha/compound/)
-- [Updating document with a schema](https://hitchdev.com/strictyaml/using/alpha/compound/)
+- [Fixed length sequences (FixedSeq)](https://hitchdev.com/strictyaml/using/alpha/compound/fixed-length-sequences)
+- [Mappings combining defined and undefined keys (MapCombined)](https://hitchdev.com/strictyaml/using/alpha/compound/map-combined)
+- [Mappings with arbitrary key names (MapPattern)](https://hitchdev.com/strictyaml/using/alpha/compound/map-pattern)
+- [Mapping with defined keys and a custom key validator (Map)](https://hitchdev.com/strictyaml/using/alpha/compound/mapping-with-slug-keys)
+- [Using a YAML object of a parsed mapping](https://hitchdev.com/strictyaml/using/alpha/compound/mapping-yaml-object)
+- [Mappings with defined keys (Map)](https://hitchdev.com/strictyaml/using/alpha/compound/mapping)
+- [Optional keys with defaults (Map/Optional)](https://hitchdev.com/strictyaml/using/alpha/compound/optional-keys-with-defaults)
+- [Validating optional keys in mappings (Map)](https://hitchdev.com/strictyaml/using/alpha/compound/optional-keys)
+- [Sequences of unique items (UniqueSeq)](https://hitchdev.com/strictyaml/using/alpha/compound/sequences-of-unique-items)
+- [Sequence/list validator (Seq)](https://hitchdev.com/strictyaml/using/alpha/compound/sequences)
+- [Updating document with a schema](https://hitchdev.com/strictyaml/using/alpha/compound/update)
 
 
 Scalar validators:
 
-- [Boolean (Bool)](https://hitchdev.com/strictyaml/using/alpha/scalar/)
-- [Parsing comma separated items (CommaSeparated)](https://hitchdev.com/strictyaml/using/alpha/scalar/)
-- [Datetimes (Datetime)](https://hitchdev.com/strictyaml/using/alpha/scalar/)
-- [Decimal numbers (Decimal)](https://hitchdev.com/strictyaml/using/alpha/scalar/)
-- [Email and URL validators](https://hitchdev.com/strictyaml/using/alpha/scalar/)
-- [Empty key validation](https://hitchdev.com/strictyaml/using/alpha/scalar/)
-- [Enumerated scalars (Enum)](https://hitchdev.com/strictyaml/using/alpha/scalar/)
-- [Floating point numbers (Float)](https://hitchdev.com/strictyaml/using/alpha/scalar/)
-- [Hexadecimal Integers (HexInt)](https://hitchdev.com/strictyaml/using/alpha/scalar/)
-- [Integers (Int)](https://hitchdev.com/strictyaml/using/alpha/scalar/)
-- [Validating strings with regexes (Regex)](https://hitchdev.com/strictyaml/using/alpha/scalar/)
-- [Parsing strings (Str)](https://hitchdev.com/strictyaml/using/alpha/scalar/)
+- [Boolean (Bool)](https://hitchdev.com/strictyaml/using/alpha/scalar/boolean)
+- [Parsing comma separated items (CommaSeparated)](https://hitchdev.com/strictyaml/using/alpha/scalar/comma-separated)
+- [Datetimes (Datetime)](https://hitchdev.com/strictyaml/using/alpha/scalar/datetime)
+- [Decimal numbers (Decimal)](https://hitchdev.com/strictyaml/using/alpha/scalar/decimal)
+- [Email and URL validators](https://hitchdev.com/strictyaml/using/alpha/scalar/email-and-url)
+- [Empty key validation](https://hitchdev.com/strictyaml/using/alpha/scalar/empty)
+- [Enumerated scalars (Enum)](https://hitchdev.com/strictyaml/using/alpha/scalar/enum)
+- [Floating point numbers (Float)](https://hitchdev.com/strictyaml/using/alpha/scalar/float)
+- [Hexadecimal Integers (HexInt)](https://hitchdev.com/strictyaml/using/alpha/scalar/hexadecimal-integer)
+- [Integers (Int)](https://hitchdev.com/strictyaml/using/alpha/scalar/integer)
+- [Validating strings with regexes (Regex)](https://hitchdev.com/strictyaml/using/alpha/scalar/regular-expressions)
+- [Parsing strings (Str)](https://hitchdev.com/strictyaml/using/alpha/scalar/string)
 
 
 Restrictions:
 
-- [Disallowed YAML](https://hitchdev.com/strictyaml/using/alpha/restrictions/)
-- [Duplicate keys](https://hitchdev.com/strictyaml/using/alpha/restrictions/)
-- [Dirty load](https://hitchdev.com/strictyaml/using/alpha/restrictions/)
+- [Disallowed YAML](https://hitchdev.com/strictyaml/using/alpha/restrictions/disallowed-yaml)
+- [Duplicate keys](https://hitchdev.com/strictyaml/using/alpha/restrictions/duplicate-keys)
+- [Dirty load](https://hitchdev.com/strictyaml/using/alpha/restrictions/loading-dirty-yaml)
 
 
 
@@ -274,16 +274,16 @@ Restrictions:
 There are some design decisions in StrictYAML which are controversial
 and/or not obvious. Those are documented here:
 
-- [What is wrong with duplicate keys?](https://hitchdev.com/strictyaml/why/)
-- [What is wrong with explicit tags?](https://hitchdev.com/strictyaml/why/)
-- [What is wrong with flow-style YAML?](https://hitchdev.com/strictyaml/why/)
-- [The Norway Problem - why StrictYAML refuses to do implicit typing and so should you](https://hitchdev.com/strictyaml/why/)
-- [What is wrong with node anchors and references?](https://hitchdev.com/strictyaml/why/)
-- [Why does StrictYAML not parse direct representations of Python objects?](https://hitchdev.com/strictyaml/why/)
-- [Why does StrictYAML only parse from strings and not files?](https://hitchdev.com/strictyaml/why/)
-- [Why is parsing speed not a high priority for StrictYAML?](https://hitchdev.com/strictyaml/why/)
-- [What is syntax typing?](https://hitchdev.com/strictyaml/why/)
-- [Why does StrictYAML make you define a schema in Python - a Turing-complete language?](https://hitchdev.com/strictyaml/why/)
+- [What is wrong with duplicate keys?](https://hitchdev.com/strictyaml/why/duplicate-keys-disallowed)
+- [What is wrong with explicit tags?](https://hitchdev.com/strictyaml/why/explicit-tags-removed)
+- [What is wrong with flow-style YAML?](https://hitchdev.com/strictyaml/why/flow-style-removed)
+- [The Norway Problem - why StrictYAML refuses to do implicit typing and so should you](https://hitchdev.com/strictyaml/why/implicit-typing-removed)
+- [What is wrong with node anchors and references?](https://hitchdev.com/strictyaml/why/node-anchors-and-references-removed)
+- [Why does StrictYAML not parse direct representations of Python objects?](https://hitchdev.com/strictyaml/why/not-parse-direct-representations-of-python-objects)
+- [Why does StrictYAML only parse from strings and not files?](https://hitchdev.com/strictyaml/why/only-parse-strings-not-files)
+- [Why is parsing speed not a high priority for StrictYAML?](https://hitchdev.com/strictyaml/why/speed-not-a-priority)
+- [What is syntax typing?](https://hitchdev.com/strictyaml/why/syntax-typing-bad)
+- [Why does StrictYAML make you define a schema in Python - a Turing-complete language?](https://hitchdev.com/strictyaml/why/turing-complete-schema)
 
 
 

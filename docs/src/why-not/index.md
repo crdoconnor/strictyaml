@@ -7,7 +7,7 @@ less the same purpose as StrictYAML. Below is a series of comparisons
 with some of the more famous ones:
 
 {% for dirfile in (thisdir.ext("md") - thisdir.named("index.md"))|sort() -%}
-- [{{ title(dirfile) }}]({{ dirfile.namebase }})
+- [{{ title(dirfile) }}]({{ dirfile.basename().splitext()[0] }})
 {% endfor %}
 
 If you'd like to write or link to a rebuttal to any argument raised

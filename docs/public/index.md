@@ -204,20 +204,20 @@ There are a number of formats and approaches that can achieve more or
 less the same purpose as StrictYAML. I've tried to make it the best one.
 Below is a series of documented justifications:
 
-- [Why avoid using environment variables as configuration?](why-not/)
-- [Why not use HJSON?](why-not/)
-- [Why not HOCON?](why-not/)
-- [Why not use INI files?](why-not/)
-- [Why not use JSON Schema for validation?](why-not/)
-- [Why not JSON for simple configuration files?](why-not/)
-- [Why not JSON5?](why-not/)
-- [Why not use the YAML 1.2 standard? - we don't need a new standard!](why-not/)
-- [Why not use kwalify with standard YAML to validate my YAML?](why-not/)
-- [Why not use Python's schema library (or similar) for validation?](why-not/)
-- [Why not use SDLang?](why-not/)
-- [What is wrong with TOML?](why-not/)
-- [Why shouldn't I just use Python code for configuration?](why-not/)
-- [Why not use XML for configuration or DSLs?](why-not/)
+- [Why avoid using environment variables as configuration?](why-not/environment-variables-as-config)
+- [Why not use HJSON?](why-not/hjson)
+- [Why not HOCON?](why-not/hocon)
+- [Why not use INI files?](why-not/ini)
+- [Why not use JSON Schema for validation?](why-not/json-schema)
+- [Why not JSON for simple configuration files?](why-not/json)
+- [Why not JSON5?](why-not/json5)
+- [Why not use the YAML 1.2 standard? - we don't need a new standard!](why-not/ordinary-yaml)
+- [Why not use kwalify with standard YAML to validate my YAML?](why-not/pykwalify)
+- [Why not use Python's schema library (or similar) for validation?](why-not/python-schema)
+- [Why not use SDLang?](why-not/sdlang)
+- [What is wrong with TOML?](why-not/toml)
+- [Why shouldn't I just use Python code for configuration?](why-not/turing-complete-code)
+- [Why not use XML for configuration or DSLs?](why-not/xml)
 
 
 
@@ -225,52 +225,52 @@ Below is a series of documented justifications:
 
 How to:
 
-- [Build a YAML document from scratch in code](using/alpha/howto/)
-- [Either/or schema validation of different, equally valid different kinds of YAML](using/alpha/howto/)
-- [Labeling exceptions](using/alpha/howto/)
-- [Merge YAML documents](using/alpha/howto/)
-- [Revalidate an already validated document](using/alpha/howto/)
-- [Reading in YAML, editing it and writing it back out](using/alpha/howto/)
-- [Get line numbers of YAML elements](using/alpha/howto/)
-- [Parsing YAML without a schema](using/alpha/howto/)
+- [Build a YAML document from scratch in code](using/alpha/howto/build-yaml-document)
+- [Either/or schema validation of different, equally valid different kinds of YAML](using/alpha/howto/either-or-validation)
+- [Labeling exceptions](using/alpha/howto/label-exceptions)
+- [Merge YAML documents](using/alpha/howto/merge-yaml-documents)
+- [Revalidate an already validated document](using/alpha/howto/revalidation)
+- [Reading in YAML, editing it and writing it back out](using/alpha/howto/roundtripping)
+- [Get line numbers of YAML elements](using/alpha/howto/what-line)
+- [Parsing YAML without a schema](using/alpha/howto/without-a-schema)
 
 
 Compound validators:
 
-- [Fixed length sequences (FixedSeq)](using/alpha/compound/)
-- [Mappings combining defined and undefined keys (MapCombined)](using/alpha/compound/)
-- [Mappings with arbitrary key names (MapPattern)](using/alpha/compound/)
-- [Mapping with defined keys and a custom key validator (Map)](using/alpha/compound/)
-- [Using a YAML object of a parsed mapping](using/alpha/compound/)
-- [Mappings with defined keys (Map)](using/alpha/compound/)
-- [Optional keys with defaults (Map/Optional)](using/alpha/compound/)
-- [Validating optional keys in mappings (Map)](using/alpha/compound/)
-- [Sequences of unique items (UniqueSeq)](using/alpha/compound/)
-- [Sequence/list validator (Seq)](using/alpha/compound/)
-- [Updating document with a schema](using/alpha/compound/)
+- [Fixed length sequences (FixedSeq)](using/alpha/compound/fixed-length-sequences)
+- [Mappings combining defined and undefined keys (MapCombined)](using/alpha/compound/map-combined)
+- [Mappings with arbitrary key names (MapPattern)](using/alpha/compound/map-pattern)
+- [Mapping with defined keys and a custom key validator (Map)](using/alpha/compound/mapping-with-slug-keys)
+- [Using a YAML object of a parsed mapping](using/alpha/compound/mapping-yaml-object)
+- [Mappings with defined keys (Map)](using/alpha/compound/mapping)
+- [Optional keys with defaults (Map/Optional)](using/alpha/compound/optional-keys-with-defaults)
+- [Validating optional keys in mappings (Map)](using/alpha/compound/optional-keys)
+- [Sequences of unique items (UniqueSeq)](using/alpha/compound/sequences-of-unique-items)
+- [Sequence/list validator (Seq)](using/alpha/compound/sequences)
+- [Updating document with a schema](using/alpha/compound/update)
 
 
 Scalar validators:
 
-- [Boolean (Bool)](using/alpha/scalar/)
-- [Parsing comma separated items (CommaSeparated)](using/alpha/scalar/)
-- [Datetimes (Datetime)](using/alpha/scalar/)
-- [Decimal numbers (Decimal)](using/alpha/scalar/)
-- [Email and URL validators](using/alpha/scalar/)
-- [Empty key validation](using/alpha/scalar/)
-- [Enumerated scalars (Enum)](using/alpha/scalar/)
-- [Floating point numbers (Float)](using/alpha/scalar/)
-- [Hexadecimal Integers (HexInt)](using/alpha/scalar/)
-- [Integers (Int)](using/alpha/scalar/)
-- [Validating strings with regexes (Regex)](using/alpha/scalar/)
-- [Parsing strings (Str)](using/alpha/scalar/)
+- [Boolean (Bool)](using/alpha/scalar/boolean)
+- [Parsing comma separated items (CommaSeparated)](using/alpha/scalar/comma-separated)
+- [Datetimes (Datetime)](using/alpha/scalar/datetime)
+- [Decimal numbers (Decimal)](using/alpha/scalar/decimal)
+- [Email and URL validators](using/alpha/scalar/email-and-url)
+- [Empty key validation](using/alpha/scalar/empty)
+- [Enumerated scalars (Enum)](using/alpha/scalar/enum)
+- [Floating point numbers (Float)](using/alpha/scalar/float)
+- [Hexadecimal Integers (HexInt)](using/alpha/scalar/hexadecimal-integer)
+- [Integers (Int)](using/alpha/scalar/integer)
+- [Validating strings with regexes (Regex)](using/alpha/scalar/regular-expressions)
+- [Parsing strings (Str)](using/alpha/scalar/string)
 
 
 Restrictions:
 
-- [Disallowed YAML](using/alpha/restrictions/)
-- [Duplicate keys](using/alpha/restrictions/)
-- [Dirty load](using/alpha/restrictions/)
+- [Disallowed YAML](using/alpha/restrictions/disallowed-yaml)
+- [Duplicate keys](using/alpha/restrictions/duplicate-keys)
+- [Dirty load](using/alpha/restrictions/loading-dirty-yaml)
 
 
 
@@ -279,16 +279,16 @@ Restrictions:
 There are some design decisions in StrictYAML which are controversial
 and/or not obvious. Those are documented here:
 
-- [What is wrong with duplicate keys?](why/)
-- [What is wrong with explicit tags?](why/)
-- [What is wrong with flow-style YAML?](why/)
-- [The Norway Problem - why StrictYAML refuses to do implicit typing and so should you](why/)
-- [What is wrong with node anchors and references?](why/)
-- [Why does StrictYAML not parse direct representations of Python objects?](why/)
-- [Why does StrictYAML only parse from strings and not files?](why/)
-- [Why is parsing speed not a high priority for StrictYAML?](why/)
-- [What is syntax typing?](why/)
-- [Why does StrictYAML make you define a schema in Python - a Turing-complete language?](why/)
+- [What is wrong with duplicate keys?](why/duplicate-keys-disallowed)
+- [What is wrong with explicit tags?](why/explicit-tags-removed)
+- [What is wrong with flow-style YAML?](why/flow-style-removed)
+- [The Norway Problem - why StrictYAML refuses to do implicit typing and so should you](why/implicit-typing-removed)
+- [What is wrong with node anchors and references?](why/node-anchors-and-references-removed)
+- [Why does StrictYAML not parse direct representations of Python objects?](why/not-parse-direct-representations-of-python-objects)
+- [Why does StrictYAML only parse from strings and not files?](why/only-parse-strings-not-files)
+- [Why is parsing speed not a high priority for StrictYAML?](why/speed-not-a-priority)
+- [What is syntax typing?](why/syntax-typing-bad)
+- [Why does StrictYAML make you define a schema in Python - a Turing-complete language?](why/turing-complete-schema)
 
 
 
