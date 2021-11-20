@@ -172,8 +172,6 @@ requests-toolbelt==0.9.1
     # via twine
 rfc3986==1.4.0
     # via twine
-ruamel.yaml==0.16.12
-    # via strictyaml
 secretstorage==3.3.0
     # via keyring
 six==1.15.0
@@ -184,7 +182,7 @@ six==1.15.0
     #   readme-renderer
 smmap==3.0.4
     # via gitdb
-strictyaml==1.1.1
+strictyaml==1.5.0
     # via
     #   dirtemplate
     #   hitchstory

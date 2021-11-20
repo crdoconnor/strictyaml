@@ -7,6 +7,7 @@ less the same purpose as StrictYAML. Below is a series of comparisons
 with some of the more famous ones:
 
 - [Why avoid using environment variables as configuration?]()
+- [Why not use HJSON?]()
 - [Why not HOCON?]()
 - [Why not use INI files?]()
 - [Why not use JSON Schema for validation?]()
