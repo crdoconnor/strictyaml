@@ -1,5 +1,5 @@
 /why-not/syntax-typing: /why/syntax-typing-bad
 /new-faq: /
-/using/alpha/compound/either-or-validation/: /using/alpha/howto/either-or-validation/
+/using/alpha/compound/either-or-validation: /using/alpha/howto/either-or-validation/
 /why/care-about-yaml: /why
-/why/binary-data-removed: 
+/why/binary-data-removed: /why/not-parse-direct-representations-of-python-objects
