@@ -82,7 +82,7 @@ the relationships between data.
 This has been recognized by [many](https://github.com/leereilly/csi/blob/567e5b55f766847c9dcc7de482c0fd241fa7377a/lib/data/master.toml) TOML [writers](https://github.com/CzarSimon/simonlindgren.info/blob/a391a6345b16f2d8093f6d4c5f422399b4b901eb/simon-cv/config.toml) who have adopted a method that
 will be quite familiar to a lot of programmers - indentation that the parser ignores:
 
-[![Non-meaningful indentation](../toml-indentation-1.png)](https://github.com/gazreese/gazreese.com/blob/c4c3fa7d576a4c316f11f0f7a652ca11ab23586d/Hugo/config.toml)
+[![Non-meaningful indentation](toml-indentation-1.png)](https://github.com/gazreese/gazreese.com/blob/c4c3fa7d576a4c316f11f0f7a652ca11ab23586d/Hugo/config.toml)
 
 This parallels the way indentation is added in *lots* of programming languages that have syntactic markers
 like brackets - e.g.  JSON, Javascript or Java are all commonly rendered with non-parsed indentation to make it
