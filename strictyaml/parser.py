@@ -110,28 +110,23 @@ class StrictYAMLConstructor(RoundTripConstructor):
         if merge_map:
             maptyp.add_yaml_merge(merge_map)
 
-        # Don't verify Mapping indentation when allowing flow,
-        # as that disallows:
-        #   short_key: { x = 1 }
-        #   very_long_key: { x = 1 }
-        if not self.allow_flow_style:
-            previous_indentation = None
+        previous_indentation = None
 
-            for node in [
-                nodegroup[1]
-                for nodegroup in node.value
-                if isinstance(nodegroup[1], ruamelyaml.nodes.MappingNode)
-            ]:
-                if previous_indentation is None:
-                    previous_indentation = node.start_mark.column
-                if node.start_mark.column != previous_indentation:
-                    raise exceptions.InconsistentIndentationDisallowed(
-                        "While parsing",
-                        node.start_mark,
-                        "Found mapping with indentation "
-                        "inconsistent with previous mapping",
-                        node.end_mark,
-                    )
+        for node in [
+            nodegroup[1]
+            for nodegroup in node.value
+            if isinstance(nodegroup[1], ruamelyaml.nodes.MappingNode)
+        ]:
+            if previous_indentation is None:
+                previous_indentation = node.start_mark.column
+            if node.start_mark.column != previous_indentation:
+                raise exceptions.InconsistentIndentationDisallowed(
+                    "While parsing",
+                    node.start_mark,
+                    "Found mapping with indentation "
+                    "inconsistent with previous mapping",
+                    node.end_mark,
+                )
 
 
 StrictYAMLConstructor.add_constructor(
