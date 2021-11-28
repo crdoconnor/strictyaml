@@ -37,7 +37,7 @@ load(yaml, Map({"x": Bool(), "y": Str()})) == {"x": True, "y": "null"}
 ```
 
 
-## Direct representations of objects ([Why?](../why/binary-data-removed))
+## Direct representations of objects ([Why?](../why/not-parse-direct-representations-of-python-objects))
 
 ```yaml
 --- !python/hash:UnsafeUserObject

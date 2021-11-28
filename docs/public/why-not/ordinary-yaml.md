@@ -18,7 +18,7 @@ While not all YAML output by other programs will be readable by StrictYAML (it i
 The features removed from the YAML spec, and their rationales are as follows:
 
 - [Implicit Typing](../../why/implicit-typing-removed)
-- [Direct representations of objects](../../why/binary-data-removed)
+- [Direct representations of objects](../../why/not-parse-direct-representations-of-python-objects)
 - [Explicit tags](../../why/explicit-tags-removed)
 - [Node anchors and refs](../../why/node-anchors-and-references-removed)
 - [Flow style](../../why/flow-style-removed)

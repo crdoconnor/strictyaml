@@ -13,7 +13,7 @@ and passing it through the schema.
 Unfortunately there are a number of problems with this approach:
 
 
-## You still have [the Norway Problem](../why/implicit-typing-removed)
+## You still have [the Norway Problem](../../why/implicit-typing-removed)
 
 If the standard YAML parser parses 'NO' as false or [empty string as
 None](https://github.com/Grokzen/pykwalify/issues/77) then it doesn't
