@@ -17,7 +17,7 @@ consistency, as the indentation level is dependent on the map key length.
 ```python
 from strictyaml import Map, Int, MapPattern, Seq, Str, Any, dirty_load
 
-schema = Map({"x": Map({"a": Any(), "b": Any(), "c": Any()}), "y": MapPattern(Str(), Str()), "z": Seq(Str())})
+schema = Map({"foo": Map({"a": Any(), "b": Any(), "c": Any()}), "y": MapPattern(Str(), Str()), "z": Seq(Str())})
 
 ```
 
