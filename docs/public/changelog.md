@@ -3,8 +3,8 @@
 
 ### Latest
 
+* BUG: Don't check indentation consistency when allowing flow.
 
-No relevant code changes.
 
 ### 1.6.0
 
