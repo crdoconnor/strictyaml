@@ -6,6 +6,11 @@
 
 No relevant code changes.
 
+### 1.6.1
+
+* BUG: Don't check indentation consistency when allowing flow.
+
+
 ### 1.6.0
 
 
