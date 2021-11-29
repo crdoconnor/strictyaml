@@ -1,6 +1,5 @@
 ---
 title: Sequence/list validator (Seq)
-type: using
 ---
 
 
@@ -228,6 +227,9 @@ found an arbitrary number
 
 
 
-{{< note title="Executable specification" >}}
-Page automatically generated from <a href="https://github.com/crdoconnor/strictyaml/blob/master/hitch/story/sequence.story">sequence.story</a>.
-{{< /note >}}
+
+!!! note "Executable specification"
+
+    Documentation automatically generated from 
+    <a href="https://github.com/crdoconnor/strictyaml/blob/master/hitch/story/sequence.story">sequence.story
+    storytests.

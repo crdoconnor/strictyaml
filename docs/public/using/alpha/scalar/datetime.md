@@ -1,6 +1,5 @@
 ---
 title: Datetimes (Datetime)
-type: using
 ---
 
 
@@ -163,6 +162,9 @@ expected a datetime, got '55' of type 'int'
 
 
 
-{{< note title="Executable specification" >}}
-Page automatically generated from <a href="https://github.com/crdoconnor/strictyaml/blob/master/hitch/story/datetime.story">datetime.story</a>.
-{{< /note >}}
+
+!!! note "Executable specification"
+
+    Documentation automatically generated from 
+    <a href="https://github.com/crdoconnor/strictyaml/blob/master/hitch/story/datetime.story">datetime.story
+    storytests.

@@ -1,6 +1,5 @@
 ---
 title: Mappings with arbitrary key names (MapPattern)
-type: using
 ---
 
 
@@ -244,6 +243,9 @@ found arbitrary text
 
 
 
-{{< note title="Executable specification" >}}
-Page automatically generated from <a href="https://github.com/crdoconnor/strictyaml/blob/master/hitch/story/mappattern.story">mappattern.story</a>.
-{{< /note >}}
+
+!!! note "Executable specification"
+
+    Documentation automatically generated from 
+    <a href="https://github.com/crdoconnor/strictyaml/blob/master/hitch/story/mappattern.story">mappattern.story
+    storytests.

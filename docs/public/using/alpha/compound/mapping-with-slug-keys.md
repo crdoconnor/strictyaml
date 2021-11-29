@@ -1,11 +1,10 @@
 ---
 title: Mapping with defined keys and a custom key validator (Map)
-type: using
 ---
 
-{{< warning title="Experimental" >}}
-This feature is in alpha. The API may change on a minor version increment.
-{{< /warning >}}
+!!! warning "Experimental"
+
+    This feature is in alpha. The API may change on a minor version increment.
 
 
 A typical mapping except that the key values are determined
@@ -64,6 +63,9 @@ Ensure(load(yaml_snippet, schema).data).equals(
 
 
 
-{{< note title="Executable specification" >}}
-Page automatically generated from <a href="https://github.com/crdoconnor/strictyaml/blob/master/hitch/story/map-with-key-validator.story">map-with-key-validator.story</a>.
-{{< /note >}}
+
+!!! note "Executable specification"
+
+    Documentation automatically generated from 
+    <a href="https://github.com/crdoconnor/strictyaml/blob/master/hitch/story/map-with-key-validator.story">map-with-key-validator.story
+    storytests.

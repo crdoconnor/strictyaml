@@ -1,6 +1,5 @@
 ---
 title: Fixed length sequences (FixedSeq)
-type: using
 ---
 
 
@@ -128,6 +127,9 @@ found a sequence of 2 elements
 
 
 
-{{< note title="Executable specification" >}}
-Page automatically generated from <a href="https://github.com/crdoconnor/strictyaml/blob/master/hitch/story/fixed-sequence.story">fixed-sequence.story</a>.
-{{< /note >}}
+
+!!! note "Executable specification"
+
+    Documentation automatically generated from 
+    <a href="https://github.com/crdoconnor/strictyaml/blob/master/hitch/story/fixed-sequence.story">fixed-sequence.story
+    storytests.

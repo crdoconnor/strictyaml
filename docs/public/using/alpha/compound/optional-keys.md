@@ -1,6 +1,5 @@
 ---
 title: Validating optional keys in mappings (Map)
-type: using
 ---
 
 
@@ -125,6 +124,9 @@ unexpected key not in schema 'c'
 
 
 
-{{< note title="Executable specification" >}}
-Page automatically generated from <a href="https://github.com/crdoconnor/strictyaml/blob/master/hitch/story/optional.story">optional.story</a>.
-{{< /note >}}
+
+!!! note "Executable specification"
+
+    Documentation automatically generated from 
+    <a href="https://github.com/crdoconnor/strictyaml/blob/master/hitch/story/optional.story">optional.story
+    storytests.

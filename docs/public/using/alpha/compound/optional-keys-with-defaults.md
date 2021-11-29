@@ -1,11 +1,10 @@
 ---
 title: Optional keys with defaults (Map/Optional)
-type: using
 ---
 
-{{< warning title="Experimental" >}}
-This feature is in alpha. The API may change on a minor version increment.
-{{< /warning >}}
+!!! warning "Experimental"
+
+    This feature is in alpha. The API may change on a minor version increment.
 
 
 
@@ -83,6 +82,9 @@ Ensure(load(yaml_snippet, schema).data).equals(OrderedDict([("a", 1), ("b", None
 
 
 
-{{< note title="Executable specification" >}}
-Page automatically generated from <a href="https://github.com/crdoconnor/strictyaml/blob/master/hitch/story/optional-with-defaults.story">optional-with-defaults.story</a>.
-{{< /note >}}
+
+!!! note "Executable specification"
+
+    Documentation automatically generated from 
+    <a href="https://github.com/crdoconnor/strictyaml/blob/master/hitch/story/optional-with-defaults.story">optional-with-defaults.story
+    storytests.

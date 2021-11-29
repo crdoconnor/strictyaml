@@ -1,12 +1,11 @@
 ---
 title: {{ story.name }}
-type: using
 ---
-{% if story.info['experimental'] %}{% raw %}
-{{< warning title="Experimental" >}}
-This feature is in alpha. The API may change on a minor version increment.
-{{< /warning >}}
-{% endraw %}{% endif %}
+{% if story.info['experimental'] %}
+!!! warning "Experimental"
+
+    This feature is in alpha. The API may change on a minor version increment.
+{% endif %}
 
 {{ story.info['description'] }}
 
@@ -37,6 +36,9 @@ This feature is in alpha. The API may change on a minor version increment.
 {% with step = story.steps[0] %}{% include "step.jinja2" %}{% endwith %}
 {% endif %}
 
-{% raw %}{{< note title="Executable specification" >}}{% endraw %}
-Page automatically generated from <a href="https://github.com/crdoconnor/strictyaml/blob/master/hitch/story/{{ story.filename.basename() }}">{{ story.filename.basename() }}</a>.
-{% raw %}{{< /note >}}{% endraw %}
+
+!!! note "Executable specification"
+
+    Documentation automatically generated from 
+    <a href="https://github.com/crdoconnor/strictyaml/blob/master/hitch/story/{{ story.filename.basename() }}">{{ story.filename.basename() }}
+    storytests.

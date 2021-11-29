@@ -1,6 +1,5 @@
 ---
 title: Either/or schema validation of different, equally valid different kinds of YAML
-type: using
 ---
 
 
@@ -156,6 +155,9 @@ assert yaml['a'] == 5
 
 
 
-{{< note title="Executable specification" >}}
-Page automatically generated from <a href="https://github.com/crdoconnor/strictyaml/blob/master/hitch/story/or.story">or.story</a>.
-{{< /note >}}
+
+!!! note "Executable specification"
+
+    Documentation automatically generated from 
+    <a href="https://github.com/crdoconnor/strictyaml/blob/master/hitch/story/or.story">or.story
+    storytests.

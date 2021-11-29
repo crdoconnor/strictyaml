@@ -1,6 +1,5 @@
 ---
 title: Labeling exceptions
-type: using
 ---
 
 
@@ -52,6 +51,9 @@ found a sequence
 
 
 
-{{< note title="Executable specification" >}}
-Page automatically generated from <a href="https://github.com/crdoconnor/strictyaml/blob/master/hitch/story/handle-exceptions.story">handle-exceptions.story</a>.
-{{< /note >}}
+
+!!! note "Executable specification"
+
+    Documentation automatically generated from 
+    <a href="https://github.com/crdoconnor/strictyaml/blob/master/hitch/story/handle-exceptions.story">handle-exceptions.story
+    storytests.

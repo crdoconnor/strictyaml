@@ -1,6 +1,5 @@
 ---
 title: Using a YAML object of a parsed mapping
-type: using
 ---
 
 
@@ -160,6 +159,9 @@ Ensure(len(load(yaml_snippet, schema))).equals(3)
 
 
 
-{{< note title="Executable specification" >}}
-Page automatically generated from <a href="https://github.com/crdoconnor/strictyaml/blob/master/hitch/story/mapping-representation.story">mapping-representation.story</a>.
-{{< /note >}}
+
+!!! note "Executable specification"
+
+    Documentation automatically generated from 
+    <a href="https://github.com/crdoconnor/strictyaml/blob/master/hitch/story/mapping-representation.story">mapping-representation.story
+    storytests.

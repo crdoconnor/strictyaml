@@ -1,6 +1,5 @@
 ---
 title: Validating strings with regexes (Regex)
-type: using
 ---
 
 
@@ -143,6 +142,9 @@ when expecting string matching [1-4] got '1' of type int.
 
 
 
-{{< note title="Executable specification" >}}
-Page automatically generated from <a href="https://github.com/crdoconnor/strictyaml/blob/master/hitch/story/regexp.story">regexp.story</a>.
-{{< /note >}}
+
+!!! note "Executable specification"
+
+    Documentation automatically generated from 
+    <a href="https://github.com/crdoconnor/strictyaml/blob/master/hitch/story/regexp.story">regexp.story
+    storytests.

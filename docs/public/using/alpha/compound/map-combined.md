@@ -1,11 +1,10 @@
 ---
 title: Mappings combining defined and undefined keys (MapCombined)
-type: using
 ---
 
-{{< warning title="Experimental" >}}
-This feature is in alpha. The API may change on a minor version increment.
-{{< /warning >}}
+!!! warning "Experimental"
+
+    This feature is in alpha. The API may change on a minor version increment.
 
 
 When you wish to support arbitrary optional keys in
@@ -184,6 +183,9 @@ found arbitrary text
 
 
 
-{{< note title="Executable specification" >}}
-Page automatically generated from <a href="https://github.com/crdoconnor/strictyaml/blob/master/hitch/story/map-combined.story">map-combined.story</a>.
-{{< /note >}}
+
+!!! note "Executable specification"
+
+    Documentation automatically generated from 
+    <a href="https://github.com/crdoconnor/strictyaml/blob/master/hitch/story/map-combined.story">map-combined.story
+    storytests.

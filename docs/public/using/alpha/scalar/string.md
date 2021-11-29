@@ -1,6 +1,5 @@
 ---
 title: Parsing strings (Str)
-type: using
 ---
 
 
@@ -90,6 +89,9 @@ Use bool(yamlobj.data) or bool(yamlobj.text) instead.
 
 
 
-{{< note title="Executable specification" >}}
-Page automatically generated from <a href="https://github.com/crdoconnor/strictyaml/blob/master/hitch/story/scalar-string.story">scalar-string.story</a>.
-{{< /note >}}
+
+!!! note "Executable specification"
+
+    Documentation automatically generated from 
+    <a href="https://github.com/crdoconnor/strictyaml/blob/master/hitch/story/scalar-string.story">scalar-string.story
+    storytests.

@@ -1,6 +1,5 @@
 ---
 title: Enumerated scalars (Enum)
-type: using
 ---
 
 
@@ -178,6 +177,9 @@ Got 'D' when  expecting one of: A, B, C
 
 
 
-{{< note title="Executable specification" >}}
-Page automatically generated from <a href="https://github.com/crdoconnor/strictyaml/blob/master/hitch/story/enum.story">enum.story</a>.
-{{< /note >}}
+
+!!! note "Executable specification"
+
+    Documentation automatically generated from 
+    <a href="https://github.com/crdoconnor/strictyaml/blob/master/hitch/story/enum.story">enum.story
+    storytests.

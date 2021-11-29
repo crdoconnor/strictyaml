@@ -1,6 +1,5 @@
 ---
 title: Reading in YAML, editing it and writing it back out
-type: using
 ---
 
 
@@ -217,6 +216,9 @@ c:
 
 
 
-{{< note title="Executable specification" >}}
-Page automatically generated from <a href="https://github.com/crdoconnor/strictyaml/blob/master/hitch/story/roundtrip.story">roundtrip.story</a>.
-{{< /note >}}
+
+!!! note "Executable specification"
+
+    Documentation automatically generated from 
+    <a href="https://github.com/crdoconnor/strictyaml/blob/master/hitch/story/roundtrip.story">roundtrip.story
+    storytests.

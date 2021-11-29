@@ -1,6 +1,5 @@
 ---
 title: Disallowed YAML
-type: using
 ---
 
 
@@ -210,6 +209,9 @@ Found mapping with indentation inconsistent with previous mapping
 
 
 
-{{< note title="Executable specification" >}}
-Page automatically generated from <a href="https://github.com/crdoconnor/strictyaml/blob/master/hitch/story/disallow.story">disallow.story</a>.
-{{< /note >}}
+
+!!! note "Executable specification"
+
+    Documentation automatically generated from 
+    <a href="https://github.com/crdoconnor/strictyaml/blob/master/hitch/story/disallow.story">disallow.story
+    storytests.

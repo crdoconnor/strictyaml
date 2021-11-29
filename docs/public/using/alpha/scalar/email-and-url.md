@@ -1,6 +1,5 @@
 ---
 title: Email and URL validators
-type: using
 ---
 
 
@@ -65,6 +64,9 @@ found non-matching string
 
 
 
-{{< note title="Executable specification" >}}
-Page automatically generated from <a href="https://github.com/crdoconnor/strictyaml/blob/master/hitch/story/email-url.story">email-url.story</a>.
-{{< /note >}}
+
+!!! note "Executable specification"
+
+    Documentation automatically generated from 
+    <a href="https://github.com/crdoconnor/strictyaml/blob/master/hitch/story/email-url.story">email-url.story
+    storytests.

@@ -1,6 +1,5 @@
 ---
 title: Hexadecimal Integers (HexInt)
-type: using
 ---
 
 
@@ -59,6 +58,9 @@ Ensure(load(yaml_snippet, schema).as_yaml()).equals("x: 0X1A\n")
 
 
 
-{{< note title="Executable specification" >}}
-Page automatically generated from <a href="https://github.com/crdoconnor/strictyaml/blob/master/hitch/story/scalar-hexadecimal-integer.story">scalar-hexadecimal-integer.story</a>.
-{{< /note >}}
+
+!!! note "Executable specification"
+
+    Documentation automatically generated from 
+    <a href="https://github.com/crdoconnor/strictyaml/blob/master/hitch/story/scalar-hexadecimal-integer.story">scalar-hexadecimal-integer.story
+    storytests.

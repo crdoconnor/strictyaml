@@ -1,6 +1,5 @@
 ---
 title: Floating point numbers (Float)
-type: using
 ---
 
 
@@ -295,6 +294,9 @@ a: yes
 
 
 
-{{< note title="Executable specification" >}}
-Page automatically generated from <a href="https://github.com/crdoconnor/strictyaml/blob/master/hitch/story/float.story">float.story</a>.
-{{< /note >}}
+
+!!! note "Executable specification"
+
+    Documentation automatically generated from 
+    <a href="https://github.com/crdoconnor/strictyaml/blob/master/hitch/story/float.story">float.story
+    storytests.

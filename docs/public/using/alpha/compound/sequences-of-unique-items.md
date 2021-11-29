@@ -1,6 +1,5 @@
 ---
 title: Sequences of unique items (UniqueSeq)
-type: using
 ---
 
 
@@ -118,6 +117,9 @@ Expecting all unique items, but duplicates were found in '['A', 'B', 'B']'.
 
 
 
-{{< note title="Executable specification" >}}
-Page automatically generated from <a href="https://github.com/crdoconnor/strictyaml/blob/master/hitch/story/unique-sequence.story">unique-sequence.story</a>.
-{{< /note >}}
+
+!!! note "Executable specification"
+
+    Documentation automatically generated from 
+    <a href="https://github.com/crdoconnor/strictyaml/blob/master/hitch/story/unique-sequence.story">unique-sequence.story
+    storytests.

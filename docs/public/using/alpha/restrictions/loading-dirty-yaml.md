@@ -1,6 +1,5 @@
 ---
 title: Dirty load
-type: using
 ---
 
 
@@ -41,6 +40,9 @@ assert dirty_load(yaml_snippet, schema, allow_flow_style=True) == {"x": {"a": "1
 
 
 
-{{< note title="Executable specification" >}}
-Page automatically generated from <a href="https://github.com/crdoconnor/strictyaml/blob/master/hitch/story/dirty-load.story">dirty-load.story</a>.
-{{< /note >}}
+
+!!! note "Executable specification"
+
+    Documentation automatically generated from 
+    <a href="https://github.com/crdoconnor/strictyaml/blob/master/hitch/story/dirty-load.story">dirty-load.story
+    storytests.

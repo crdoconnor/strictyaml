@@ -1,6 +1,5 @@
 ---
 title: Revalidate an already validated document
-type: using
 ---
 
 
@@ -100,6 +99,9 @@ unexpected key not in schema 'France'
 
 
 
-{{< note title="Executable specification" >}}
-Page automatically generated from <a href="https://github.com/crdoconnor/strictyaml/blob/master/hitch/story/revalidation.story">revalidation.story</a>.
-{{< /note >}}
+
+!!! note "Executable specification"
+
+    Documentation automatically generated from 
+    <a href="https://github.com/crdoconnor/strictyaml/blob/master/hitch/story/revalidation.story">revalidation.story
+    storytests.

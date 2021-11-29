@@ -1,6 +1,5 @@
 ---
 title: Get line numbers of YAML elements
-type: using
 ---
 
 
@@ -128,6 +127,9 @@ a: |
 
 
 
-{{< note title="Executable specification" >}}
-Page automatically generated from <a href="https://github.com/crdoconnor/strictyaml/blob/master/hitch/story/whatline.story">whatline.story</a>.
-{{< /note >}}
+
+!!! note "Executable specification"
+
+    Documentation automatically generated from 
+    <a href="https://github.com/crdoconnor/strictyaml/blob/master/hitch/story/whatline.story">whatline.story
+    storytests.

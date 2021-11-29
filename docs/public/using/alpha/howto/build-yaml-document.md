@@ -1,6 +1,5 @@
 ---
 title: Build a YAML document from scratch in code
-type: using
 ---
 
 
@@ -111,6 +110,9 @@ Ensure(yaml.start_line).equals(1)
 
 
 
-{{< note title="Executable specification" >}}
-Page automatically generated from <a href="https://github.com/crdoconnor/strictyaml/blob/master/hitch/story/build-yaml-document-from-scratch.story">build-yaml-document-from-scratch.story</a>.
-{{< /note >}}
+
+!!! note "Executable specification"
+
+    Documentation automatically generated from 
+    <a href="https://github.com/crdoconnor/strictyaml/blob/master/hitch/story/build-yaml-document-from-scratch.story">build-yaml-document-from-scratch.story
+    storytests.

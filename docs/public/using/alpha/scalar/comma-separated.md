@@ -1,6 +1,5 @@
 ---
 title: Parsing comma separated items (CommaSeparated)
-type: using
 ---
 
 
@@ -182,6 +181,9 @@ expected string or list, got '1' of type 'int'
 
 
 
-{{< note title="Executable specification" >}}
-Page automatically generated from <a href="https://github.com/crdoconnor/strictyaml/blob/master/hitch/story/commaseparated.story">commaseparated.story</a>.
-{{< /note >}}
+
+!!! note "Executable specification"
+
+    Documentation automatically generated from 
+    <a href="https://github.com/crdoconnor/strictyaml/blob/master/hitch/story/commaseparated.story">commaseparated.story
+    storytests.

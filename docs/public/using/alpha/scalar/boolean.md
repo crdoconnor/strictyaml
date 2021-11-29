@@ -1,6 +1,5 @@
 ---
 title: Boolean (Bool)
-type: using
 ---
 
 
@@ -166,6 +165,9 @@ found arbitrary text
 
 
 
-{{< note title="Executable specification" >}}
-Page automatically generated from <a href="https://github.com/crdoconnor/strictyaml/blob/master/hitch/story/boolean.story">boolean.story</a>.
-{{< /note >}}
+
+!!! note "Executable specification"
+
+    Documentation automatically generated from 
+    <a href="https://github.com/crdoconnor/strictyaml/blob/master/hitch/story/boolean.story">boolean.story
+    storytests.

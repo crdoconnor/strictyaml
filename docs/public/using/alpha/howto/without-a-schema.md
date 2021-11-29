@@ -1,6 +1,5 @@
 ---
 title: Parsing YAML without a schema
-type: using
 ---
 
 
@@ -73,6 +72,9 @@ Ensure(load(yaml_snippet, MapPattern(Str(), Any()))).equals({"a": {"x": "9", "y"
 
 
 
-{{< note title="Executable specification" >}}
-Page automatically generated from <a href="https://github.com/crdoconnor/strictyaml/blob/master/hitch/story/non-schema-validation.story">non-schema-validation.story</a>.
-{{< /note >}}
+
+!!! note "Executable specification"
+
+    Documentation automatically generated from 
+    <a href="https://github.com/crdoconnor/strictyaml/blob/master/hitch/story/non-schema-validation.story">non-schema-validation.story
+    storytests.

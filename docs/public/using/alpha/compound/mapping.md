@@ -1,6 +1,5 @@
 ---
 title: Mappings with defined keys (Map)
-type: using
 ---
 
 
@@ -269,6 +268,9 @@ assert as_document(OrderedDict([(u"â", 1), ("b", 2), ("c", 3)]), schema_2).as_y
 
 
 
-{{< note title="Executable specification" >}}
-Page automatically generated from <a href="https://github.com/crdoconnor/strictyaml/blob/master/hitch/story/map.story">map.story</a>.
-{{< /note >}}
+
+!!! note "Executable specification"
+
+    Documentation automatically generated from 
+    <a href="https://github.com/crdoconnor/strictyaml/blob/master/hitch/story/map.story">map.story
+    storytests.

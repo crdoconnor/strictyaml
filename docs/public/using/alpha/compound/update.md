@@ -1,6 +1,5 @@
 ---
 title: Updating document with a schema
-type: using
 ---
 
 
@@ -138,6 +137,9 @@ assert doc['b'] == 9
 
 
 
-{{< note title="Executable specification" >}}
-Page automatically generated from <a href="https://github.com/crdoconnor/strictyaml/blob/master/hitch/story/update-with-schema.story">update-with-schema.story</a>.
-{{< /note >}}
+
+!!! note "Executable specification"
+
+    Documentation automatically generated from 
+    <a href="https://github.com/crdoconnor/strictyaml/blob/master/hitch/story/update-with-schema.story">update-with-schema.story
+    storytests.

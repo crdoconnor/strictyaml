@@ -1,6 +1,5 @@
 ---
 title: Merge YAML documents
-type: using
 ---
 
 
@@ -53,6 +52,9 @@ c:
 
 
 
-{{< note title="Executable specification" >}}
-Page automatically generated from <a href="https://github.com/crdoconnor/strictyaml/blob/master/hitch/story/merge-documents.story">merge-documents.story</a>.
-{{< /note >}}
+
+!!! note "Executable specification"
+
+    Documentation automatically generated from 
+    <a href="https://github.com/crdoconnor/strictyaml/blob/master/hitch/story/merge-documents.story">merge-documents.story
+    storytests.

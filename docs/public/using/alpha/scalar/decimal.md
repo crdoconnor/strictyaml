@@ -1,6 +1,5 @@
 ---
 title: Decimal numbers (Decimal)
-type: using
 ---
 
 
@@ -145,6 +144,9 @@ found arbitrary text
 
 
 
-{{< note title="Executable specification" >}}
-Page automatically generated from <a href="https://github.com/crdoconnor/strictyaml/blob/master/hitch/story/decimal.story">decimal.story</a>.
-{{< /note >}}
+
+!!! note "Executable specification"
+
+    Documentation automatically generated from 
+    <a href="https://github.com/crdoconnor/strictyaml/blob/master/hitch/story/decimal.story">decimal.story
+    storytests.

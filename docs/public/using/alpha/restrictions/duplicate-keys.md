@@ -1,6 +1,5 @@
 ---
 title: Duplicate keys
-type: using
 ---
 
 
@@ -78,6 +77,9 @@ Duplicate key 'a' found
 
 
 
-{{< note title="Executable specification" >}}
-Page automatically generated from <a href="https://github.com/crdoconnor/strictyaml/blob/master/hitch/story/duplicatekeys.story">duplicatekeys.story</a>.
-{{< /note >}}
+
+!!! note "Executable specification"
+
+    Documentation automatically generated from 
+    <a href="https://github.com/crdoconnor/strictyaml/blob/master/hitch/story/duplicatekeys.story">duplicatekeys.story
+    storytests.
