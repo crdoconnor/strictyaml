@@ -2,9 +2,10 @@
 title: Why not use HJSON?
 ---
 
-{{< note title="No longer supported" >}}
-HJSON is no longer supported.
-{{< /note >}}
+!!! note "No longer supported"
+
+    HJSON is no longer supported.
+
 
 [HJSON](http://hjson.org/) is an attempt at fixing the aforementioned lack of readability of JSON.
 

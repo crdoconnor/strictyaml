@@ -5,7 +5,10 @@
 title: StrictYAML
 ---
 
-{% raw %}{{< github-stars user="crdoconnor" project="strictyaml" >}}{% endraw %}
+{% raw %}
+<img alt="GitHub Repo stars" src="https://img.shields.io/github/stars/crdoconnor/strictyaml?style=social"> 
+<img alt="PyPI - Downloads" src="https://img.shields.io/pypi/dm/strictyaml">
+{% endraw %}
 {% endif %}
 
 StrictYAML is a [type-safe](https://en.wikipedia.org/wiki/Type_safety) YAML parser
