@@ -6,7 +6,7 @@ title: Why not use the YAML 1.2 standard? - we don't need a new standard!
 
 StrictYAML is composed of two parts:
 
-- A new YAML specification which parses a restricted subset of the [YAML 1.2 specification](https://github.com/yaml/yaml-spec/tree/spec-1.2)
+- A new YAML specification which parses a restricted subset of the [YAML 1.2 specification](https://yaml.org/spec/1.2.2/)
   and *only* parses to ordered dict, list or string.
 - An optional validator (which will, as requested, validate and cast parse some of those scalar string values to ints, floats, datetimes, etc.).
 
