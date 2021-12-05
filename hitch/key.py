@@ -137,8 +137,6 @@ def checks():
     """
     toolkit.validate_reformatting()
     toolkit.lint(exclude=["__init__.py", "ruamel"])
-    toolkit.validate_readmegen(Engine(DIR))
-    toolkit.validate_docgen(Engine(DIR))
     doctests()
     storybook = _storybook().only_uninherited()
     storybook.with_params(**{"python version": "3.7.0"}).ordered_by_name().play()
