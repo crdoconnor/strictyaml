@@ -172,11 +172,16 @@ def lint():
     toolkit.lint(exclude=["__init__.py", "ruamel"])
 
 
-def deploy(version):
+def prepdeploy(version):
     """
-    Deploy to pypi as specified version.
+    Prepare a deployment with new version, README and docs, but do not push.
     """
-    toolkit.deploy(version)
+    toolkit.prepdeploy(Engine(DIR), version)
+
+
+def pushdeploy():
+    """Push a new deployment to github and pypi."""
+    toolkit.pushdeploy()
 
 
 @expected(dirtemplate.exceptions.DirTemplateException)
