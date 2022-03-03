@@ -7,11 +7,15 @@ Hexadecimal Integers (HexInt):
   given:
     yaml_snippet: |
       x: 0x1a
+      y: -0x1a
+      z: +0x1a
     setup: |
       from strictyaml import Map, HexInt, load
       from ensure import Ensure
 
-      schema = Map({"x": HexInt()})
+      schema = Map({"x": HexInt(),
+                    "y": HexInt(),
+                    "z": HexInt()})
 
       parsed = load(yaml_snippet, schema)
 
@@ -19,8 +23,10 @@ Hexadecimal Integers (HexInt):
     Parsed correctly:
       steps:
       - Run: |
-          Ensure(parsed).equals({"x": 26})
-          Ensure(parsed.as_yaml()).equals("x: 0x1a\n")
+          Ensure(parsed).equals({"x": 26,
+                                  "y": -26,
+                                  "z": 26})
+          Ensure(parsed.as_yaml()).equals("x: 0x1a\ny: -0x1a\nz: +0x1a")
 
     Uppercase:
       given:
