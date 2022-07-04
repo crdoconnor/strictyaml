@@ -56,11 +56,7 @@ def is_string(value):
     """
     Python 2/3 compatible way of checking if a value is a string.
     """
-    return isinstance(value, unicode) or str(type(value)) in (
-        "<type 'unicode'>",
-        "<type 'str'>",
-        "<class 'str'>",
-    )
+    return isinstance(value, (unicode, str))
 
 
 def is_integer(value):
