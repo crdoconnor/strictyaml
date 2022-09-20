@@ -196,7 +196,7 @@ tomli==1.2.2
     # via pep517
 tqdm==4.54.0
     # via twine
-traitlets==5.0.4
+traitlets==4.3.3
     # via ipython
 twine==3.2.0
     # via hitchpylibrarytoolkit
