@@ -15,10 +15,10 @@ Email and URL validators:
       given:
         yaml_snippet: |
           a: billg@microsoft.com
-          b: http://www.twitter.com/@realDonaldTrump
+          b: https://user:pass@example.com:443/path?k=v#frag
       steps:
       - Run: |
-          Ensure(load(yaml_snippet, schema)).equals({"a": "billg@microsoft.com", "b": "http://www.twitter.com/@realDonaldTrump"})
+          Ensure(load(yaml_snippet, schema)).equals({"a": "billg@microsoft.com", "b": "https://user:pass@example.com:443/path?k=v#frag"})
 
     Exception:
       given:
