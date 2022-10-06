@@ -10,6 +10,7 @@ import dateutil.parser
 import decimal
 import sys
 import re
+import urllib.parse
 from strictyaml.ruamel.scalarstring import PreservedScalarString
 
 
@@ -144,10 +145,24 @@ class Email(Regex):
         self._matching_message = "when expecting an email address"
 
 
-class Url(Regex):
-    def __init__(self):
-        super(Url, self).__init__(constants.REGEXES["url"])
-        self._matching_message = "when expecting a url"
+class Url(ScalarValidator):
+    def __is_absolute_url(self, raw):
+        try:
+            ret = urllib.parse.urlparse(raw)
+            return ret.scheme != "" and ret.netloc != ""
+        except ValueError:
+            return False
+
+    def validate_scalar(self, chunk):
+        if not self.__is_absolute_url(chunk.contents):
+            chunk.expecting_but_found("when expecting a URL")
+        return chunk.contents
+
+    def to_yaml(self, data):
+        self.should_be_string(data, "expected a URL,")
+        if not self.__is_absolute_url(data):
+            raise YAMLSerializationError("'{}' is not a URL".format(data))
+        return data
 
 
 class Str(ScalarValidator):
