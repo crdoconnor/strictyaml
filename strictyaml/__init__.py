@@ -53,4 +53,4 @@ from strictyaml.exceptions import AnchorTokenDisallowed
 from strictyaml.exceptions import DuplicateKeysDisallowed
 from strictyaml import exceptions
 
-__version__ = "DEVELOPMENT_VERSION"
+__version__ = "1.6.2"

@@ -1,5 +1,6 @@
 from hitchstory import StoryCollection
 from strictyaml import Str, Map, Bool, load
+from commandlib import Command, python
 from click import argument, group, pass_context
 from pathquery import pathquery
 import hitchpylibrarytoolkit
@@ -199,7 +200,6 @@ def lint():
     Lint project code and hitch code.
     """
     _lint()
-
 
 
 @cli.command()

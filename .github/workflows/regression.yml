@@ -28,4 +28,6 @@ jobs:
           ./key.sh make
 
       - name: regression
-        run: ./key.sh regression
+        run: |
+          ./key.sh bdd validat parsed correct
+          ./key.sh regression
