@@ -88,17 +88,17 @@ class YAMLChunk(object):
 
     def found(self):
         if self.is_sequence():
-            return u"a sequence"
+            return "a sequence"
         elif self.is_mapping():
-            return u"a mapping"
-        elif self.contents == u"":
-            return u"a blank string"
+            return "a mapping"
+        elif self.contents == "":
+            return "a blank string"
         elif utils.is_integer(self.contents):
-            return u"an arbitrary integer"
+            return "an arbitrary integer"
         elif utils.is_decimal(self.contents):
-            return u"an arbitrary number"
+            return "an arbitrary number"
         else:
-            return u"arbitrary text"
+            return "arbitrary text"
 
     def expect_sequence(self, expecting="when expecting a sequence"):
         if not self.is_sequence():

@@ -1,0 +1,30 @@
+FROM ubuntu:18.04
+
+
+RUN apt-get update
+RUN apt-get install libuv1-dev -y
+RUN apt-get install curl -y
+RUN apt-get install git -y
+RUN apt-get install libreadline-dev -y
+RUN apt-get install libffi-dev -y
+RUN apt-get install python3-virtualenv -y
+RUN apt-get install virtualenv -y
+RUN apt-get install build-essential -y
+RUN apt-get install python3-dev -y
+RUN apt-get install zlib1g-dev -y
+RUN apt-get install zlib1g -y
+RUN apt-get install libbz2-dev -y
+ENV DEBIAN_FRONTEND=noninteractive
+RUN apt-get install make build-essential libssl-dev zlib1g-dev libbz2-dev libreadline-dev libsqlite3-dev wget curl llvm libncurses5-dev libncursesw5-dev xz-utils tk-dev libffi-dev liblzma-dev python-openssl -y
+
+
+# Isolate system python packages from those used in project
+RUN virtualenv --python=python3 /venv
+RUN mkdir /src
+
+WORKDIR /src
+COPY hitch/hitchreqs.txt /
+ENV LC_ALL=C.UTF-8
+ENV LANG=C.UTF-8
+RUN /venv/bin/pip install setuptools-rust
+RUN /venv/bin/pip install -r /hitchreqs.txt

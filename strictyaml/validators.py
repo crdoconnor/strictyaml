@@ -18,7 +18,7 @@ class Validator(object):
         return YAML(chunk, validator=self)
 
     def __repr__(self):
-        return u"{0}()".format(self.__class__.__name__)
+        return "{0}()".format(self.__class__.__name__)
 
 
 class MapValidator(Validator):
@@ -115,4 +115,4 @@ class OrValidator(Validator):
             return result
 
     def __repr__(self):
-        return u"{0} | {1}".format(repr(self._validator_a), repr(self._validator_b))
+        return "{0} | {1}".format(repr(self._validator_a), repr(self._validator_b))

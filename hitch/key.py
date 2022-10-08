@@ -1,12 +1,28 @@
-from hitchstory import HitchStoryException, StoryCollection
-from hitchrun import expected
-from commandlib import CommandError
+from hitchstory import StoryCollection
 from strictyaml import Str, Map, Bool, load
+from click import argument, group, pass_context
 from pathquery import pathquery
-from hitchrun import DIR
-import dirtemplate
 import hitchpylibrarytoolkit
 from engine import Engine
+from path import Path
+
+
+class Directories:
+    gen = Path("/gen")
+    key = Path("/src/hitch/")
+    project = Path("/src/")
+    share = Path("/gen")
+
+
+DIR = Directories()
+
+
+@group(invoke_without_command=True)
+@pass_context
+def cli(ctx):
+    """Integration test command line interface."""
+    pass
+
 
 PROJECT_NAME = "strictyaml"
 
@@ -67,8 +83,9 @@ RUNNABLE COMMANDS
 """
 
 
-@expected(HitchStoryException)
-def bdd(*keywords):
+@cli.command()
+@argument("keywords", nargs=-1)
+def bdd(keywords):
     """
     Run story matching keywords.
     """
@@ -77,8 +94,10 @@ def bdd(*keywords):
     ).only_uninherited().shortcut(*keywords).play()
 
 
-@expected(HitchStoryException)
-def tver(pyversion, *keywords):
+@cli.command()
+@argument("pyversion", nargs=1)
+@argument("keywords", nargs=-1)
+def tver(pyversion, keywords):
     """
     Run story against specific version of Python - e.g. tver 3.7.0 modify multi line
     """
@@ -87,8 +106,9 @@ def tver(pyversion, *keywords):
     ).only_uninherited().shortcut(*keywords).play()
 
 
-@expected(HitchStoryException)
-def rbdd(*keywords):
+@cli.command()
+@argument("keywords", nargs=-1)
+def rbdd(keywords):
     """
     Run story matching keywords and rewrite story if code changed.
     """
@@ -97,7 +117,8 @@ def rbdd(*keywords):
     ).only_uninherited().shortcut(*keywords).play()
 
 
-@expected(HitchStoryException)
+@cli.command()
+@argument("filename", nargs=1)
 def regressfile(filename):
     """
     Run all stories in filename 'filename' in python 3.7.
@@ -107,18 +128,20 @@ def regressfile(filename):
     ).ordered_by_name().play()
 
 
-@expected(HitchStoryException)
+@cli.command()
 def regression():
     """
     Run regression testing - lint and then run all tests.
     """
-    lint()
-    doctests()
+    _lint()
+    _doctests()
     storybook = _storybook().only_uninherited()
     storybook.with_params(**{"python version": "3.7.0"}).ordered_by_name().play()
 
 
-@expected(HitchStoryException)
+@cli.command()
+@argument("python_path", nargs=1)
+@argument("python_version", nargs=1)
 def regression_on_python_path(python_path, python_version):
     """
     Run regression tests - e.g. hk regression_on_python_path /usr/bin/python 3.7.0
@@ -128,7 +151,7 @@ def regression_on_python_path(python_path, python_version):
     ).only_uninherited().ordered_by_name().play()
 
 
-@expected(hitchpylibrarytoolkit.ToolkitError)
+@cli.command()
 def checks():
     """
     Run all checks ensure linter, code formatter, tests and docgen all run correctly.
@@ -137,11 +160,12 @@ def checks():
     """
     toolkit.validate_reformatting()
     toolkit.lint(exclude=["__init__.py", "ruamel"])
-    doctests()
+    _doctests()
     storybook = _storybook().only_uninherited()
     storybook.with_params(**{"python version": "3.7.0"}).ordered_by_name().play()
 
 
+@cli.command()
 def reformat():
     """
     Reformat using black and then relint.
@@ -149,6 +173,7 @@ def reformat():
     toolkit.reformat()
 
 
+@cli.command()
 def ipython():
     """
     Run ipython in strictyaml virtualenv.
@@ -164,12 +189,16 @@ def ipython():
     ).run()
 
 
-@expected(CommandError)
+def _lint():
+    toolkit.lint(exclude=["__init__.py", "ruamel"])
+
+
+@cli.command()
 def lint():
     """
     Lint project code and hitch code.
     """
-    toolkit.lint(exclude=["__init__.py", "ruamel"])
+    _lint()
 
 
 def prepdeploy(version):
@@ -184,7 +213,7 @@ def pushdeploy():
     toolkit.pushdeploy()
 
 
-@expected(dirtemplate.exceptions.DirTemplateException)
+@cli.command()
 def docgen():
     """
     Build documentation.
@@ -192,7 +221,7 @@ def docgen():
     toolkit.docgen(Engine(DIR))
 
 
-@expected(dirtemplate.exceptions.DirTemplateException)
+@cli.command()
 def readmegen():
     """
     Build README.md and CHANGELOG.md.
@@ -200,11 +229,7 @@ def readmegen():
     toolkit.readmegen(Engine(DIR))
 
 
-@expected(CommandError)
-def doctests():
-    """
-    Run doctests in utils.py in python 2 and 3.
-    """
+def _doctests():
     for python_version in ["2.7.14", "3.7.0"]:
         pylibrary = hitchpylibrarytoolkit.PyLibraryBuild(
             "strictyaml",
@@ -215,7 +240,15 @@ def doctests():
         ).in_dir(DIR.project.joinpath(PROJECT_NAME)).run()
 
 
-@expected(CommandError)
+@cli.command()
+def doctests():
+    """
+    Run doctests in utils.py in python 2 and 3.
+    """
+    _doctests()
+
+
+@cli.command()
 def rerun():
     """
     Rerun last example code block with specified version of Python.
@@ -228,7 +261,7 @@ def rerun():
     ).in_dir(DIR.gen.joinpath("working")).run()
 
 
-@expected(CommandError)
+@cli.command()
 def bash():
     """
     Run bash
@@ -238,6 +271,7 @@ def bash():
     Command("bash").run()
 
 
+@cli.command()
 def build():
     import hitchpylibrarytoolkit
 
@@ -247,3 +281,7 @@ def build():
         "3.7.0",
         {"ruamel.yaml": "0.16.5"},
     )
+
+
+if __name__ == "__main__":
+    cli()

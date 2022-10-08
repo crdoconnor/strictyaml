@@ -240,7 +240,7 @@ def ruamel_structure(data, validator=None):
             )
         return CommentedSeq([ruamel_structure(item) for item in data])
     elif isinstance(data, bool):
-        return u"yes" if data else u"no"
+        return "yes" if data else "no"
     elif isinstance(data, (int, float)):
         return str(data)
     else:

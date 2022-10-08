@@ -43,7 +43,7 @@ class YAMLValidationError(StrictYAMLError):
     def context_mark(self):
         context_line = self._chunk.start_line() - 1
         str_document = dump(self._chunk.whole_document, Dumper=RoundTripDumper)
-        context_index = len(u"\n".join(str_document.split(u"\n")[:context_line]))
+        context_index = len("\n".join(str_document.split("\n")[:context_line]))
         return StringMark(
             self._chunk.label,
             context_index,
@@ -57,7 +57,7 @@ class YAMLValidationError(StrictYAMLError):
     def problem_mark(self):
         problem_line = self._chunk.end_line() - 1
         str_document = dump(self._chunk.whole_document, Dumper=RoundTripDumper)
-        problem_index = len(u"\n".join(str_document.split(u"\n")[:problem_line]))
+        problem_index = len("\n".join(str_document.split("\n")[:problem_line]))
         return StringMark(
             self._chunk.label,
             problem_index,

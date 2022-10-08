@@ -19,7 +19,7 @@ class Optional(object):
 
     def __repr__(self):
         # TODO: Add default
-        return u'Optional("{0}")'.format(self.key)
+        return 'Optional("{0}")'.format(self.key)
 
 
 class MapPattern(MapValidator):
@@ -52,20 +52,20 @@ class MapPattern(MapValidator):
 
         if self._maximum_keys is not None and len(items) > self._maximum_keys:
             chunk.expecting_but_found(
-                u"while parsing a mapping",
-                u"expected a maximum of {0} key{1}, found {2}.".format(
+                "while parsing a mapping",
+                "expected a maximum of {0} key{1}, found {2}.".format(
                     self._maximum_keys,
-                    u"s" if self._maximum_keys > 1 else u"",
+                    "s" if self._maximum_keys > 1 else "",
                     len(items),
                 ),
             )
 
         if self._minimum_keys is not None and len(items) < self._minimum_keys:
             chunk.expecting_but_found(
-                u"while parsing a mapping",
-                u"expected a minimum of {0} key{1}, found {2}.".format(
+                "while parsing a mapping",
+                "expected a minimum of {0} key{1}, found {2}.".format(
                     self._minimum_keys,
-                    u"s" if self._minimum_keys > 1 else u"",
+                    "s" if self._minimum_keys > 1 else "",
                     len(items),
                 ),
             )
@@ -87,7 +87,7 @@ class MapPattern(MapValidator):
         )
 
     def __repr__(self):
-        return u"MapPattern({0}, {1})".format(
+        return "MapPattern({0}, {1})".format(
             repr(self._key_validator), repr(self._value_validator)
         )
 
@@ -138,7 +138,7 @@ class Map(MapValidator):
 
     def __repr__(self):
         # TODO : repr key_validator
-        return u"Map({{{0}}})".format(
+        return "Map({{{0}}})".format(
             ", ".join(
                 [
                     "{0}: {1}".format(repr(key), repr(value))
@@ -152,8 +152,8 @@ class Map(MapValidator):
 
     def unexpected_key(self, key, yaml_key, value, chunk):
         key.expecting_but_found(
-            u"while parsing a mapping",
-            u"unexpected key not in schema '{0}'".format(unicode(yaml_key.scalar)),
+            "while parsing a mapping",
+            "unexpected key not in schema '{0}'".format(unicode(yaml_key.scalar)),
         )
 
     def validate(self, chunk):
@@ -201,8 +201,8 @@ class Map(MapValidator):
 
         if not set(self._required_keys).issubset(found_keys):
             chunk.while_parsing_found(
-                u"a mapping",
-                u"required key(s) '{0}' not found".format(
+                "a mapping",
+                "required key(s) '{0}' not found".format(
                     "', '".join(
                         sorted(list(set(self._required_keys).difference(found_keys)))
                     )

@@ -135,51 +135,51 @@ class StrictYAMLConstructor(RoundTripConstructor):
 
 
 StrictYAMLConstructor.add_constructor(
-    u"tag:yaml.org,2002:null", RoundTripConstructor.construct_yaml_str
+    "tag:yaml.org,2002:null", RoundTripConstructor.construct_yaml_str
 )
 
 StrictYAMLConstructor.add_constructor(
-    u"tag:yaml.org,2002:bool", RoundTripConstructor.construct_yaml_str
+    "tag:yaml.org,2002:bool", RoundTripConstructor.construct_yaml_str
 )
 
 StrictYAMLConstructor.add_constructor(
-    u"tag:yaml.org,2002:int", RoundTripConstructor.construct_yaml_str
+    "tag:yaml.org,2002:int", RoundTripConstructor.construct_yaml_str
 )
 
 StrictYAMLConstructor.add_constructor(
-    u"tag:yaml.org,2002:float", RoundTripConstructor.construct_yaml_str
+    "tag:yaml.org,2002:float", RoundTripConstructor.construct_yaml_str
 )
 
 StrictYAMLConstructor.add_constructor(
-    u"tag:yaml.org,2002:binary", RoundTripConstructor.construct_yaml_str
+    "tag:yaml.org,2002:binary", RoundTripConstructor.construct_yaml_str
 )
 
 StrictYAMLConstructor.add_constructor(
-    u"tag:yaml.org,2002:timestamp", RoundTripConstructor.construct_yaml_str
+    "tag:yaml.org,2002:timestamp", RoundTripConstructor.construct_yaml_str
 )
 
 StrictYAMLConstructor.add_constructor(
-    u"tag:yaml.org,2002:omap", RoundTripConstructor.construct_yaml_omap
+    "tag:yaml.org,2002:omap", RoundTripConstructor.construct_yaml_omap
 )
 
 StrictYAMLConstructor.add_constructor(
-    u"tag:yaml.org,2002:pairs", RoundTripConstructor.construct_yaml_pairs
+    "tag:yaml.org,2002:pairs", RoundTripConstructor.construct_yaml_pairs
 )
 
 StrictYAMLConstructor.add_constructor(
-    u"tag:yaml.org,2002:set", RoundTripConstructor.construct_yaml_set
+    "tag:yaml.org,2002:set", RoundTripConstructor.construct_yaml_set
 )
 
 StrictYAMLConstructor.add_constructor(
-    u"tag:yaml.org,2002:str", RoundTripConstructor.construct_yaml_str
+    "tag:yaml.org,2002:str", RoundTripConstructor.construct_yaml_str
 )
 
 StrictYAMLConstructor.add_constructor(
-    u"tag:yaml.org,2002:seq", RoundTripConstructor.construct_yaml_seq
+    "tag:yaml.org,2002:seq", RoundTripConstructor.construct_yaml_seq
 )
 
 StrictYAMLConstructor.add_constructor(
-    u"tag:yaml.org,2002:map", RoundTripConstructor.construct_yaml_map
+    "tag:yaml.org,2002:map", RoundTripConstructor.construct_yaml_map
 )
 
 StrictYAMLConstructor.add_constructor(None, RoundTripConstructor.construct_undefined)
@@ -257,7 +257,7 @@ class StrictYAMLLoader(
         VersionedResolver.__init__(self, version, loader=self)
 
 
-def as_document(data, schema=None, label=u"<unicode string>"):
+def as_document(data, schema=None, label="<unicode string>"):
     """
     Translate dicts/lists and scalar (string/bool/float/int/etc.) values into a
     YAML object which can be dumped out.
@@ -269,7 +269,7 @@ def as_document(data, schema=None, label=u"<unicode string>"):
 
 
 def generic_load(
-    yaml_string, schema=None, label=u"<unicode string>", allow_flow_style=False
+    yaml_string, schema=None, label="<unicode string>", allow_flow_style=False
 ):
     if not utils.is_string(yaml_string):
         raise TypeError("StrictYAML can only read a string of valid YAML.")
@@ -302,7 +302,7 @@ def generic_load(
 
 
 def dirty_load(
-    yaml_string, schema=None, label=u"<unicode string>", allow_flow_style=False
+    yaml_string, schema=None, label="<unicode string>", allow_flow_style=False
 ):
     """
     Parse the first YAML document in a string
@@ -315,7 +315,7 @@ def dirty_load(
     )
 
 
-def load(yaml_string, schema=None, label=u"<unicode string>"):
+def load(yaml_string, schema=None, label="<unicode string>"):
     """
     Parse the first YAML document in a string
     and produce corresponding YAML object.

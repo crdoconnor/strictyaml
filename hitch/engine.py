@@ -1,4 +1,10 @@
-from hitchstory import StoryCollection, BaseEngine, exceptions, validate, no_stacktrace_for
+from hitchstory import (
+    StoryCollection,
+    BaseEngine,
+    exceptions,
+    validate,
+    no_stacktrace_for,
+)
 from hitchstory import GivenDefinition, GivenProperty, InfoDefinition, InfoProperty
 from templex import Templex
 from strictyaml import Optional, Str, Map, Int, Bool, Enum, load
@@ -11,7 +17,6 @@ from hitchrunpy import (
 )
 
 
-
 CODE_TYPE = Map({"in python 2": Str(), "in python 3": Str()}) | Str()
 
 
@@ -20,27 +25,21 @@ class Engine(BaseEngine):
 
     given_definition = GivenDefinition(
         yaml_snippet=GivenProperty(
-            Str(),
-            document="yaml_snippet:\n```yaml\n{{ yaml_snippet }}\n```"
+            Str(), document="yaml_snippet:\n```yaml\n{{ yaml_snippet }}\n```"
         ),
         yaml_snippet_1=GivenProperty(
-            Str(),
-            document="yaml_snippet_1:\n```yaml\n{{ yaml_snippet_1 }}\n```"
+            Str(), document="yaml_snippet_1:\n```yaml\n{{ yaml_snippet_1 }}\n```"
         ),
         yaml_snippet_2=GivenProperty(
-            Str(),
-            document="yaml_snippet_2:\n```yaml\n{{ yaml_snippet_2 }}\n```"
+            Str(), document="yaml_snippet_2:\n```yaml\n{{ yaml_snippet_2 }}\n```"
         ),
         modified_yaml_snippet=GivenProperty(
             Str(),
-            document="modified_yaml_snippet:\n```yaml\n{{ modified_yaml_snippet }}\n```"
+            document="modified_yaml_snippet:\n```yaml\n{{ modified_yaml_snippet }}\n```",
         ),
         python_version=GivenProperty(Str()),
         ruamel_version=GivenProperty(Str()),
-        setup=GivenProperty(
-            Str(),
-            document="```python\n{{ setup }}\n```"
-        ),
+        setup=GivenProperty(Str(), document="```python\n{{ setup }}\n```"),
     )
 
     info_definition = InfoDefinition(
@@ -65,11 +64,11 @@ class Engine(BaseEngine):
             self.path.profile.mkdir()
 
         if not self._python_path:
-            self.pylibrary = hitchpylibrarytoolkit.PyLibraryBuild(
-                "strictyaml",
-                self.path
-            ).with_python_version(self.given["python version"])\
-             .with_packages({"ruamel.yaml": self.given["ruamel version"]})
+            self.pylibrary = (
+                hitchpylibrarytoolkit.PyLibraryBuild("strictyaml", self.path)
+                .with_python_version(self.given["python version"])
+                .with_packages({"ruamel.yaml": self.given["ruamel version"]})
+            )
             self.pylibrary.ensure_built()
             self.python = self.pylibrary.bin.python
         else:
@@ -79,9 +78,7 @@ class Engine(BaseEngine):
         self.example_py_code = (
             ExamplePythonCode(self.python, self.path.gen)
             .with_code(self.given.get("code", ""))
-            .with_setup_code(
-                self.given.get("setup", "")
-            )
+            .with_setup_code(self.given.get("setup", ""))
             .with_terminal_size(160, 100)
             .with_strings(
                 yaml_snippet_1=self.given.get("yaml_snippet_1"),
@@ -110,11 +107,13 @@ class Engine(BaseEngine):
         if in_interpreter:
             if self.given["python version"].startswith("3"):
                 code = "{0}\nprint(repr({1}))".format(
-                    "\n".join(code.strip().split("\n")[:-1]), code.strip().split("\n")[-1]
+                    "\n".join(code.strip().split("\n")[:-1]),
+                    code.strip().split("\n")[-1],
                 )
             else:
                 code = "{0}\nprint repr({1})".format(
-                    "\n".join(code.strip().split("\n")[:-1]), code.strip().split("\n")[-1]
+                    "\n".join(code.strip().split("\n")[:-1]),
+                    code.strip().split("\n")[-1],
                 )
 
         to_run = self.example_py_code.with_code(code)

@@ -22,7 +22,6 @@ if sys.version_info[:2] < (3, 7):
                 + "}"
             )
 
-
 else:
     OrderedDict = dict
 
@@ -176,7 +175,7 @@ class YAML(object):
         return float(self._value)
 
     def __repr__(self):
-        return u"YAML({0})".format(self.data)
+        return "YAML({0})".format(self.data)
 
     def __bool__(self):
         if isinstance(self._value, bool):

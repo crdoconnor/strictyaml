@@ -71,7 +71,7 @@ class Enum(ScalarValidator):
 
     def __repr__(self):
         # TODO : item_validator
-        return u"Enum({0})".format(repr(self._restricted_to))
+        return "Enum({0})".format(repr(self._restricted_to))
 
 
 class CommaSeparated(ScalarValidator):
@@ -231,7 +231,7 @@ class Bool(ScalarValidator):
             else:
                 raise YAMLSerializationError("Not a boolean")
         else:
-            return u"yes" if data else u"no"
+            return "yes" if data else "no"
 
 
 class Float(ScalarValidator):
@@ -307,7 +307,7 @@ class NullNone(ScalarValidator):
 
     def to_yaml(self, data):
         if data is None:
-            return u"null"
+            return "null"
         raise YAMLSerializationError("expected None, got '{}'")
 
 
@@ -324,7 +324,7 @@ class EmptyNone(ScalarValidator):
 
     def to_yaml(self, data):
         if data is None:
-            return u""
+            return ""
         raise YAMLSerializationError("expected None, got '{}'")
 
 
@@ -334,7 +334,7 @@ class EmptyDict(EmptyNone):
 
     def to_yaml(self, data):
         if data == {}:
-            return u""
+            return ""
         raise YAMLSerializationError("Not an empty dict")
 
 
@@ -344,5 +344,5 @@ class EmptyList(EmptyNone):
 
     def to_yaml(self, data):
         if data == []:
-            return u""
+            return ""
         raise YAMLSerializationError("expected empty list, got '{}'")
