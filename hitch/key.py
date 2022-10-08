@@ -201,16 +201,31 @@ def lint():
     _lint()
 
 
-def prepdeploy(version):
-    """
-    Prepare a deployment with new version, README and docs, but do not push.
-    """
-    toolkit.prepdeploy(Engine(DIR), version)
 
+@cli.command()
+def deploy():
+    """
+    Deploy to pypi as specified version.
+    """
+    git = Command("git")
+    git("clone", "git@github.com:crdoconnor/strictyaml.git").in_dir(DIR.gen).run()
+    project = DIR.gen / "strictyaml"
+    version = DIR.project.joinpath("VERSION").text().rstrip()
+    initpy = DIR.project.joinpath("strictyaml", "__init__.py")
+    original_initpy_contents = initpy.bytes().decode("utf8")
+    initpy.write_text(
+        original_initpy_contents.replace("DEVELOPMENT_VERSION", version)
+    )
+    python("setup.py", "sdist").in_dir(project).run()
+    initpy.write_text(original_initpy_contents)
 
-def pushdeploy():
-    """Push a new deployment to github and pypi."""
-    toolkit.pushdeploy()
+    # Upload to pypi
+    python(
+        "-m",
+        "twine",
+        "upload",
+        "dist/{0}-{1}.tar.gz".format("strictyaml", version),
+    ).in_dir(project).run()
 
 
 @cli.command()

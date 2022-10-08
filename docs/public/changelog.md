@@ -3,8 +3,8 @@
 
 ### Latest
 
+* BUGFIX : Fully parse URL, fix #141
 
-No relevant code changes.
 
 ### 1.6.1
 
