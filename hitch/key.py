@@ -243,14 +243,10 @@ def readmegen():
 
 
 def _doctests():
-    for python_version in ["2.7.14", "3.7.0"]:
-        pylibrary = hitchpylibrarytoolkit.PyLibraryBuild(
-            "strictyaml",
-            DIR,
-        )
-        pylibrary.bin.python(
-            "-m", "doctest", "-v", DIR.project.joinpath(PROJECT_NAME, "utils.py")
-        ).in_dir(DIR.project.joinpath(PROJECT_NAME)).run()
+    py = Command("/gen/pyenv/versions/venv3.11.2/bin/python")
+    py(
+        "-m", "doctest", "-v", DIR.project.joinpath(PROJECT_NAME, "utils.py")
+    ).in_dir(DIR.project.joinpath(PROJECT_NAME)).run()
 
 
 @cli.command()
