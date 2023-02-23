@@ -213,9 +213,7 @@ def deploy():
     version = DIR.project.joinpath("VERSION").text().rstrip()
     initpy = DIR.project.joinpath("strictyaml", "__init__.py")
     original_initpy_contents = initpy.bytes().decode("utf8")
-    initpy.write_text(
-        original_initpy_contents.replace("DEVELOPMENT_VERSION", version)
-    )
+    initpy.write_text(original_initpy_contents.replace("DEVELOPMENT_VERSION", version))
     python("setup.py", "sdist").in_dir(project).run()
     initpy.write_text(original_initpy_contents)
 
@@ -296,6 +294,31 @@ def build():
         "3.7.0",
         {"ruamel.yaml": "0.16.5"},
     )
+
+
+@cli.command()
+def make():
+    if not Path("/gen/pyenv/").exists():
+        Command(
+            "git", "clone", "https://github.com/pyenv/pyenv.git", "/gen/pyenv"
+        ).run()
+        Command(
+            "git",
+            "clone",
+            "https://github.com/pyenv/pyenv-virtualenv.git",
+            "/gen/pyenv/plugins/pyenv-virtualenv",
+        ).run()
+    if not Path("/gen/pyenv/versions/3.11.2/").exists():
+        Command("/gen/pyenv/bin/pyenv", "install", "3.11.2").run()
+    if not Path("/gen/pyenv/versions/venv3.11.2").exists():
+        Command("/gen/pyenv/bin/pyenv", "virtualenv", "3.11.2", "venv3.11.2").run()
+    Command(
+        "/gen/pyenv/versions/venv3.11.2/bin/pip",
+        "install",
+        "-r",
+        "/src/hitch/debugrequirements.txt",
+    ).run()
+    Command("/gen/pyenv/versions/venv3.11.2/bin/pip", "install", "-e", "/src").run()
 
 
 if __name__ == "__main__":

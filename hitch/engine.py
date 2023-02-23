@@ -64,13 +64,7 @@ class Engine(BaseEngine):
             self.path.profile.mkdir()
 
         if not self._python_path:
-            self.pylibrary = (
-                hitchpylibrarytoolkit.PyLibraryBuild("strictyaml", self.path)
-                .with_python_version(self.given["python version"])
-                .with_packages({"ruamel.yaml": self.given["ruamel version"]})
-            )
-            self.pylibrary.ensure_built()
-            self.python = self.pylibrary.bin.python
+            self.python = Path("/gen/pyenv/versions/venv3.11.2/bin/python")
         else:
             self.python = Path(self._python_path)
             assert self.python.exists()

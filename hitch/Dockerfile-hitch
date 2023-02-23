@@ -3,6 +3,7 @@ FROM ubuntu:20.04
 ENV DEBIAN_FRONTEND=noninteractive
 ENV LC_ALL=C.UTF-8
 ENV LANG=C.UTF-8
+ENV PYENV_ROOT=/gen/pyenv/
 
 RUN apt-get update && apt-get install \
     libuv1-dev libncurses5-dev libncursesw5-dev xz-utils \

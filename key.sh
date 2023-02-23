@@ -29,6 +29,7 @@ case "$1" in
             podman volume create strictyaml-hitch-container
         fi
         podman build -f hitch/Dockerfile-hitch -t strictyaml-hitch $PROJECT_DIR
+        hitchrun "/venv/bin/python hitch/key.py make"
         ;;
     "bash")
         hitchrun "bash"
