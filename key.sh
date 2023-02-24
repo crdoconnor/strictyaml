@@ -32,7 +32,7 @@ case "$1" in
         if ! podman volume exists $CONTAINER_NAME; then
             podman volume create $CONTAINER_NAME
         fi
-        podman build -f hitch/Dockerfile-hitch -t $CONTAINER_NAME $PROJECT_DIR
+        podman build -f hitch/Dockerfile-hitch -t $IMAGE_NAME $PROJECT_DIR
         hitchrun "/venv/bin/python hitch/key.py make"
         ;;
     "bash")
