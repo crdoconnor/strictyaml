@@ -1,4 +1,9 @@
 # -*- coding: utf-8 -*
+from setuptools import setup
+
+setup()
+
+"""
 from setuptools.command.install import install
 from setuptools import find_packages
 from setuptools import setup
@@ -58,3 +63,4 @@ setup(
     zip_safe=False,
     include_package_data=True,
 )
+"""

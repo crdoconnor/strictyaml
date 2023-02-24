@@ -1,0 +1,37 @@
+[build-system]
+requires = ["setuptools", "setuptools-scm"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools]
+packages = ["strictyaml"]
+
+[project]
+name = "strictyaml"
+authors = [
+    {name = "Colm O'Connor", email = "colm.oconnor.github@gmail.com"},
+]
+description = "Strict, typed YAML parser"
+license = {text = "MIT"}
+requires-python = ">=3.6"
+keywords = ["yaml"]
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+    "Topic :: Text Processing :: Markup",
+    "Topic :: Software Development :: Libraries",
+    "Natural Language :: English",
+]
+dependencies = [
+    "python-dateutil>=2.6.0"
+]
+dynamic = ["version", "readme"]
+
+[project.urls]
+homepage = "https://hitchdev.com/strictyaml"
+documentation = "https://hitchdev.com/strictyaml/using"
+repository = "https://github.com/crdoconnor/strictyaml"
+changelog = "https://hitchdev.com/strictyaml/changelog"
+
+[tool.setuptools.dynamic]
+readme = {file = ["README.md",], content-type = "text/markdown"}
+version = {file = "VERSION"}
