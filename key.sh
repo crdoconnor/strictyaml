@@ -33,7 +33,7 @@ case "$1" in
             podman volume create $CONTAINER_NAME
         fi
         podman build -f hitch/Dockerfile-hitch -t $IMAGE_NAME $PROJECT_DIR
-        hitchrun "/venv/bin/python hitch/key.py make"
+        hitchrun "/venv/bin/python hitch/key.py build"
         ;;
     "bash")
         hitchrun "bash"

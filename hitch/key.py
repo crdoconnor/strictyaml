@@ -244,9 +244,9 @@ def readmegen():
 
 def _doctests():
     py = Command("/gen/pyenv/versions/venv3.11.2/bin/python")
-    py(
-        "-m", "doctest", "-v", DIR.project.joinpath(PROJECT_NAME, "utils.py")
-    ).in_dir(DIR.project.joinpath(PROJECT_NAME)).run()
+    py("-m", "doctest", "-v", DIR.project.joinpath(PROJECT_NAME, "utils.py")).in_dir(
+        DIR.project.joinpath(PROJECT_NAME)
+    ).run()
 
 
 @cli.command()
@@ -281,40 +281,32 @@ def bash():
 
 
 @cli.command()
-def build():
-    import hitchpylibrarytoolkit
+def cleanpyenv():
+    import pyenv
 
-    hitchpylibrarytoolkit.project_build(
-        "strictyaml",
-        DIR,
-        "3.7.0",
-        {"ruamel.yaml": "0.16.5"},
-    )
+    pyenv.Pyenv("/gen/pyenv").clean()
 
 
 @cli.command()
-def make():
-    if not Path("/gen/pyenv/").exists():
-        Command(
-            "git", "clone", "https://github.com/pyenv/pyenv.git", "/gen/pyenv"
-        ).run()
-        Command(
-            "git",
-            "clone",
-            "https://github.com/pyenv/pyenv-virtualenv.git",
-            "/gen/pyenv/plugins/pyenv-virtualenv",
-        ).run()
-    if not Path("/gen/pyenv/versions/3.11.2/").exists():
-        Command("/gen/pyenv/bin/pyenv", "install", "3.11.2").run()
-    if not Path("/gen/pyenv/versions/venv3.11.2").exists():
-        Command("/gen/pyenv/bin/pyenv", "virtualenv", "3.11.2", "venv3.11.2").run()
-    Command(
-        "/gen/pyenv/versions/venv3.11.2/bin/pip",
-        "install",
-        "-r",
-        "/src/hitch/debugrequirements.txt",
-    ).run()
-    Command("/gen/pyenv/versions/venv3.11.2/bin/pip", "install", "-e", "/src").run()
+def build():
+    import pyenv
+
+    pyenv_build = pyenv.Pyenv("/gen/pyenv")
+    pyenv_build.clean()
+
+    pyversion = pyenv.PyVersion(
+        pyenv_build,
+        "3.11.2",
+    )
+    pyversion.ensure_built()
+
+    venv = pyenv.ProjectVirtualenv(
+        "venv3.11.2",
+        pyversion,
+        ["/src/hitch/debugrequirements.txt"],
+        "/src",
+    )
+    venv.ensure_built()
 
 
 if __name__ == "__main__":
