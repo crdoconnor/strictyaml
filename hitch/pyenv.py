@@ -4,6 +4,7 @@ from path import Path
 import hitchbuild
 import requests
 import dateutil
+from typing import List
 
 
 def clean():
@@ -15,7 +16,7 @@ def randomtestvenv(picker=None, local_package=None):
     pyenv_build.ensure_built()
 
     python_dateutil_version = picker(package_versions_above("python-dateutil", "2.6.0"))
-    python_version = picker(pyenv_build.available_versions_above_and_including("3.6.0"))
+    python_version = picker(pyenv_build.available_versions_above_and_including("3.7.0"))
     print("Dateutil version: {}".format(python_dateutil_version))
     print("Python version: {}".format(python_version))
 
@@ -27,13 +28,24 @@ def randomtestvenv(picker=None, local_package=None):
     venv = ProjectVirtualenv(
         "randomtestvenv",
         pyversion,
-        requirements_files=[],
-        requirements=[
-            "ensure",
-            "python-slugify",
-            "python-dateutil=={}".format(python_dateutil_version),
+        # requirements_files=[],
+        # requirements=[
+        # "ensure",
+        # "python-slugify",
+        # "python-dateutil=={}".format(python_dateutil_version),
+        # ],
+        # local_package=local_package,
+        packages=[
+            PythonRequirements(
+                ["ensure", "python-slugify"],
+            ),
+            PythonProjectPackage(local_package),
+            PythonRequirements(
+                [
+                    "python-dateutil=={}".format(python_dateutil_version),
+                ]
+            ),
         ],
-        local_package=local_package,
     )
     venv.clean()
     venv.ensure_built()
@@ -41,18 +53,21 @@ def randomtestvenv(picker=None, local_package=None):
 
 
 def devvenv():
-    pyenv_build = pyenv.Pyenv("/gen/pyenv")
+    pyenv_build = Pyenv("/gen/pyenv")
+    pyenv_build.ensure_built()
 
-    pyversion = pyenv.PyVersion(
+    pyversion = PyVersion(
         pyenv_build,
-        "3.11.2",
+        pyenv_build.available_versions_above_and_including("3.7.0")[-2],
     )
 
-    venv = pyenv.ProjectVirtualenv(
-        "venv3.11.2",
+    venv = ProjectVirtualenv(
+        "devenv",
         pyversion,
-        ["/src/hitch/debugrequirements.txt"],
-        "/src",
+        packages=[
+            PythonRequirementsFile("/src/hitch/debugrequirements.txt"),
+            PythonProjectDirectory("/src"),
+        ],
     )
     venv.ensure_built()
     return venv
@@ -87,6 +102,46 @@ def package_versions_above(package_name, minimum_version):
     return relevant_versions
 
 
+class PythonPackage:
+    pass
+
+
+class PythonRequirementsFile(PythonPackage):
+    def __init__(self, requirements_file):
+        self.requirements_file = requirements_file
+
+    def install(self, pip):
+        pip("install", "-r", self.requirements_file).run()
+
+
+class PythonRequirements(PythonPackage):
+    def __init__(self, requirements: List[str]):
+        self.requirements = requirements
+
+    def install(self, pip):
+        for requirement in self.requirements:
+            pip("install", requirement).run()
+
+
+class PythonProjectPackage(PythonPackage):
+    def __init__(self, package_filename):
+        self.package_filename = package_filename
+
+    def install(self, pip):
+        local_install_output = pip("install", self.package_filename).output()
+
+        if "DEPRECATION" in local_install_output:
+            raise Exception("DEPRECATION ERROR:\n {}".format(local_install_output))
+
+
+class PythonProjectDirectory(PythonPackage):
+    def __init__(self, project_directory):
+        self.project_directory = project_directory
+
+    def install(self, pip):
+        pip("install", "-e", self.project_directory).run()
+
+
 class ProjectVirtualenv(hitchbuild.HitchBuild):
     def __init__(
         self,
@@ -96,6 +151,7 @@ class ProjectVirtualenv(hitchbuild.HitchBuild):
         requirements_files=None,
         package_dir=None,
         local_package=None,
+        packages=None,
     ):
         self.venv_name = venv_name
         self.py_version = py_version
@@ -103,6 +159,7 @@ class ProjectVirtualenv(hitchbuild.HitchBuild):
         self.requirements = requirements
         self.package_dir = package_dir
         self.local_package = local_package
+        self.packages = packages
         self.build_path = (
             self.py_version.pyenv_build.build_path / "versions" / self.venv_name
         )
@@ -131,24 +188,11 @@ class ProjectVirtualenv(hitchbuild.HitchBuild):
         if not self.build_path.exists():
             self.py_version.ensure_built()
             self.pyenv("virtualenv", self.py_version.version, self.venv_name).run()
-            for requirements_file in self.requirements_files:
-                self.pip("install", "-r", requirements_file).run()
-            if self.package_dir is not None:
-                self.pip("install", "-e", self.package_dir).in_dir(
-                    self.build_path
-                ).run()
 
-            if self.local_package is not None:
-                local_install_output = self.pip("install", self.local_package).output()
+            if self.packages is not None:
+                for package in self.packages:
+                    package.install(self.pip)
 
-                if "DEPRECATION" in local_install_output:
-                    raise Exception(
-                        "DEPRECATION ERROR:\n {}".format(local_install_output)
-                    )
-
-            if self.requirements is not None:
-                for requirement in self.requirements:
-                    self.pip("install", requirement).run()
             self.refingerprint()
 
 

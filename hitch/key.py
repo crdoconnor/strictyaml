@@ -135,10 +135,15 @@ def regression():
     """
     Run regression testing - lint and then run all tests.
     """
+    venv = pyenv.devvenv()
     _lint()
-    _doctests()
-    storybook = _storybook().only_uninherited()
-    storybook.with_params(**{"python version": "3.7.0"}).ordered_by_name().play()
+    _doctests(venv.python_path)
+    storybook = _storybook(
+        python_path=venv.python_path
+    ).only_uninherited()
+    storybook.with_params(**{
+        "python version": venv.py_version.version
+    }).ordered_by_name().play()
 
 
 @cli.command()
@@ -193,6 +198,7 @@ def ipython():
 
 def _lint():
     toolkit.lint(exclude=["__init__.py", "ruamel"])
+    assert "\n" not in DIR.project.joinpath("VERSION")
 
 
 @cli.command()
@@ -243,19 +249,18 @@ def readmegen():
     toolkit.readmegen(Engine(DIR))
 
 
-def _doctests():
-    py = Command("/gen/pyenv/versions/venv3.11.2/bin/python")
-    py("-m", "doctest", "-v", DIR.project.joinpath(PROJECT_NAME, "utils.py")).in_dir(
-        DIR.project.joinpath(PROJECT_NAME)
-    ).run()
+def _doctests(python_path):
+    Command(python_path)(
+        "-m", "doctest", "-v", DIR.project.joinpath(PROJECT_NAME, "utils.py")
+    ).in_dir(DIR.project.joinpath(PROJECT_NAME)).run()
 
 
 @cli.command()
 def doctests():
     """
-    Run doctests in utils.py in python 2 and 3.
+    Run doctests in utils.py in latest version.
     """
-    _doctests()
+    _doctests(pyenv.devvenv().python_path)
 
 
 @cli.command()
@@ -287,33 +292,40 @@ def cleanpyenv():
 
 
 @cli.command()
-@argument("count", nargs=1)
-def randomtestvenv(count):
-    """Run tests on random version of python / requirements together."""
+@argument("strategy_name", nargs=1)
+def envirotest(strategy_name):
+    """Run tests on package / python version combinations."""
+    import random
     DIR.project.joinpath("dist").rmtree(ignore_errors=True)
     python("setup.py", "sdist").in_dir(DIR.project).run()
     sdist_path = DIR.project.joinpath(
         "dist", "strictyaml-{}.tar.gz".format(_current_version())
     )
 
-    venv = pyenv.randomtestvenv(
-        picker=lambda versions: versions[-2],
-        local_package=sdist_path,
-    )
-    python_path = venv.python_path
-    results = (
-        _storybook(python_path=python_path)
-        .with_params(**{"python version": venv.py_version.version})
-        .only_uninherited()
-        .ordered_by_name()
-        .play()
-    )
-    assert results.all_passed
+    if strategy_name == "latest":
+        strategies = [
+            lambda versions: versions[-2],
+        ]
+    elif strategy_name == "earliest":
+        strategies = [
+            lambda versions: versions[0],
+        ]
+    elif strategy_name in ("full", "maxi"):
+        strategies = (
+            [
+                lambda versions: versions[0],
+            ]
+            + [random.choice] * 2 if strategy_name == "full" else 5
+            + [lambda versions: versions[-2]]
+        )
+    else:
+        raise Exception(f"Strategy name {strategy_name} not found")
 
-    import random
-
-    for _ in range(int(count)):
-        venv = pyenv.randomtestvenv(picker=random.choice)
+    for strategy in strategies:
+        venv = pyenv.randomtestvenv(
+            picker=strategy,
+            local_package=sdist_path,
+        )
         python_path = venv.python_path
         results = (
             _storybook(python_path=python_path)
@@ -323,37 +335,12 @@ def randomtestvenv(count):
             .play()
         )
         assert results.all_passed
-
-    venv = pyenv.randomtestvenv(picker=lambda versions: versions[0])
-    python_path = venv.python_path
-    results = (
-        _storybook(python_path=python_path)
-        .with_params(**{"python version": venv.py_version.version})
-        .only_uninherited()
-        .ordered_by_name()
-        .play()
-    )
-    assert results.all_passed
+        _doctests(python_path)
 
 
 @cli.command()
-def build():
-    import pyenv
-
-    pyenv_build = pyenv.Pyenv("/gen/pyenv")
-
-    pyversion = pyenv.PyVersion(
-        pyenv_build,
-        "3.11.2",
-    )
-
-    venv = pyenv.ProjectVirtualenv(
-        "venv3.11.2",
-        pyversion,
-        ["/src/hitch/debugrequirements.txt"],
-        "/src",
-    )
-    venv.ensure_built()
+def make():
+    pyenv.devvenv()
 
 
 if __name__ == "__main__":

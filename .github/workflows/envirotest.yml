@@ -1,14 +1,10 @@
-name: Regression
+name: Envirotest
 
 on:
   workflow_dispatch:
-  push:
-    branches:
-    - master
-  pull_request:
 
 jobs:
-  regression:
+  envirotest:
     timeout-minutes: 30
     runs-on: ubuntu-latest
     steps:
@@ -22,7 +18,6 @@ jobs:
           touch ~/.ssh/id_rsa.pub
           ./key.sh make
 
-      - name: regression
+      - name: envirotest
         run: |
-          ./key.sh bdd validat parsed correct
-          ./key.sh regression
+          ./key.sh envirotest full
