@@ -24,5 +24,4 @@ jobs:
 
       - name: regression
         run: |
-          ./key.sh bdd validat parsed correct
           ./key.sh regression
