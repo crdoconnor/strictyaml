@@ -1,2 +1,4 @@
 hitchpylibrarytoolkit==0.5.1
 hitchrun>=0.4.0
+build
+wheel

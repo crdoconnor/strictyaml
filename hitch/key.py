@@ -6,6 +6,7 @@ from pathquery import pathquery
 import hitchpylibrarytoolkit
 from engine import Engine
 from path import Path
+import pyenv
 
 
 class Directories:
@@ -282,9 +283,57 @@ def bash():
 
 @cli.command()
 def cleanpyenv():
-    import pyenv
-
     pyenv.Pyenv("/gen/pyenv").clean()
+
+
+@cli.command()
+@argument("count", nargs=1)
+def randomtestvenv(count):
+    """Run tests on random version of python / requirements together."""
+    DIR.project.joinpath("dist").rmtree(ignore_errors=True)
+    python("setup.py", "sdist").in_dir(DIR.project).run()
+    sdist_path = DIR.project.joinpath(
+        "dist", "strictyaml-{}.tar.gz".format(_current_version())
+    )
+
+    venv = pyenv.randomtestvenv(
+        picker=lambda versions: versions[-2],
+        local_package=sdist_path,
+    )
+    python_path = venv.python_path
+    results = (
+        _storybook(python_path=python_path)
+        .with_params(**{"python version": venv.py_version.version})
+        .only_uninherited()
+        .ordered_by_name()
+        .play()
+    )
+    assert results.all_passed
+
+    import random
+
+    for _ in range(int(count)):
+        venv = pyenv.randomtestvenv(picker=random.choice)
+        python_path = venv.python_path
+        results = (
+            _storybook(python_path=python_path)
+            .with_params(**{"python version": venv.py_version.version})
+            .only_uninherited()
+            .ordered_by_name()
+            .play()
+        )
+        assert results.all_passed
+
+    venv = pyenv.randomtestvenv(picker=lambda versions: versions[0])
+    python_path = venv.python_path
+    results = (
+        _storybook(python_path=python_path)
+        .with_params(**{"python version": venv.py_version.version})
+        .only_uninherited()
+        .ordered_by_name()
+        .play()
+    )
+    assert results.all_passed
 
 
 @cli.command()
@@ -292,13 +341,11 @@ def build():
     import pyenv
 
     pyenv_build = pyenv.Pyenv("/gen/pyenv")
-    pyenv_build.clean()
 
     pyversion = pyenv.PyVersion(
         pyenv_build,
         "3.11.2",
     )
-    pyversion.ensure_built()
 
     venv = pyenv.ProjectVirtualenv(
         "venv3.11.2",

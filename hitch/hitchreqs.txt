@@ -6,6 +6,8 @@ black==21.11b1
     # via hitchpylibrarytoolkit
 bleach==4.1.0
     # via readme-renderer
+build==0.1.0
+    # via build
 certifi==2021.10.8
     # via requests
 cffi==1.15.0
