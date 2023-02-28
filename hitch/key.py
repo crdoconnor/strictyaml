@@ -339,7 +339,7 @@ def envirotest(strategy_name):
 
 
 @cli.command()
-def make():
+def build():
     pyenv.devvenv()
 
 
