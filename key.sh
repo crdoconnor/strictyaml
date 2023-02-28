@@ -20,11 +20,11 @@ hitchrun() {
 
 case "$1" in
     "clean")
-        if podman volume exists $CONTAINER_NAME; then
-            podman volume rm $CONTAINER_NAME
-        fi
         if podman image exists $IMAGE_NAME; then
             podman image rm -f $IMAGE_NAME
+        fi
+        if podman volume exists $CONTAINER_NAME; then
+            podman volume rm $CONTAINER_NAME
         fi
         ;;
     "make")
