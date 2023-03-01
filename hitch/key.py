@@ -209,11 +209,9 @@ def lint():
     _lint()
 
 
+"""
 @cli.command()
 def draftdocs():
-    """
-    Build documentation.
-    """
     run_docgen(DIR, _storybook({}))
 
 
@@ -244,12 +242,10 @@ def publishdocs():
 
 @cli.command()
 def readmegen():
-    """
-    Build documentation.
-    """
     run_docgen(DIR, _storybook({}), readme=True)
     DIR.project.joinpath("docs", "draft", "index.md").copy("README.md")
     DIR.project.joinpath("docs", "draft", "changelog.md").copy("CHANGELOG.md")
+"""
 
 
 @cli.command()
