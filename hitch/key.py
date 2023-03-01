@@ -210,15 +210,64 @@ def lint():
 
 
 @cli.command()
+def draftdocs():
+    """
+    Build documentation.
+    """
+    run_docgen(DIR, _storybook({}))
+
+
+@cli.command()
+def publishdocs():
+    if DIR.gen.joinpath("strictyaml").exists():
+        DIR.gen.joinpath("strictyaml").rmtree()
+
+    Path("/root/.ssh/known_hosts").write_text(
+        Command("ssh-keyscan", "github.com").output()
+    )
+    Command("git", "clone", "git@github.com:crdoconnor/strictyaml.git").in_dir(
+        DIR.gen
+    ).run()
+
+    git = Command("git").in_dir(DIR.gen / "strictyaml")
+    git("config", "user.name", "Bot").run()
+    git("config", "user.email", "bot@hithdev.com").run()
+    git("rm", "-r", "docs/public").run()
+
+    run_docgen(DIR, _storybook({}), publish=True)
+
+    git("add", "docs/public").run()
+    git("commit", "-m", "DOCS : Regenerated docs.").run()
+
+    git("push").run()
+
+
+@cli.command()
+def readmegen():
+    """
+    Build documentation.
+    """
+    run_docgen(DIR, _storybook({}), readme=True)
+    DIR.project.joinpath("docs", "draft", "index.md").copy("README.md")
+    DIR.project.joinpath("docs", "draft", "changelog.md").copy("CHANGELOG.md")
+
+
+@cli.command()
 def deploy():
     """
     Deploy to pypi as specified version.
     """
+    from commandlib import python
+
     git = Command("git")
+
+    if DIR.gen.joinpath("strictyaml").exists():
+        DIR.gen.joinpath("strictyaml").rmtree()
+
     git("clone", "git@github.com:crdoconnor/strictyaml.git").in_dir(DIR.gen).run()
     project = DIR.gen / "strictyaml"
-    version = DIR.project.joinpath("VERSION").text().rstrip()
-    initpy = DIR.project.joinpath("strictyaml", "__init__.py")
+    version = project.joinpath("VERSION").text().rstrip()
+    initpy = project.joinpath("strictyaml", "__init__.py")
     original_initpy_contents = initpy.bytes().decode("utf8")
     initpy.write_text(original_initpy_contents.replace("DEVELOPMENT_VERSION", version))
     python("setup.py", "sdist").in_dir(project).run()
@@ -229,8 +278,11 @@ def deploy():
         "-m",
         "twine",
         "upload",
-        "dist/{0}-{1}.tar.gz".format("strictyaml", version),
+        "dist/{0}-{1}.tar.gz".format("hitchstory", version),
     ).in_dir(project).run()
+
+    # Clean up
+    DIR.gen.joinpath("strictyaml").rmtree()
 
 
 @cli.command()
