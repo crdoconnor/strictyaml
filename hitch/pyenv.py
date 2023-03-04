@@ -9,14 +9,16 @@ from typing import List
 
 def clean():
     Pyenv("/gen/pyenv").clean()
-    
+
+
 class ProjectVersions:
     def __init__(self, filename, pyenv_build):
         self._filename = filename
         self._pyenv_build = pyenv_build
-    
+
     def load(self):
         import tomli
+
         project = tomli.loads(Path(filename).text())["project"]
         pyversion = project["requires-python"]
         dependencies = project["dependencies"]

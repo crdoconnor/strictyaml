@@ -138,12 +138,10 @@ def regression():
     venv = pyenv.devvenv()
     _lint()
     _doctests(venv.python_path)
-    storybook = _storybook(
-        python_path=venv.python_path
-    ).only_uninherited()
-    storybook.with_params(**{
-        "python version": venv.py_version.version
-    }).ordered_by_name().play()
+    storybook = _storybook(python_path=venv.python_path).only_uninherited()
+    storybook.with_params(
+        **{"python version": venv.py_version.version}
+    ).ordered_by_name().play()
 
 
 @cli.command()
@@ -249,7 +247,8 @@ def readmegen():
 
 
 @cli.command()
-def deploy():
+@argument("test", nargs=1)
+def deploy(test="notest"):
     """
     Deploy to pypi as specified version.
     """
@@ -270,12 +269,13 @@ def deploy():
     initpy.write_text(original_initpy_contents)
 
     # Upload to pypi
-    python(
-        "-m",
-        "twine",
-        "upload",
-        "dist/{0}-{1}.tar.gz".format("strictyaml", version),
-    ).in_dir(project).run()
+    args = ["-m", "twine"]
+    if test == "test":
+        args += ["--repository", "testpypi"]
+    args += (["upload", "dist/{0}-{1}.tar.gz".format("strictyaml", version)],)
+
+    assert test == "test"
+    python(*args).in_dir(project).run()
 
     # Clean up
     DIR.gen.joinpath("strictyaml").rmtree()
@@ -340,10 +340,18 @@ def cleanpyenv():
 
 
 @cli.command()
+def sdist():
+    """Build sdist"""
+    DIR.project.joinpath("dist").rmtree(ignore_errors=True)
+    python("setup.py", "sdist").in_dir(DIR.project).run()
+
+
+@cli.command()
 @argument("strategy_name", nargs=1)
 def envirotest(strategy_name):
     """Run tests on package / python version combinations."""
     import random
+
     DIR.project.joinpath("dist").rmtree(ignore_errors=True)
     python("setup.py", "sdist").in_dir(DIR.project).run()
     sdist_path = DIR.project.joinpath(
@@ -363,8 +371,9 @@ def envirotest(strategy_name):
             [
                 lambda versions: versions[0],
             ]
-            + [random.choice] * 2 if strategy_name == "full" else 5
-            + [lambda versions: versions[-2]]
+            + [random.choice] * 2
+            if strategy_name == "full"
+            else 5 + [lambda versions: versions[-2]]
         )
     else:
         raise Exception(f"Strategy name {strategy_name} not found")
