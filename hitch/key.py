@@ -269,10 +269,10 @@ def deploy(test="notest"):
     initpy.write_text(original_initpy_contents)
 
     # Upload to pypi
-    args = ["-m", "twine"]
+    args = ["-m", "twine", "upload"]
     if test == "test":
         args += ["--repository", "testpypi"]
-    args += (["upload", "dist/{0}-{1}.tar.gz".format("strictyaml", version)],)
+    args += ["dist/{0}-{1}.tar.gz".format("strictyaml", version)]
 
     assert test == "test"
     python(*args).in_dir(project).run()

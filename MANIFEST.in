@@ -1,5 +1,4 @@
 include VERSION
 include LICENSE.txt
 include README.md
-prune hitch/__pycache__
-prune hitch/gen
+include strictyaml/ruamel
