@@ -265,17 +265,24 @@ def deploy(test="notest"):
     initpy = project.joinpath("strictyaml", "__init__.py")
     original_initpy_contents = initpy.bytes().decode("utf8")
     initpy.write_text(original_initpy_contents.replace("DEVELOPMENT_VERSION", version))
-    python("setup.py", "sdist").in_dir(project).run()
+    python("-m", "pip", "wheel", ".", "-w", "dist").in_dir(project).run()
     initpy.write_text(original_initpy_contents)
 
-    # Upload to pypi
-    args = ["-m", "twine", "upload"]
-    if test == "test":
-        args += ["--repository", "testpypi"]
-    args += ["dist/{0}-{1}.tar.gz".format("strictyaml", version)]
-
     assert test == "test"
-    python(*args).in_dir(project).run()
+
+    # Upload to pypi
+    wheel_args = ["-m", "twine", "upload"]
+    if test == "test":
+        wheel_args += ["--repository", "testpypi"]
+    wheel_args += ["dist/{}-{}-py3-none-any.whl".format("strictyaml", version)]
+
+    python(*wheel_args).in_dir(project).run()
+
+    sdist_args = ["-m", "twine", "upload"]
+    if test == "test":
+        sdist_args += ["--repository", "testpypi"]
+    sdist_args += ["dist/{0}-{1}.tar.gz".format("strictyaml", version)]
+    python(*sdist_args).in_dir(project).run()
 
     # Clean up
     DIR.gen.joinpath("strictyaml").rmtree()
