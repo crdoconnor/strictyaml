@@ -358,12 +358,6 @@ def envirotest(strategy_name):
     """Run tests on package / python version combinations."""
     import random
 
-    DIR.project.joinpath("dist").rmtree(ignore_errors=True)
-    python("setup.py", "sdist").in_dir(DIR.project).run()
-    sdist_path = DIR.project.joinpath(
-        "dist", "strictyaml-{}.tar.gz".format(_current_version())
-    )
-
     if strategy_name == "latest":
         strategies = [
             lambda versions: versions[-2],
@@ -387,7 +381,7 @@ def envirotest(strategy_name):
     for strategy in strategies:
         venv = pyenv.randomtestvenv(
             picker=strategy,
-            local_package=sdist_path,
+            package_version=_current_version(),
         )
         python_path = venv.python_path
         results = (

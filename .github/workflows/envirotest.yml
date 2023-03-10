@@ -2,9 +2,9 @@ name: Envirotest
 
 on:
   workflow_dispatch:
-  #schedule:
-    # Run every friday evening, to catch before weekend
-    #- cron: '0 17 * * Fri'
+  schedule:
+    Run every friday evening, to catch before weekend
+    - cron: '0 17 * * Fri'
 
 jobs:
   envirotest:

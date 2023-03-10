@@ -24,7 +24,7 @@ class ProjectVersions:
         dependencies = project["dependencies"]
 
 
-def randomtestvenv(picker=None, local_package=None):
+def randomtestvenv(picker=None, package_version=None):
     pyenv_build = Pyenv("/gen/pyenv")
     pyenv_build.ensure_built()
 
@@ -41,18 +41,15 @@ def randomtestvenv(picker=None, local_package=None):
     venv = ProjectVirtualenv(
         "randomtestvenv",
         pyversion,
-        # requirements_files=[],
-        # requirements=[
-        # "ensure",
-        # "python-slugify",
-        # "python-dateutil=={}".format(python_dateutil_version),
-        # ],
-        # local_package=local_package,
         packages=[
             PythonRequirements(
                 ["ensure", "python-slugify"],
             ),
-            PythonProjectPackage(local_package),
+            PythonRequirements(
+                [
+                    "strictyaml=={}".format(package_version),
+                ]
+            ),
             PythonRequirements(
                 [
                     "python-dateutil=={}".format(python_dateutil_version),
