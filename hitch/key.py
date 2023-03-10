@@ -266,9 +266,8 @@ def deploy(test="notest"):
     original_initpy_contents = initpy.bytes().decode("utf8")
     initpy.write_text(original_initpy_contents.replace("DEVELOPMENT_VERSION", version))
     python("-m", "pip", "wheel", ".", "-w", "dist").in_dir(project).run()
+    python("-m", "build", "--sdist").in_dir(project).run()
     initpy.write_text(original_initpy_contents)
-
-    assert test == "test"
 
     # Upload to pypi
     wheel_args = ["-m", "twine", "upload"]
