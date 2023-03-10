@@ -5,33 +5,57 @@ import hitchbuild
 import requests
 import dateutil
 from typing import List
+import tomli
 
 
 def clean():
     Pyenv("/gen/pyenv").clean()
 
 
-class ProjectVersions:
-    def __init__(self, filename, pyenv_build):
-        self._filename = filename
+class ProjectDependencies:
+    def __init__(self, pyproject_toml, pyenv_build):
+        self._pyproject_toml = pyproject_toml
         self._pyenv_build = pyenv_build
 
     def load(self):
-        import tomli
-
-        project = tomli.loads(Path(filename).text())["project"]
+        project = tomli.loads(self._pyproject_toml)["project"]
         pyversion = project["requires-python"]
         dependencies = project["dependencies"]
 
+        self.dependency_versions = {}
 
-def randomtestvenv(picker=None, package_version=None):
+        for dependency in dependencies:
+            assert ">=" in dependency
+
+            self.dependency_versions[
+                dependency.split(">=")[0]
+            ] = package_versions_above(
+                dependency.split(">=")[0],
+                dependency.split(">=")[1],
+            )
+
+        self.python_versions = self._pyenv_build.available_versions_above_and_including(
+            pyversion.split(">=")[1]
+        )
+
+
+def randomtestvenv(picker=None, package_version=None, pyproject_toml=None):
     pyenv_build = Pyenv("/gen/pyenv")
     pyenv_build.ensure_built()
 
-    python_dateutil_version = picker(package_versions_above("python-dateutil", "2.6.0"))
-    python_version = picker(pyenv_build.available_versions_above_and_including("3.7.0"))
-    print("Dateutil version: {}".format(python_dateutil_version))
+    project_dependencies = ProjectDependencies(
+        pyproject_toml,
+        pyenv_build,
+    )
+    project_dependencies.load()
+
+    python_version = picker(project_dependencies.python_versions)
     print("Python version: {}".format(python_version))
+
+    picked_versions = {}
+    for dependency, versions in project_dependencies.dependency_versions.items():
+        picked_versions[dependency] = picker(versions)
+        print("{} version: {}".format(dependency, picked_versions[dependency]))
 
     pyversion = PyVersion(
         pyenv_build,
@@ -52,7 +76,8 @@ def randomtestvenv(picker=None, package_version=None):
             ),
             PythonRequirements(
                 [
-                    "python-dateutil=={}".format(python_dateutil_version),
+                    "{}=={}".format(library, version)
+                    for library, version in picked_versions.items()
                 ]
             ),
         ],

@@ -353,6 +353,18 @@ def sdist():
 
 
 @cli.command()
+def envirolist():
+    pyenv_build = pyenv.Pyenv("/gen/pyenv")
+    pyenv_build.ensure_built()
+
+    project_dependencies = pyenv.ProjectDependencies(
+        DIR.project.joinpath("pyproject.toml").text(),
+        pyenv_build,
+    )
+    project_dependencies.load()
+
+
+@cli.command()
 @argument("strategy_name", nargs=1)
 def envirotest(strategy_name):
     """Run tests on package / python version combinations."""
@@ -382,8 +394,10 @@ def envirotest(strategy_name):
         venv = pyenv.randomtestvenv(
             picker=strategy,
             package_version=_current_version(),
+            pyproject_toml=DIR.project.joinpath("pyproject.toml").text(),
         )
         python_path = venv.python_path
+        _doctests(python_path)
         results = (
             _storybook(python_path=python_path)
             .with_params(**{"python version": venv.py_version.version})
@@ -392,7 +406,6 @@ def envirotest(strategy_name):
             .play()
         )
         assert results.all_passed
-        _doctests(python_path)
 
 
 @cli.command()
