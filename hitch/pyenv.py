@@ -12,6 +12,35 @@ def clean():
     Pyenv("/gen/pyenv").clean()
 
 
+def package_versions_above(package_name, minimum_version):
+    data = requests.get("https://pypi.org/pypi/{}/json".format(package_name)).json()
+    versions = list(data["releases"].keys())
+    versions.sort(key=StrictVersion)
+
+    selected_versions = [
+        version
+        for version in versions
+        if LooseVersion(version) >= LooseVersion(minimum_version)
+    ]
+
+    upload_dates = {
+        version: dateutil.parser.parse(data["releases"][version][-1]["upload_time"])
+        for version in selected_versions
+    }
+
+    possible_versions = []
+
+    for index, version in enumerate(selected_versions[1:]):
+        timediff = upload_dates[version] - upload_dates[selected_versions[index]]
+
+        if timediff.days > 7:
+            possible_versions.append(selected_versions[index])
+
+    possible_versions.append(selected_versions[-1])
+
+    return possible_versions
+
+
 class ProjectDependencies:
     def __init__(self, pyproject_toml, pyenv_build):
         self._pyproject_toml = pyproject_toml
@@ -167,56 +196,6 @@ class DevelopmentVirtualenv(hitchbuild.HitchBuild):
             self.refingerprint()
 
 
-def devvenv():
-    pyenv_build = Pyenv("/gen/pyenv")
-    pyenv_build.ensure_built()
-
-    pyversion = PyVersion(
-        pyenv_build,
-        pyenv_build.available_versions_above_and_including("3.7.0")[-2],
-    )
-
-    venv = ProjectVirtualenv(
-        "devenv",
-        pyversion,
-        packages=[
-            PythonRequirementsFile("/src/hitch/debugrequirements.txt"),
-            PythonProjectDirectory("/src"),
-        ],
-    )
-    venv.ensure_built()
-    return venv
-
-
-def package_versions_above(package_name, minimum_version):
-    data = requests.get("https://pypi.org/pypi/{}/json".format(package_name)).json()
-    versions = list(data["releases"].keys())
-    versions.sort(key=StrictVersion)
-
-    selected_versions = [
-        version
-        for version in versions
-        if LooseVersion(version) >= LooseVersion(minimum_version)
-    ]
-
-    upload_dates = {
-        version: dateutil.parser.parse(data["releases"][version][-1]["upload_time"])
-        for version in selected_versions
-    }
-
-    relevant_versions = []
-
-    for index, version in enumerate(selected_versions[1:]):
-        timediff = upload_dates[version] - upload_dates[selected_versions[index]]
-
-        if timediff.days > 7:
-            relevant_versions.append(selected_versions[index])
-
-    relevant_versions.append(selected_versions[-1])
-
-    return relevant_versions
-
-
 class PythonPackage:
     pass
 
@@ -280,10 +259,6 @@ class ProjectVirtualenv(hitchbuild.HitchBuild):
     ):
         self.venv_name = venv_name
         self.py_version = py_version
-        self.requirements_files = requirements_files
-        self.requirements = requirements
-        self.package_dir = package_dir
-        self.local_package = local_package
         self.packages = packages
         self.build_path = (
             self.py_version.pyenv_build.build_path / "versions" / self.venv_name

@@ -339,8 +339,6 @@ def bash():
     """
     Run bash
     """
-    from commandlib import Command
-
     Command("bash").run()
 
 
