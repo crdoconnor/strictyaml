@@ -49,7 +49,7 @@ def randomtestvenv(picker=None, package_version=None, pyproject_toml=None):
     )
     project_dependencies.load()
 
-    python_version = picker(project_dependencies.python_versions)
+    python_version = picker(project_dependencies.python_versions[:-1])
     print("Python version: {}".format(python_version))
 
     picked_versions = {}
@@ -72,7 +72,8 @@ def randomtestvenv(picker=None, package_version=None, pyproject_toml=None):
             PythonRequirements(
                 [
                     "strictyaml=={}".format(package_version),
-                ]
+                ],
+                test_repo=True,
             ),
             PythonRequirements(
                 [
@@ -150,12 +151,22 @@ class PythonRequirementsFile(PythonPackage):
 
 
 class PythonRequirements(PythonPackage):
-    def __init__(self, requirements: List[str]):
+    def __init__(self, requirements: List[str], test_repo=False):
         self.requirements = requirements
+        self._test_repo = test_repo
 
     def install(self, pip):
         for requirement in self.requirements:
-            pip("install", requirement).run()
+            if self._test_repo:
+                pip(
+                    "install",
+                    "--no-build-isolation",
+                    "--index-url",
+                    "https://test.pypi.org/simple/",
+                    requirement,
+                ).run()
+            else:
+                pip("install", requirement).run()
 
 
 class PythonProjectPackage(PythonPackage):

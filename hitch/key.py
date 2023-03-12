@@ -6,6 +6,7 @@ from pathquery import pathquery
 import hitchpylibrarytoolkit
 from engine import Engine
 from path import Path
+import random
 import pyenv
 
 
@@ -368,11 +369,9 @@ def envirolist():
 @argument("strategy_name", nargs=1)
 def envirotest(strategy_name):
     """Run tests on package / python version combinations."""
-    import random
-
     if strategy_name == "latest":
         strategies = [
-            lambda versions: versions[-2],
+            lambda versions: versions[-1],
         ]
     elif strategy_name == "earliest":
         strategies = [
