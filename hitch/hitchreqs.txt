@@ -2,7 +2,7 @@ argcomplete==1.12.2
     # via hitchrun
 backcall==0.2.0
     # via ipython
-black==21.11b1
+black==23.1.0
     # via hitchpylibrarytoolkit
 bleach==4.1.0
     # via readme-renderer
@@ -210,7 +210,7 @@ typing-extensions==4.0.0
     #   gitpython
 urllib3==1.26.7
     # via requests
-uvloop==0.11.2
+uvloop==0.17.0
     # via icommandlib
 wcwidth==0.2.5
     # via

@@ -106,57 +106,65 @@ class DevelopmentVirtualenv(hitchbuild.HitchBuild):
         self._project_path = project_path
         self._pyproject_toml = pyproject_toml
 
+    @property
+    def build_path(self):
+        return self._pyenv_build.build_path / "versions" / "devvenv"
+
+    @property
+    def fingerprint_path(self):
+        return self.build_path / "fingerprint.txt"
+
+    @property
+    def python_path(self):
+        return self.build_path / "bin" / "python"
+
     def build(self):
         self._pyenv_build.ensure_built()
 
-        if not self._versions_file.exists():
-            project_dependencies = ProjectDependencies(
-                self._pyproject_toml,
-                self._pyenv_build,
-            )
-            project_dependencies.load()
-
-            self.python_version = project_dependencies.python_versions[:-1][-1]
-            print("Python version: {}".format(python_version))
-
-            self.picked_versions = {}
-            for (
-                dependency,
-                versions,
-            ) in project_dependencies.dependency_versions.items():
-                self.picked_versions[dependency] = versions[-1]
-                print(
-                    "{} version: {}".format(
-                        dependency, self.picked_versions[dependency]
-                    )
+        if not self.build_path.exists():
+            if not self._versions_file.exists():
+                project_dependencies = ProjectDependencies(
+                    self._pyproject_toml,
+                    self._pyenv_build,
                 )
-        else:
-            from strictyaml import load
+                project_dependencies.load()
 
-            devenv = load(self._versions_file.text()).data
-            self.python_version = devenv["python version"]
-            self.picked_versions = devenv["packages"]
+                self.python_version = project_dependencies.python_versions[:-1][-1]
 
-        self.venv = ProjectVirtualenv(
-            "devvenv",
-            PyVersion(
-                self._pyenv_build,
-                self.python_version,
-            ),
-            packages=[
-                PythonRequirements(
-                    ["ensure", "python-slugify"],
+                self.picked_versions = {}
+                for (
+                    dependency,
+                    versions,
+                ) in project_dependencies.dependency_versions.items():
+                    self.picked_versions[dependency] = versions[-1]
+            else:
+                from strictyaml import load
+
+                devenv = load(self._versions_file.text()).data
+                self.python_version = devenv["python version"]
+                self.picked_versions = devenv["packages"]
+
+            self.venv = ProjectVirtualenv(
+                "devvenv",
+                PyVersion(
+                    self._pyenv_build,
+                    self.python_version,
                 ),
-                PythonProjectDirectory(self._project_path),
-                PythonRequirements(
-                    [
-                        "{}=={}".format(library, version)
-                        for library, version in self.picked_versions.items()
-                    ]
-                ),
-            ],
-        )
-        self.venv.ensure_built()
+                packages=[
+                    PythonRequirements(
+                        ["ensure", "python-slugify"],
+                    ),
+                    PythonProjectDirectory(self._project_path),
+                    PythonRequirements(
+                        [
+                            "{}=={}".format(library, version)
+                            for library, version in self.picked_versions.items()
+                        ]
+                    ),
+                ],
+            )
+            self.venv.ensure_built()
+            self.refingerprint()
 
 
 def devvenv():

@@ -1,6 +1,6 @@
 from hitchstory import StoryCollection
 from strictyaml import Str, Map, Bool, load
-from commandlib import Command
+from commandlib import Command, python_bin
 from click import argument, group, pass_context
 from pathquery import pathquery
 import hitchpylibrarytoolkit
@@ -8,6 +8,7 @@ from engine import Engine
 from path import Path
 import random
 import pyenv
+import sys
 
 
 class Directories:
@@ -35,23 +36,23 @@ toolkit = hitchpylibrarytoolkit.ProjectToolkit(
 )
 
 
+"""
+----------------------------
+Non-runnable utility methods
+---------------------------
+"""
+
+
 def _devenv():
     env = pyenv.DevelopmentVirtualenv(
         pyenv.Pyenv(DIR.gen / "pyenv"),
         DIR.project.joinpath("hitch", "devenv.yml"),
         DIR.project.joinpath("hitch", "debugrequirements.txt"),
         DIR.project,
-        DIR.project / "pyproject.toml",
+        DIR.project.joinpath("pyproject.toml").text(),
     )
     env.ensure_built()
     return env
-
-
-"""
-----------------------------
-Non-runnable utility methods
----------------------------
-"""
 
 
 def _storybook(**settings):
@@ -105,7 +106,7 @@ def bdd(keywords):
     """
     Run story matching keywords.
     """
-    _storybook(python_path=_devenv().venv.python_path).only_uninherited().shortcut(
+    _storybook(python_path=_devenv().python_path).only_uninherited().shortcut(
         *keywords
     ).play()
 
@@ -116,7 +117,7 @@ def rbdd(keywords):
     """
     Run story matching keywords and rewrite story if code changed.
     """
-    _storybook(python_path=_devenv().venv.python_path).only_uninherited().shortcut(
+    _storybook(python_path=_devenv().python_path).only_uninherited().shortcut(
         *keywords
     ).play()
 
@@ -127,7 +128,7 @@ def regressfile(filename):
     """
     Run all stories in filename 'filename' in python 3.7.
     """
-    _storybook(python_path=_devenv().venv.python_path).in_filename(
+    _storybook(python_path=_devenv().python_path).in_filename(
         filename
     ).ordered_by_name().play()
 
@@ -137,32 +138,15 @@ def regression():
     """
     Run regression testing - lint and then run all tests.
     """
-    venv = _devenv().venv
+    python_path = _devenv().python_path
     _lint()
-    _doctests(venv.python_path)
+    _doctests(python_path)
     result = (
-        _storybook(python_path=venv.python_path)
-        .only_uninherited()
-        .ordered_by_name()
-        .play()
+        _storybook(python_path=python_path).only_uninherited().ordered_by_name().play()
     )
     if not result.all_passed:
         print("FAILURE")
-        import sys
-
         sys.exit(1)
-
-
-@cli.command()
-@argument("python_path", nargs=1)
-@argument("python_version", nargs=1)
-def regression_on_python_path(python_path, python_version):
-    """
-    Run regression tests - e.g. hk regression_on_python_path /usr/bin/python 3.7.0
-    """
-    _storybook(python_path=python_path).with_params(
-        **{"python version": python_version}
-    ).only_uninherited().ordered_by_name().play()
 
 
 @cli.command()
@@ -172,11 +156,17 @@ def checks():
 
     These checks should prevent code that doesn't have the proper checks run from being merged.
     """
-    toolkit.validate_reformatting()
+    python_path = _devenv().python_path
+    python_bin.black(DIR.project / "strictyaml", "--exclude", "ruamel", "--check").run()
+    python_bin.black(DIR.project / "hitch", "--check").run()
     toolkit.lint(exclude=["__init__.py", "ruamel"])
-    _doctests()
-    storybook = _storybook().only_uninherited()
-    storybook.with_params(**{"python version": "3.7.0"}).ordered_by_name().play()
+    _doctests(python_path)
+    result = (
+        _storybook(python_path=python_path).only_uninherited().ordered_by_name().play()
+    )
+    if not result.all_passed:
+        print("FAILURE")
+        sys.exit(1)
 
 
 @cli.command()
@@ -184,7 +174,12 @@ def reformat():
     """
     Reformat using black and then relint.
     """
-    toolkit.reformat()
+    python_bin.black(
+        DIR.project / "strictyaml",
+        "--exclude",
+        "ruamel",
+    ).run()
+    python_bin.black(DIR.project / "hitch").run()
 
 
 @cli.command()
@@ -402,8 +397,6 @@ def envirotest(strategy_name):
             print("packages:")
             for package, version in envirotestvenv.picked_versions.items():
                 print("  {}: {}".format(package, version))
-            import sys
-
             sys.exit(1)
 
 
