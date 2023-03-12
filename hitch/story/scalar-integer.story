@@ -61,6 +61,7 @@ Integers (Int):
       - Run:
           code: bool(load(yaml_snippet, schema)['a'])
           raises:
+            type: TypeError
             message: |-
               Cannot cast 'YAML(1)' to bool.
               Use bool(yamlobj.data) or bool(yamlobj.text) instead.

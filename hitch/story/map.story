@@ -43,6 +43,7 @@ Mappings with defined keys (Map):
       - Run:
           code: load(yaml_snippet, schema_2)['keynotfound']
           raises:
+            type: KeyError
             message: "'keynotfound'"
 
     cannot use .text:
@@ -50,12 +51,8 @@ Mappings with defined keys (Map):
       - Run:
           code: load(yaml_snippet, schema_2).text
           raises:
-            type:
-              in python 3: builtins.TypeError
-              in python 2: exceptions.TypeError
-            message:
-              in python 3: "YAML({'â': 1, 'b': 2, 'c': 3}) is a mapping, has no text value."
-              in python 2: "YAML({u'\\xe2': 1, 'b': 2, 'c': 3}) is a mapping, has no text value."
+            type: TypeError
+            message: "YAML({'â': 1, 'b': 2, 'c': 3}) is a mapping, has no text value."
 
     parse snippet where key is not found in schema:
       given:

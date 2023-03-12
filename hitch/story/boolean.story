@@ -92,9 +92,7 @@ Boolean (Bool):
       - Run:
           code: str(load(yaml_snippet, schema)["y"])
           raises:
-            type:
-              in python 2: exceptions.TypeError
-              in python 3: builtins.TypeError
+            type: TypeError
             message: |-
               Cannot cast 'YAML(False)' to str.
               Use str(yamlobj.data) or str(yamlobj.text) instead.

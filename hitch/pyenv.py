@@ -39,53 +39,124 @@ class ProjectDependencies:
         )
 
 
-def randomtestvenv(picker=None, package_version=None, pyproject_toml=None):
-    pyenv_build = Pyenv("/gen/pyenv")
-    pyenv_build.ensure_built()
+class EnvirotestVirtualenv(hitchbuild.HitchBuild):
+    def __init__(self, pyenv_build, pyproject_toml, picker, testpypi_package):
+        self._pyenv_build = pyenv_build
+        self._pyproject_toml = pyproject_toml
+        self._picker = picker
+        self._testpypi_package = testpypi_package
 
-    project_dependencies = ProjectDependencies(
+    def build(self):
+        self._pyenv_build.ensure_built()
+
+        project_dependencies = ProjectDependencies(
+            self._pyproject_toml,
+            self._pyenv_build,
+        )
+        project_dependencies.load()
+
+        self.python_version = self._picker(project_dependencies.python_versions[:-1])
+        print("Python version: {}".format(self.python_version))
+
+        self.picked_versions = {}
+        for dependency, versions in project_dependencies.dependency_versions.items():
+            self.picked_versions[dependency] = self._picker(versions)
+            print("{} version: {}".format(dependency, self.picked_versions[dependency]))
+
+        self.venv = ProjectVirtualenv(
+            "randomtestvenv",
+            PyVersion(
+                self._pyenv_build,
+                self.python_version,
+            ),
+            packages=[
+                PythonRequirements(
+                    ["ensure", "python-slugify"],
+                ),
+                PythonRequirements(
+                    [
+                        self._testpypi_package,
+                    ],
+                    test_repo=True,
+                ),
+                PythonRequirements(
+                    [
+                        "{}=={}".format(library, version)
+                        for library, version in self.picked_versions.items()
+                    ]
+                ),
+            ],
+        )
+        self.venv.clean()
+        self.venv.ensure_built()
+
+
+class DevelopmentVirtualenv(hitchbuild.HitchBuild):
+    def __init__(
+        self,
+        pyenv_build,
+        versions_file,
+        debug_requirements,
+        project_path,
         pyproject_toml,
-        pyenv_build,
-    )
-    project_dependencies.load()
+    ):
+        self._pyenv_build = pyenv_build
+        self._versions_file = versions_file
+        self._debug_requirements = debug_requirements
+        self._project_path = project_path
+        self._pyproject_toml = pyproject_toml
 
-    python_version = picker(project_dependencies.python_versions[:-1])
-    print("Python version: {}".format(python_version))
+    def build(self):
+        self._pyenv_build.ensure_built()
 
-    picked_versions = {}
-    for dependency, versions in project_dependencies.dependency_versions.items():
-        picked_versions[dependency] = picker(versions)
-        print("{} version: {}".format(dependency, picked_versions[dependency]))
+        if not self._versions_file.exists():
+            project_dependencies = ProjectDependencies(
+                self._pyproject_toml,
+                self._pyenv_build,
+            )
+            project_dependencies.load()
 
-    pyversion = PyVersion(
-        pyenv_build,
-        python_version,
-    )
+            self.python_version = project_dependencies.python_versions[:-1][-1]
+            print("Python version: {}".format(python_version))
 
-    venv = ProjectVirtualenv(
-        "randomtestvenv",
-        pyversion,
-        packages=[
-            PythonRequirements(
-                ["ensure", "python-slugify"],
+            self.picked_versions = {}
+            for (
+                dependency,
+                versions,
+            ) in project_dependencies.dependency_versions.items():
+                self.picked_versions[dependency] = versions[-1]
+                print(
+                    "{} version: {}".format(
+                        dependency, self.picked_versions[dependency]
+                    )
+                )
+        else:
+            from strictyaml import load
+
+            devenv = load(self._versions_file.text()).data
+            self.python_version = devenv["python version"]
+            self.picked_versions = devenv["packages"]
+
+        self.venv = ProjectVirtualenv(
+            "devvenv",
+            PyVersion(
+                self._pyenv_build,
+                self.python_version,
             ),
-            PythonRequirements(
-                [
-                    "strictyaml=={}".format(package_version),
-                ],
-                test_repo=True,
-            ),
-            PythonRequirements(
-                [
-                    "{}=={}".format(library, version)
-                    for library, version in picked_versions.items()
-                ]
-            ),
-        ],
-    )
-    venv.clean()
-    venv.ensure_built()
-    return venv
+            packages=[
+                PythonRequirements(
+                    ["ensure", "python-slugify"],
+                ),
+                PythonProjectDirectory(self._project_path),
+                PythonRequirements(
+                    [
+                        "{}=={}".format(library, version)
+                        for library, version in self.picked_versions.items()
+                    ]
+                ),
+            ],
+        )
+        self.venv.ensure_built()
 
 
 def devvenv():

@@ -1,6 +1,6 @@
 from hitchstory import StoryCollection
 from strictyaml import Str, Map, Bool, load
-from commandlib import Command, python
+from commandlib import Command
 from click import argument, group, pass_context
 from pathquery import pathquery
 import hitchpylibrarytoolkit
@@ -34,6 +34,19 @@ toolkit = hitchpylibrarytoolkit.ProjectToolkit(
     DIR,
 )
 
+
+def _devenv():
+    env = pyenv.DevelopmentVirtualenv(
+        pyenv.Pyenv(DIR.gen / "pyenv"),
+        DIR.project.joinpath("hitch", "devenv.yml"),
+        DIR.project.joinpath("hitch", "debugrequirements.txt"),
+        DIR.project,
+        DIR.project / "pyproject.toml",
+    )
+    env.ensure_built()
+    return env
+
+
 """
 ----------------------------
 Non-runnable utility methods
@@ -48,7 +61,7 @@ def _storybook(**settings):
 
 
 def _current_version():
-    return DIR.project.joinpath("VERSION").bytes().decode("utf8").rstrip()
+    return DIR.project.joinpath("VERSION").text().rstrip()
 
 
 def _personal_settings():
@@ -92,21 +105,9 @@ def bdd(keywords):
     """
     Run story matching keywords.
     """
-    _storybook().with_params(
-        **{"python version": _default_python_version()}
-    ).only_uninherited().shortcut(*keywords).play()
-
-
-@cli.command()
-@argument("pyversion", nargs=1)
-@argument("keywords", nargs=-1)
-def tver(pyversion, keywords):
-    """
-    Run story against specific version of Python - e.g. tver 3.7.0 modify multi line
-    """
-    _storybook().with_params(
-        **{"python version": pyversion}
-    ).only_uninherited().shortcut(*keywords).play()
+    _storybook(python_path=_devenv().venv.python_path).only_uninherited().shortcut(
+        *keywords
+    ).play()
 
 
 @cli.command()
@@ -115,9 +116,9 @@ def rbdd(keywords):
     """
     Run story matching keywords and rewrite story if code changed.
     """
-    _storybook(rewrite=True).with_params(
-        **{"python version": _default_python_version()}
-    ).only_uninherited().shortcut(*keywords).play()
+    _storybook(python_path=_devenv().venv.python_path).only_uninherited().shortcut(
+        *keywords
+    ).play()
 
 
 @cli.command()
@@ -126,7 +127,7 @@ def regressfile(filename):
     """
     Run all stories in filename 'filename' in python 3.7.
     """
-    _storybook().with_params(**{"python version": "3.7.0"}).in_filename(
+    _storybook(python_path=_devenv().venv.python_path).in_filename(
         filename
     ).ordered_by_name().play()
 
@@ -136,13 +137,20 @@ def regression():
     """
     Run regression testing - lint and then run all tests.
     """
-    venv = pyenv.devvenv()
+    venv = _devenv().venv
     _lint()
     _doctests(venv.python_path)
-    storybook = _storybook(python_path=venv.python_path).only_uninherited()
-    storybook.with_params(
-        **{"python version": venv.py_version.version}
-    ).ordered_by_name().play()
+    result = (
+        _storybook(python_path=venv.python_path)
+        .only_uninherited()
+        .ordered_by_name()
+        .play()
+    )
+    if not result.all_passed:
+        print("FAILURE")
+        import sys
+
+        sys.exit(1)
 
 
 @cli.command()
@@ -347,25 +355,6 @@ def cleanpyenv():
 
 
 @cli.command()
-def sdist():
-    """Build sdist"""
-    DIR.project.joinpath("dist").rmtree(ignore_errors=True)
-    python("setup.py", "sdist").in_dir(DIR.project).run()
-
-
-@cli.command()
-def envirolist():
-    pyenv_build = pyenv.Pyenv("/gen/pyenv")
-    pyenv_build.ensure_built()
-
-    project_dependencies = pyenv.ProjectDependencies(
-        DIR.project.joinpath("pyproject.toml").text(),
-        pyenv_build,
-    )
-    project_dependencies.load()
-
-
-@cli.command()
 @argument("strategy_name", nargs=1)
 def envirotest(strategy_name):
     """Run tests on package / python version combinations."""
@@ -384,32 +373,43 @@ def envirotest(strategy_name):
             ]
             + [random.choice] * 2
             if strategy_name == "full"
-            else 5 + [lambda versions: versions[-2]]
+            else 5 + [lambda versions: versions[-1]]
         )
     else:
         raise Exception(f"Strategy name {strategy_name} not found")
 
     for strategy in strategies:
-        venv = pyenv.randomtestvenv(
-            picker=strategy,
-            package_version=_current_version(),
+        envirotestvenv = pyenv.EnvirotestVirtualenv(
+            pyenv_build=pyenv.Pyenv(DIR.gen / "pyenv"),
             pyproject_toml=DIR.project.joinpath("pyproject.toml").text(),
+            picker=strategy,
+            testpypi_package="strictyaml=={}".format(_current_version()),
         )
-        python_path = venv.python_path
+        envirotestvenv.build()
+
+        python_path = envirotestvenv.venv.python_path
         _doctests(python_path)
         results = (
             _storybook(python_path=python_path)
-            .with_params(**{"python version": venv.py_version.version})
             .only_uninherited()
             .ordered_by_name()
             .play()
         )
-        assert results.all_passed
+        if not results.all_passed:
+            print("FAILED")
+            print("COPY the following into hitch/devenv.yml:\n\n")
+            print("python version: {}".format(envirotestvenv.python_version))
+            print("packages:")
+            for package, version in envirotestvenv.picked_versions.items():
+                print("  {}: {}".format(package, version))
+            import sys
+
+            sys.exit(1)
 
 
 @cli.command()
 def build():
-    pyenv.devvenv()
+    _devenv()
 
 
 if __name__ == "__main__":

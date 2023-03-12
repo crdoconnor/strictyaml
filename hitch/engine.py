@@ -63,11 +63,8 @@ class Engine(BaseEngine):
         if not self.path.profile.exists():
             self.path.profile.mkdir()
 
-        if not self._python_path:
-            self.python = Path("/gen/pyenv/versions/venv3.11.2/bin/python")
-        else:
-            self.python = Path(self._python_path)
-            assert self.python.exists()
+        self.python = Path(self._python_path)
+        assert self.python.exists()
 
         self.example_py_code = (
             ExamplePythonCode(self.python, self.path.gen)
@@ -99,16 +96,10 @@ class Engine(BaseEngine):
         in_interpreter=False,
     ):
         if in_interpreter:
-            if self.given["python version"].startswith("3"):
-                code = "{0}\nprint(repr({1}))".format(
-                    "\n".join(code.strip().split("\n")[:-1]),
-                    code.strip().split("\n")[-1],
-                )
-            else:
-                code = "{0}\nprint repr({1})".format(
-                    "\n".join(code.strip().split("\n")[:-1]),
-                    code.strip().split("\n")[-1],
-                )
+            code = "{0}\nprint(repr({1}))".format(
+                "\n".join(code.strip().split("\n")[:-1]),
+                code.strip().split("\n")[-1],
+            )
 
         to_run = self.example_py_code.with_code(code)
 
@@ -159,8 +150,12 @@ class Engine(BaseEngine):
 
             try:
                 result = to_run.expect_exceptions().run()
-                result.exception_was_raised(exception_type, message)
-            except ExpectedExceptionMessageWasDifferent as error:
+                if exception_type is not None:
+                    assert (
+                        exception_type in result.exception.exception_type
+                    ), result.exception.exception_type
+                assert message == result.exception.message, result.exception.message
+            except AssertionError:
                 if self._rewrite and not differential:
                     new_raises = raises.copy()
                     new_raises["message"] = result.exception.message

@@ -60,12 +60,8 @@ Sequence/list validator (Seq):
       - Run:
           code: load(yaml_snippet, Seq(Str())).text
           raises:
-            type:
-              in python 2: exceptions.TypeError
-              in python 3: builtins.TypeError
-            message:
-              in python 2: YAML([u'\xe2', '2', '3']) is a sequence, has no text value.
-              in python 3: YAML(['â', '2', '3']) is a sequence, has no text value.
+            type: TypeError
+            message: YAML(['â', '2', '3']) is a sequence, has no text value.
 
     Invalid mapping instead:
       given:

@@ -11,3 +11,4 @@ hitch/gen
 hitch/personalsettings.yml
 temp/
 .vscode/
+hitch/devenv.yml

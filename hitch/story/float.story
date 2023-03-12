@@ -97,6 +97,7 @@ Floating point numbers (Float):
       - Run:
           code: bool(load(yaml_snippet, schema)['a'])
           raises:
+            type: TypeError
             message: |-
               Cannot cast 'YAML(1.0)' to bool.
               Use bool(yamlobj.data) or bool(yamlobj.text) instead.
