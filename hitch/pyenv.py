@@ -10,7 +10,9 @@ import tomli
 
 def package_versions_above(package_name, minimum_version):
     data = requests.get("https://pypi.org/pypi/{}/json".format(package_name)).json()
-    versions = list(data["releases"].keys())
+    versions = list(
+        [release for release in data["releases"].keys() if "rc" not in release]
+    )
     versions.sort(key=StrictVersion)
 
     selected_versions = [
