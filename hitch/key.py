@@ -344,58 +344,23 @@ def bash():
 
 @cli.command()
 def cleanpyenv():
-    pyenv.Pyenv("/gen/pyenv").clean()
+    pyenv.Pyenv(DIR.gen / "pyenv").clean()
 
 
 @cli.command()
 @argument("strategy_name", nargs=1)
 def envirotest(strategy_name):
     """Run tests on package / python version combinations."""
-    if strategy_name == "latest":
-        strategies = [
-            lambda versions: versions[-1],
-        ]
-    elif strategy_name == "earliest":
-        strategies = [
-            lambda versions: versions[0],
-        ]
-    elif strategy_name in ("full", "maxi"):
-        strategies = (
-            [
-                lambda versions: versions[0],
-            ]
-            + [random.choice] * 2
-            if strategy_name == "full"
-            else 5 + [lambda versions: versions[-1]]
-        )
-    else:
-        raise Exception(f"Strategy name {strategy_name} not found")
+    import envirotest
 
-    for strategy in strategies:
-        envirotestvenv = pyenv.EnvirotestVirtualenv(
-            pyenv_build=pyenv.Pyenv(DIR.gen / "pyenv"),
-            pyproject_toml=DIR.project.joinpath("pyproject.toml").text(),
-            picker=strategy,
-            testpypi_package="strictyaml=={}".format(_current_version()),
-        )
-        envirotestvenv.build()
-
-        python_path = envirotestvenv.venv.python_path
-        _doctests(python_path)
-        results = (
-            _storybook(python_path=python_path)
-            .only_uninherited()
-            .ordered_by_name()
-            .play()
-        )
-        if not results.all_passed:
-            print("FAILED")
-            print("COPY the following into hitch/devenv.yml:\n\n")
-            print("python version: {}".format(envirotestvenv.python_version))
-            print("packages:")
-            for package, version in envirotestvenv.picked_versions.items():
-                print("  {}: {}".format(package, version))
-            sys.exit(1)
+    envirotest.run_test(
+        pyenv.Pyenv(DIR.gen / "pyenv"),
+        DIR.project.joinpath("pyproject.toml").text(),
+        "strictyaml=={}".format(_current_version()),
+        strategy_name,
+        _storybook,
+        _doctests,
+    )
 
 
 @cli.command()

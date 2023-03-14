@@ -8,10 +8,6 @@ from typing import List
 import tomli
 
 
-def clean():
-    Pyenv("/gen/pyenv").clean()
-
-
 def package_versions_above(package_name, minimum_version):
     data = requests.get("https://pypi.org/pypi/{}/json".format(package_name)).json()
     versions = list(data["releases"].keys())
