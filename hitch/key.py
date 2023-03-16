@@ -351,11 +351,31 @@ def cleanpyenv():
 def envirotest(strategy_name):
     """Run tests on package / python version combinations."""
     import envirotest
+    import pyenv
+
+    test_package = pyenv.PythonRequirements(
+        [
+            "strictyaml=={}".format(_current_version()),
+        ],
+        test_repo=True,
+    )
+
+    test_package = pyenv.PythonProjectDirectory(DIR.project)
+
+    prerequisites = [
+        pyenv.PythonRequirements(
+            [
+                "ensure",
+                "python-slugify",
+            ]
+        ),
+    ]
 
     envirotest.run_test(
         pyenv.Pyenv(DIR.gen / "pyenv"),
         DIR.project.joinpath("pyproject.toml").text(),
-        "strictyaml=={}".format(_current_version()),
+        test_package,
+        prerequisites,
         strategy_name,
         _storybook,
         _doctests,

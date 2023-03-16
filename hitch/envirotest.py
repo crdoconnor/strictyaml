@@ -1,8 +1,16 @@
 import pyenv
+import sys
+import random
 
 
 def run_test(
-    pyenv_build, pyproject_toml, testpypi_package, strategy_name, _storybook, _doctests
+    pyenv_build,
+    pyproject_toml,
+    test_package,
+    prerequisites,
+    strategy_name,
+    _storybook,
+    _doctests,
 ):
     if strategy_name == "latest":
         strategies = [
@@ -29,7 +37,8 @@ def run_test(
             pyenv_build=pyenv_build,
             pyproject_toml=pyproject_toml,
             picker=strategy,
-            testpypi_package=testpypi_package,
+            test_package=test_package,
+            prerequisites=prerequisites,
         )
         envirotestvenv.build()
 
