@@ -11,7 +11,7 @@ RUN apt-get update && apt-get install \
     libreadline-dev libffi-dev libsqlite3-dev \
     zlib1g-dev zlib1g libbz2-dev libssl-dev \
     curl git make llvm wget \
-    python3-virtualenv virtualenv \
+    python3-virtualenv virtualenv python3.8-venv \
     python3-dev python-openssl -y \
     && apt-get clean && rm -rf /var/lib/apt/lists/*
 
