@@ -43,7 +43,7 @@ case "$1" in
         ;;
     "make")
         case "$2" in
-            "all")
+            "")
                 echo "building ci container..."
                 if ! podman volume exists $CONTAINER_NAME; then
                     podman volume create $CONTAINER_NAME
