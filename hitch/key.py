@@ -30,7 +30,7 @@ def cli(ctx):
 PROJECT_NAME = "strictyaml"
 
 toolkit = hitchpylibrarytoolkit.ProjectToolkit(
-    "strictyaml",
+    PROJECT_NAME,
     DIR,
 )
 

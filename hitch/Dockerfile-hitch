@@ -3,7 +3,6 @@ FROM ubuntu:20.04
 ENV DEBIAN_FRONTEND=noninteractive
 ENV LC_ALL=C.UTF-8
 ENV LANG=C.UTF-8
-ENV PYENV_ROOT=/gen/pyenv/
 
 RUN apt-get update && apt-get install \
     libuv1-dev libncurses5-dev libncursesw5-dev xz-utils \
@@ -15,11 +14,5 @@ RUN apt-get update && apt-get install \
     python3-dev python-openssl -y \
     && apt-get clean && rm -rf /var/lib/apt/lists/*
 
-# Isolate system python packages from those used in project
-RUN virtualenv --python=python3 /venv
 RUN mkdir /src
-
 WORKDIR /src
-COPY hitch/hitchreqs.txt /
-RUN /venv/bin/pip install setuptools-rust
-RUN /venv/bin/pip install -r /hitchreqs.txt
