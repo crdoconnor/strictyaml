@@ -20,6 +20,7 @@ jobs:
           mkdir -p ~/.ssh/
           touch ~/.ssh/id_rsa
           touch ~/.ssh/id_rsa.pub
+          echo test | podman secret create pypitoken -
           ./key.sh make
 
       - name: regression
