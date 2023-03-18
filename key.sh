@@ -4,13 +4,13 @@ PROJECT_NAME=strictyaml
 
 PROJECT_DIR=$(cd "$(dirname "${BASH_SOURCE[0]}")" &> /dev/null && pwd)
 FOLDER_HASH=$(echo $PROJECT_DIR | md5sum | cut -c 1-5)
-CONTAINER_NAME=${PROJECT_NAME}-hitch-container
-IMAGE_NAME=${PROJECT_NAME}-hitch
+GEN_VOLUME_NAME=hitch-vol-${PROJECT_NAME}-${FOLDER_HASH}
+IMAGE_NAME=hitch-${FOLDER_HASH}-${PROJECT_NAME}
 
 hitchrun() {
     podman run --privileged -it --rm \
         -v $PROJECT_DIR:/src \
-        -v $CONTAINER_NAME:/gen \
+        -v $GEN_VOLUME_NAME:/gen \
         -v ~/.ssh/id_rsa:/root/.ssh/id_rsa \
         -v ~/.ssh/id_rsa.pub:/root/.ssh/id_rsa.pub \
         -p 5555:5555 \
@@ -28,8 +28,8 @@ case "$1" in
                 if podman image exists $IMAGE_NAME; then
                     podman image rm -f $IMAGE_NAME
                 fi
-                if podman volume exists $CONTAINER_NAME; then
-                    podman volume rm -f $CONTAINER_NAME
+                if podman volume exists $GEN_VOLUME_NAME; then
+                    podman volume rm -f $GEN_VOLUME_NAME
                 fi
                 ;;
             "gen")
@@ -51,8 +51,8 @@ case "$1" in
         case "$2" in
             "")
                 echo "building ci container..."
-                if ! podman volume exists $CONTAINER_NAME; then
-                    podman volume create $CONTAINER_NAME
+                if ! podman volume exists $GEN_VOLUME_NAME; then
+                    podman volume create $GEN_VOLUME_NAME
                 fi
                 podman build -f hitch/Dockerfile-hitch -t $IMAGE_NAME $PROJECT_DIR
                 hitchrun "virtualenv --python=python3 /gen/venv"
