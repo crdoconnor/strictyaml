@@ -65,7 +65,7 @@ hitchrun==0.4.0
     # via hitchpylibrarytoolkit
 hitchrunpy==0.11.2
     # via hitchpylibrarytoolkit
-hitchstory==0.12.1
+hitchstory==0.15.2
     # via
     #   -r hitch/hitchreqs.in
     #   hitchpylibrarytoolkit

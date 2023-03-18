@@ -1,5 +1,4 @@
 from hitchstory import StoryCollection
-from strictyaml import Str, Map, Bool, load
 from commandlib import Command, python_bin
 from click import argument, group, pass_context
 from pathquery import pathquery
@@ -62,34 +61,6 @@ def _storybook(**settings):
 
 def _current_version():
     return DIR.project.joinpath("VERSION").text().rstrip()
-
-
-def _personal_settings():
-    settings_file = DIR.key.joinpath("personalsettings.yml")
-
-    if not settings_file.exists():
-        settings_file.write_text(
-            (
-                "engine:\n"
-                "  rewrite: no\n"
-                "  cprofile: no\n"
-                "params:\n"
-                "  python version: 3.7.0\n"
-            )
-        )
-    return load(
-        settings_file.bytes().decode("utf8"),
-        Map(
-            {
-                "engine": Map({"rewrite": Bool(), "cprofile": Bool()}),
-                "params": Map({"python version": Str()}),
-            }
-        ),
-    )
-
-
-def _default_python_version():
-    return _personal_settings().data["params"]["python version"]
 
 
 """
@@ -179,22 +150,6 @@ def reformat():
         "ruamel",
     ).run()
     python_bin.black(DIR.project / "hitch").run()
-
-
-@cli.command()
-def ipython():
-    """
-    Run ipython in strictyaml virtualenv.
-    """
-    DIR.gen.joinpath("example.py").write_text(
-        ("from strictyaml import *\n" "import IPython\n" "IPython.embed()\n")
-    )
-    from commandlib import Command
-
-    version = _personal_settings().data["params"]["python version"]
-    Command(DIR.gen.joinpath("py{0}".format(version), "bin", "python"))(
-        DIR.gen.joinpath("example.py")
-    ).run()
 
 
 def _lint():
@@ -318,19 +273,6 @@ def doctests():
     Run doctests in utils.py in latest version.
     """
     _doctests(pyenv.devvenv().python_path)
-
-
-@cli.command()
-def rerun():
-    """
-    Rerun last example code block with specified version of Python.
-    """
-    from commandlib import Command
-
-    version = _personal_settings().data["params"]["python version"]
-    Command(DIR.gen.joinpath("py{0}".format(version), "bin", "python"))(
-        DIR.gen.joinpath("working", "examplepythoncode.py")
-    ).in_dir(DIR.gen.joinpath("working")).run()
 
 
 @cli.command()

@@ -31,7 +31,7 @@ Mapping with defined keys and a custom key validator (Map):
       official languages:
       - English
       - Welsh
-  steps:
+  following steps:
   - Run: |
       Ensure(load(yaml_snippet, schema).data).equals(
           {
@@ -45,7 +45,7 @@ Mapping with defined keys and a custom key validator (Map):
 
 Slug key validator revalidation bug:
   based on: Mapping with defined keys and a custom key validator (Map)
-  steps:
+  following steps:
   - Run: |
       yaml = load(yaml_snippet, schema)
       yaml.revalidate(schema)
@@ -64,14 +64,14 @@ Slug key validation getitem setitem and delitem:
   based on: Mapping with defined keys and a custom key validator (Map)
   variations:
     Getting:
-      steps:
+      following steps:
       - Run:
           code: |
             yaml = load(yaml_snippet, schema)
             Ensure(yaml['dial code']).equals("+44")
 
     Setting:
-      steps:
+      following steps:
       - Run:
           code: |
             yaml = load(yaml_snippet, schema)
@@ -87,7 +87,7 @@ Slug key validation getitem setitem and delitem:
             - Welsh
 
     Deleting:
-      steps:
+      following steps:
       - Run:
           code: |
             yaml = load(yaml_snippet, schema)
