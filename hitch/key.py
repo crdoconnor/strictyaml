@@ -342,11 +342,6 @@ def bash():
 
 
 @cli.command()
-def cleanpyenv():
-    pyenv.Pyenv(DIR.gen / "pyenv").clean()
-
-
-@cli.command()
 @argument("strategy_name", nargs=1)
 def envirotest(strategy_name):
     """Run tests on package / python version combinations."""

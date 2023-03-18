@@ -35,6 +35,12 @@ case "$1" in
             "gen")
                 hitchrun "rm -rf /gen/*"
                 ;;
+            "pyenv")
+                hitchrun "rm -rf /gen/pyenv"
+                ;;
+            "devenv")
+                hitchrun "rm /gen/pyenv/versions/devvenv"
+                ;;
             *)
                 echo "Invalid clean target. ./key.sh clean [all]"
                 exit 1
