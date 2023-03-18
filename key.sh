@@ -36,7 +36,7 @@ case "$1" in
                 hitchrun "rm -rf /gen/*"
                 ;;
             "pyenv")
-                hitchrun "rm -rf /gen/pyenv"
+                hitchrun "rm -rf /gen/pyenv/"
                 ;;
             "devenv")
                 hitchrun "rm /gen/pyenv/versions/devvenv"
@@ -67,10 +67,8 @@ case "$1" in
                 hitchrun "/gen/venv/bin/python hitch/key.py build"
                 ;;
             "pylibrarytoolkit")
-                hitchrun "virtualenv --python=python3 /gen/venv"
-                hitchrun "/gen/venv/bin/pip install --upgrade pip setuptools wheel setuptools-rust"
-                hitchrun "/gen/venv/bin/pip install -e /src/hitchpylibrarytoolkit"
-                hitchrun "/gen/venv/bin/python hitch/key.py build"
+                hitchrun "/gen/venv/bin/pip uninstall hitchpylibrarytoolkit -y"
+                hitchrun "/gen/venv/bin/pip install --upgrade-strategy only-if-needed -e /src/hitchpylibrarytoolkit"
                 ;;
             *)
                 echo "Invalid make target. ./key.sh make [all|gen|pylibrarytoolkit]"
