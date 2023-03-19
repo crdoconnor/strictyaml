@@ -2,7 +2,7 @@ Mapping with defined keys and a custom key validator (Map):
   docs: compound/mapping-with-slug-keys
   based on: strictyaml
   experimental: yes
-  description: |
+  about: |
     A typical mapping except that the key values are determined
     by the value provided by the validator.
   given:
@@ -31,7 +31,7 @@ Mapping with defined keys and a custom key validator (Map):
       official languages:
       - English
       - Welsh
-  following steps:
+  replacement steps:
   - Run: |
       Ensure(load(yaml_snippet, schema).data).equals(
           {
@@ -45,14 +45,14 @@ Mapping with defined keys and a custom key validator (Map):
 
 Slug key validator revalidation bug:
   based on: Mapping with defined keys and a custom key validator (Map)
-  following steps:
+  replacement steps:
   - Run: |
       yaml = load(yaml_snippet, schema)
       yaml.revalidate(schema)
 
 
 Slug key validation getitem setitem and delitem:
-  description: |
+  about: |
     You can set properties on slug key validated by
     using a key that turns into the same slug as the text
     key. E.g.
@@ -64,14 +64,14 @@ Slug key validation getitem setitem and delitem:
   based on: Mapping with defined keys and a custom key validator (Map)
   variations:
     Getting:
-      following steps:
+      replacement steps:
       - Run:
           code: |
             yaml = load(yaml_snippet, schema)
             Ensure(yaml['dial code']).equals("+44")
 
     Setting:
-      following steps:
+      replacement steps:
       - Run:
           code: |
             yaml = load(yaml_snippet, schema)
@@ -87,7 +87,7 @@ Slug key validation getitem setitem and delitem:
             - Welsh
 
     Deleting:
-      following steps:
+      replacement steps:
       - Run:
           code: |
             yaml = load(yaml_snippet, schema)
