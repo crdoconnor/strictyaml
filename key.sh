@@ -1,8 +1,11 @@
 #!/bin/bash
 set -e
-PROJECT_NAME=strictyaml
-
 PROJECT_DIR=$(cd "$(dirname "${BASH_SOURCE[0]}")" &> /dev/null && pwd)
+PROJECT_NAME=$(cat $PROJECT_DIR/PROJECT_NAME | tr -d '\n')
+if [ -z "$PROJECT_NAME" ]; then
+    echo "PROJECT_NAME file must be set with project name."
+    exit 1
+fi
 FOLDER_HASH=$(echo $PROJECT_DIR | md5sum | cut -c 1-5)
 GEN_VOLUME_NAME=hitch-vol-${PROJECT_NAME}-${FOLDER_HASH}
 IMAGE_NAME=hitch-${FOLDER_HASH}-${PROJECT_NAME}
