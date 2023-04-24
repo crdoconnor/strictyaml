@@ -76,6 +76,10 @@ case "$1" in
                 hitchrun "/gen/venv/bin/pip uninstall hitchpylibrarytoolkit -y"
                 hitchrun "/gen/venv/bin/pip install --no-deps -e /src/hitchpylibrarytoolkit"
                 ;;
+            "hitchreqs")
+                hitchrun "/gen/venv/bin/pip-compile hitch/hitchreqs.in -o hitch/hitchreqs.txt"
+                ;;
+
             *)
                 echo "Invalid make target. ./key.sh make [all|gen|pylibrarytoolkit]"
                 exit 1
