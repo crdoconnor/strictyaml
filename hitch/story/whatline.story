@@ -21,7 +21,6 @@ Get line numbers of YAML elements:
 
     setup: |
       from strictyaml import Map, Str, YAMLValidationError, load
-      from ensure import Ensure
 
       schema = Map({"y": Str(), "a": Str(), "b": Str(), "c": Str(), "d": Str()})
 
@@ -32,40 +31,40 @@ Get line numbers of YAML elements:
       steps:
       - Run:
           code: |
-            Ensure(snippet["a"].start_line).equals(3)
-            Ensure(snippet["d"].start_line).equals(9)
+            assert snippet["a"].start_line == 3
+            assert snippet["d"].start_line == 9
 
     If there is a trailing comment the end line includes it:
       steps:
       - Run:
           code: |
-            Ensure(snippet["a"].end_line).equals(6)
-            Ensure(snippet["d"].end_line).equals(10)
+            assert snippet["a"].end_line == 6
+            assert snippet["d"].end_line == 10
 
     You can grab the start line of a key:
       steps:
       - Run:
           code: |
-            Ensure(snippet.keys()[1].start_line).equals(3)
+            assert snippet.keys()[1].start_line == 3
 
     Start line and end line of whole snippet:
       steps:
       - Run:
           code: |
-            Ensure(snippet.start_line).equals(1)
-            Ensure(snippet.end_line).equals(10)
+            assert snippet.start_line == 1
+            assert snippet.end_line == 10
 
     Grabbing a line before an item:
       steps:
       - Run:
           code: |
-            Ensure(snippet['a'].lines_before(1)).equals("# Some comment")
+            assert snippet['a'].lines_before(1) == "# Some comment"
 
     Grabbing a line after an item:
       steps:
       - Run:
           code: |
-            Ensure(snippet['a'].lines_after(4)).equals("b: y\nc: a\n\nd: b")
+            assert snippet['a'].lines_after(4) == "b: y\nc: a\n\nd: b"
 
     Grabbing the lines of an item including surrounding comments:
       steps:
@@ -97,9 +96,8 @@ Start line of YAML with list:
         - 4
     setup: |
       from strictyaml import load
-      from ensure import Ensure
   steps:
   - Run:
       code: |-
-        Ensure(load(yaml_snippet)['a']['b'][1].start_line).equals(4)
-        Ensure(load(yaml_snippet)['a']['b'][1].end_line).equals(4)
+        assert load(yaml_snippet)['a']['b'][1].start_line == 4
+        assert load(yaml_snippet)['a']['b'][1].end_line == 4

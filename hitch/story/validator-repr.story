@@ -5,7 +5,6 @@ Validator repr:
     executable representation of the object.
   given:
     setup: |
-      from ensure import Ensure
       import strictyaml as sy
 
   variations:
@@ -13,49 +12,47 @@ Validator repr:
       steps:
       - Run:
           code: |
-            Ensure(repr(sy.Map({"a": sy.Int()}))).equals("""Map({'a': Int()})""")
+            assert repr(sy.Map({"a": sy.Int()})) == """Map({'a': Int()})"""
 
     Optional:
       steps:
       - Run:
           code: |
-            Ensure(repr(sy.Map({sy.Optional("a"): sy.Int()}))).equals("""Map({Optional("a"): Int()})""")
+            assert repr(sy.Map({sy.Optional("a"): sy.Int()})) == """Map({Optional("a"): Int()})"""
 
     Sequence:
       steps:
       - Run:
           code: |
-            Ensure(repr(sy.Seq(sy.Str()))).equals("""Seq(Str())""")
+            assert repr(sy.Seq(sy.Str())) == """Seq(Str())"""
 
     Empty:
       steps:
       - Run:
           code: |
-            Ensure(repr(sy.FixedSeq([sy.EmptyNone(), sy.EmptyDict(), sy.EmptyList()]))).equals(
-                """FixedSeq([EmptyNone(), EmptyDict(), EmptyList()])"""
-            )
+            assert repr(sy.FixedSeq([sy.EmptyNone(), sy.EmptyDict(), sy.EmptyList()])) == """FixedSeq([EmptyNone(), EmptyDict(), EmptyList()])"""
 
     UniqueSeq Decimal:
       steps:
       - Run:
           code: |
-            Ensure(repr(sy.UniqueSeq(sy.Decimal()))).equals("""UniqueSeq(Decimal())""")
+            assert repr(sy.UniqueSeq(sy.Decimal())) == """UniqueSeq(Decimal())"""
 
     MapPattern Bool Enum:
       steps:
       - Run:
           code: |
-            Ensure(repr(sy.MapPattern(sy.Bool(), sy.Enum(["x", "y"])))).equals("MapPattern(Bool(), Enum(['x', 'y']))")
+            assert repr(sy.MapPattern(sy.Bool(), sy.Enum(["x", "y"]))) == "MapPattern(Bool(), Enum(['x', 'y']))"
 
     Seq Datetime Any Or:
       steps:
       - Run:
           code: |
-            Ensure(repr(sy.Seq(sy.Datetime() | sy.Any()))).equals("""Seq(Datetime() | Any())""")
+            assert repr(sy.Seq(sy.Datetime() | sy.Any())) == """Seq(Datetime() | Any())"""
 
     Comma Separated Float:
       steps:
       - Run:
           code: |
-            Ensure(repr(sy.Map({"x": sy.CommaSeparated(sy.Float())}))).equals("Map({'x': CommaSeparated(Float())})")
+            assert repr(sy.Map({"x": sy.CommaSeparated(sy.Float())})) == "Map({'x': CommaSeparated(Float())})"
 
