@@ -11,7 +11,6 @@ Single value:
   given:
     setup: |
       from strictyaml import Str, Int, load
-      from ensure import Ensure
   variations:
     Raise exception on None:
       steps:
@@ -24,34 +23,34 @@ Single value:
       steps:
       - Run:
           code: |
-            Ensure(load("1", Str())).equals("1")
+            assert load("1", Str()) == "1"
 
     Int of 1:
       steps:
       - Run:
           code: |
-            Ensure(load("1", Int())).equals(1)
+            assert load("1", Int()) == 1
 
     Empty value parsed as blank string by default:
       steps:
       - Run:
           code: |
-            Ensure(load("x:")).equals({"x": ""})
+            assert load("x:") == {"x": ""}
 
     Empty document parsed as blank string by default:
       steps:
       - Run:
           code: |
-            Ensure(load("", Str())).equals("")
+            assert load("", Str()) == ""
 
     Null parsed as string null by default:
       steps:
       - Run:
           code: |
-            Ensure(load("null: null")).equals({"null": "null"})
+            assert load("null: null") == {"null": "null"}
 
     #Single value with comment:
       #steps:
       #- Run:
           #code: |
-            #Ensure(load("# ought not to be parsed\nstring")).equals("string")
+            #assert load("# ought not to be parsed\nstring") == "string"

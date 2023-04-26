@@ -7,7 +7,6 @@ Updating document with a schema:
   given:
     setup: |
       import strictyaml as s
-      from ensure import Ensure
   variations:
     GitHub \#72:
       steps:

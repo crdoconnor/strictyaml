@@ -11,7 +11,6 @@ Sequences of unique items (UniqueSeq):
       - C
     setup: |
       from strictyaml import UniqueSeq, Str, load, as_document
-      from ensure import Ensure
 
       schema = UniqueSeq(Str())
   variations:
@@ -19,7 +18,7 @@ Sequences of unique items (UniqueSeq):
       steps:
       - Run:
           code: |
-            Ensure(load(yaml_snippet, schema)).equals(["A", "B", "C", ])
+            assert load(yaml_snippet, schema) == ["A", "B", "C", ]
 
     Parsing with one dupe raises an exception:
       given:
