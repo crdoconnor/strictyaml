@@ -11,8 +11,7 @@ title: StrictYAML
 {% endraw %}
 {% endif %}
 
-StrictYAML is a [type-safe](https://en.wikipedia.org/wiki/Type_safety) YAML parser
-that parses and validates a [restricted subset](features-removed) of the [YAML](what-is-yaml)
+StrictYAML is a [type-safe](https://en.wikipedia.org/wiki/Type_safety) YAML parser that parses and validates a [restricted subset](features-removed) of the [YAML](what-is-yaml)
 specification.
 
 Priorities:
@@ -24,6 +23,8 @@ Priorities:
 - Acting as a near-drop in replacement for pyyaml, ruamel.yaml or poyo.
 - Ability to read in YAML, make changes and write it out again with comments preserved.
 - [Not speed](why/speed-not-a-priority), currently.
+
+I built it largely so I could [write integration tests with it](https://github.com/hitchdev/hitchstory).
 
 {% for story in quickstart %}
 {{ story.name }}:
