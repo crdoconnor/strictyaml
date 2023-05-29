@@ -262,11 +262,13 @@ class YAML(object):
     def __len__(self):
         return len(self._value)
 
-    def as_yaml(self):
+    def as_yaml(self, indent=None, width=None, block_seq_indent=None):
         """
         Render the YAML node and subnodes as string.
         """
-        dumped = dump(self.as_marked_up(), Dumper=StrictYAMLDumper, allow_unicode=True)
+        dumped = dump(self.as_marked_up(), Dumper=StrictYAMLDumper,
+                      allow_unicode=True, indent=indent,
+                      width=width, block_seq_indent=block_seq_indent)
         return dumped if sys.version_info[0] == 3 else dumped.decode("utf8")
 
     def items(self):
