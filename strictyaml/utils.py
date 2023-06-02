@@ -83,6 +83,12 @@ def is_hexadecimal(value):
     """
     Is a string a string of a hexademcial integer?
 
+    >>> is_hexadecimal("+0xa1")
+    True
+
+    >>> is_hexadecimal("-0xa1")
+    True
+
     >>> is_hexadecimal("0xa1")
     True
 
@@ -101,7 +107,7 @@ def is_hexadecimal(value):
     >>> is_hexadecimal("1")
     False
     """
-    return compile(r"^0[xX]+[a-fA-F0-9]+$").match(value) is not None
+    return compile(r"^[\-\+]?0[xX]+[a-fA-F0-9]+$").match(value) is not None
 
 
 def is_decimal(value):
