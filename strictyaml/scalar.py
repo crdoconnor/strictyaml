@@ -209,6 +209,23 @@ class HexInt(ScalarValidator):
         raise YAMLSerializationError("'{}' not a hexademial integer.".format(data))
 
 
+class OctInt(ScalarValidator):
+    def validate_scalar(self, chunk):
+        val = chunk.contents
+        if not utils.is_octal(val):
+            chunk.expecting_but_found("when expecting an octal integer")
+        return int(val, 8)
+
+    def to_yaml(self, data):
+        if utils.is_octal(data):
+            if isinstance(data, int):
+                return oct(data)
+            else:
+                return data
+        raise YAMLSerializationError("'{}' not an octal integer.".format(data))
+
+
+
 class Bool(ScalarValidator):
     def validate_scalar(self, chunk):
         val = chunk.contents
