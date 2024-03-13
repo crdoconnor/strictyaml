@@ -79,6 +79,31 @@ def is_integer(value):
     return compile(r"^[-+]?[0-9_]+$").match(value) is not None
 
 
+def is_octal(value):
+    """
+    Is a string a string of a octal integer?
+
+    >>> is_octal("0o15")
+    True
+
+    >>> is_octal("0O15")
+    True
+
+    >>> is_octal("0o19")
+    False
+
+    >>> is_octal("o15")
+    False
+
+    >>> is_octal("16")
+    False
+
+    >>> is_octal("1")
+    False
+    """
+    return compile(r"^0[oO][0-7]+$").match(value) is not None
+
+
 def is_hexadecimal(value):
     """
     Is a string a string of a hexademcial integer?
