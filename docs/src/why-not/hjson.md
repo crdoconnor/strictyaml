@@ -7,7 +7,7 @@ title: Why not use HJSON?
     HJSON is no longer supported.
 
 
-[HJSON](http://hjson.org/) is an attempt at fixing the aforementioned lack of readability of JSON.
+[HJSON](https://hjson.github.io/) is an attempt at fixing the aforementioned lack of readability of JSON.
 
 It has the following criticisms of YAML:
 
