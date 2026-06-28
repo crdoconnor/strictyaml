@@ -201,11 +201,10 @@ class HexInt(ScalarValidator):
         return int(val, 16)
 
     def to_yaml(self, data):
-        if utils.is_hexadecimal(data):
-            if isinstance(data, int):
-                return hex(data)
-            else:
-                return data
+        if isinstance(data, int) and not isinstance(data, bool):
+            return hex(data)
+        if utils.is_string(data) and utils.is_hexadecimal(data):
+            return data
         raise YAMLSerializationError("'{}' not a hexademial integer.".format(data))
 
 
