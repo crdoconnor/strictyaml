@@ -194,21 +194,22 @@ def comma_separated_positions(text):
     """
     Start and end positions of comma separated text items.
 
-    Commas and trailing spaces should not be included.
+    Commas and surrounding whitespace should not be included.
 
     >>> comma_separated_positions("ABC, 2,3")
     [(0, 3), (5, 6), (7, 8)]
+    >>> comma_separated_positions("1,   2 , ,3")
+    [(0, 1), (5, 6), (9, 9), (10, 11)]
+    >>> comma_separated_positions("a,,")
+    [(0, 1), (2, 2), (3, 3)]
     """
     chunks = []
-    start = 0
-    end = 0
+    offset = 0
     for item in text.split(","):
-        space_increment = 1 if item[0] == " " else 0
-        start += space_increment  # Is there a space after the comma to ignore? ", "
-        end += len(item.lstrip()) + space_increment
+        start = offset + len(item) - len(item.lstrip())
+        end = max(start, offset + len(item.rstrip()))
         chunks.append((start, end))
-        start += len(item.lstrip()) + 1  # Plus comma
-        end = start
+        offset += len(item) + 1
     return chunks
 
 

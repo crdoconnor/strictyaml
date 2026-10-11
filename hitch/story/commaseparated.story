@@ -76,6 +76,37 @@ Parsing comma separated items (CommaSeparated):
             print(as_document({"a": "1,2,3"}, int_schema).as_yaml())
           will output: 'a: 1,2,3'
 
+    Serialize spaced string to comma separated sequence:
+      steps:
+      - Run:
+          code: |
+            print(as_document({"a": "1, 2, 3"}, int_schema).as_yaml())
+          will output: 'a: 1, 2, 3'
+
+    Whitespace around items is consistent when reading and writing:
+      steps:
+      - Run:
+          code: |
+            for value in ("1,   2", "1 ,  2"):
+                Ensure(load("a: " + value, int_schema).data).equals({"a": [1, 2]})
+                Ensure(as_document({"a": value}, int_schema).data).equals({"a": [1, 2]})
+
+    Empty string items can be parsed and serialized:
+      steps:
+      - Run:
+          code: |
+            Ensure(load("a: first,,last,", str_schema).data).equals({"a": ["first", "", "last", ""]})
+            Ensure(as_document({"a": ["first", "", "last"]}, str_schema).data).equals({"a": ["first", "", "last"]})
+
+    Empty integer item is rejected when serializing:
+      steps:
+      - Run:
+          code: |
+            as_document({"a": "1,,3"}, int_schema)
+          raises:
+            type: strictyaml.exceptions.YAMLSerializationError
+            message: "'' not an integer."
+
     Serialize empty list to comma separated sequence:
       steps:
       - Run:
