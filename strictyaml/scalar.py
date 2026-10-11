@@ -13,7 +13,6 @@ import re
 import urllib.parse
 from strictyaml.ruamel.scalarstring import PreservedScalarString
 
-
 if sys.version_info[0] == 3:
     unicode = str
 
@@ -115,10 +114,7 @@ class Regex(ScalarValidator):
         Give regular expression, e.g. u'[0-9]'
         """
         self._regex = regular_expression
-        # re.fullmatch is only available in Python 3.4+ so append "$" if needed
-        if not regular_expression.endswith(r"$"):
-            regular_expression += r"$"
-        self._fullmatch = re.compile(regular_expression).match
+        self._fullmatch = re.compile(regular_expression).fullmatch
         self._matching_message = "when expecting string matching {0}".format(
             self._regex
         )

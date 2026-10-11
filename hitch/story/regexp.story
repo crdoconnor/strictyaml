@@ -10,9 +10,43 @@ Validating strings with regexes (Regex):
       from strictyaml import Regex, Map, load, as_document
       from collections import OrderedDict
       from ensure import Ensure
+      import pytest
+      from strictyaml.exceptions import YAMLValidationError, YAMLSerializationError
 
       schema = Map({"a": Regex(u"[1-4]"), "b": Regex(u"[5-9]")})
   variations:
+    Alternatives reject trailing content when parsing:
+      steps:
+      - Run:
+          code: |
+            for value in ("dogtail", "dogcat", "cat tail"):
+                with pytest.raises(YAMLValidationError):
+                    load(value, Regex("dog|cat"))
+
+    Alternatives reject trailing content when serializing:
+      steps:
+      - Run:
+          code: |
+            for value in ("dogtail", "dogcat", "cat tail"):
+                with pytest.raises(YAMLSerializationError):
+                    as_document(value, Regex("dog|cat"))
+
+    Terminal newlines must match the expression too:
+      steps:
+      - Run:
+          code: |
+            for expression in ("dog", "dog$", "^dog$"):
+                with pytest.raises(YAMLSerializationError):
+                    as_document("dog\n", Regex(expression))
+
+    Complete alternatives and inline flags still work:
+      steps:
+      - Run:
+          code: |
+            for value in ("dog", "cat", "DOG", "CAT"):
+                Ensure(load(value, Regex("(?i)dog|cat")).data).equals(value)
+                Ensure(as_document(value, Regex("(?i)dog|cat")).data).equals(value)
+
     Parsed correctly:
       given:
         yaml_snippet: |
