@@ -300,6 +300,9 @@ class YAML(object):
             return item in self._value
 
     def __iter__(self):
+        # EmptyList validates a scalar YAML node to a plain empty list.
+        if isinstance(self._value, list) and not self._value:
+            return iter(())
         if self.is_sequence():
             return YAMLIterator(self)
         elif self.is_mapping():
