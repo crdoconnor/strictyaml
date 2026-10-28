@@ -66,3 +66,71 @@ Revalidate an already validated document:
                 in "<unicode string>", line 4, column 1:
                     France: '3'
                   ^ (line: 4)
+
+    Reparse after failed mapping validation:
+      steps:
+      - Run:
+          code: |
+            from strictyaml import as_document, YAMLValidationError
+
+            parsed = as_document({"a": 1, "b": "x"})
+            try:
+                parsed.revalidate(Map({"a": Int(), "b": Int()}))
+            except YAMLValidationError:
+                pass
+            else:
+                raise AssertionError("Expected integer validation to fail")
+
+            schema = Map({"a": Int(), "b": Str()})
+            parsed.revalidate(schema)
+            parsed.revalidate(schema)
+            Ensure(parsed.data).equals({"a": 1, "b": "x"})
+            Ensure(list(parsed.data)).equals(["a", "b"])
+
+    Reparse after failed nested mapping validation:
+      steps:
+      - Run:
+          code: |
+            from strictyaml import YAMLValidationError
+
+            parsed = load("outer:\n  a: 1\n  b: x\n")
+            try:
+                parsed["outer"].revalidate(Map({"a": Int(), "b": Int()}))
+            except YAMLValidationError:
+                pass
+            else:
+                raise AssertionError("Expected integer validation to fail")
+
+            parsed["outer"].revalidate(Map({"a": Int(), "b": Str()}))
+            Ensure(parsed.data).equals({"outer": {"a": 1, "b": "x"}})
+            Ensure(list(parsed.data["outer"])).equals(["a", "b"])
+
+    Reparse normalized keys after failed mapping validation:
+      steps:
+      - Run:
+          code: |
+            from strictyaml import ScalarValidator, YAMLValidationError
+            from slugify import slugify
+
+            class Slug(ScalarValidator):
+                def validate_scalar(self, chunk):
+                    return slugify(chunk.contents)
+
+            parsed = load(
+                "First Key: 1\nSecond Key: x\n",
+                Map({"first-key": Str(), "second-key": Str()}, key_validator=Slug()),
+            )
+            try:
+                parsed.revalidate(
+                    Map({"first-key": Int(), "second-key": Int()}, key_validator=Slug())
+                )
+            except YAMLValidationError:
+                pass
+            else:
+                raise AssertionError("Expected integer validation to fail")
+
+            parsed.revalidate(
+                Map({"first-key": Int(), "second-key": Str()}, key_validator=Slug())
+            )
+            Ensure(parsed.data).equals({"first-key": 1, "second-key": "x"})
+            Ensure(list(parsed.data)).equals(["first-key", "second-key"])

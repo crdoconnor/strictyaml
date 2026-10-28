@@ -110,14 +110,17 @@ class YAMLChunk(object):
             self.expecting_but_found(
                 "when expecting a mapping", "found {0}".format(self.found())
             )
+        # Interrupted revalidation can leave strict-parsed keys in a different order.
+        strict_keys = {
+            key.text if hasattr(key, "text") else key: unicode(key)
+            for key in self.strictparsed().keys()
+        }
         return [
             (
-                self.key(regular_key, unicode(validated_key)),
-                self.val(unicode(validated_key)),
+                self.key(regular_key, strict_keys[regular_key]),
+                self.val(strict_keys[regular_key]),
             )
-            for (regular_key, validated_key) in zip(
-                self.contents.keys(), self.strictparsed().keys()
-            )
+            for regular_key in self.contents.keys()
         ]
 
     def expect_scalar(self, what):
