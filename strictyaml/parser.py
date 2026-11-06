@@ -5,7 +5,6 @@ import sys
 
 from strictyaml import ruamel as ruamelyaml
 from strictyaml import exceptions
-from strictyaml.ruamel.comments import CommentedSeq, CommentedMap
 
 from strictyaml.any_validator import Any
 from strictyaml.yamllocation import YAMLChunk
@@ -291,9 +290,9 @@ def generic_load(
 
         raise parse_error
 
-    # Document is just a (string, int, etc.)
-    if type(document) not in (CommentedMap, CommentedSeq):
-        document = yaml_string
+    # An empty document has no node; other scalars already contain parsed values.
+    if document is None:
+        document = ""
 
     if schema is None:
         schema = Any()
