@@ -3,6 +3,8 @@
 
 ### Latest
 
+* BUG : Retain parsed scalar values instead of including document syntax in data (#225).
+
 * BUGFIX : Fully parse URL, fix #141
 
 
