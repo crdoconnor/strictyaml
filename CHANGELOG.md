@@ -3,6 +3,8 @@
 
 ### Latest
 
+* BUGFIX : Preserve comments around plain and quoted scalar values on a new line (#198).
+
 * BUGFIX : Fully parse URL, fix #141
 
 

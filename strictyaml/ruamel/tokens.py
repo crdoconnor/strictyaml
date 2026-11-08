@@ -42,6 +42,23 @@ class Token(object):
         # type: (Any) -> None
         if not hasattr(self, "_comment"):
             self._comment = [None, None]
+        previous = self._comment[0]
+        if (
+            previous
+            and previous.value.strip()
+            and isinstance(self, ScalarToken)
+            and self.style not in ("|", ">")
+        ):
+            if comment.value.startswith("\n"):
+                # The new comment already includes the following blank lines.
+                comment.value = previous.value.rstrip("\n") + comment.value
+            else:
+                comment.value = (
+                    previous.value
+                    + " " * comment.start_mark.column
+                    + comment.value
+                )
+            comment.start_mark = previous.start_mark
         self._comment[0] = comment
 
     def add_pre_comments(self, comments):
@@ -82,10 +99,17 @@ class Token(object):
             target._comment = c
             # nprint('mco2:', self, target, target.comment, empty)
             return self
-        if c[0] and tc[0] or c[1] and tc[1]:
+        if c[1] and tc[1] or (
+            c[0]
+            and tc[0]
+            and (not isinstance(target, ScalarToken) or target.style in ("|", ">"))
+        ):
             raise NotImplementedError("overlap in comment %r %r" % (c, tc))
         if c[0]:
+            post_comment = tc[0]
             tc[0] = c[0]
+            if post_comment:
+                target.add_post_comment(post_comment)
         if c[1]:
             tc[1] = c[1]
         return self
