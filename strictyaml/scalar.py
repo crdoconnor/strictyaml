@@ -177,18 +177,54 @@ class Str(ScalarValidator):
         return data
 
 
-class Int(ScalarValidator):
+class _NumericValidator(ScalarValidator):
+    def __init__(self, minimum=None, maximum=None):
+        for value in (minimum, maximum):
+            if value is not None and (
+                isinstance(value, bool)
+                or not isinstance(value, (int, float))
+                or value != value
+            ):
+                raise ValueError("numeric bounds must be numbers other than NaN")
+        if minimum is not None and maximum is not None and minimum > maximum:
+            raise ValueError("minimum must not exceed maximum")
+        self._minimum = minimum
+        self._maximum = maximum
+
+    def __repr__(self):
+        bounds = []
+        if self._minimum is not None:
+            bounds.append("minimum={0!r}".format(self._minimum))
+        if self._maximum is not None:
+            bounds.append("maximum={0!r}".format(self._maximum))
+        return "{0}({1})".format(self.__class__.__name__, ", ".join(bounds))
+
+    def _check_range(self, value, chunk=None):
+        message = None
+        if self._minimum is not None and not value >= self._minimum:
+            message = "when expecting a number at least {0}".format(self._minimum)
+        elif self._maximum is not None and not value <= self._maximum:
+            message = "when expecting a number at most {0}".format(self._maximum)
+        if message is not None:
+            if chunk is not None:
+                chunk.expecting_but_found(message)
+            raise YAMLSerializationError("{0}, got '{1}'".format(message, value))
+        return value
+
+
+class Int(_NumericValidator):
     def validate_scalar(self, chunk):
         val = chunk.contents
         if not utils.is_integer(val):
             chunk.expecting_but_found("when expecting an integer")
         else:
             # Only Python 3.6+ supports underscores in numeric literals
-            return int(val.replace("_", ""))
+            return self._check_range(int(val.replace("_", "")), chunk)
 
     def to_yaml(self, data):
         if utils.is_string(data) or isinstance(data, int):
             if utils.is_integer(str(data)):
+                self._check_range(int(str(data).replace("_", "")))
                 return str(data)
         raise YAMLSerializationError("'{}' not an integer.".format(data))
 
@@ -234,7 +270,7 @@ class Bool(ScalarValidator):
             return "yes" if data else "no"
 
 
-class Float(ScalarValidator):
+class Float(_NumericValidator):
     def validate_scalar(self, chunk):
         val = chunk.contents
         if utils.is_infinity(val) or utils.is_not_a_number(val):
@@ -242,10 +278,11 @@ class Float(ScalarValidator):
         elif not utils.is_decimal(val):
             chunk.expecting_but_found("when expecting a float")
         # Only Python 3.6+ supports underscores in numeric literals
-        return float(val.replace("_", ""))
+        return self._check_range(float(val.replace("_", "")), chunk)
 
     def to_yaml(self, data):
         if utils.has_number_type(data):
+            self._check_range(data)
             if math.isnan(data):
                 return "nan"
             if data == float("inf"):
@@ -254,6 +291,8 @@ class Float(ScalarValidator):
                 return "-inf"
             return str(data)
         if utils.is_string(data) and utils.is_decimal(data):
+            if self._minimum is not None or self._maximum is not None:
+                self._check_range(float(data.replace("_", "")))
             return data
         raise YAMLSerializationError("when expecting a float, got '{}'".format(data))
 
