@@ -16,7 +16,7 @@ Mapping with defined keys and a custom key validator (Map):
 
       class Slug(ScalarValidator):
           def validate_scalar(self, chunk):
-              return slugify(unicode(chunk.contents))
+              return slugify(chunk.contents)
 
       schema = Map({
           "name": Str(),
