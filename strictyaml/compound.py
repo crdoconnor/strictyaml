@@ -1,4 +1,6 @@
 from strictyaml.exceptions import YAMLSerializationError, InvalidOptionalDefault
+from strictyaml.exceptions import InvalidValidatorError
+from strictyaml.utils import is_string
 from strictyaml.validators import Validator, MapValidator, SeqValidator
 from strictyaml.ruamel.comments import CommentedMap, CommentedSeq
 from strictyaml.representation import YAML
@@ -13,6 +15,12 @@ if sys.version_info[0] == 3:
 
 class Optional(object):
     def __init__(self, key, default=None, drop_if_none=True):
+        if isinstance(key, Validator):
+            raise InvalidValidatorError(
+                "Optional() expects a string key, not a validator."
+            )
+        if not is_string(key):
+            raise InvalidValidatorError("Optional() expects a string key.")
         self.key = key
         self.default = default
         self.drop_if_none = drop_if_none
