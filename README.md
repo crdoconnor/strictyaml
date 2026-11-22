@@ -81,6 +81,35 @@ schema = Map({"name": Str(), "age": Int(), "possessions": Seq(Str())})
 
 
 
+### Using parsed Python values
+
+Indexing a document returns a `YAML` wrapper. Use `.data` to obtain its parsed
+Python value for calculations or to pass it to another library. This works
+on a scalar, a sequence, or the whole document:
+
+```python
+>>> from datetime import timedelta
+>>> from strictyaml import Datetime, Map, load
+>>> config = load("stop_time: 2021-01-22T23:50:00", Map({"stop_time": Datetime()}))
+>>> stop_time = config["stop_time"].data
+>>> (stop_time + timedelta(minutes=5)).isoformat()
+'2021-01-22T23:55:00'
+>>> config.data["stop_time"] == stop_time
+True
+>>> config["stop_time"].text
+'2021-01-22T23:50:00'
+```
+
+Use `.text` when you need a scalar's original text. `.value` and
+`.scalar` are not substitutes for the public `.data` interface.
+
+Keep the `YAML` document when you want to edit and save YAML with comments
+preserved. Assign changes through the wrapper, for example
+`config['stop_time'] = stop_time + timedelta(minutes=5)`, then call
+`config.as_yaml()`. Modifying a dictionary returned by `config.data` does
+not edit the document.
+
+
 A YAMLError will be raised if there are syntactic problems, violations of your schema or use of disallowed YAML features:
 
 ```yaml
