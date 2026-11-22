@@ -62,13 +62,17 @@ countries:
 - 'NO'
 ```
 
-The most tragic aspect of this bug, however, is that it is
-*intended* behavior according to the [YAML 1.2 specification](https://yaml.org/spec/1.2.2/).
-The real fix requires explicitly disregarding the spec - which
-is why most YAML parsers have it.
+This is *intended* behavior according to the
+[YAML 1.1 boolean specification](https://yaml.org/type/bool.html).
+The [YAML 1.2 core schema](https://yaml.org/spec/1.2.2/#1032-tag-resolution)
+changed boolean resolution to recognize only `true`, `True`, `TRUE`,
+`false`, `False`, and `FALSE`. Under that schema, `NO` is a string.
+The Norway problem still affects parsers that use YAML 1.1 boolean
+resolution, including PyYAML's default and safe loaders.
 
-StrictYAML sidesteps this problem by ignoring key parts of the
-spec, in an attempt to create a "zero surprises" parser.
+StrictYAML sidesteps implicit typing altogether in an attempt to create a
+"zero surprises" parser. YAML 1.2 fixes the Norway example, but still
+implicitly resolves values such as numbers and nulls, as discussed below.
 
 *Everything* is a string by default:
 
