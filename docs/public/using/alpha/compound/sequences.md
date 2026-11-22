@@ -9,6 +9,11 @@ and parsed as a list in python.
 Validating sequences of a particular type can be done with
 the Seq validator, specifying the type.
 
+With `load`, block sequences are nonempty. Use `Seq(Str())` without
+`EmptyList()` to require at least one item. A blank value is a scalar,
+not a sequence, and will be rejected. To interpret a blank value as an
+empty list, explicitly allow `Seq(Str()) | EmptyList()` instead.
+
 See also [UniqueSeq](../sequences-of-unique-items) and
 [FixedSeq](../fixed-length-sequences) for other types of sequence
 validation.
@@ -25,7 +30,7 @@ Example yaml_snippet:
 
 
 ```python
-from strictyaml import Seq, Str, Int, load
+from strictyaml import Seq, Str, Int, Map, EmptyList, load
 from ensure import Ensure
 
 ```
@@ -87,6 +92,36 @@ assert load(yaml_snippet, Seq(Seq(Str()))) == [["a", "b", "c"], ["d", "e", "f"]]
 
 
 
+
+Blank value is not a sequence:
+
+```yaml
+items:
+```
+
+```python
+load(yaml_snippet, Map({"items": Seq(Str())}))
+```
+
+```python
+strictyaml.exceptions.YAMLValidationError:
+when expecting a sequence
+found a blank string
+  in "<unicode string>", line 1, column 1:
+    items: ''
+     ^ (line: 1)
+```
+
+Explicitly allow an empty list:
+
+```yaml
+items:
+```
+
+```python
+schema = Map({"items": Seq(Str()) | EmptyList()})
+assert load(yaml_snippet, schema).data == {"items": []}
+```
 
 .text is nonsensical:
 
