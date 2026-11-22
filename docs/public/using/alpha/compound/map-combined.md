@@ -139,6 +139,13 @@ bar: forty two
 
 
 ```python
+schema = MapCombined(
+  {
+    "required": Str(),
+  },
+  Str(),
+  Int(),
+)
 load(yaml_snippet, schema)
 ```
 
@@ -165,6 +172,13 @@ not_an_integer: 42
 
 
 ```python
+schema = MapCombined(
+  {
+    "1": Str(),
+  },
+  Int(),
+  Str(),
+)
 load(yaml_snippet, schema)
 ```
 
