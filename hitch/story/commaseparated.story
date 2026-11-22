@@ -9,7 +9,8 @@ Parsing comma separated items (CommaSeparated):
     default when parsed.
   given:
     setup: |
-      from strictyaml import CommaSeparated, Int, Str, Map, load, as_document
+      from strictyaml import CommaSeparated, Int, Str, Enum, Map, load, as_document
+      from strictyaml.exceptions import YAMLValidationError
       from ensure import Ensure
 
       int_schema = Map({"a": CommaSeparated(Int())})
@@ -42,6 +43,29 @@ Parsing comma separated items (CommaSeparated):
       - Run:
           code: |
             Ensure(load(yaml_snippet, str_schema)).equals({"a": []})
+
+    Parse enum values as plain data:
+      steps:
+      - Run: |
+          schema = Map({"a": CommaSeparated(Enum(["A", "B", "C"]))})
+          document = load("a: A, B", schema)
+          Ensure(document.data).equals({"a": ["A", "B"]})
+          Ensure([type(value) for value in document.data["a"]]).equals([str, str])
+          Ensure(as_document(document.data, schema).data).equals(document.data)
+
+    Parse enum values using their item validator:
+      steps:
+      - Run: |
+          schema = Map({"a": CommaSeparated(Enum([1, 2, 3], Int()))})
+          document = load("a: 1, 2", schema)
+          Ensure(document.data).equals({"a": [1, 2]})
+          Ensure([type(value) for value in document.data["a"]]).equals([int, int])
+          try:
+              load("a: 1, 4", schema)
+          except YAMLValidationError:
+              pass
+          else:
+              raise AssertionError("Accepted an item outside the enum")
 
     Invalid int comma separated sequence:
       given:

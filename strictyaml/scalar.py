@@ -85,9 +85,7 @@ class CommaSeparated(ScalarValidator):
         if chunk.contents == "":
             return []
         return [
-            self._item_validator.validate_scalar(
-                chunk.textslice(positions[0], positions[1])
-            )
+            self._item_validator(chunk.textslice(positions[0], positions[1])).data
             for positions in utils.comma_separated_positions(chunk.contents)
         ]
 
