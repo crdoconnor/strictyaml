@@ -17,7 +17,8 @@ Decimal numbers (Decimal):
     values which require precision, like prices.
   given:
     setup: |
-      from strictyaml import Map, Decimal, load
+      from strictyaml import Map, Decimal, load, as_document
+      from strictyaml.exceptions import YAMLSerializationError
       from decimal import Decimal as Dec
       from ensure import Ensure
 
@@ -83,3 +84,39 @@ Decimal numbers (Decimal):
                 in "<unicode string>", line 1, column 1:
                   a: string
                    ^ (line: 1)
+
+    Serialize without losing precision:
+      steps:
+      - Run: |
+          document = as_document({"a": Dec("1.00000000000000000001"), "b": "5.4135"}, schema)
+          Ensure(document.as_yaml()).equals(yaml_snippet)
+          Ensure(load(document.as_yaml(), schema).data).equals(document.data)
+
+    Update a decimal value:
+      steps:
+      - Run: |
+          document = load(yaml_snippet, schema)
+          document["a"] = Dec(0)
+          document["b"] = Dec("1.00000000000000000001")
+          Ensure(document.as_yaml()).equals("a: 0\nb: 1.00000000000000000001\n")
+
+    Serialize numeric values and decimal strings:
+      steps:
+      - Run: |
+          for value in [0, -12, 0.25, Dec("2.500"), "1_000.5", "+2.50", "1e-7"]:
+              document = as_document({"a": value}, Map({"a": Decimal()}))
+              Ensure(document.as_yaml()).equals("a: {}\n".format(value))
+              Ensure(document.data["a"]).equals(Dec(str(value)))
+
+    Reject values which cannot be parsed as decimals:
+      steps:
+      - Run: |
+          invalid_values = [True, None, [], {}, "x", "", ".", "-", "_", "1e_",
+                            float("inf"), float("nan"), Dec("Infinity"), Dec("NaN")]
+          for value in invalid_values:
+              try:
+                  as_document({"a": value}, Map({"a": Decimal()}))
+              except YAMLSerializationError as error:
+                  Ensure(str(error)).equals("when expecting a decimal, got '{}'".format(value))
+              else:
+                  raise AssertionError("Serialized invalid decimal: {!r}".format(value))

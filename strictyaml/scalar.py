@@ -266,6 +266,17 @@ class Decimal(ScalarValidator):
         else:
             return decimal.Decimal(val)
 
+    def to_yaml(self, data):
+        if utils.has_number_type(data) or utils.is_string(data):
+            text = str(data)
+            if utils.is_decimal(text):
+                try:
+                    if decimal.Decimal(text).is_finite():
+                        return text
+                except decimal.InvalidOperation:
+                    pass
+        raise YAMLSerializationError("when expecting a decimal, got '{}'".format(data))
+
 
 class Datetime(ScalarValidator):
     def validate_scalar(self, chunk):
