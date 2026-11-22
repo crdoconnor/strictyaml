@@ -84,23 +84,19 @@ Mappings combining defined and undefined keys (MapCombined):
                    ^ (line: 1)
     "Undefined of invalid type":
       given:
-        setup: |
-          from strictyaml import Any, Int, MapCombined, Optional, Str, load
-          from ensure import Ensure
-
-          schema = MapCombined(
-            {
-              "required": Str(),
-            },
-            Str(),
-            Int(),
-          )
         yaml_snippet: |
           required: Hello World
           bar: forty two
       steps:
       - Run:
-          code:
+          code: |
+            schema = MapCombined(
+              {
+                "required": Str(),
+              },
+              Str(),
+              Int(),
+            )
             load(yaml_snippet, schema)
           raises:
             type: strictyaml.exceptions.YAMLValidationError
@@ -112,23 +108,19 @@ Mappings combining defined and undefined keys (MapCombined):
                   ^ (line: 2)
     "Invalid key type":
       given:
-        setup: |
-          from strictyaml import Any, Int, MapCombined, Optional, Str, load
-          from ensure import Ensure
-
-          schema = MapCombined(
-            {
-              "1": Str(),
-            },
-            Int(),
-            Str(),
-          )
         yaml_snippet: |
           1: Hello World
           not_an_integer: 42
       steps:
       - Run:
-          code:
+          code: |
+            schema = MapCombined(
+              {
+                "1": Str(),
+              },
+              Int(),
+              Str(),
+            )
             load(yaml_snippet, schema)
           raises:
             type: strictyaml.exceptions.YAMLValidationError
