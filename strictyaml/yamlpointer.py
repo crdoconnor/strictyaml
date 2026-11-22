@@ -8,6 +8,13 @@ if sys.version_info[0] == 3:
     unicode = str
 
 
+def _dump_document(document):
+    # Location calculations must not introduce wraps in long scalar lines.
+    return dump(
+        document, Dumper=RoundTripDumper, width=sys.maxsize, allow_unicode=True
+    )
+
+
 class YAMLPointer(object):
     """
     A sequence of indexes/keys that look up a specific chunk of a YAML document.
@@ -144,30 +151,30 @@ class YAMLPointer(object):
             return 1
         else:
             return (
-                len(dump(slicedpart, Dumper=RoundTripDumper).rstrip().split("\n")) + 1
+                len(_dump_document(slicedpart).rstrip().split("\n")) + 1
             )
 
     def end_line(self, document):
         slicedpart = self._slice_segment(self._indices, document, include_selected=True)
-        return len(dump(slicedpart, Dumper=RoundTripDumper).rstrip().split("\n"))
+        return len(_dump_document(slicedpart).rstrip().split("\n"))
 
     def lines(self, document):
         return "\n".join(
-            dump(document, Dumper=RoundTripDumper).split("\n")[
+            _dump_document(document).split("\n")[
                 self.start_line(document) - 1 : self.end_line(document)
             ]
         )
 
     def lines_before(self, document, how_many):
         return "\n".join(
-            dump(document, Dumper=RoundTripDumper).split("\n")[
+            _dump_document(document).split("\n")[
                 self.start_line(document) - 1 - how_many : self.start_line(document) - 1
             ]
         )
 
     def lines_after(self, document, how_many):
         return "\n".join(
-            dump(document, Dumper=RoundTripDumper).split("\n")[
+            _dump_document(document).split("\n")[
                 self.end_line(document) : self.end_line(document) + how_many
             ]
         )
