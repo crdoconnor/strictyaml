@@ -1,6 +1,5 @@
 from strictyaml.ruamel.error import MarkedYAMLError
-from strictyaml.ruamel.dumper import RoundTripDumper
-from strictyaml.ruamel import dump
+from strictyaml.yamlpointer import _dump_document
 
 try:
     from strictyaml.ruamel.error import Mark as StringMark
@@ -42,7 +41,7 @@ class YAMLValidationError(StrictYAMLError):
     @property
     def context_mark(self):
         context_line = self._chunk.start_line() - 1
-        str_document = dump(self._chunk.whole_document, Dumper=RoundTripDumper)
+        str_document = _dump_document(self._chunk.whole_document)
         context_index = len("\n".join(str_document.split("\n")[:context_line]))
         return StringMark(
             self._chunk.label,
@@ -56,7 +55,7 @@ class YAMLValidationError(StrictYAMLError):
     @property
     def problem_mark(self):
         problem_line = self._chunk.end_line() - 1
-        str_document = dump(self._chunk.whole_document, Dumper=RoundTripDumper)
+        str_document = _dump_document(self._chunk.whole_document)
         problem_index = len("\n".join(str_document.split("\n")[:problem_line]))
         return StringMark(
             self._chunk.label,
