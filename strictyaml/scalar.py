@@ -5,7 +5,7 @@ from strictyaml.validators import Validator
 from strictyaml.representation import YAML
 from strictyaml import constants
 from strictyaml import utils
-from datetime import datetime
+from datetime import datetime, time
 import dateutil.parser
 import decimal
 import sys
@@ -290,6 +290,38 @@ class Datetime(ScalarValidator):
                 data, type(data).__name__
             )
         )
+
+
+class Time(ScalarValidator):
+    _pattern = re.compile(
+        r"[0-9]{2}:[0-5][0-9](?::[0-5][0-9](?:\.[0-9]{1,6})?)?"
+        r"(?:Z|[+-][0-9]{2}:[0-5][0-9](?::[0-5][0-9](?:\.[0-9]{1,6})?)?)?"
+    )
+
+    def _parse(self, value):
+        if self._pattern.fullmatch(value) is None:
+            raise ValueError("invalid time format")
+        # Python 3.7-3.10 do not accept the ISO UTC suffix in fromisoformat.
+        if value.endswith("Z"):
+            value = value[:-1] + "+00:00"
+        return time.fromisoformat(value)
+
+    def validate_scalar(self, chunk):
+        try:
+            return self._parse(chunk.contents)
+        except ValueError:
+            chunk.expecting_but_found("when expecting a time of day")
+
+    def to_yaml(self, data):
+        if isinstance(data, time):
+            data = data.isoformat()
+        if utils.is_string(data):
+            try:
+                self._parse(data)
+                return data
+            except ValueError:
+                pass
+        raise YAMLSerializationError("expected a time of day, got '{0}'".format(data))
 
 
 class NullNone(ScalarValidator):
