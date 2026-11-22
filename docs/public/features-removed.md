@@ -115,7 +115,7 @@ load(yaml) == {'x': {'a': 1}, 'y': {'a': 1}}
 Example StrictYAML
 
 ```python
-raises NodeAnchorDisallowed
+raises AnchorTokenDisallowed
 ```
 
 To parse the above YAML *literally* in StrictYAML do:
@@ -143,5 +143,5 @@ load(yaml) == {'x': 1, 'b': {'c': 3, 'd': 4}}
 Example StrictYAML
 
 ```python
-raises FlowStyleDisallowed
+raises FlowMappingDisallowed
 ```
