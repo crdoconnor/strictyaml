@@ -125,9 +125,29 @@ def is_decimal(value):
 
     >>> is_decimal("blah")
     False
+
+    >>> is_decimal("")
+    False
+
+    >>> is_decimal(".")
+    False
+
+    >>> is_decimal("e10")
+    False
+
+    >>> is_decimal("1e_")
+    False
+
+    >>> is_decimal("-.5e+2")
+    True
+
+    >>> is_decimal("1e1_0")
+    True
     """
     return (
-        compile(r"^[-+]?[0-9_]*(\.[0-9_]*)?([eE][-+]?[0-9_]+)?$").match(value)
+        compile(
+            r"^[-+]?(?:[0-9]+(?:\.[0-9]*)?|\.[0-9]+)(?:[eE][-+]?[0-9]+)?$"
+        ).match(value.replace("_", ""))
         is not None
     )
 
