@@ -236,18 +236,55 @@ class MapCombined(Map):
 
 
 class Seq(SeqValidator):
-    def __init__(self, validator):
+    def __init__(self, validator, minimum_size=None, maximum_size=None):
         self._validator = validator
+        for value in (minimum_size, maximum_size):
+            if value is not None and (
+                isinstance(value, bool) or not isinstance(value, int) or value < 0
+            ):
+                raise ValueError("sequence size bounds must be non-negative integers")
+        if (
+            minimum_size is not None
+            and maximum_size is not None
+            and minimum_size > maximum_size
+        ):
+            raise ValueError("minimum_size must not exceed maximum_size")
+        self._minimum_size = minimum_size
+        self._maximum_size = maximum_size
 
     def __repr__(self):
-        return "Seq({0})".format(repr(self._validator))
+        args = [repr(self._validator)]
+        if self._minimum_size is not None:
+            args.append("minimum_size={0}".format(self._minimum_size))
+        if self._maximum_size is not None:
+            args.append("maximum_size={0}".format(self._maximum_size))
+        return "{0}({1})".format(self.__class__.__name__, ", ".join(args))
+
+    def _check_size(self, sequence, chunk=None):
+        message = None
+        if self._minimum_size is not None and len(sequence) < self._minimum_size:
+            message = "when expecting a sequence with at least {0} items".format(
+                self._minimum_size
+            )
+        elif self._maximum_size is not None and len(sequence) > self._maximum_size:
+            message = "when expecting a sequence with at most {0} items".format(
+                self._maximum_size
+            )
+        if message is not None:
+            found = "found {0} items".format(len(sequence))
+            if chunk is not None:
+                chunk.expecting_but_found(message, found)
+            raise YAMLSerializationError("{0}, {1}".format(message, found))
 
     def validate(self, chunk):
-        for item in chunk.expect_sequence():
+        sequence = chunk.expect_sequence()
+        self._check_size(sequence, chunk)
+        for item in sequence:
             item.process(self._validator(item))
 
     def to_yaml(self, data):
         self._should_be_list(data)
+        self._check_size(data)
         return CommentedSeq([self._validator.to_yaml(item) for item in data])
 
 
@@ -286,20 +323,18 @@ class FixedSeq(SeqValidator):
         )
 
 
-class UniqueSeq(SeqValidator):
-    def __init__(self, validator):
-        self._validator = validator
+class UniqueSeq(Seq):
+    def __init__(self, validator, minimum_size=None, maximum_size=None):
+        super(UniqueSeq, self).__init__(validator, minimum_size, maximum_size)
         assert isinstance(
             self._validator, ScalarValidator
         ), "UniqueSeq validator must be ScalarValidator"
 
-    def __repr__(self):
-        return "UniqueSeq({0})".format(repr(self._validator))
-
     def validate(self, chunk):
         existing_items = set()
-
-        for item in chunk.expect_sequence("when expecting a unique sequence"):
+        sequence = chunk.expect_sequence("when expecting a unique sequence")
+        self._check_size(sequence, chunk)
+        for item in sequence:
             if item.contents in existing_items:
                 chunk.while_parsing_found("a sequence", "duplicate found")
             else:
@@ -308,6 +343,7 @@ class UniqueSeq(SeqValidator):
 
     def to_yaml(self, data):
         self._should_be_list(data)
+        self._check_size(data)
 
         if len(set(data)) < len(data):
             raise YAMLSerializationError(
