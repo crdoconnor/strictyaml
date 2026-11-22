@@ -11,7 +11,7 @@ from strictyaml.any_validator import Any
 from strictyaml.yamllocation import YAMLChunk
 from strictyaml import utils
 
-from strictyaml.ruamel.reader import Reader
+from strictyaml.ruamel.reader import Reader, ReaderError
 from strictyaml.ruamel.scanner import RoundTripScanner
 from strictyaml.ruamel.parser import RoundTripParser
 from strictyaml.ruamel.composer import Composer
@@ -283,6 +283,10 @@ def generic_load(
 
     try:
         document = ruamelyaml.load(yaml_string, Loader=DynamicStrictYAMLLoader)
+    except ReaderError as parse_error:
+        # Reader errors identify a character offset instead of YAML marks.
+        parse_error.name = label
+        raise
     except ruamelyaml.YAMLError as parse_error:
         if parse_error.context_mark is not None:
             parse_error.context_mark.name = label
