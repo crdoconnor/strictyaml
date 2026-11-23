@@ -1,6 +1,7 @@
 """
 Parsing code for strictyaml.
 """
+
 import sys
 
 from strictyaml import ruamel as ruamelyaml
@@ -8,7 +9,7 @@ from strictyaml import exceptions
 from strictyaml.ruamel.comments import CommentedSeq, CommentedMap
 
 from strictyaml.any_validator import Any
-from strictyaml.yamllocation import YAMLChunk
+from strictyaml.yamllocation import YAMLChunk, _ValidationContext
 from strictyaml import utils
 
 from strictyaml.ruamel.reader import Reader
@@ -17,7 +18,8 @@ from strictyaml.ruamel.parser import RoundTripParser
 from strictyaml.ruamel.composer import Composer
 from strictyaml.ruamel.constructor import RoundTripConstructor
 from strictyaml.ruamel.resolver import VersionedResolver
-from strictyaml.ruamel.nodes import MappingNode
+from strictyaml.ruamel.nodes import MappingNode, ScalarNode
+from strictyaml.ruamel.events import AliasEvent
 from strictyaml.ruamel.compat import PY2
 from strictyaml.ruamel.constructor import ConstructorError
 
@@ -32,6 +34,19 @@ else:
 #  * If a duplicate key is found, an exception is raised
 
 
+def _report_error(loader, error):
+    if loader.collected_errors is None:
+        raise error
+    for mark in (error.context_mark, error.problem_mark):
+        if mark is not None:
+            mark.name = loader.label
+    # The parser can inspect the same scanner token more than once.
+    identity = (type(error), error.problem_mark.index)
+    if identity not in loader._reported_errors:
+        loader._reported_errors.add(identity)
+        loader.collected_errors.append(error)
+
+
 class StrictYAMLConstructor(RoundTripConstructor):
     yaml_constructors = {}
 
@@ -43,6 +58,11 @@ class StrictYAMLConstructor(RoundTripConstructor):
                 "expected a mapping node, but found %s" % node.id,
                 node.start_mark,
             )
+        if self.collected_errors is not None:
+            # Alias values are diagnostic placeholders, never merge sources.
+            for key_node, _ in node.value:
+                if key_node.tag == "tag:yaml.org,2002:merge":
+                    key_node.tag = "tag:yaml.org,2002:str"
         merge_map = self.flatten_mapping(node)
 
         # mapping = {}
@@ -81,6 +101,20 @@ class StrictYAMLConstructor(RoundTripConstructor):
                         key_node.start_mark,
                     )
             value = self.construct_object(value_node, deep=deep)
+            if key in maptyp:
+                key_node.start_mark.name = self.label
+                key_node.end_mark.name = self.label
+                _report_error(
+                    self,
+                    exceptions.DuplicateKeysDisallowed(
+                        "While parsing",
+                        key_node.start_mark,
+                        "Duplicate key '{0}' found".format(key),
+                        key_node.end_mark,
+                    ),
+                )
+                # Keep the first occurrence for subsequent schema diagnostics.
+                continue
             if key_node.comment:
                 maptyp._yaml_add_comment(key_node.comment, key=key)
             if value_node.comment:
@@ -94,16 +128,6 @@ class StrictYAMLConstructor(RoundTripConstructor):
                     value_node.start_mark.column,
                 ],
             )
-            if key in maptyp:
-                key_node.start_mark.name = self.label
-                key_node.end_mark.name = self.label
-
-                raise exceptions.DuplicateKeysDisallowed(
-                    "While parsing",
-                    key_node.start_mark,
-                    "Duplicate key '{0}' found".format(key),
-                    key_node.end_mark,
-                )
             maptyp[key] = value
         # do this last, or <<: before a key will prevent insertion in instances
         # of collections.OrderedDict (as they have no __contains__
@@ -125,12 +149,15 @@ class StrictYAMLConstructor(RoundTripConstructor):
                 if previous_indentation is None:
                     previous_indentation = node.start_mark.column
                 if node.start_mark.column != previous_indentation:
-                    raise exceptions.InconsistentIndentationDisallowed(
-                        "While parsing",
-                        node.start_mark,
-                        "Found mapping with indentation "
-                        "inconsistent with previous mapping",
-                        node.end_mark,
+                    _report_error(
+                        self,
+                        exceptions.InconsistentIndentationDisallowed(
+                            "While parsing",
+                            node.start_mark,
+                            "Found mapping with indentation "
+                            "inconsistent with previous mapping",
+                            node.end_mark,
+                        ),
                     )
 
 
@@ -206,33 +233,57 @@ class StrictYAMLScanner(RoundTripScanner):
                     token.end_mark.name = self.label
 
                     if isinstance(token, ruamelyaml.tokens.TagToken):
-                        raise exceptions.TagTokenDisallowed(
-                            "While scanning",
-                            token.end_mark,
-                            "Found disallowed tag tokens "
-                            "(do not specify types in markup)",
-                            token.start_mark,
+                        _report_error(
+                            self,
+                            exceptions.TagTokenDisallowed(
+                                "While scanning",
+                                token.end_mark,
+                                "Found disallowed tag tokens "
+                                "(do not specify types in markup)",
+                                token.start_mark,
+                            ),
                         )
+                        # Continue with the node's ordinary shape, without
+                        # invoking a constructor chosen by the explicit tag.
+                        token.value = (None, "!")
                     if not self.allow_flow_style:
                         if isinstance(
                             token, ruamelyaml.tokens.FlowMappingStartToken
                         ) or isinstance(
                             token, ruamelyaml.tokens.FlowSequenceStartToken
                         ):
-                            raise exceptions.FlowMappingDisallowed(
-                                "While scanning",
-                                token.start_mark,
-                                "Found ugly disallowed JSONesque flow mapping "
-                                "(surround with ' and ' to make text appear literally)",
-                                token.end_mark,
+                            _report_error(
+                                self,
+                                exceptions.FlowMappingDisallowed(
+                                    "While scanning",
+                                    token.start_mark,
+                                    "Found ugly disallowed JSONesque flow mapping "
+                                    "(surround with ' and ' to make text appear literally)",
+                                    token.end_mark,
+                                ),
                             )
                     if isinstance(token, ruamelyaml.tokens.AnchorToken):
-                        raise exceptions.AnchorTokenDisallowed(
-                            "While scanning",
-                            token.start_mark,
-                            "Found confusing disallowed anchor token "
-                            "(surround with ' and ' to make text appear literally)",
-                            token.end_mark,
+                        _report_error(
+                            self,
+                            exceptions.AnchorTokenDisallowed(
+                                "While scanning",
+                                token.start_mark,
+                                "Found confusing disallowed anchor token "
+                                "(surround with ' and ' to make text appear literally)",
+                                token.end_mark,
+                            ),
+                        )
+                    if self.collected_errors is not None and isinstance(
+                        token, ruamelyaml.tokens.AliasToken
+                    ):
+                        _report_error(
+                            self,
+                            exceptions.AnchorTokenDisallowed(
+                                "While scanning",
+                                token.start_mark,
+                                "Found disallowed alias token (aliases are not expanded)",
+                                token.end_mark,
+                            ),
                         )
                     return True
         return False
@@ -246,7 +297,10 @@ class StrictYAMLLoader(
     StrictYAMLConstructor,
     VersionedResolver,
 ):
+    collected_errors = None
+
     def __init__(self, stream, version=None, preserve_quotes=None):
+        self._reported_errors = set()
         Reader.__init__(self, stream, loader=self)
         StrictYAMLScanner.__init__(self, loader=self)
         RoundTripParser.__init__(self, loader=self)
@@ -255,6 +309,20 @@ class StrictYAMLLoader(
             self, preserve_quotes=preserve_quotes, loader=self
         )
         VersionedResolver.__init__(self, version, loader=self)
+
+    def compose_node(self, parent, index):
+        if self.collected_errors is not None:
+            if self.parser.check_event(AliasEvent):
+                event = self.parser.get_event()
+                return ScalarNode(
+                    "tag:yaml.org,2002:str",
+                    exceptions._InvalidAlias("*" + event.anchor),
+                    event.start_mark,
+                    event.end_mark,
+                )
+            # No anchor table is needed because aliases never refer to nodes.
+            self.parser.peek_event().anchor = None
+        return Composer.compose_node(self, parent, index)
 
 
 def as_document(data, schema=None, label="<unicode string>"):
@@ -269,40 +337,72 @@ def as_document(data, schema=None, label="<unicode string>"):
 
 
 def generic_load(
-    yaml_string, schema=None, label="<unicode string>", allow_flow_style=False
+    yaml_string,
+    schema=None,
+    label="<unicode string>",
+    allow_flow_style=False,
+    collect_errors=False,
 ):
     if not utils.is_string(yaml_string):
         raise TypeError("StrictYAML can only read a string of valid YAML.")
 
+    errors = [] if collect_errors else None
     # We manufacture a class that has the label we want
     DynamicStrictYAMLLoader = type(
         "DynamicStrictYAMLLoader",
         (StrictYAMLLoader,),
-        {"label": label, "allow_flow_style": allow_flow_style},
+        {
+            "label": label,
+            "allow_flow_style": allow_flow_style,
+            "collected_errors": errors,
+        },
     )
 
     try:
         document = ruamelyaml.load(yaml_string, Loader=DynamicStrictYAMLLoader)
     except ruamelyaml.YAMLError as parse_error:
-        if parse_error.context_mark is not None:
-            parse_error.context_mark.name = label
-        if parse_error.problem_mark is not None:
-            parse_error.problem_mark.name = label
+        for attribute in ("context_mark", "problem_mark"):
+            mark = getattr(parse_error, attribute, None)
+            if mark is not None:
+                mark.name = label
 
+        if errors is not None:
+            # Syntax errors stop parsing; the remaining tree is not trustworthy.
+            raise exceptions.YAMLValidationErrors(
+                errors + [parse_error]
+            ) from parse_error
         raise parse_error
 
     # Document is just a (string, int, etc.)
-    if type(document) not in (CommentedMap, CommentedSeq):
+    if type(document) not in (CommentedMap, CommentedSeq) and not errors:
         document = yaml_string
 
     if schema is None:
         schema = Any()
 
-    return schema(YAMLChunk(document, label=label))
+    if errors is None:
+        return schema(YAMLChunk(document, label=label))
+
+    context = _ValidationContext(errors, yaml_string)
+    chunk = YAMLChunk(document, label=label, validation_context=context)
+    result = None
+    try:
+        with chunk.validation_scope():
+            result = chunk.validate(schema)
+    finally:
+        # A returned document must keep normal fail-fast assignment/revalidation.
+        context.active = False
+    if errors:
+        raise exceptions.YAMLValidationErrors(errors)
+    return result
 
 
 def dirty_load(
-    yaml_string, schema=None, label="<unicode string>", allow_flow_style=False
+    yaml_string,
+    schema=None,
+    label="<unicode string>",
+    allow_flow_style=False,
+    collect_errors=False,
 ):
     """
     Parse the first YAML document in a string
@@ -311,13 +411,19 @@ def dirty_load(
     If allow_flow_style is set to True, then flow style is allowed.
     """
     return generic_load(
-        yaml_string, schema=schema, label=label, allow_flow_style=allow_flow_style
+        yaml_string,
+        schema=schema,
+        label=label,
+        allow_flow_style=allow_flow_style,
+        collect_errors=collect_errors,
     )
 
 
-def load(yaml_string, schema=None, label="<unicode string>"):
+def load(yaml_string, schema=None, label="<unicode string>", collect_errors=False):
     """
     Parse the first YAML document in a string
     and produce corresponding YAML object.
     """
-    return generic_load(yaml_string, schema=schema, label=label)
+    return generic_load(
+        yaml_string, schema=schema, label=label, collect_errors=collect_errors
+    )

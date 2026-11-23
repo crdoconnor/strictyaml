@@ -12,6 +12,32 @@ class StrictYAMLError(MarkedYAMLError):
     pass
 
 
+class YAMLValidationErrors(StrictYAMLError):
+    """Located parser and schema errors from an explicitly collecting load."""
+
+    def __init__(self, errors):
+        self.errors = tuple(errors)
+        super(YAMLValidationErrors, self).__init__(
+            problem="{0} YAML errors".format(len(self.errors))
+        )
+
+    def __str__(self):
+        return "{0} YAML errors:\n\n{1}".format(
+            len(self.errors), "\n\n".join(str(error) for error in self.errors)
+        )
+
+
+class _InvalidAlias(str):
+    """An inert diagnostic placeholder; aliases must never build object graphs."""
+
+
+class _SkipValidation(Exception):
+    pass
+
+
+RoundTripDumper.add_representer(_InvalidAlias, RoundTripDumper.represent_str)
+
+
 class InvalidValidatorError(StrictYAMLError):
     pass
 
@@ -38,9 +64,16 @@ class YAMLValidationError(StrictYAMLError):
         self.problem = problem
         self._chunk = chunk
         self.note = None
+        self._source_location = chunk.source_location()
+
+    def _source_mark(self):
+        source, line, column, offset = self._source_location
+        return StringMark(self._chunk.label, offset, line, column, source, offset)
 
     @property
     def context_mark(self):
+        if self._source_location is not None:
+            return self._source_mark()
         context_line = self._chunk.start_line() - 1
         str_document = dump(self._chunk.whole_document, Dumper=RoundTripDumper)
         context_index = len("\n".join(str_document.split("\n")[:context_line]))
@@ -55,6 +88,8 @@ class YAMLValidationError(StrictYAMLError):
 
     @property
     def problem_mark(self):
+        if self._source_location is not None:
+            return self._source_mark()
         problem_line = self._chunk.end_line() - 1
         str_document = dump(self._chunk.whole_document, Dumper=RoundTripDumper)
         problem_index = len("\n".join(str_document.split("\n")[:problem_line]))

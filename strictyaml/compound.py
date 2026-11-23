@@ -6,7 +6,6 @@ from strictyaml.scalar import ScalarValidator, Str
 from strictyaml.yamllocation import YAMLChunk
 import sys
 
-
 if sys.version_info[0] == 3:
     unicode = str
 
@@ -51,30 +50,36 @@ class MapPattern(MapValidator):
         items = chunk.expect_mapping()
 
         if self._maximum_keys is not None and len(items) > self._maximum_keys:
-            chunk.expecting_but_found(
-                "while parsing a mapping",
-                "expected a maximum of {0} key{1}, found {2}.".format(
-                    self._maximum_keys,
-                    "s" if self._maximum_keys > 1 else "",
-                    len(items),
-                ),
-            )
+            with chunk.validation_scope():
+                chunk.expecting_but_found(
+                    "while parsing a mapping",
+                    "expected a maximum of {0} key{1}, found {2}.".format(
+                        self._maximum_keys,
+                        "s" if self._maximum_keys > 1 else "",
+                        len(items),
+                    ),
+                )
 
         if self._minimum_keys is not None and len(items) < self._minimum_keys:
-            chunk.expecting_but_found(
-                "while parsing a mapping",
-                "expected a minimum of {0} key{1}, found {2}.".format(
-                    self._minimum_keys,
-                    "s" if self._minimum_keys > 1 else "",
-                    len(items),
-                ),
-            )
+            with chunk.validation_scope():
+                chunk.expecting_but_found(
+                    "while parsing a mapping",
+                    "expected a minimum of {0} key{1}, found {2}.".format(
+                        self._minimum_keys,
+                        "s" if self._minimum_keys > 1 else "",
+                        len(items),
+                    ),
+                )
 
         for key, value in items:
-            yaml_key = self._key_validator(key)
-            key.process(yaml_key)
-            value.process(self._value_validator(value))
-            chunk.add_key_association(key.contents, yaml_key.data)
+            yaml_key = None
+            with key.validation_scope():
+                yaml_key = key.validate(self._key_validator)
+                key.process(yaml_key)
+            with value.validation_scope():
+                value.process(value.validate(self._value_validator))
+            if yaml_key is not None:
+                chunk.add_key_association(key.contents, yaml_key.data)
 
     def to_yaml(self, data):
         self._should_be_mapping(data)
@@ -161,15 +166,17 @@ class Map(MapValidator):
         items = chunk.expect_mapping()
 
         for key, value in items:
-            yaml_key = self._key_validator(key)
+            with key.validation_scope():
+                yaml_key = key.validate(self._key_validator)
 
-            if yaml_key.scalar not in self._validator_dict.keys():
-                self.unexpected_key(key, yaml_key, value, chunk)
+                if yaml_key.scalar not in self._validator_dict.keys():
+                    self.unexpected_key(key, yaml_key, value, chunk)
 
-            value.process(self.get_validator(yaml_key.scalar)(value))
-            key.process(yaml_key)
-            chunk.add_key_association(key.contents, yaml_key.data)
-            found_keys.add(yaml_key.scalar)
+                found_keys.add(yaml_key.scalar)
+                with value.validation_scope():
+                    value.process(value.validate(self.get_validator(yaml_key.scalar)))
+                key.process(yaml_key)
+                chunk.add_key_association(key.contents, yaml_key.data)
 
         for default_key, default_data in self._defaults.items():
             if default_key not in [key.contents for key, _ in items]:
@@ -244,7 +251,8 @@ class Seq(SeqValidator):
 
     def validate(self, chunk):
         for item in chunk.expect_sequence():
-            item.process(self._validator(item))
+            with item.validation_scope():
+                item.process(item.validate(self._validator))
 
     def to_yaml(self, data):
         self._should_be_list(data)
@@ -268,15 +276,17 @@ class FixedSeq(SeqValidator):
         )
 
         if len(self._validators) != len(sequence):
-            chunk.expecting_but_found(
-                "when expecting a sequence of {0} elements".format(
-                    len(self._validators)
-                ),
-                "found a sequence of {0} elements".format(len(chunk.contents)),
-            )
+            with chunk.validation_scope():
+                chunk.expecting_but_found(
+                    "when expecting a sequence of {0} elements".format(
+                        len(self._validators)
+                    ),
+                    "found a sequence of {0} elements".format(len(chunk.contents)),
+                )
 
         for item, validator in zip(sequence, self._validators):
-            item.process(validator(item))
+            with item.validation_scope():
+                item.process(item.validate(validator))
 
     def to_yaml(self, data):
         self._should_be_list(data)
@@ -300,11 +310,17 @@ class UniqueSeq(SeqValidator):
         existing_items = set()
 
         for item in chunk.expect_sequence("when expecting a unique sequence"):
+            if not item.is_scalar():
+                with item.validation_scope():
+                    item.process(item.validate(self._validator))
+                continue
             if item.contents in existing_items:
-                chunk.while_parsing_found("a sequence", "duplicate found")
+                with chunk.validation_scope():
+                    chunk.while_parsing_found("a sequence", "duplicate found")
             else:
                 existing_items.add(item.contents)
-                item.process(self._validator(item))
+            with item.validation_scope():
+                item.process(item.validate(self._validator))
 
     def to_yaml(self, data):
         self._should_be_list(data)

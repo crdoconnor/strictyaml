@@ -43,6 +43,7 @@ from strictyaml.ruamel import YAMLError
 # Exceptions
 from strictyaml.exceptions import StrictYAMLError
 from strictyaml.exceptions import YAMLValidationError
+from strictyaml.exceptions import YAMLValidationErrors
 
 # Disallowed token exceptions
 from strictyaml.exceptions import DisallowedToken

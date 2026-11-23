@@ -1,12 +1,23 @@
 from strictyaml.ruamel.comments import CommentedSeq, CommentedMap
-from strictyaml.exceptions import YAMLValidationError
+from strictyaml.exceptions import YAMLValidationError, _InvalidAlias, _SkipValidation
 from strictyaml.yamlpointer import YAMLPointer
 from strictyaml import utils
 from copy import deepcopy, copy
+from contextlib import contextmanager
 import sys
 
 if sys.version_info[0] == 3:
     unicode = str
+
+
+class _ValidationContext(object):
+    def __init__(self, errors, source):
+        self.errors = errors
+        self.source = source
+        self.line_offsets = [0]
+        for line in source.splitlines(True):
+            self.line_offsets.append(self.line_offsets[-1] + len(line))
+        self.active = True
 
 
 class YAMLChunk(object):
@@ -28,6 +39,7 @@ class YAMLChunk(object):
         label=None,
         strictparsed=None,
         key_association=None,
+        validation_context=None,
     ):
         self._ruamelparsed = ruamelparsed
         self._strictparsed = (
@@ -35,10 +47,62 @@ class YAMLChunk(object):
         )
         self._pointer = pointer if pointer is not None else YAMLPointer()
         self._label = label
+        self._validation_context = validation_context
 
         # Associates strictparsed key names with ruamelparsed key names
         # E.g. "my-key-name" -> "My Key name"
         self._key_association = {} if key_association is None else key_association
+
+    @property
+    def validation_errors(self):
+        context = self._validation_context
+        return context.errors if context is not None and context.active else None
+
+    @contextmanager
+    def validation_scope(self):
+        """Continue with independent siblings only in an active collecting load."""
+        try:
+            yield
+        except _SkipValidation:
+            if self.validation_errors is None:
+                raise
+        except YAMLValidationError as error:
+            if self.validation_errors is None:
+                raise
+            self.validation_errors.append(error)
+
+    def validate(self, validator):
+        if isinstance(self.contents, _InvalidAlias):
+            raise _SkipValidation()
+        return validator(self)
+
+    def source_location(self):
+        """Locate collecting diagnostics in input, before duplicate/tag removal."""
+        if self.validation_errors is None:
+            return None
+        source = self._validation_context.source
+        segment = self.whole_document
+        line, column = 0, 0
+        try:
+            if isinstance(segment, (CommentedMap, CommentedSeq)):
+                line, column = segment.lc.line, segment.lc.col
+            for kind, index in self.pointer._indices:
+                if kind == "val":
+                    line, column = segment.lc.value(index[0])
+                    segment = segment[index[0]]
+                elif kind == "key":
+                    line, column = segment.lc.key(index[0])
+                    segment = index[0]
+                elif kind == "index":
+                    line, column = segment.lc.item(index)
+                    segment = segment[index]
+                # Text slices use the containing scalar's source span: decoded
+                # offsets may differ from input because of quoting and escapes.
+            offset = self._validation_context.line_offsets[line] + column
+        except (AttributeError, IndexError, KeyError, TypeError):
+            # Schema-generated default values may have no input location.
+            return None
+        return source, line, column, offset
 
     def expecting_but_found(self, expecting, found=None):
         raise YAMLValidationError(
@@ -68,9 +132,9 @@ class YAMLChunk(object):
         if self.pointer.is_index():
             current_parsed[self.pointer.last_index] = new_item
         elif self.pointer.is_val():
-            current_parsed[
-                actual_key_from_string_key(self.pointer.last_regularkey)
-            ] = new_item
+            current_parsed[actual_key_from_string_key(self.pointer.last_regularkey)] = (
+                new_item
+            )
         elif self.pointer.is_key():
             key = actual_key_from_string_key(self.pointer.last_regularkey)
             existing_val = current_parsed[key]
@@ -150,6 +214,7 @@ class YAMLChunk(object):
             pointer=self.pointer,
             label=self.label,
             key_association=copy(self._key_association),
+            validation_context=self._validation_context,
         )
         if self.is_scalar():
             # Necessary for e.g. EmptyDict, which reports as a scalar.
@@ -194,6 +259,7 @@ class YAMLChunk(object):
             label=self._label,
             strictparsed=self._strictparsed,
             key_association=copy(self._key_association),
+            validation_context=self._validation_context,
         )
 
     def index(self, strictindex):

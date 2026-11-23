@@ -13,7 +13,6 @@ import re
 import urllib.parse
 from strictyaml.ruamel.scalarstring import PreservedScalarString
 
-
 if sys.version_info[0] == 3:
     unicode = str
 
@@ -84,12 +83,12 @@ class CommaSeparated(ScalarValidator):
     def validate_scalar(self, chunk):
         if chunk.contents == "":
             return []
-        return [
-            self._item_validator.validate_scalar(
-                chunk.textslice(positions[0], positions[1])
-            )
-            for positions in utils.comma_separated_positions(chunk.contents)
-        ]
+        values = []
+        for start, end in utils.comma_separated_positions(chunk.contents):
+            item = chunk.textslice(start, end)
+            with item.validation_scope():
+                values.append(self._item_validator.validate_scalar(item))
+        return values
 
     def to_yaml(self, data):
         if isinstance(data, list):
