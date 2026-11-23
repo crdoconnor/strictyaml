@@ -4,7 +4,6 @@ from strictyaml.representation import YAML
 from strictyaml import utils
 import sys
 
-
 if sys.version_info[0] == 3:
     unicode = str
 
@@ -103,6 +102,8 @@ class OrValidator(Validator):
             return self._validator_b.to_yaml(value)
 
     def __call__(self, chunk):
+        if chunk.validation_errors is not None:
+            return self._collecting_call(chunk)
         try:
             result = self._validator_a(chunk)
             result._selected_validator = result._validator
@@ -113,6 +114,24 @@ class OrValidator(Validator):
             result._selected_validator = result._validator
             result._validator = self
             return result
+
+    def _collecting_call(self, chunk):
+        errors = chunk.validation_errors
+        start = len(errors)
+        failures = []
+        for validator in (self._validator_a, self._validator_b):
+            with chunk.validation_scope():
+                result = chunk.validate(validator)
+            if len(errors) == start:
+                result._selected_validator = result._validator
+                result._validator = self
+                return result
+            failures.extend(errors[start:])
+            del errors[start:]
+        # A successful alternative discards all speculative errors. When both
+        # fail, retain both sets and let the enclosing scope record the last one.
+        errors.extend(failures[:-1])
+        raise failures[-1]
 
     def __repr__(self):
         return "{0} | {1}".format(repr(self._validator_a), repr(self._validator_b))
