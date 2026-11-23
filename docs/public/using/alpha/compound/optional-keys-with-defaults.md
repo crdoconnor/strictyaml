@@ -83,6 +83,31 @@ Ensure(load(yaml_snippet, schema).data).equals(OrderedDict([("a", 1), ("b", None
 
 
 
+## Recording the effective configuration
+
+Use `include_defaults=True` to write all validated optional defaults, including
+defaults inside nested mappings and sequence items. This is useful for
+recording the complete configuration used by an execution:
+
+```python
+configuration = load(yaml_snippet, schema)
+print(configuration.as_yaml(include_defaults=True))
+```
+
+```yaml
+a: 1
+b: no
+```
+
+The same option works on documents created with `as_document()` and on
+`as_marked_up()` when using your own dumper. It preserves existing comments
+and the spelling of explicit values. Implicit keys are appended in schema
+order; optionals without defaults remain absent. No extra comments are added.
+
+The expanded result is a copy: `configuration.as_yaml()` still returns the
+original markup, and neither the schema nor the validated values are changed.
+The default remains `include_defaults=False`.
+
 !!! note "Executable specification"
 
     Documentation automatically generated from 

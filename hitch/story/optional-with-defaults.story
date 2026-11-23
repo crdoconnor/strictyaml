@@ -35,6 +35,38 @@ Optional keys with defaults (Map/Optional):
             print(as_document({"a": 1, "b": False}, schema).as_yaml())
           will output: |-
             a: 1
+
+    Include defaults when recording the effective configuration:
+      steps:
+      - Run:
+          code: |
+            configuration = load(yaml_snippet, schema)
+            print(configuration.as_yaml(include_defaults=True))
+            assert configuration.as_yaml() == yaml_snippet
+          will output: |-
+            a: 1
+            b: no
+
+    Include defaults when serializing Python data:
+      steps:
+      - Run:
+          code: |
+            print(as_document({"a": 1, "b": False}, schema).as_yaml(include_defaults=True))
+          will output: |-
+            a: 1
+            b: no
+
+    Include defaults in nested mappings and sequence items:
+      steps:
+      - Run:
+          code: |
+            from strictyaml import Seq
+            nested = load("items:\n- a: 1\n", Map({"items": Seq(schema)}))
+            print(nested.as_yaml(include_defaults=True))
+          will output: |-
+            items:
+            - a: 1
+              b: no
     
     When you want a key to stay and default to None:
       steps:

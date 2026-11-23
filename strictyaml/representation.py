@@ -3,7 +3,7 @@ from strictyaml.exceptions import raise_type_error, YAMLSerializationError
 from strictyaml.yamllocation import YAMLChunk
 from strictyaml.dumper import StrictYAMLDumper
 from strictyaml.ruamel import dump, scalarstring
-from copy import copy
+from copy import copy, deepcopy
 import decimal
 import sys
 
@@ -136,13 +136,35 @@ class YAML(object):
                 return str(self._value)
             return self._value
 
-    def as_marked_up(self):
+    def as_marked_up(self, include_defaults=False):
         """
         Returns strictyaml.ruamel CommentedSeq/CommentedMap objects
         with comments. This can be fed directly into a strictyaml.ruamel
         dumper.
+
+        Include validated defaults in a detached copy when requested, so
+        recording the effective configuration does not edit the source.
         """
-        return self._chunk.contents
+        contents = self._chunk.contents
+        if not include_defaults:
+            return contents
+        contents = deepcopy(contents)
+        self._add_defaults(contents)
+        return contents
+
+    def _add_defaults(self, contents):
+        """Fill absent values from the validated tree, preserving source markup."""
+        if self.is_mapping():
+            for key, value in self._value.items():
+                # The validator may have normalized the key. The key node
+                # retains its original spelling, including for implicit keys.
+                original_key = key.as_marked_up()
+                if original_key not in contents:
+                    contents[original_key] = deepcopy(value.as_marked_up())
+                value._add_defaults(contents[original_key])
+        elif self.is_sequence():
+            for index, value in enumerate(self._value):
+                value._add_defaults(contents[index])
 
     @property
     def start_line(self):
@@ -262,11 +284,19 @@ class YAML(object):
     def __len__(self):
         return len(self._value)
 
-    def as_yaml(self):
+    def as_yaml(self, include_defaults=False):
         """
         Render the YAML node and subnodes as string.
+
+        Set include_defaults=True to record optional defaults throughout the
+        validated document without changing the original YAML or its schema.
         """
-        dumped = dump(self.as_marked_up(), Dumper=StrictYAMLDumper, allow_unicode=True)
+        marked_up = (
+            self.as_marked_up(include_defaults=True)
+            if include_defaults
+            else self.as_marked_up()
+        )
+        dumped = dump(marked_up, Dumper=StrictYAMLDumper, allow_unicode=True)
         return dumped if sys.version_info[0] == 3 else dumped.decode("utf8")
 
     def items(self):
