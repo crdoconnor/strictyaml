@@ -1,4 +1,8 @@
-from strictyaml.exceptions import YAMLSerializationError, InvalidOptionalDefault
+from strictyaml.exceptions import (
+    YAMLSerializationError,
+    InvalidOptionalDefault,
+    InvalidValidatorError,
+)
 from strictyaml.validators import Validator, MapValidator, SeqValidator
 from strictyaml.ruamel.comments import CommentedMap, CommentedSeq
 from strictyaml.representation import YAML
@@ -6,19 +10,38 @@ from strictyaml.scalar import ScalarValidator, Str
 from strictyaml.yamllocation import YAMLChunk
 import sys
 
-
 if sys.version_info[0] == 3:
     unicode = str
 
 
 class Optional(object):
-    def __init__(self, key, default=None, drop_if_none=True):
+    def __init__(self, key, default=None, drop_if_none=True, required_unless=None):
         self.key = key
         self.default = default
         self.drop_if_none = drop_if_none
+        if required_unless is not None:
+            if isinstance(required_unless, (str, bytes)):
+                raise InvalidValidatorError(
+                    "required_unless must be a nonempty iterable of keys"
+                )
+            try:
+                required_unless = tuple(required_unless)
+            except TypeError:
+                raise InvalidValidatorError(
+                    "required_unless must be a nonempty iterable of keys"
+                )
+            if not required_unless:
+                raise InvalidValidatorError(
+                    "required_unless must be a nonempty iterable of keys"
+                )
+        self.required_unless = required_unless
 
     def __repr__(self):
         # TODO: Add default
+        if self.required_unless is not None:
+            return 'Optional("{0}", required_unless={1!r})'.format(
+                self.key, self.required_unless
+            )
         return 'Optional("{0}")'.format(self.key)
 
 
@@ -109,6 +132,23 @@ class Map(MapValidator):
             key for key in validator.keys() if not isinstance(key, Optional)
         ]
 
+        self._required_unless = {}
+        for key in validator:
+            if isinstance(key, Optional) and key.required_unless is not None:
+                for alternative in key.required_unless:
+                    try:
+                        known_key = alternative in self._validator_dict
+                    except TypeError:
+                        known_key = False
+                    if not known_key or alternative == key.key:
+                        raise InvalidValidatorError(
+                            "required_unless for {0!r} must reference other keys "
+                            "declared in the same mapping; got {1!r}".format(
+                                key.key, alternative
+                            )
+                        )
+                self._required_unless[key.key] = key.required_unless
+
         for key_val, value_val in validator.items():
             if isinstance(key_val, Optional):
                 if key_val.default is not None and not key_val.drop_if_none:
@@ -155,6 +195,17 @@ class Map(MapValidator):
             "while parsing a mapping",
             "unexpected key not in schema '{0}'".format(unicode(yaml_key.scalar)),
         )
+
+    def _dependency_problems(self, keys):
+        # Defaults count as present, even when omitted from the serialized YAML.
+        present = set(keys).union(self._defaults)
+        return [
+            "key {0!r} is required unless at least one of {1} is present".format(
+                key, ", ".join(repr(alternative) for alternative in alternatives)
+            )
+            for key, alternatives in self._required_unless.items()
+            if key not in present and present.isdisjoint(alternatives)
+        ]
 
     def validate(self, chunk):
         found_keys = set()
@@ -209,8 +260,15 @@ class Map(MapValidator):
                 ),
             )
 
+        problems = self._dependency_problems(found_keys)
+        if problems:
+            chunk.while_parsing_found("a mapping", "; ".join(problems))
+
     def to_yaml(self, data):
         self._should_be_mapping(data)
+        problems = self._dependency_problems(data)
+        if problems:
+            raise YAMLSerializationError("; ".join(problems))
         # TODO : if keys not in list or required keys missing, raise exception.
         return CommentedMap(
             [
