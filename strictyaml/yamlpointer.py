@@ -3,7 +3,6 @@ from strictyaml.ruamel import dump, RoundTripDumper
 from copy import deepcopy
 import sys
 
-
 if sys.version_info[0] == 3:
     unicode = str
 
@@ -195,6 +194,24 @@ class YAMLPointer(object):
         for index_type, index in self._indices:
             segment = self._individual_get(segment, index_type, index, strictdoc)
         return segment
+
+    def source_node(self, node):
+        """Locate the parser node corresponding to an original document chunk."""
+        for index_type, index in self._indices:
+            if index_type == "index":
+                node = node.value[index]
+            elif index_type in ("key", "val"):
+                pair = next(
+                    (pair for pair in node.value if pair[0].value == index[0]), None
+                )
+                if pair is None:
+                    return None  # A schema default has no location in the input.
+                node = pair[0 if index_type == "key" else 1]
+            elif index_type == "textslice":
+                # Text slices may refer to folded/escaped scalar values. Their
+                # containing scalar remains the reliable location in the source.
+                return node
+        return node
 
     def set(self, src_obj, src_attr, new_ruamel, strictdoc=False):
         """Since set() needs to overwrite what this pointer points to, it

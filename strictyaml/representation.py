@@ -7,7 +7,6 @@ from copy import copy
 import decimal
 import sys
 
-
 if sys.version_info[0] == 3:
     unicode = str
 
@@ -250,11 +249,13 @@ class YAML(object):
         # pointing at the original document.
         self._chunk._ruamelparsed = old_chunk._ruamelparsed
         self._chunk._strictparsed = old_chunk._strictparsed
+        old_chunk.invalidate_source()
 
     def __delitem__(self, index):
         strictindex = self._strictindex(index)
         del self._value[strictindex]
         del self._chunk.contents[self._chunk.ruamelindex(strictindex)]
+        self._chunk.invalidate_source()
 
     def __hash__(self):
         return hash(self._value)

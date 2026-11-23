@@ -41,6 +41,9 @@ class YAMLValidationError(StrictYAMLError):
 
     @property
     def context_mark(self):
+        source_mark = self._chunk.source_mark()
+        if source_mark is not None:
+            return source_mark
         context_line = self._chunk.start_line() - 1
         str_document = dump(self._chunk.whole_document, Dumper=RoundTripDumper)
         context_index = len("\n".join(str_document.split("\n")[:context_line]))
@@ -55,6 +58,9 @@ class YAMLValidationError(StrictYAMLError):
 
     @property
     def problem_mark(self):
+        source_mark = self._chunk.source_mark(end=True)
+        if source_mark is not None:
+            return source_mark
         problem_line = self._chunk.end_line() - 1
         str_document = dump(self._chunk.whole_document, Dumper=RoundTripDumper)
         problem_index = len("\n".join(str_document.split("\n")[:problem_line]))
