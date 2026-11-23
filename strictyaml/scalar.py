@@ -1,6 +1,7 @@
 import math
+import enum
 
-from strictyaml.exceptions import YAMLSerializationError
+from strictyaml.exceptions import YAMLSerializationError, InvalidValidatorError
 from strictyaml.validators import Validator
 from strictyaml.representation import YAML
 from strictyaml import constants
@@ -12,7 +13,6 @@ import sys
 import re
 import urllib.parse
 from strictyaml.ruamel.scalarstring import PreservedScalarString
-
 
 if sys.version_info[0] == 3:
     unicode = str
@@ -42,6 +42,13 @@ class ScalarValidator(Validator):
 
 class Enum(ScalarValidator):
     def __init__(self, restricted_to, item_validator=None):
+        self._enum_type = (
+            restricted_to if isinstance(restricted_to, enum.EnumMeta) else None
+        )
+        if self._enum_type is not None and item_validator is not None:
+            raise InvalidValidatorError(
+                "item_validator cannot be used with a Python Enum class"
+            )
         self._item_validator = Str() if item_validator is None else item_validator
         assert isinstance(
             self._item_validator, ScalarValidator
@@ -49,6 +56,14 @@ class Enum(ScalarValidator):
         self._restricted_to = restricted_to
 
     def validate_scalar(self, chunk):
+        if self._enum_type is not None:
+            if chunk.contents not in self._enum_type.__members__:
+                chunk.expecting_but_found(
+                    "when expecting one of: {0}".format(
+                        ", ".join(self._enum_type.__members__)
+                    )
+                )
+            return self._enum_type[chunk.contents]
         val = self._item_validator(chunk)
         val._validator = self
         if val.scalar not in self._restricted_to:
@@ -61,6 +76,17 @@ class Enum(ScalarValidator):
             return val
 
     def to_yaml(self, data):
+        if self._enum_type is not None:
+            if (
+                not isinstance(data, self._enum_type)
+                or data.name not in self._enum_type.__members__
+            ):
+                raise YAMLSerializationError(
+                    "Got '{0}' when expecting a named member of {1}".format(
+                        data, self._enum_type.__name__
+                    )
+                )
+            return data.name
         if data not in self._restricted_to:
             raise YAMLSerializationError(
                 "Got '{0}' when  expecting one of: {1}".format(
