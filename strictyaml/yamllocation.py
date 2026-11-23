@@ -28,6 +28,7 @@ class YAMLChunk(object):
         label=None,
         strictparsed=None,
         key_association=None,
+        source=None,
     ):
         self._ruamelparsed = ruamelparsed
         self._strictparsed = (
@@ -35,6 +36,7 @@ class YAMLChunk(object):
         )
         self._pointer = pointer if pointer is not None else YAMLPointer()
         self._label = label
+        self._source = source
 
         # Associates strictparsed key names with ruamelparsed key names
         # E.g. "my-key-name" -> "My Key name"
@@ -68,9 +70,9 @@ class YAMLChunk(object):
         if self.pointer.is_index():
             current_parsed[self.pointer.last_index] = new_item
         elif self.pointer.is_val():
-            current_parsed[
-                actual_key_from_string_key(self.pointer.last_regularkey)
-            ] = new_item
+            current_parsed[actual_key_from_string_key(self.pointer.last_regularkey)] = (
+                new_item
+            )
         elif self.pointer.is_key():
             key = actual_key_from_string_key(self.pointer.last_regularkey)
             existing_val = current_parsed[key]
@@ -194,6 +196,7 @@ class YAMLChunk(object):
             label=self._label,
             strictparsed=self._strictparsed,
             key_association=copy(self._key_association),
+            source=self._source,
         )
 
     def index(self, strictindex):
@@ -234,19 +237,56 @@ class YAMLChunk(object):
         return self._select(self._pointer.textslice(start, end))
 
     def start_line(self):
+        node = self.source_node()
+        if node is not None:
+            return node.start_mark.line + 1
         return self._pointer.start_line(self._ruamelparsed)
 
     def end_line(self):
+        node = self.source_node()
+        if node is not None:
+            end = node.end_mark
+            return max(self.start_line(), end.line + (1 if end.column else 0))
         return self._pointer.end_line(self._ruamelparsed)
 
     def lines(self):
+        if self.source_node() is not None:
+            return "\n".join(
+                self._source["text"].splitlines()[
+                    self.start_line() - 1 : self.end_line()
+                ]
+            )
         return self._pointer.lines(self._ruamelparsed)
 
     def lines_before(self, how_many):
+        if self.source_node() is not None:
+            start = self.start_line() - 1
+            return "\n".join(
+                self._source["text"].splitlines()[max(0, start - how_many) : start]
+            )
         return self._pointer.lines_before(self._ruamelparsed, how_many)
 
     def lines_after(self, how_many):
+        if self.source_node() is not None:
+            end = self.end_line()
+            return "\n".join(self._source["text"].splitlines()[end : end + how_many])
         return self._pointer.lines_after(self._ruamelparsed, how_many)
+
+    def source_node(self):
+        if self._source:
+            return self._pointer.source_node(self._source["node"])
+
+    def source_mark(self, end=False):
+        node = self.source_node()
+        if node is not None:
+            mark = copy(node.end_mark if end else node.start_mark)
+            mark.name = self.label
+            return mark
+
+    def invalidate_source(self):
+        """Edits make original positions stale for every chunk in the document."""
+        if self._source:
+            self._source.clear()
 
     @property
     def contents(self):

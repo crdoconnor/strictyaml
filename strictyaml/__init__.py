@@ -1,6 +1,8 @@
 # The all important loader
 from strictyaml.parser import load
 from strictyaml.parser import dirty_load
+from strictyaml.parser import load_all
+from strictyaml.parser import dirty_load_all
 
 # Document builder
 from strictyaml.parser import as_document

@@ -1,6 +1,7 @@
 """
 Parsing code for strictyaml.
 """
+
 import sys
 
 from strictyaml import ruamel as ruamelyaml
@@ -321,3 +322,50 @@ def load(yaml_string, schema=None, label="<unicode string>"):
     and produce corresponding YAML object.
     """
     return generic_load(yaml_string, schema=schema, label=label)
+
+
+def dirty_load_all(
+    yaml_string, schema=None, label="<unicode string>", allow_flow_style=False
+):
+    """Yield validated documents, retaining positions in the original stream.
+
+    Document boundaries are recognized by the YAML parser, including explicit
+    empty documents and scalar documents introduced on the marker line.
+    """
+    if not utils.is_string(yaml_string):
+        raise TypeError("StrictYAML can only read a string of valid YAML.")
+    if schema is None:
+        schema = Any()
+    loader_class = type(
+        "DynamicStrictYAMLLoader",
+        (StrictYAMLLoader,),
+        {"label": label, "allow_flow_style": allow_flow_style},
+    )
+    loader = loader_class(yaml_string)
+    try:
+        while loader.check_node():
+            node = loader.get_node()
+            document = loader.construct_document(node)
+            # Unlike the single-document API's raw scalar text, use the
+            # constructed scalar: the full input also contains other documents.
+            source = {"text": yaml_string, "node": node}
+            yield schema(YAMLChunk(document, label=label, source=source))
+    except ruamelyaml.YAMLError as parse_error:
+        for attribute in ("context_mark", "problem_mark"):
+            mark = getattr(parse_error, attribute, None)
+            if mark is not None:
+                mark.name = label
+        raise
+    finally:
+        loader.dispose()
+        loader.reset_reader()
+        loader.reset_scanner()
+
+
+def load_all(yaml_string, schema=None, label="<unicode string>"):
+    """Yield a YAML object for each document, using the same schema for all.
+
+    An empty/comment-only stream yields no documents. Explicit empty documents
+    are validated as empty strings. Parsing and validation happen on iteration.
+    """
+    return dirty_load_all(yaml_string, schema=schema, label=label)
